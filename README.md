@@ -1,6 +1,6 @@
-### 👋 Welcome to **BUDGETKIT**
+### 👋 Welcome to **iBudget**
 
-**BudgetKit**  is a web application designed to help people, especially students, 
+**iBudget**  is a web application designed to help people, especially students, 
 manage their finances with ease. It aims to simplify money management and reduce 
 the time and effort typically associated with budgeting. The application addresses 
 the common problem of overspending and financial stress by providing an easy and 
