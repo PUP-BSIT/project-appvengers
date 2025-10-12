@@ -1,0 +1,29 @@
+#this is the name of the workflow and this is what will appear in the actions tab in github repo
+name: Greet Newly Created Issues
+
+#this block grants permissions for the workflow to write to issues, without this, the job will fail
+permissions:
+  issues: write
+
+# Run when someone creates an issue
+on:
+  issues:
+    types: [opened] #on opened issues only
+
+jobs:
+  greet:
+    name: Welcome User #name for easy identification
+    runs-on: ubuntu-latest #this job would run on the latest version of Ubunutu Linux that are available in github
+    
+    steps:
+      # Post a friendly comment
+      - name: Post welcome comment
+        uses: actions/github-script@v6 #version 6 of the pre-built action github-script
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: ' Hi, this is an auto-generated response from the Appvengers Group. Thanks for opening this issue! We will look into it soon. '
+            })
