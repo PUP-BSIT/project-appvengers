@@ -23,7 +23,7 @@ efficient way to track daily, weekly, and monthly expenses.
 ## 🌐 Web Hosting
 
 - **Hosted on:** Hostinger
-- **Live URL:** 
+- **Live URL:** [i-budget.site](https://i-budget.site/)
 
 ---
 
