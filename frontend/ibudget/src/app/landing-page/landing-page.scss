@@ -1,0 +1,137 @@
+.landing-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #c9cefa;
+  box-sizing: border-box;
+  font-family: "Patua One", Arial, sans-serif;
+  min-height: 100vh;
+}
+
+.top-nav {
+  position: absolute;
+  right: 24px;
+  top: 16px;
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+}
+
+.go-to {
+  height: 40px;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  background: #3B82F6 !important;
+  color: white !important;
+  border: none;
+  border-radius: 8px;
+}
+
+.about {
+  height: 40px;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  background: #3B82F6 !important;
+  color: white !important;
+  border: none;
+  border-radius: 8px;
+}
+
+.landing-container {
+  max-width: 1200px;
+  margin: 80px auto 40px;
+  display: flex;
+  align-items: center;
+  gap: 64px;
+  padding: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-left {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.hero-card {
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.55);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.hero-card img {
+  width: auto;
+  max-width: 900px;
+  height: auto;
+  display: block;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 12px;
+  background: white;
+  margin: 0;
+}
+
+.hero-right {
+  flex: 1 1 50%;
+  padding: 20px;
+}
+
+.brand {
+  font-size: 58px;
+  margin: 0 0 50px 0;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: -1px;
+  text-align: center;
+}
+
+.lead {
+  font-size: 20px;
+  color: #111111;
+  line-height: 1.5;
+  max-width: 580px;
+  margin: 0 ;
+  text-align: left;
+  font-weight: 400;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+
+@media (max-width: 840px) {
+  .landing-container {
+    flex-direction: column;
+    margin: 36px 16px;
+  }
+
+  .brand {
+    font-size: 40px;
+    text-align: center;
+  }
+
+  .lead {
+    text-align: center;
+  }
+
+  .top-nav {
+    right: 12px;
+    top: 12px;
+  }
+
+  .hero-card img {
+    max-width: 100%;
+  }
+}
