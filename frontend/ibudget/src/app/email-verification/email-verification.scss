@@ -1,0 +1,23 @@
+$auth-background-color: #c9cefa;
+$dark-box-shadow: 2px 2px 3px #434548;
+$message-bg-color: white;
+
+.main-container {
+  height: 100%;
+  width: 100%;
+  background-color: $auth-background-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.message-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+  border-radius: 10px;
+  background-color: $message-bg-color;
+  box-shadow: $dark-box-shadow;
+}
