@@ -1,5 +1,6 @@
 import { CommonModule, } from '@angular/common';
 import { Component, signal, inject  } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -12,6 +13,7 @@ import {
     imports: [
     ReactiveFormsModule,
     CommonModule,
+    RouterLink
   ],
   templateUrl: './sign-up.html',
   styleUrl: './sign-up.scss'
@@ -25,19 +27,19 @@ export class SignUp {
 
   constructor() {
     this.signupForm = this.fb.group({
-      username: ['', { 
+      username: ['', {
         validators: [Validators.required, Validators.minLength(3)]
       }],
-      email: ['', { 
+      email: ['', {
         validators: [Validators.required, Validators.email]
       }],
-      password: ['', { 
+      password: ['', {
         validators: [Validators.required, Validators.minLength(6)]
       }],
       confirmPassword: ['', {
-        validators: [Validators.required] 
+        validators: [Validators.required]
       }]
-    }, { 
+    }, {
       validators: this.passwordMatchValidator
     });
   }
@@ -52,8 +54,8 @@ export class SignUp {
   private passwordMatchValidator(control: AbstractControl) {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
-    
-    if (password && confirmPassword && 
+
+    if (password && confirmPassword &&
         password.value !== confirmPassword.value) {
       return { passwordMismatch: true };
     }
@@ -67,7 +69,7 @@ export class SignUp {
   get email() {
     return this.signupForm.get('email');
   }
-  
+
   get password() {
     return this.signupForm.get('password');
   }
