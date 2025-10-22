@@ -1,0 +1,94 @@
+<div class="main-container">
+  <div class="setup-acc-container">
+    <div>
+      <h2>Setup your account</h2>
+    </div>
+
+    <form [formGroup]="setupAccountForm">
+      <div class="first-row">
+        <div class="form-input">
+          <label for="first_name">First Name</label>
+          <input 
+            id="first_name" 
+            class="form-control"
+            formControlName="firstName" 
+            type="text" 
+            placeholder="John"
+            (input)="checkFields()"/>
+            
+          @if(firstName?.touched) {
+            @if(firstName?.errors?.['required']) {
+              <div class="text-danger">First name is required.</div>
+            }
+          }
+        </div>
+
+        <div class="form-input">
+          <label for="last_name">Last Name</label>
+          <input 
+            id="last_name" 
+            class="form-control"
+            formControlName="lastName" 
+            type="text" 
+            placeholder="Doe"
+            (input)="checkFields()"/>
+
+          @if(lastName?.touched) {
+            @if(lastName?.errors?.['required']) {
+              <div class="text-danger">Last name is required.</div>
+            }
+          }
+        </div>
+      </div>
+
+      <div class="form-input">
+        <label for="middle_name">Middle Name</label>
+        <input 
+          id="middle_name" 
+          class="form-control"
+          formControlName="middleName" 
+          type="text" 
+          placeholder="(optional)"/>
+      </div>
+
+      <div class="third-row">
+        <div class="form-input">
+          <label for="birthdate">Birthdate</label>
+          <input 
+            id="birthdate" 
+            class="form-control"
+            formControlName="birthdate" 
+            type="date" 
+            placeholder="Birthdate"
+            (input)="checkFields()"/>
+
+          @if(birthdate?.touched) {
+            @if(birthdate?.errors?.['required']) {
+              <div class="text-danger">Birthdate is required.</div>
+            }
+          }
+        </div>
+
+        <div class="form-input">
+          <label for="gender">Gender</label>
+          <select class="form-select" id="gender" formControlName="gender" (change)="checkFields()">
+            <option value="" selected disabled>Gender</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+            <option value="N/A">Rather not say</option>
+          </select>
+
+          @if(gender?.touched) {
+            @if(gender?.errors?.['required']) {
+              <div class="text-danger">Gender is required.</div>
+            }
+          }
+        </div>
+      </div>
+      
+      <div class="continue-btn-container">
+        <button class="btn btn-primary" [disabled]="isDisabled()">Continue</button>
+      </div>
+    </form>
+  </div>
+</div>

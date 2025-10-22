@@ -1,10 +1,9 @@
 import { Component, signal } from '@angular/core';
-import { LandingPage } from './landing-page/landing-page';
-import { SignUp } from './sign-up/sign-up';
+import { SetupAccount } from "./setup-account/setup-account";
 
 @Component({
   selector: 'app-root',
-  imports: [SignUp],
+  imports: [SetupAccount],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
