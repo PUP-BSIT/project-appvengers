@@ -1,6 +1,18 @@
+$background-color: #c9cefa;
+$background-shadow: rgba(0, 0, 0, 0.1);
+$bg-color-btn: #3B82F6;
+$text-color-button: white;
+$bg-color-btn-hover: #2563eb;
+$box-shadow: rgba(59, 130, 246, 0.3);
+$hero-bg-color: rgba(255, 255, 255, 0.1);
+$hero-card-bg: rgba(0, 0, 0, 0.1);
+$hero-card-hover: rgba(0, 0, 0, 0.15);
+$text-color: #111;
+$lead-text-color: #3a3a3a;
+
 .landing-root {
   min-height: 100vh;
-  background-color: #c9cefa;
+  background-color: $background-color;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -10,8 +22,8 @@
 // Navigation
 .top-nav {
   padding: 1rem 0;
-  background: #c9cefa;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: $background-color;
+  box-shadow: 0 2px 10px $background-shadow;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -23,19 +35,19 @@
 
 // Buttons
 .go-to {
-  background-color: #3B82F6;
-  border-color: #3B82F6;
-  color: white;
+  background-color: $bg-color-btn;
+  border-color: $bg-color-btn;
+  color: $text-color-button;
   padding: 0.75rem 2rem;
   font-weight: 600;
   border-radius: 8px;
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: #2563eb;
-    border-color: #2563eb;
+    background-color: $bg-color-btn-hover;
+    border-color: $bg-color-btn-hover;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 12px $box-shadow;
   }
 
   &:active {
@@ -44,19 +56,19 @@
 }
 
 .about {
-  color: white;
-  border-color: #3B82F6;
-  background-color: #3B82F6;
+  color: $text-color-button;
+  border-color: $bg-color-btn;
+  background-color: $bg-color-btn;
   padding: 0.75rem 2rem;
   font-weight: 600;
   border-radius: 8px;
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: #2563eb;
-    border-color: #2563eb;
+    background-color: $bg-color-btn-hover;
+    border-color: $bg-color-btn-hover;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 4px 12px $box-shadow;
   }
 
   &:active {
@@ -85,7 +97,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.1);
+  background: $hero-bg-color;
   border-radius: 20px;
   z-index: 1;
 }
@@ -94,14 +106,14 @@
 .hero-card {
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px $hero-card-bg;
   border: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   background: transparent;
 
   &:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 20px 40px $hero-card-hover;
   }
 
   .card-img-top {
@@ -122,7 +134,7 @@
   padding-left: 3rem;
 
   .brand {
-    color: #111;
+    color: $text-color;
     margin-bottom: 1.5rem;
     font-weight: 800;
     letter-spacing: -0.5px;
@@ -130,7 +142,7 @@
   }
 
   .lead {
-    color: #3a3a3a;
+    color: $lead-text-color;
     line-height: 1.7;
     margin-bottom: 2.5rem;
     font-size: 1.5rem;
@@ -146,7 +158,7 @@
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 20px $hero-card-hover;
   }
 }
 
