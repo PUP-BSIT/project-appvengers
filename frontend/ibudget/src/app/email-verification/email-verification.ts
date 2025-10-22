@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-email-verification',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './email-verification.html',
   styleUrl: './email-verification.scss'
 })
