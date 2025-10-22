@@ -4,6 +4,7 @@ $container-bg-color: white;
 $purple-border-color: rgba(193, 110, 248, 0.25);
 $btn-color: #C16EF8;
 $hovered-btn-color: #873eb8;
+$disabled-btn: #c16ef8d6;
 
 .main-container {
   height: 100%;
@@ -84,6 +85,16 @@ label {
 
     &:hover {
       background-color: $hovered-btn-color;
+      transition: background-color 0.5s;
+    }
+
+    &:active {
+      background-color: $btn-color;
+      transition: background-color 0.5s;
+    }
+
+    &:disabled {
+      background-color: $disabled-btn;
       transition: background-color 0.5s;
     }
   }
