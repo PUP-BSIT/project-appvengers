@@ -7,6 +7,6 @@ import { SetupAccount } from './setup-account/setup-account';
 export const routes: Routes = [
   {path: '', component: LandingPage},
   {path: 'signup-page', component: SignUp},
-  {path: 'email-verification', component: EmailVerification}
+  {path: 'email-verification', component: EmailVerification},
   {path: 'setup-account', component: SetupAccount}
 ];
