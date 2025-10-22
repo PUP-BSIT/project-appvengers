@@ -69,9 +69,9 @@
           }
         </div>
 
-        <div class="form-input" (change)="checkFields()">
+        <div class="form-input">
           <label for="gender">Gender</label>
-          <select class="form-select" id="gender" formControlName="gender">
+          <select class="form-select" id="gender" formControlName="gender" (change)="checkFields()">
             <option value="" selected disabled>Gender</option>
             <option value="Female">Female</option>
             <option value="Male">Male</option>
