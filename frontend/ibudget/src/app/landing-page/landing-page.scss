@@ -1,137 +1,249 @@
 .landing-root {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #c9cefa;
-  box-sizing: border-box;
-  font-family: "Patua One", Arial, sans-serif;
   min-height: 100vh;
+  background-color: #c9cefa;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+// Navigation
 .top-nav {
-  position: absolute;
-  right: 24px;
-  top: 16px;
-  display: flex;
-  gap: 12px;
-  z-index: 10;
+  padding: 1rem 0;
+  background: #c9cefa;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  .container-fluid {
+    padding: 0 1rem;
+  }
 }
 
+// Buttons
 .go-to {
-  height: 40px;
-  font-size: 1rem;
-  font-weight: 500;
-  margin-top: 0.5rem;
-  background: #3B82F6 !important;
-  color: white !important;
-  border: none;
+  background-color: #3B82F6;
+  border-color: #3B82F6;
+  color: white;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
   border-radius: 8px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
 .about {
-  height: 40px;
-  font-size: 1rem;
-  font-weight: 500;
-  margin-top: 0.5rem;
-  background: #3B82F6 !important;
-  color: white !important;
-  border: none;
+  color: white;
+  border-color: #3B82F6;
+  background-color: #3B82F6;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
   border-radius: 8px;
-}
+  transition: all 0.3s ease;
 
-.landing-container {
-  max-width: 1200px;
-  margin: 80px auto 40px;
-  display: flex;
-  align-items: center;
-  gap: 64px;
-  padding: 12px;
-  justify-content: center;
-  align-items: center;
-}
-
-.hero-left {
-  flex: 1;
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.hero-card {
-  padding: 20px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.55);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  width: 100%;
-}
-
-.hero-card img {
-  width: auto;
-  max-width: 900px;
-  height: auto;
-  display: block;
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 12px;
-  background: white;
-  margin: 0;
-}
-
-.hero-right {
-  flex: 1 1 50%;
-  padding: 20px;
-}
-
-.brand {
-  font-size: 58px;
-  margin: 0 0 50px 0;
-  font-weight: 800;
-  color: #111;
-  letter-spacing: -1px;
-  text-align: center;
-}
-
-.lead {
-  font-size: 20px;
-  color: #111111;
-  line-height: 1.5;
-  max-width: 580px;
-  margin: 0 ;
-  text-align: left;
-  font-weight: 400;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-
-@media (max-width: 840px) {
-  .landing-container {
-    flex-direction: column;
-    margin: 36px 16px;
+  &:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
   }
 
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Main content
+.landing-container {
+  padding: 3rem 0;
+
+  .min-vh-75 {
+    min-height: 75vh;
+  }
+}
+
+// Hero card with image container
+.hero-image-container {
+  position: relative;
+  padding: 2rem;
+}
+
+.hero-background-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  z-index: 1;
+}
+
+// Hero card with image
+.hero-card {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: transparent;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-img-top {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover .card-img-top {
+    transform: scale(1.02);
+  }
+}
+
+// Brand and text content
+.hero-right {
+  padding-left: 3rem;
+
   .brand {
-    font-size: 40px;
+    color: #111;
+    margin-bottom: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
     text-align: center;
   }
 
   .lead {
+    color: #3a3a3a;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    font-size: 1.5rem;
+  }
+}
+
+// Additional CTA buttons
+.btn-lg {
+  padding: 0.875rem 2.5rem;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Responsive design
+@media (max-width: 992px) {
+  .hero-right {
+    padding-left: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-container {
+    padding: 2rem 0;
+  }
+
+  .hero-right {
+    padding-left: 0;
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .brand {
+    font-size: 2.8rem;
     text-align: center;
   }
 
-  .top-nav {
-    right: 12px;
-    top: 12px;
+  .lead {
+    font-size: 1.1rem;
+    text-align: center;
   }
 
-  .hero-card img {
-    max-width: 100%;
+  .hero-card {
+    margin: 0 auto;
+    max-width: 500px;
+    
+    &:hover {
+      transform: none;
+    }
   }
+
+  .top-nav {
+    .ms-auto {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+  }
+
+  .btn {
+    padding: 0.6rem 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .brand {
+    font-size: 2.3rem;
+  }
+
+  .lead {
+    font-size: 1rem;
+  }
+
+  .top-nav {
+    .ms-auto {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      width: 100%;
+      margin: 0.25rem 0;
+    }
+  }
+
+  .btn-lg {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+}
+
+// Animation for page load
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-card,
+.hero-right {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.hero-right {
+  animation-delay: 0.2s;
 }
