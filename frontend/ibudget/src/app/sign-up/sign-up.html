@@ -1,0 +1,122 @@
+<div [formGroup]="signupForm" (ngSubmit)="onSignup()" class="login-container">
+  <div class="card login-card">
+    <div class="card-body">
+      <!-- Header -->
+      <div class="login-header text-center mb-4">
+        <div class="title-container">
+          <img
+            src="/assets/images/ibudget.png"
+            alt="iBudget Logo"
+            class="app-logo mb-3">
+          <h1 class="app-title">Sign Up</h1>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form class="login-form">
+        <!-- Username Field -->
+        <div class="mb-3">
+          <label for="username" class="form-label">
+            Username
+          </label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              formControlName="username"
+              placeholder="Choose a username">
+            <span class="input-group-text">
+              <i class="bi bi-person"></i>
+            </span>
+          </div>
+          @if(username?.hasError('required') && username?.touched) {
+            <div class="text-danger small mt-1">
+              Username is required
+            </div>
+          }
+          @if(username?.hasError('minlength') && username?.touched) {
+            <div class="text-danger small mt-1">
+              Username must be at least 12 characters
+            </div>
+          }
+        </div>
+
+        <!-- Email Field -->
+        <div class="mb-3">
+          <label for="email" class="form-label">
+            Email
+          </label>
+          <div class="input-group">
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              formControlName="email"
+              placeholder="Enter your email">
+            <span class="input-group-text">
+              <i class="bi bi-envelope"></i>
+            </span>
+          </div>
+          @if(email?.hasError('required') && email?.touched) {
+            <div class="text-danger small mt-1">
+              Email is required
+            </div>
+          }
+          @if(email?.hasError('email') && email?.touched) {
+            <div class="text-danger small mt-1">
+              Please enter a valid email
+            </div>
+          }
+        </div>
+
+        <!-- Password Field -->
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <input
+              [type]="hidePassword() ? 'password' : 'text'"
+              class="form-control"
+              id="password"
+              formControlName="password"
+              placeholder="Create a password">
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              (click)="hidePassword.set(!hidePassword())">
+              <i
+                class="bi" [class.bi-eye]="!hidePassword()"
+                [class.bi-eye-slash]="hidePassword()"></i>
+            </button>
+          </div>
+
+          @if(password?.hasError('required') && password?.touched) {
+            <div class="text-danger small mt-1">
+              Password is required
+            </div>
+          }
+          @if(password?.hasError('minlength') && password?.touched) {
+            <div class="text-danger small mt-1">
+              Password must be at least 12 characters
+            </div>
+          }
+        </div>
+
+        <button
+          type="submit"
+          class="btn login-button w-100" routerLink="/email-verification">
+            Create Account
+        </button>
+      </form>
+
+      <!-- Signup Link -->
+      <div class="signup-section text-center mt-4">
+        <div class="signup-text">
+          <span>Already have an account? </span>
+          <a class="signup-link text-decoration-none" 
+            routerLink="/login-page">Login Here.</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
