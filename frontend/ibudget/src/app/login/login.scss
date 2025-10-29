@@ -1,0 +1,27 @@
+.main-container {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;    
+  justify-content: center; 
+  background-color: #DFE2FF;
+  height: 100vh;                     
+}
+
+.main-form{
+    display: flex;
+    flex-direction: column;
+    padding: 60px;
+    gap: 10px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.custom-input {
+    width: 400px;
+    background-color: rgb(243, 240, 240);
+}
+
+.custom-title {
+    font-family: 'Patua One', sans-serif;
+    font-size: 60px;
+}

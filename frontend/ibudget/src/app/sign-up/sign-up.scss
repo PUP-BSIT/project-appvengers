@@ -1,9 +1,25 @@
+$background-color: #c9cefa;
+$background-shadow: rgba(0, 0, 0, 0.1);
+$text-color: #333;
+$text-color-signup: #666;
+$text-color-title: black;
+$text-color-button: white;
+$border-color: #ddd;
+$border-color-input: #C16EF8;
+$box-shadow-hover: rgba(193, 110, 248, 0.25);
+$input-group-text: #f8f9fa;
+$button-hover-bg: #b45ef2;
+$disable-bg: #d9b4fa;
+$disable-text-color: #e5e7eb;
+$link-color: #3f51b5;
+$link-color-hover: #283593;
+
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #c9cefa;
+  background: $background-color;
   padding: 20px;
   overflow: hidden;
   box-sizing: border-box;
@@ -13,7 +29,7 @@
   width: 100%;
   max-width: 500px;
   padding: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px $background-shadow;
   border-radius: 12px;
   margin: auto;
   border: none;
@@ -44,7 +60,7 @@
 .app-title {
   font-size: 2rem;
   font-weight: 700;
-  color: black;
+  color: $text-color-title;
   margin: 0;
   letter-spacing: -0.5px;
 }
@@ -58,26 +74,26 @@
 
 .form-label {
   font-weight: 600;
-  color: #333;
+  color: $text-color;
   margin-bottom: 0.5rem;
 }
 
 .form-control {
   border-radius: 8px;
-  border: 1px solid #ddd;
+  border: 1px solid $border-color;
   padding: 0.75rem;
   font-size: 1rem;
   transition: all 0.3s ease;
 
   &:focus {
-    border-color: #C16EF8;
-    box-shadow: 0 0 0 0.2rem rgba(193, 110, 248, 0.25);
+    border-color: $border-color-input;
+    box-shadow: 0 0 0 0.2rem $box-shadow-hover;
   }
 }
 
 .input-group-text {
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
+  background-color: $input-group-text;
+  border: 1px solid $border-color;
   border-left: none;
 }
 
@@ -86,14 +102,14 @@
   font-size: 1rem;
   font-weight: 600;
   margin-top: 0.5rem;
-  background-color: #C16EF8 !important;
-  color: white !important;
+  background-color: $border-color-input !important;
+  color: $text-color-button !important;
   border: none;
   border-radius: 8px;
   transition: all 0.3s ease;
   
   &:hover:not(:disabled) {
-    background-color: #b45ef2 !important;
+    background-color: $button-hover-bg !important;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(193, 110, 248, 0.3);
   }
@@ -103,8 +119,8 @@
   }
   
   &:disabled {
-    background-color: #d9b4fa !important;
-    color: #e5e7eb !important;
+    background-color: $disable-bg !important;
+    color: $disable-text-color !important;
     transform: none;
     box-shadow: none;
   }
@@ -118,18 +134,18 @@
 .signup-text {
   text-align: center;
   font-size: 0.95rem;
-  color: #666;
+  color: $text-color-signup;
 }
 
 .signup-link {
-  color: #3f51b5;
+  color: $link-color;
   text-decoration: none;
   cursor: pointer;
   font-weight: 600;
   transition: color 0.3s ease;
 
   &:hover {
-    color: #283593;
+    color: $link-color-hover;
     text-decoration: underline;
   }
 }

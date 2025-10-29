@@ -71,7 +71,7 @@
 
         <div class="form-input">
           <label for="gender">Gender</label>
-          <select class="form-select" id="gender" formControlName="gender" (change)="checkFields()">
+          <select class="form-select" id="gender" formControlName="gender">
             <option value="" selected disabled>Gender</option>
             <option value="Female">Female</option>
             <option value="Male">Male</option>
@@ -87,7 +87,7 @@
       </div>
       
       <div class="continue-btn-container">
-        <button class="btn btn-primary" [disabled]="isDisabled()">Continue</button>
+        <button class="btn btn-primary">Continue</button>
       </div>
     </form>
   </div>
