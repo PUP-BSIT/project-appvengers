@@ -7,6 +7,7 @@ import { SetupAccount } from './setup-account/setup-account';
 import { Dashboard } from './dashboard/dashboard';
 import { Budgets } from './budgets/budgets';
 import { Transactions } from './transactions/transactions';
+import { Categories } from './categories/categories';
 
 export const routes: Routes = [
   {path: '', component: Dashboard},
@@ -16,5 +17,6 @@ export const routes: Routes = [
   {path: 'setup-account', component: SetupAccount},
   {path: 'dashboard', component: Dashboard },
   {path: 'transactions', component: Transactions},
-  {path: 'budgets', component: Budgets}
+  {path: 'budgets', component: Budgets},
+  {path: 'categories', component: Categories}
 ];
