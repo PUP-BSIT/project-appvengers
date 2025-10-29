@@ -10,7 +10,7 @@ import { Transactions } from './transactions/transactions';
 import { Categories } from './categories/categories';
 
 export const routes: Routes = [
-  {path: '', component: Dashboard},
+  {path: '', component: LandingPage},
   {path: 'login-page', component: Login},
   {path: 'signup-page', component: SignUp},
   {path: 'email-verification', component: EmailVerification},
