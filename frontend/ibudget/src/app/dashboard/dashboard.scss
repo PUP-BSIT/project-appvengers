@@ -32,7 +32,10 @@ main {
   grid-area: item2;
 }
 
-.history-container {
+.history-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   grid-area: item3;
 }
 
