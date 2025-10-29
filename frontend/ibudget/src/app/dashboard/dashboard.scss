@@ -6,9 +6,13 @@ main {
   padding: 10px;
   background-color: $background-color;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  display: grid;
+  grid-template-areas: 
+  "item1 item1"
+  "item2 item3";
+  // flex-direction: column;
+  // justify-content: center;
+  // align-items: flex-start;
 }
 
 .card {
@@ -16,6 +20,20 @@ main {
   height: 12em;
   max-height: 12em;
   box-shadow: 5px 4px $card-drop-shadow;
+  grid-area: item1;
+  margin: auto;
+}
+
+.chart-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  grid-area: item2;
+}
+
+.history-container {
+  grid-area: item3;
 }
 
 .card-body {
