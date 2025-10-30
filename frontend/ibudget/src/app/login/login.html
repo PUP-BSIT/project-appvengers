@@ -1,37 +1,64 @@
-<div class="main-container">
-  <!-- Main Input Form -->
-  <form class="main-form">
-    <!-- Title -->
-    <div class="d-flex align-items-center gap-2">
-      <img src="/assets/images/ibudget_icon.png" alt="Logo"
-        class="img-fluid mb-2"
-        style="max-width: 140px;">
-      <h1 class="text-center fw-bold custom-title">iBudget</h1>
-    </div>
+<div class="login-container">
+  <div class="card login-card">
+    <div class="card-body">
+      <!-- Header -->
+      <div class="login-header text-center mb-4">
+        <div class="text-center">
+          <h1 class="fw-bold custom-title">Login</h1>
+        </div>
+      </div>
 
-    <!-- Email Input -->
-    <div class="mb-3">
-      <label for="exampleFormControlInput1" class="form-label fs-5 fw-semibold">
-        Email</label>
-      <input class="form-control form-control-lg  custom-input" type="email"
-        placeholder="name@example.com"
-        aria-label=".form-control-lg example">
-    </div>
+      <!-- Form -->
+      <form class="login-form">
+        <!-- Email Field -->
+        <div class="mb-3">
+          <label for="email" class="form-label">
+            Email
+          </label>
+          <div class="input-group">
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              placeholder="name@example.com">
+            <span class="input-group-text">
+              <i class="bi bi-envelope"></i>
+            </span>
+          </div>
+        </div>
 
-    <!-- Password Input -->
-    <div class="mb-3">
-      <label for="exampleFormControlInput1" class="form-label fs-5 fw-semibold">
-        Password</label>
-      <input class="form-control form-control-lg custom-input" type="password"
-        placeholder="password"
-        arial-label=".form-control-lg example">
-    </div>
+        <!-- Password Field -->
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              placeholder="password">
+            <button
+              class="btn btn-outline-secondary"
+              type="button">
+              <i class="bi bi-eye-slash"></i>
+            </button>
+          </div>
+        </div>
 
-    <span class="text-center">
-      No Account?
-      <button type="button" class="btn btn-link" 
-        routerLink="/signup-page">Sign Up Here</button>
-    </span>
-    <button type="button" class="btn btn-success">Login</button>
-  </form>
+        <button
+          type="button"
+          class="btn login-button w-100">
+            Login
+        </button>
+      </form>
+
+      <!-- Signup Link -->
+      <div class="signup-section text-center mt-4">
+        <div class="signup-text">
+          <span>Don't have an account? </span>
+          <a class="signup-link text-decoration-none"
+            routerLink="/signup-page">Sign Up Here.</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
