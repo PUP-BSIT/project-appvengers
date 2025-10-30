@@ -1,4 +1,10 @@
+
+$background-color: #c9cefa;
+$sidebar-width: 100px;
+
 .budgets-container {
-  margin-left: 250px;
+  margin-left: $sidebar-width;
   padding: 10px;
+  height: 100%;
+  background-color: $background-color;
 }
