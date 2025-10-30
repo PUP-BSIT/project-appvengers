@@ -1,0 +1,50 @@
+$background-color: #c9cefa;
+$card-drop-shadow: #00000040;
+
+main {
+  margin-left: 250px;
+  padding: 10px;
+  background-color: $background-color;
+  height: 100%;
+  display: grid;
+  grid-template-areas: 
+  "item1 item1"
+  "item2 item3";
+}
+
+.card {
+  width: 95%;
+  height: 12em;
+  max-height: 12em;
+  box-shadow: 5px 4px $card-drop-shadow;
+  grid-area: item1;
+  margin: auto;
+}
+
+.chart-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  grid-area: item2;
+}
+
+.history-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-area: item3;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 30px;
+}
+
+.budget-num-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
