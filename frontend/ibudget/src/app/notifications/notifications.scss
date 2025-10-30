@@ -1,4 +1,6 @@
+$sidebar-width: 100px;
+
 .notifications-container {
-  margin-left: 250px;
+  margin-left: $sidebar-width;
   padding: 10px;
 }
