@@ -1,19 +1,19 @@
 $header-bg: #ffffff;
 $header-margin-left: 100px;
-$header-margin-right: 30px;
 $border-color: #d3d3d3;
 $icon-hovered-color: #0034e0;
+$card-drop-shadow: #00000040;
 
 .header-container {
   height: 70px;
   background-color: $header-bg;
-  display: flex;;
+  display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 3vw;
   padding: 0 20px;
   margin-left: $header-margin-left;
-  margin-right: $header-margin-right;
+  border-bottom: $border-color 1px solid;
 }
 
 .about-nav {
