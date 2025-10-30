@@ -7,6 +7,7 @@
   $logo-text-color: #2c3e50;
   $nav-link-color: white;
   $nav-bg-hover: #f0f5ff;
+  $logo-bg-color: #222831;
 
 .sidebar {
   width: $sidebar-width;
@@ -27,6 +28,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 70px;
+  background-color: $logo-bg-color;
 }
 
 .logo-container {
