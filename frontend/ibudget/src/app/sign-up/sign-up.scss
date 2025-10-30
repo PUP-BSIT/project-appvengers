@@ -150,6 +150,11 @@ $link-color-hover: #283593;
   }
 }
 
+.custom-title {
+    font-family: 'Patua One', sans-serif;
+    font-size: 50px;
+}
+
 @keyframes slowBounce {
   0%, 100% {
     transform: translateY(0);
