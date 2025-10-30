@@ -1,0 +1,45 @@
+$header-bg: #ffffff;
+$header-margin-left: 100px;
+$header-margin-right: 30px;
+$border-color: #d3d3d3;
+$icon-hovered-color: #0034e0;
+
+.header-container {
+  height: 70px;
+  background-color: $header-bg;
+  display: flex;;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 3vw;
+  padding: 0 20px;
+  margin-left: $header-margin-left;
+  margin-right: $header-margin-right;
+}
+
+.about-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  border-right: 1px solid $border-color;
+
+  i {
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+    font-weight: 400;
+  }
+}
+
+.bi {
+  padding: 5px;
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+    color: $icon-hovered-color;
+    transform: scale(1.2);
+  }
+}
