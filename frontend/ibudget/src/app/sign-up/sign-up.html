@@ -4,7 +4,7 @@
       <!-- Header -->
       <div class="login-header text-center mb-4">
         <div class="title-container">
-          <img 
+          <img
             src="/assets/images/ibudget.png"
             alt="iBudget Logo"
             class="app-logo mb-3">
@@ -20,8 +20,8 @@
             Username
           </label>
           <div class="input-group">
-            <input 
-              type="text" 
+            <input
+              type="text"
               class="form-control"
               id="username"
               formControlName="username"
@@ -48,8 +48,8 @@
             Email
           </label>
           <div class="input-group">
-            <input 
-              type="email" 
+            <input
+              type="email"
               class="form-control"
               id="email"
               formControlName="email"
@@ -74,17 +74,17 @@
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
           <div class="input-group">
-            <input 
+            <input
               [type]="hidePassword() ? 'password' : 'text'"
               class="form-control"
               id="password"
               formControlName="password"
               placeholder="Create a password">
-            <button 
-              class="btn btn-outline-secondary" 
+            <button
+              class="btn btn-outline-secondary"
               type="button"
               (click)="hidePassword.set(!hidePassword())">
-              <i 
+              <i
                 class="bi" [class.bi-eye]="!hidePassword()"
                 [class.bi-eye-slash]="hidePassword()"></i>
             </button>
@@ -104,7 +104,7 @@
 
         <button
           type="submit"
-          class="btn login-button w-100">
+          class="btn login-button w-100" routerLink="/email-verification">
             Create Account
         </button>
       </form>
@@ -113,7 +113,8 @@
       <div class="signup-section text-center mt-4">
         <div class="signup-text">
           <span>Already have an account? </span>
-          <a class="signup-link text-decoration-none">Login Here.</a>
+          <a class="signup-link text-decoration-none" 
+            routerLink="/login-page">Login Here.</a>
         </div>
       </div>
     </div>
