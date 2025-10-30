@@ -1,6 +1,6 @@
 import { CommonModule, } from '@angular/common';
 import { Component, signal, inject  } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -23,6 +23,7 @@ export class Login {
   submitted = signal(false);
 
   fb = inject(FormBuilder);
+  router = inject(Router);
 
   constructor() {
     this.loginForm = this.fb.group({
@@ -38,7 +39,9 @@ export class Login {
   onLogin(): void {
     this.submitted.set(true);
     if (this.loginForm.valid) {
-      console.log("Login data:", this.loginForm.value);
+      console.log(this.loginForm.value);
+      // Navigate to dashboard or home page after successful login
+      this.router.navigate(['/dashboard']);
     }
   }
 
