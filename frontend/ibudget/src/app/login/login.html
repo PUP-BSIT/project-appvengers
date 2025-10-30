@@ -9,7 +9,7 @@
       </div>
 
       <!-- Form -->
-      <form class="login-form">
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
         <!-- Email Field -->
         <div class="mb-3">
           <label for="email" class="form-label">
@@ -20,11 +20,22 @@
               type="email"
               class="form-control"
               id="email"
-              placeholder="name@example.com">
+              formControlName="email"
+              placeholder="Enter your email">
             <span class="input-group-text">
               <i class="bi bi-envelope"></i>
             </span>
           </div>
+          @if(email?.hasError('required') && email?.touched) {
+            <div class="text-danger small mt-1">
+              Email is required
+            </div>
+          }
+          @if(email?.hasError('email') && email?.touched) {
+            <div class="text-danger small mt-1">
+              Please enter a valid email
+            </div>
+          }
         </div>
 
         <!-- Password Field -->
@@ -32,20 +43,29 @@
           <label for="password" class="form-label">Password</label>
           <div class="input-group">
             <input
-              type="password"
+              [type]="hidePassword() ? 'password' : 'text'"
               class="form-control"
               id="password"
-              placeholder="password">
+              formControlName="password"
+              placeholder="Enter your password">
             <button
               class="btn btn-outline-secondary"
-              type="button">
-              <i class="bi bi-eye-slash"></i>
+              type="button"
+              (click)="hidePassword.set(!hidePassword())">
+              <i
+                class="bi" [class.bi-eye]="!hidePassword()"
+                [class.bi-eye-slash]="hidePassword()"></i>
             </button>
           </div>
+          @if(password?.hasError('required') && password?.touched) {
+            <div class="text-danger small mt-1">
+              Password is required
+            </div>
+          }
         </div>
 
         <button
-          type="button"
+          type="submit"
           class="btn login-button w-100">
             Login
         </button>
