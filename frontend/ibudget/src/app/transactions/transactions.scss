@@ -481,8 +481,12 @@ $sidebar-width: 100px;
   .success-icon {
     font-size: 2.5rem;
   }
-  min-height: 100vh;
-  color: #333;
+
+  .transactions-container {
+    margin-left: $sidebar-width;
+    min-height: 100vh;
+    color: #333;
+  }
 }
 
 .header-actions {
