@@ -2,5 +2,73 @@
 <app-header></app-header>
 
 <main class="notifications-container">
-  <p>notifications page coming soon!</p>
+  <div class="notifications-header">
+    <button class="btn-mark-all" (click)="markAllAsRead()">
+      <i class="fas fa-check-double"></i>
+        Mark all as read
+    </button>
+  </div>
+
+  <div class="notifications-content">
+    <div class="notifications-list">
+      @for (notification of notifications; track notification.id) {
+        <div 
+          class="notification-item"
+          [class.unread]="!notification.read"
+          [class]="getNotificationColor(notification.type)">
+          
+          <div class="notification-icon">
+            <i [class]="getNotificationIcon(notification.type)"></i>
+          </div>
+          
+          <div class="notification-content">
+            <h3 class="notification-title">{{ notification.title }}</h3>
+            <span class="notification-date">{{ notification.date }}</span>
+
+            <div class="notification-meta">
+              @if (notification.category) {
+                <div class="notification-category">
+                  <span class="category-tag">{{ notification.category }}</span>
+                </div>
+              }
+
+              @if (notification.amount) {
+                <div class="notification-amount">
+                  <i class="fas fa-money-bill-wave"></i>
+                  {{ notification.amount | currency:'PHP' }}
+                </div>
+              }
+            </div>
+
+            <p class="notification-message">{{ notification.message }}</p>
+          </div>
+          
+          <div class="notification-actions">
+            @if (!notification.read) {
+              <button 
+                class="btn-mark-read"
+                (click)="markAsRead(notification)"
+                title="Mark as read">
+                <i class="fas fa-check"></i>
+              </button>
+            }
+            <button 
+              class="btn-delete"
+              (click)="deleteNotification(notification.id)"
+              title="Delete notification">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      }
+      
+      @if (notifications.length === 0) {
+        <div class="no-notifications">
+          <i class="fas fa-bell-slash"></i>
+          <h3>No notifications</h3>
+          <p>You're all caught up! New notifications will appear here.</p>
+        </div>
+      }
+    </div>
+  </div>
 </main>
