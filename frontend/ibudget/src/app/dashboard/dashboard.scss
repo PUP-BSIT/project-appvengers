@@ -1,8 +1,9 @@
 $background-color: #c9cefa;
 $card-drop-shadow: #00000040;
+$page-margin-left: 100px;
 
 main {
-  margin-left: 250px;
+  margin-left: $page-margin-left;
   padding: 10px;
   background-color: $background-color;
   height: 100%;
