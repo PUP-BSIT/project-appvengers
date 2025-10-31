@@ -41,6 +41,16 @@ $link-color-hover: #283593;
   padding: 0;
 }
 
+.custom-title {
+    font-family: 'Patua One', sans-serif;
+    font-size: 50px;
+
+    img {
+        width: 150px;
+        height: auto;
+    }
+}
+
 .title-container {
   display: flex;
   flex-direction: column;
