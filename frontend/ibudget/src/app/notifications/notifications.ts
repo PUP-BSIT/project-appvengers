@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
 import { Notification } from '../model/user_model';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgClass } from '@angular/common';
 import { NotificationService } from '../../services/notification';
 
 @Component({
   selector: 'app-notifications',
-  imports: [Sidebar, Header, CurrencyPipe],
+  imports: [Sidebar, Header, CurrencyPipe, NgClass],
   templateUrl: './notifications.html',
   styleUrl: './notifications.scss',
 })

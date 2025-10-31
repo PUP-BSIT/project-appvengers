@@ -12,13 +12,13 @@
   <div class="notifications-content">
     <div class="notifications-list">
       @for (notification of notifications; track notification.id) {
-        <div 
+        <div
           class="notification-item"
-          [class.unread]="!notification.read"
-          [class]="getNotificationColor(notification.type)">
+          [ngClass]="{'unread': !notification.read}"
+          [ngClass]="getNotificationColor(notification.type)">
           
           <div class="notification-icon">
-            <i [class]="getNotificationIcon(notification.type)"></i>
+            <i [ngClass]="getNotificationIcon(notification.type)"></i>
           </div>
           
           <div class="notification-content">
