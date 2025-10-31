@@ -6,3 +6,14 @@ export type Transaction = {
   amount: number;
   type: 'income' | 'expense';
 }
+
+export type Notification = {
+  id: number;
+  title: string;
+  message: string;
+  date: string;
+  amount?: number;
+  type: 'warning' | 'info' | 'alert';
+  read: boolean;
+  category?: string;
+}
