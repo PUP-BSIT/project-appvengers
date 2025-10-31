@@ -1,0 +1,26 @@
+$card-drop-shadow: #00000040;
+
+.table-container {
+  height: 350px;
+  width: 400px;
+  overflow-y: auto;
+  box-shadow: 5px 5px $card-drop-shadow;
+  padding: 20px;
+}
+
+.card-title {
+  position: sticky;
+  top: 20px;
+  margin-bottom: 0;
+  z-index: 10;
+  background-color: white;
+  padding-bottom: 10px;
+}
+
+table th {
+  position: sticky;
+  top: 70px;
+  z-index: 5;
+
+}
+

@@ -1,0 +1,27 @@
+<div class="header-container">
+  <div class="about-nav">
+    <p>About</p>
+  </div>
+
+  <div class="notifications-nav">
+    <a
+      class="nav-link"
+      routerLink="/notifications"
+      routerLinkActive="active">
+         <i class="bi bi-bell notification-icon"></i>
+         @if (getUnreadCount() > 0) {
+           <span class="notification-count">{{ getUnreadCount() }}</span>
+         }
+    </a>
+  </div>
+
+  <div class="profile-nav">
+    <a 
+      class="nav-link"
+      routerLink="/dashboard" 
+      routerLinkActive="active">
+        <i class="bi bi-person"></i>
+    </a>
+    
+  </div>
+</div>

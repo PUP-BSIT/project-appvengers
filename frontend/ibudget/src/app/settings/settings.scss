@@ -1,0 +1,9 @@
+$sidebar-width: 100px;
+$background-color: #c9cefa;
+
+.settings-container {
+  margin-left: $sidebar-width;
+  padding: 10px;
+  height: 100%;
+  background-color: $background-color;
+}

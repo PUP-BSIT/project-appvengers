@@ -1,0 +1,99 @@
+<div class="sidebar">
+  <!-- Logo Section -->
+  <div class="logo">
+    <div class="logo-container">
+      <img
+        src="/assets/images/ibudget_logo.png"
+        alt="iBudget Logo"
+        class="logo-image">
+    </div>
+  </div>
+
+  <!-- Navigation Menu -->
+  <div class="nav-menu">
+    <!-- Dashboard -->
+    <div class="nav-item">
+      <a 
+        class="nav-link" 
+        routerLink="/dashboard"
+        routerLinkActive="active">
+        <i class="bi bi-house-door"></i>
+        <span>Dashboard</span>
+      </a>
+    </div>
+    
+    <!-- Transactions -->
+    <div class="nav-item">
+      <a 
+        class="nav-link" 
+        routerLink="/transactions"
+        routerLinkActive="active">
+        <i class="bi bi-arrow-left-right"></i>
+        <span>Transactions</span>
+      </a>
+    </div>
+    
+    <!-- Budgets -->
+    <div class="nav-item">
+      <a 
+        class="nav-link" 
+        routerLink="/budgets"
+        routerLinkActive="active">
+        <i class="bi bi-wallet2"></i>
+        <span>Budgets</span>
+      </a>
+    </div>
+    
+    <!-- Categories -->
+    <div class="nav-item">
+      <a 
+        class="nav-link" 
+        routerLink="/categories"
+        routerLinkActive="active">
+        <i class="bi bi-tags"></i>
+        <span>Categories</span>
+      </a>
+    </div>
+    
+    <!-- Reports -->
+    <div class="nav-item">
+      <a 
+        class="nav-link" 
+        routerLink="/reports"
+        routerLinkActive="active">
+        <i class="bi bi-bar-chart"></i>
+        <span>Reports</span>
+      </a>
+    </div>
+    
+    <!-- Notifications -->
+    <!-- <div class="nav-item">
+      <a 
+        class="nav-link" 
+        routerLink="/notifications"
+        routerLinkActive="active">
+        <i class="bi bi-bell"></i>
+        <span>Notifications</span>
+      </a>
+    </div> -->
+    
+    <!-- Settings -->
+    <div class="nav-item">
+      <a 
+        class="nav-link" 
+        routerLink="/settings"
+        routerLinkActive="active">
+        <i class="bi bi-gear"></i>
+        <span>Settings</span>
+      </a>
+    </div>
+
+    <!-- Logout -->
+    <div class="nav-item">
+      <a class="nav-link" (click)="logout()" routerLink="/login-page">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </div>
+</div>
