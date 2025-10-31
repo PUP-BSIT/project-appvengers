@@ -1,1 +1,20 @@
-<p>categories-panel works!</p>
+<div class="categories-panel-container">
+  <div class="card">
+    <div class="card-header">
+      <h2>Categories Insights</h2>
+    </div>
+
+    <div class="card-body">
+      <select class="form-select mb-3" #categoryType 
+          (change)="logCategoryType()">
+        <option value="expenses" selected>Expenses</option>
+        <option value="income">Income</option>
+      </select>
+      <canvas baseChart
+        [data]="activeChartData"
+        type="bar"
+        width="400"
+        height="130"></canvas>
+    </div>
+  </div>
+</div>
