@@ -2,5 +2,210 @@
 <app-header></app-header>
 
 <main class="transactions-container">
-  <p>transactions page coming soon!</p>
+  <div class="transactions-content">
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <div class="card income-card">
+        <h3>Total Income</h3>
+        <p class="amount">{{ getTotalIncome() | currency : 'PHP' }}</p>
+      </div>
+      <div class="card expense-card">
+        <h3>Total Expenses</h3>
+        <p class="amount">{{ getTotalExpenses() | currency : 'PHP' }}</p>
+      </div>
+      <div class="card balance-card">
+        <h3>Balance</h3>
+        <p class="amount">{{ getBalance() | currency : 'PHP' }}</p>
+      </div>
+    </div>
+
+    <!-- Filter and Add Row -->
+    <div class="filter-add-row">
+      <!-- Filter by Category -->
+      <div class="category-section">
+        <h3>Filter by Category</h3>
+        <select
+          class="category-select"
+          [(ngModel)]="selectedCategory"
+          (change)="onCategoryChange()">
+          @for (category of categories; track category) {
+            <option [value]="category">{{ category }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Add Transaction Button -->
+      <div class="button-container">
+        <button class="btn-add" (click)="openAddModal()">
+          <i class="fas fa-plus"></i>
+            Add Transaction
+        </button>
+      </div>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="transactions-table-container">
+      <table class="transactions-table">
+        <thead>
+          <tr>
+            <th>DATE</th>
+            <th>DESCRIPTION</th>
+            <th>CATEGORY</th>
+            <th>AMOUNT</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (transaction of filteredTransactions; track transaction.id) {
+            <tr>
+              <td>{{ transaction.date | date:'MMM d, y' }}</td>
+              <td>{{ transaction.description }}</td>
+              <td>
+                <span
+                  class="category-tag"
+                  [ngClass]="[transaction.category.toLowerCase()]">
+                  {{ transaction.category }}
+                </span>
+              </td>
+              <td
+                [ngClass]="{'income': transaction.type === 'income',
+                            'expense': transaction.type === 'expense'}">
+                  {{ transaction.amount | currency : 'PHP' }}
+              </td>
+              <td>
+                <button
+                  class="btn-edit"
+                  (click)="editTransaction(transaction)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button
+                  class="btn-delete"
+                  (click)="deleteTransaction(transaction.id)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          }
+          @if (filteredTransactions.length === 0) {
+            <tr>
+              <td colspan="5" class="no-data">No transactions found</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Success Notification Modal -->
+  @if (showNotification()) {
+    <div class="modal-overlay">
+      <div class="notification-modal">
+        <div class="notification-content">
+          <i class="fas fa-check-circle success-icon"></i>
+          <p>{{ notificationMessage() }}</p>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Add/Edit Transaction Modal -->
+  @if (showAddModal()) {
+    <div class="modal-overlay" (click)="closeAddModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ isEditing ? 'Edit Transaction' : 'Add New Transaction' }}</h2>
+          <button class="btn-close" (click)="closeAddModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+          <form (ngSubmit)="isEditing ? updateTransaction() : addTransaction()">
+            <div class="form-group">
+              <label for="date">Date</label>
+              <input 
+                type="date" 
+                id="date" 
+                [(ngModel)]="newTransaction.date" 
+                name="date"
+                required>
+            </div>
+            
+            <div class="form-group">
+              <label for="description">Description</label>
+              <input 
+                type="text" 
+                id="description" 
+                [(ngModel)]="newTransaction.description" 
+                name="description"
+                placeholder="Enter description"
+                required>
+            </div>
+            
+            <div class="form-group">
+              <label for="category">Category</label>
+              <select 
+                id="category" 
+                [(ngModel)]="newTransaction.category" 
+                name="category"
+                required>
+                <option value="" disabled selected>Select category</option>
+                <option value="Income">Income</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Bills">Bills</option>
+                <option value="Shopping">Shopping</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="type">Type</label>
+              <div class="radio-group">
+                <label>
+                  <input 
+                    type="radio" 
+                    name="type" 
+                    value="income" 
+                    [(ngModel)]="newTransaction.type">
+                      Income
+                </label>
+                <label>
+                  <input 
+                    type="radio" 
+                    name="type" 
+                    value="expense" 
+                    [(ngModel)]="newTransaction.type" 
+                    checked> Expense
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="amount">Amount</label>
+              <input 
+                type="number" 
+                id="amount" 
+                [(ngModel)]="newTransaction.amount" 
+                name="amount"
+                placeholder="0.00"
+                min="0.01"
+                step="0.01"
+                required>
+            </div>
+            
+            <div class="form-actions">
+              <button
+                type="button"
+                class="btn-cancel"
+                (click)="closeAddModal()">
+                  Cancel
+              </button>
+              <button type="submit" class="btn-submit">
+                {{ isEditing ? 'Update Transaction' : 'Add Transaction' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  }
 </main>
