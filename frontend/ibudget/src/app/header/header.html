@@ -4,11 +4,14 @@
   </div>
 
   <div class="notifications-nav">
-    <a 
+    <a
       class="nav-link"
-      routerLink="/notifications" 
+      routerLink="/notifications"
       routerLinkActive="active">
          <i class="bi bi-bell notification-icon"></i>
+         @if (getUnreadCount() > 0) {
+           <span class="notification-count">{{ getUnreadCount() }}</span>
+         }
     </a>
   </div>
 
