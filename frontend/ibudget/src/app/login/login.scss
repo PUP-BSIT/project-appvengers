@@ -49,22 +49,6 @@ $link-color-hover: #283593;
   gap: 16px;
 }
 
-.app-logo {
-  width: 40%;
-  height: 80%;
-  object-fit: contain;
-  animation: slowBounce 4s ease-in-out infinite;
-  transform-origin: center bottom;
-}
-
-.app-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: $text-color-title;
-  margin: 0;
-  letter-spacing: -0.5px;
-}
-
 .login-form {
   display: flex;
   flex-direction: column;
@@ -153,6 +137,11 @@ $link-color-hover: #283593;
 .custom-title {
     font-family: 'Patua One', sans-serif;
     font-size: 50px;
+
+    img {
+        width: 150px;
+        height: auto;
+    }
 }
 
 @keyframes slowBounce {
