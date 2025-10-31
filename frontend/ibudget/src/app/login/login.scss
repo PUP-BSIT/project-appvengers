@@ -49,13 +49,6 @@ $link-color-hover: #283593;
   gap: 16px;
 }
 
-.app-logo {
-  width: 20%;
-  height: 40%;
-  object-fit: contain;
-  margin-bottom: 20px;
-}
-
 .login-form {
   display: flex;
   flex-direction: column;
@@ -146,10 +139,8 @@ $link-color-hover: #283593;
     font-size: 50px;
 
     img {
-        width: 350px;
+        width: 150px;
         height: auto;
-        margin-top: 20px;
-        margin-bottom: 10px;
     }
 }
 
