@@ -27,6 +27,7 @@ export type Expenses = {
 
 export type Income = {
   name: string;
+  currentAmount: number;
   amount: number;
   percentageCompleted: number;
 };

@@ -10,7 +10,10 @@
         <div class="card-body">
           <div class="d-flex justify-content-between mb-2">
             <h5>{{ expense.name }}</h5>
-            <span class="text-secondary">&#8369; {{ expense.allocatedAmount }}</span>
+            <span class="text-secondary">
+              &#8369; {{ expense.currentAmount }} / 
+              &#8369; {{ expense.allocatedAmount }}
+            </span>
           </div>
 
           <div>
@@ -34,7 +37,10 @@
         <div class="card-body">
           <div class="d-flex justify-content-between mb-2">
             <h5>{{ income.name }}</h5>
-            <span class="text-secondary">&#8369;{{ income.amount }}</span>
+            <span class="text-secondary">
+              &#8369;{{ income.currentAmount }} /
+              &#8369;{{ income.amount }} 
+            </span>
           </div>
           
           <div>
