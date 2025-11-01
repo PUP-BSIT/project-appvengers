@@ -1,87 +1,45 @@
-  <div class="card">
-    <div class="card-header">
-      <span class="text-secondary">Total Budget</span>
-      <span class="h3">&#8369;1,000.00</span>
-    </div>
+<div class="budgets-panel-container">
+  <div class="page-title mb-4">
+    <span class="h2">Monthly Budgets - November 2025</span>
+  </div>
 
-    <div class="card-body">
-      <div>
-        <span class="h6">Allocation</span>
-        <div class="progress-stacked">
-          <div class="progress" role="progressbar" style="width: 40px;">
-            <div class="progress-bar bg-success"></div>
+  <div class="expenses-wrapper">
+    @for(expense of staticExpenses(); track $index) {
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between mb-2">
+            <h5>{{ expense.name }}</h5>
+            <span class="text-secondary">&#8369; {{ expense.allocatedAmount }}</span>
           </div>
-          <div class="progress" role="progressbar" style="width: 190px;">
-            <div class="progress-bar bg-primary"></div>
-          </div>
-          <div class="progress" role="progressbar" style="width: 150px;">
-            <div class="progress-bar bg-info"></div>
-          </div>
-          <div class="progress" role="progressbar" style="width: 100px;">
-            <div class="progress-bar bg-warning"></div>
+
+          <div>
+            <div class="progress" role="progressbar" aria-label="sample progressbar">
+              <div 
+                  class="progress-bar text-bg-success" 
+                  [style.width]="expense.percentageUsed + '%'">
+                {{ expense.percentageUsed }}%
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    }
+  </div>
 
-      <div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <div class="expense-container">
-              <div class="expense-title">
-                <span class="green-progress-color"></span>
-                <span>Food</span>
-              </div>
-              <span class="badge bg-danger">-&#8369;150.00</span>
-            </div>
-
-            <div class="budget-container">
-              <span class="text-success">&#8369;1,850.00</span>
-              <span class="text-secondary">&#8369;2,000.00</span>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="expense-container">
-              <div class="expense-title">
-                <span class="blue-progress-color"></span>
-                <span>Utilities</span>
-              </div>
-              <span class="badge bg-danger">-&#8369;400.00</span>
-            </div>
-
-            <div class="budget-container">
-              <span class="text-success">&#8369;1,600.00</span>
-              <span class="text-secondary">&#8369;2,000.00</span>
-            </div>
-          </li>
-          <li class="list-group-item">
-           <div class="expense-container">
-              <div class="expense-title">
-                <span class="info-progress-color"></span>
-                <span>Healtcare</span>
-              </div>
-              <span class="badge bg-danger">-&#8369;1,500.00</span>
-            </div>
-
-            <div class="budget-container">
-              <span class="text-success">&#8369;1,500.00</span>
-              <span class="text-secondary">&#8369;3,000.00</span>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="expense-container">
-              <div class="expense-title">
-                <span class="yellow-progress-color"></span>
-                <span>Others</span>
-              </div>
-              <span class="badge bg-danger">-&#8369;400.00</span>
-            </div>
-
-            <div class="budget-container">
-              <span class="text-success">&#8369;1,600.00</span>
-              <span class="text-secondary">&#8369;2,000.00</span>
-            </div>
-          </li>
-        </ul>
+  <div class="income-wrapper">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between mb-2">
+          <h5>Salary</h5>
+          <span class="text-secondary">&#8369;30,000</span>
+        </div>
+        
+        <div>
+          <div class="progress" role="progressbar" aria-label="sample progressbar">
+            <div class="progress-bar text-bg-success" style="width: 50%;">50%</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</div>
