@@ -16,7 +16,8 @@ export class ExpensesService {
       name: 'Transportation', 
       currentAmount: 90, 
       allocatedAmount: 200, 
-      percentageUsed: 40 },
+      percentageUsed: 40 
+    },
     { 
       name: 'Entertainment', 
       currentAmount: 120, 
