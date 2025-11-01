@@ -9,7 +9,7 @@ export class IncomeService {
     {name: 'Salary', amount: 3000, percentageCompleted: 75},
     {name: 'Freelance', amount: 800, percentageCompleted: 50},
     {name: 'Others', amount: 200, percentageCompleted: 20}
-  ]
+  ];
 
   getStaticIncome(): Income[] {
     return [...this.STATIC_INCOME];
