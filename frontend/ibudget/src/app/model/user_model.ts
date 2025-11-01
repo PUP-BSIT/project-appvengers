@@ -25,7 +25,7 @@ export type Expenses = {
   percentageUsed: number;
 };
 
-export type Salary = {
+export type Income = {
   name: string;
   amount: number;
   percentageCompleted: number;
