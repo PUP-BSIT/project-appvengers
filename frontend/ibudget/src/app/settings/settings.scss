@@ -50,3 +50,10 @@ $background-color: #c9cefa;
     width: 90vw;
   }
 }
+
+.security-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  gap: 1em;
+}

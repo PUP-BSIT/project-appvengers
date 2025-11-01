@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
 import { SubHeader } from "../header/sub-header/sub-header";
@@ -18,7 +18,11 @@ import {
 })
 export class Settings {
   accountSettingsForm: FormGroup;
+  securitySettingsForm: FormGroup;
   formBuilder = inject(FormBuilder);
+  hideCurrentPassword = signal(true);
+  hideNewPassword = signal(true);
+  hideConfirmPassword = signal(true);
 
   constructor() {
     this.accountSettingsForm = this.formBuilder.group({
@@ -41,6 +45,18 @@ export class Settings {
       username: ['', {
         validators: [Validators.required]
       }],
+    })
+
+    this.securitySettingsForm = this.formBuilder.group({
+      current_password: ['', {
+        validators: [Validators.required]
+      }],
+      new_password: ['', {
+        validators: [Validators.minLength(12)]
+      }],
+      confirm_password: ['', {
+        validators: [Validators.required]
+      }]
     })
   }
 
@@ -70,5 +86,17 @@ export class Settings {
 
   get username() {
     return this.accountSettingsForm.get('username');
+  }
+
+  get currentPassword() {
+    return this.securitySettingsForm.get('current_password');
+  }
+
+  get newPassword() {
+    return this.securitySettingsForm.get('new_password');
+  }
+
+  get confirmPassword() {
+    return this.securitySettingsForm.get('confirm_password');
   }
 }
