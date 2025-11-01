@@ -1,6 +1,272 @@
 <app-sidebar></app-sidebar>
 <app-header></app-header>
+<app-sub-header (panelSelected)="scrollToPanel($event)"></app-sub-header>
 
 <main class="settings-container">
-  <p>settings page coming soon!</p>
+  <div 
+    id='generalSettingsPanel'
+    class="first-panel d-flex flex-row align-items-center 
+      justify-content-center gap-5 mt-5 mb-5">
+    <div class="info-container">
+      <h5 class="fw-semibold">General</h5>
+      <p class="text-muted">
+        Lorem ipsum dolor sit amet consectetur, adipisicing.
+      </p>
+    </div>
+
+    <div class="card w-50 h-50">
+      <div class="card-body">
+        <h6 class="fw-semibold">Theme</h6>
+        <div class="d-flex flex-row align-items-center gap-3">
+          <button class="btn btn-outline-primary fw-semibold">
+            Light
+          </button>
+          <button class="btn btn-outline-primary fw-semibold">
+            Dark
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div 
+    id='accountSettingsPanel'
+    class="second-panel d-flex flex-row align-items-center 
+      justify-content-center gap-5 mt-5 mb-5">
+    <div class="info-container">
+      <h5 class="fw-semibold">Account</h5>
+      <p class="text-muted">
+        Lorem ipsum dolor sit amet consectetur, adipisicing.
+      </p>
+    </div>
+
+    <div class="card w-50">
+      <div class="card-header p-4">
+        <h6 class="fw-semibold m-0">Personal Information</h6>
+      </div>
+      <div class="card-body">
+       <form [formGroup]="accountSettingsForm" class="account-form-container">
+        <div class="first-row">
+          <div class="first-row-input">
+            <label for="first_name">First Name</label>
+            <input 
+              formControlName="first_name" 
+              id="first_name"
+              class="form-control"
+              placeholder="First Name"
+              type="text"/>
+
+            @if(firstName?.errors?.['required'] && firstName?.touched) {
+              <span class="text-danger small mt-1">
+                First Name is required.
+              </span>
+            }
+          </div>
+
+          <div class="first-row-input ">
+            <label for="last_name">Last Name</label>
+            <input 
+              formControlName="last_name" 
+              id="last_name"
+              class="form-control"
+              placeholder="Last Name"
+              type="text"/>
+
+            @if(lastName?.errors?.['required'] && lastName?.touched) {
+              <span class="text-danger small mt-1">
+                Last Name is required.
+              </span>
+            }
+          </div>
+        </div>
+          
+        <div class="second-row">
+          <label for="middle_name">Middle Name</label>
+          <input 
+            formControlName="middle_name" 
+            id="middle_name"
+            class="form-control"
+            placeholder="Middle Name (Optional)"
+            type="text"/>
+        </div>
+
+        <div class="third-row">
+          <label for="email">Email</label>
+          <input 
+            formControlName="email" 
+            id="email"
+            class="form-control"
+            placeholder="Email"
+            type="text"/>
+          
+          @if(email?.errors?.['required'] && email?.touched) {
+            <span class="text-danger small mt-1">
+              Email is required.
+            </span>
+          }
+
+          @if(email?.errors?.['email'] && email?.touched) {
+            <span class="text-danger small mt-1">
+              Please enter a valid email.
+            </span>
+          }
+        </div>
+        
+        <div class="fourth-row">
+          <label for="username">Username</label>
+          <input 
+            formControlName="username" 
+            id="username"
+            class="form-control"
+            placeholder="Username"
+            type="text"/>
+
+          @if(username?.errors?.['required'] && username?.touched) {
+            <span class="text-danger small mt-1">
+              Username is required.
+            </span>
+          }
+      </div>
+        
+        <div class="fifth-row">
+          <div class="fifth-row-input">
+            <label for="birthdate">Birthdate</label>
+            <input 
+              formControlName="birthdate" 
+              id="birthdate"
+              class="form-control"
+              type="date" />
+
+            @if(birthdate?.errors?.['required'] && birthdate?.touched) {
+              <span class="text-danger small mt-1">
+                Birthdate is required.
+              </span>
+            } 
+          </div> 
+       
+          <div class="fifth-row-input">
+            <label for="gender">Gender</label>
+            <select id="gender" formControlName="gender" class="form-select">
+              <option value="" selected disabled>Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="N/A">Rather not say</option>
+            </select>
+
+            @if(gender?.errors?.['required'] && gender?.touched) {
+              <span class="text-danger small mt-1">
+                Gender is required.
+              </span>
+            } 
+          </div>
+        </div>
+    
+        <button class="btn btn-primary">Save</button>
+       </form>
+      </div>
+    </div>
+  </div>
+
+  <div 
+    id='securitySettingsPanel'
+    class="third-panel d-flex flex-row align-items-center justify-content-center 
+      gap-5 mt-5 mb-5 h-100">
+    <div class="info-container">
+      <h5 class="fw-semibold">Security</h5>
+      <p class="text-muted">
+        Lorem ipsum dolor sit amet consectetur, adipisicing.
+      </p>
+    </div>
+
+    <div class="card w-50 h-100">
+      <div class="card-header p-4">
+        <h6 class="fw-semibold m-0">Privacy</h6>
+      </div>
+
+      <div class="card-body">
+        <form [formGroup]="securitySettingsForm" class="security-form-wrapper">
+          <div>
+            <label>Current Password</label>
+            <div class="input-group">
+              <input 
+              class="form-control" 
+              formControlName="current_password"
+              placeholder="Current Password"
+              [type]="hideCurrentPassword() ? 'password' : 'text'"/>
+              
+              <button 
+                class="btn btn-outline-secondary"
+                (click)="hideCurrentPassword.set(!hideCurrentPassword())">
+                  <i
+                  class="bi" [class.bi-eye]="!hideCurrentPassword()"
+                  [class.bi-eye-slash]="hideCurrentPassword()"></i>
+              </button>
+            </div>
+
+            @if(currentPassword?.errors?.['required'] 
+                  && currentPassword?.touched) {
+                <span class="text-danger small mt-1">
+                  Current Password is required.
+                </span>
+              } 
+          </div>
+          
+          <div>
+            <label>New Password</label>
+            <div class="input-group">
+              <input 
+                class="form-control"
+                formControlName="new_password"
+                placeholder="New Password"
+                type="password"
+                [type]="hideNewPassword() ? 'password' : 'text'"/>
+
+              <button 
+                class="btn btn-outline-secondary"
+                (click)="hideNewPassword.set(!hideNewPassword())">
+                  <i
+                  class="bi" [class.bi-eye]="!hideNewPassword()"
+                  [class.bi-eye-slash]="hideNewPassword()"></i>
+              </button>
+            </div>
+
+            @if(newPassword?.errors?.['minlength'] && newPassword?.touched) {
+              <span class="text-danger small mt-1">
+                Password must be minimum or greater than 12 characters.
+              </span>
+            }
+          </div>
+          
+          <div>
+            <label>Confirm Password</label>
+            <div class="input-group">
+              <input 
+              class="form-control"
+              formControlName="confirm_password"
+              placeholder="Confirm Password"
+              type="password"
+              [type]="hideConfirmPassword() ? 'password' : 'text'"/>
+
+              <button 
+                class="btn btn-outline-secondary"
+                (click)="hideConfirmPassword.set(!hideConfirmPassword())">
+                  <i
+                  class="bi" [class.bi-eye]="!hideConfirmPassword()"
+                  [class.bi-eye-slash]="hideConfirmPassword()"></i>
+              </button>
+            </div>
+
+            @if(confirmPassword?.errors?.['required'] 
+                && confirmPassword?.touched) {
+              <span class="text-danger small mt-1">
+                Confirm Password is required.
+              </span>
+            }
+          </div>
+
+          <button class="btn btn-primary">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </main>
