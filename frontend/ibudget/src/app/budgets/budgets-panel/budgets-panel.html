@@ -4,6 +4,7 @@
   </div>
 
   <div class="expenses-wrapper">
+   <h3>Expense</h3>
     @for(expense of staticExpenses(); track $index) {
       <div class="card">
         <div class="card-body">
@@ -27,19 +28,27 @@
   </div>
 
   <div class="income-wrapper">
-    <div class="card">
-      <div class="card-body">
-        <div class="d-flex justify-content-between mb-2">
-          <h5>Salary</h5>
-          <span class="text-secondary">&#8369;30,000</span>
-        </div>
-        
-        <div>
-          <div class="progress" role="progressbar" aria-label="sample progressbar">
-            <div class="progress-bar text-bg-success" style="width: 50%;">50%</div>
+    <h3>Income</h3>
+    @for(income of staticIncome(); track $index) {
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between mb-2">
+            <h5>{{ income.name }}</h5>
+            <span class="text-secondary">&#8369;{{ income.amount }}</span>
+          </div>
+          
+          <div>
+            <div class="progress" role="progressbar" aria-label="sample progressbar">
+              <div 
+                class="progress-bar text-bg-success" 
+                  [style.width]="income.percentageCompleted + '%'">
+                {{ income.percentageCompleted }}%
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    }
+    
   </div>
 </div>
