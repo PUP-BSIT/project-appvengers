@@ -10,6 +10,7 @@ import {
     FormBuilder,
     Validators
   } from '@angular/forms';
+import { SubHeader } from './sub-header/sub-header';
 
 @Component({
   selector: 'app-settings',
