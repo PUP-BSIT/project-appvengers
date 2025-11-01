@@ -1,19 +1,25 @@
 <div class="sub-header-wrapper">
   <div class="sub-header-selections">
     <div class="selection-container">
-      <a class="fw-semibold text-decoration-none">
+      <a
+        (click)="selectPanel('generalSettingsPanel')" 
+        class="fw-semibold text-decoration-none">
         General
       </a>
     </div>
 
     <div class="selection-container">
-      <a class="fw-semibold text-decoration-none">
+      <a 
+        (click)="selectPanel('accountSettingsPanel')" 
+        class="fw-semibold text-decoration-none">
         Account Settings
       </a>
     </div>
   
     <div class="selection-container">
-      <a class="fw-semibold text-decoration-none">
+      <a
+        (click)="selectPanel('securitySettingsPanel')"  
+        class="fw-semibold text-decoration-none">
         Security Settings
       </a>
     </div>

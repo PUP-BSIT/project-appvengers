@@ -1,6 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
+import { SubHeader } from './sub-header/sub-header';
+import { ViewportScroller } from '@angular/common';
 import { 
     FormGroup, 
     FormControl,
@@ -8,7 +10,6 @@ import {
     FormBuilder,
     Validators
   } from '@angular/forms';
-import { SubHeader } from './sub-header/sub-header';
 
 @Component({
   selector: 'app-settings',
@@ -24,7 +25,7 @@ export class Settings {
   hideNewPassword = signal(true);
   hideConfirmPassword = signal(true);
 
-  constructor() {
+  constructor(private viewportScroller: ViewportScroller) {
     this.accountSettingsForm = this.formBuilder.group({
       birthdate: ['', {
         validators: [Validators.required]
@@ -45,7 +46,7 @@ export class Settings {
       username: ['', {
         validators: [Validators.required]
       }],
-    })
+    });
 
     this.securitySettingsForm = this.formBuilder.group({
       current_password: ['', {
@@ -57,7 +58,7 @@ export class Settings {
       confirm_password: ['', {
         validators: [Validators.required]
       }]
-    })
+    });
   }
 
   get birthdate() {
@@ -98,5 +99,9 @@ export class Settings {
 
   get confirmPassword() {
     return this.securitySettingsForm.get('confirm_password');
+  }
+
+  scrollToPanel(anchorId: string) {
+    this.viewportScroller.scrollToAnchor(anchorId);
   }
 }

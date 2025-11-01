@@ -1,9 +1,10 @@
 <app-sidebar></app-sidebar>
 <app-header></app-header>
-<app-sub-header></app-sub-header>
+<app-sub-header (panelSelected)="scrollToPanel($event)"></app-sub-header>
 
 <main class="settings-container">
   <div 
+    id='generalSettingsPanel'
     class="first-panel d-flex flex-row align-items-center 
       justify-content-center gap-5 mt-5 mb-5">
     <div class="info-container">
@@ -29,6 +30,7 @@
   </div>
 
   <div 
+    id='accountSettingsPanel'
     class="second-panel d-flex flex-row align-items-center 
       justify-content-center gap-5 mt-5 mb-5">
     <div class="info-container">
@@ -166,6 +168,7 @@
   </div>
 
   <div 
+    id='securitySettingsPanel'
     class="third-panel d-flex flex-row align-items-center justify-content-center 
       gap-5 mt-5 mb-5 h-100">
     <div class="info-container">

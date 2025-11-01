@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 
 @Component({
   selector: 'app-sub-header',
@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './sub-header.scss',
 })
 export class SubHeader {
+  panelSelected =  output<string>();
 
+  selectPanel(panelId: string) {
+    this.panelSelected.emit(panelId);
+  }
 }
