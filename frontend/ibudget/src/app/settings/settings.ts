@@ -1,7 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
-import { SubHeader } from "../header/sub-header/sub-header";
 import { 
     FormGroup, 
     FormControl,
@@ -9,6 +8,7 @@ import {
     FormBuilder,
     Validators
   } from '@angular/forms';
+import { SubHeader } from './sub-header/sub-header';
 
 @Component({
   selector: 'app-settings',
