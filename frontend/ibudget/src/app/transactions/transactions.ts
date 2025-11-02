@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe, DatePipe, CommonModule } from '@angular/common';
-import {Transaction} from "../model/user_model";
+import {Transaction} from "../model/user.model";
 import { Header } from '../header/header';
 
 @Component({
