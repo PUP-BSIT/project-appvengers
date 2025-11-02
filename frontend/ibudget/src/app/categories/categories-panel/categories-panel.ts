@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
-import { ChartData } from 'chart.js';
+import { ChartData, ChartType } from 'chart.js';
 import { BaseChartDirective } from "ng2-charts";
 
 @Component({
@@ -10,6 +10,8 @@ import { BaseChartDirective } from "ng2-charts";
 })
 export class CategoriesPanel implements OnInit {
   @ViewChild('categoryType') categoryType!: ElementRef;
+  chartType: ChartType = 'bar';
+  activeChartTitle = signal('Expenses Overview');
   activeChartData!: ChartData<'bar' | 'line'> ;
 
   expensesCategories = signal([
@@ -21,29 +23,45 @@ export class CategoriesPanel implements OnInit {
     'Salary', 'Business', 'Investments', 'Gifts', 'Others'
   ]);
 
-  expensesChartData: ChartData<'bar'> = {
+  expensesChartData: ChartData<'bar' | 'line'> = {
     labels: this.expensesCategories(),
     datasets: [
       {
-        label: 'Categories Expenses Overview',
+        label: 'Bar Dataset',
         data: [65, 59, 80, 81, 56, 55, 40, 45, 60, 70, 75, 90],
-    }]
+        type: 'bar'
+      },
+      {
+        label: 'Line Dataset',
+        data: [65, 59, 80, 81, 56, 55, 40, 45, 60, 70, 75, 90],
+        type: 'line'
+      }
+    ]
   }
 
-  incomeData: ChartData<'bar'> = {
+  incomeData: ChartData<'bar' | 'line'> = {
       labels: this.incomeCategories(),
       datasets: [
         {
-          label: 'Categories Income Overview',
+          label: 'Bar Dataset',
           data: [75, 70, 85, 60, 80],
+          type: 'bar',
           backgroundColor: [
           'rgba(255, 99, 132, 0.4)',
           'rgba(255, 159, 64, 0.4)',
           'rgba(255, 205, 86, 0.4)',
           'rgba(75, 192, 192, 0.4)',
           'rgba(54, 162, 235, 0.4)'
-      ],
-    }],
+        ],
+      },
+      {
+        label: 'Line Dataset',
+        data: [75, 70, 85, 60, 80],
+        type: 'line',
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      }
+    ],
   }
 
   ngOnInit(): void {
@@ -53,10 +71,19 @@ export class CategoriesPanel implements OnInit {
   logCategoryType() {
     const selectedType = this.categoryType.nativeElement.value;
 
-    if (selectedType === 'expenses') {
-      this.activeChartData = JSON.parse(JSON.stringify(this.expensesChartData));
-    } else if(selectedType === 'income') {
-      this.activeChartData = JSON.parse(JSON.stringify(this.incomeData));
+    switch(selectedType) {
+      case "1": 
+        this.activeChartData = JSON.parse(JSON.stringify(this.expensesChartData));
+        this.activeChartTitle.set('Expenses Overview');
+        break;
+      case "2":
+        this.activeChartData = JSON.parse(JSON.stringify(this.incomeData));
+        this.activeChartTitle.set('Income Overview');
+        break;
+      default:
+        this.activeChartData = JSON.parse(JSON.stringify(this.expensesChartData));
+        this.activeChartTitle.set('Expenses Overview');
+        break;
     }
   }
 }
