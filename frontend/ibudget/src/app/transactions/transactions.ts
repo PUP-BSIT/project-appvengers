@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+  import { Component, signal } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe, DatePipe, CommonModule } from '@angular/common';
@@ -101,10 +101,10 @@ export class Transactions {
     this.editingTransactionId = null;
     // Reset form
     this.newTransaction = {
-      date: new Date(),
+      date: '' as any,
       description: '',
       category: '',
-      amount: 0,
+      amount: null as any,
       type: 'expense'
     };
   }

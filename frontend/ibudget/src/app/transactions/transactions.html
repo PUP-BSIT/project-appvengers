@@ -120,34 +120,45 @@
         </div>
         
         <div class="modal-body">
-          <form (ngSubmit)="isEditing ? updateTransaction() : addTransaction()">
+          <form #form="ngForm"
+                (ngSubmit)="isEditing ? updateTransaction() : addTransaction()">
             <div class="form-group">
               <label for="date">Date</label>
-              <input 
-                type="date" 
-                id="date" 
-                [(ngModel)]="newTransaction.date" 
+              <input
+                type="date"
+                id="date"
+                [(ngModel)]="newTransaction.date"
                 name="date"
+                #date="ngModel"
                 required>
+              @if (date.touched && date.invalid && date.errors?.['required']) {
+                <div class="error-message">Date is required</div>
+              }
             </div>
-            
+
             <div class="form-group">
               <label for="description">Description</label>
-              <input 
-                type="text" 
-                id="description" 
-                [(ngModel)]="newTransaction.description" 
+              <input
+                type="text"
+                id="description"
+                [(ngModel)]="newTransaction.description"
                 name="description"
+                #description="ngModel"
                 placeholder="Enter description"
                 required>
+              @if (description.touched && description.invalid &&
+                   description.errors?.['required']) {
+                <div class="error-message">Description is required</div>
+              }
             </div>
-            
+
             <div class="form-group">
               <label for="category">Category</label>
-              <select 
-                id="category" 
-                [(ngModel)]="newTransaction.category" 
+              <select
+                id="category"
+                [(ngModel)]="newTransaction.category"
                 name="category"
+                #category="ngModel"
                 required>
                 <option value="" disabled selected>Select category</option>
                 <option value="Income">Income</option>
@@ -155,41 +166,50 @@
                 <option value="Bills">Bills</option>
                 <option value="Shopping">Shopping</option>
               </select>
+              @if (category.touched && category.invalid &&
+                   category.errors?.['required']) {
+                <div class="error-message">Category is required</div>
+              }
             </div>
-            
+
             <div class="form-group">
               <label for="type">Type</label>
               <div class="radio-group">
                 <label>
-                  <input 
-                    type="radio" 
-                    name="type" 
-                    value="income" 
+                  <input
+                    type="radio"
+                    name="type"
+                    value="income"
                     [(ngModel)]="newTransaction.type">
                       Income
                 </label>
                 <label>
-                  <input 
-                    type="radio" 
-                    name="type" 
-                    value="expense" 
-                    [(ngModel)]="newTransaction.type" 
+                  <input
+                    type="radio"
+                    name="type"
+                    value="expense"
+                    [(ngModel)]="newTransaction.type"
                     checked> Expense
                 </label>
               </div>
             </div>
-            
+
             <div class="form-group">
               <label for="amount">Amount</label>
-              <input 
-                type="number" 
-                id="amount" 
-                [(ngModel)]="newTransaction.amount" 
+              <input
+                type="number"
+                id="amount"
+                [(ngModel)]="newTransaction.amount"
                 name="amount"
+                #amount="ngModel"
                 placeholder="0.00"
                 min="0.01"
                 step="0.01"
                 required>
+              @if (amount.touched && amount.invalid &&
+                   amount.errors?.['required']) {
+                <div class="error-message">Amount is required</div>
+              }
             </div>
             
             <div class="form-actions">
