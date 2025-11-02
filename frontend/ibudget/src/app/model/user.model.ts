@@ -17,3 +17,17 @@ export type Notification = {
   read: boolean;
   category?: string;
 }
+
+export type Expenses = {
+  name: string;
+  currentAmount: number;
+  allocatedAmount: number;
+  percentageUsed: number;
+};
+
+export type Income = {
+  name: string;
+  currentAmount: number;
+  amount: number;
+  percentageCompleted: number;
+};
