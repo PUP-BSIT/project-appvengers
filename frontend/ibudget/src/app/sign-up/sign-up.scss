@@ -158,16 +158,148 @@ $link-color-hover: #283593;
   }
 }
 
-@media (max-width: 480px) {
+/* Mobile S   */ @media (max-width: 320px) {
   .login-container {
     padding: 10px;
   }
-  
+
+  .login-card {
+    padding: 1rem;
+    max-width: 100%;
+  }
+
+  .custom-title {
+    font-size: 40px;
+
+    img {
+      width: 120px;
+    }
+  }
+
+  .form-control {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .login-button {
+    height: 40px;
+    font-size: 0.9rem;
+  }
+
+  .signup-text {
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile M  */ @media (min-width: 321px) and (max-width: 375px) {
+  .login-container {
+    padding: 15px;
+  }
+
+  .login-card {
+    padding: 1.25rem;
+    max-width: 100%;
+  }
+
+  .custom-title {
+    font-size: 45px;
+
+    img {
+      width: 130px;
+    }
+  }
+
+  .form-control {
+    padding: 0.7rem;
+    font-size: 0.95rem;
+  }
+
+  .login-button {
+    height: 42px;
+    font-size: 0.95rem;
+  }
+
+  .signup-text {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile L   */ @media (min-width: 376px) and (max-width: 425px) {
+  .login-container {
+    padding: 20px;
+  }
+
   .login-card {
     padding: 1.5rem;
+    max-width: 100%;
   }
-  
-  .app-title {
-    font-size: 1.75rem;
+
+  .custom-title {
+    font-size: 48px;
+
+    img {
+      width: 140px;
+    }
+  }
+
+  .form-control {
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .login-button {
+    height: 44px;
+    font-size: 1rem;
+  }
+
+  .signup-text {
+    font-size: 0.95rem;
+  }
+}
+
+/* Tablet       */ @media (min-width: 426px) and (max-width: 768px) {
+  .login-container {
+    padding: 25px;
+  }
+
+  .login-card {
+    padding: 1.75rem;
+    max-width: 450px;
+  }
+
+  .custom-title {
+    font-size: 52px;
+
+    img {
+      width: 155px;
+    }
+  }
+}
+
+/* Laptop     */ @media (min-width: 769px) and (max-width: 1024px) {
+  .login-card {
+    max-width: 480px;
+  }
+
+  .custom-title {
+    font-size: 55px;
+
+    img {
+      width: 160px;
+    }
+  }
+}
+
+/* & Above   */ @media (min-width: 1025px) {
+  .login-card {
+    max-width: 500px;
+  }
+
+  .custom-title {
+    font-size: 50px;
+
+    img {
+      width: 150px;
+    }
   }
 }
