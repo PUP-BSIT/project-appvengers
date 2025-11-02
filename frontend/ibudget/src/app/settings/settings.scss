@@ -4,6 +4,56 @@ $background-color: #c9cefa;
 .settings-container {
   margin-left: $sidebar-width;
   padding: 10px;
-  height: 100%;
+  height: auto;
   background-color: $background-color;
+}
+
+.account-form-container {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.first-row {
+  display: flex;
+  flex-direction: row;
+  gap: 2em;
+
+  .first-row-input {
+    width: 90vw;
+  }
+}
+
+.second-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.third-row {
+  display: flex;
+  flex-direction:column;
+}
+
+.fourth-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.fifth-row {
+  display: flex;
+  flex-direction: row;
+  gap: 2em;
+  margin-bottom: 10px;
+
+  .fifth-row-input {
+    width: 90vw;
+  }
+}
+
+.security-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  gap: 1em;
 }
