@@ -1,8 +1,8 @@
 $card-drop-shadow: #00000040;
 
 .table-container {
-  height: 350px;
-  width: 400px;
+  height: 340px;
+  width: 370px;
   overflow-y: auto;
   box-shadow: 5px 5px $card-drop-shadow;
   padding: 20px;
@@ -15,12 +15,12 @@ $card-drop-shadow: #00000040;
   z-index: 10;
   background-color: white;
   padding-bottom: 10px;
+  text-align: center;
 }
 
 table th {
   position: sticky;
   top: 70px;
   z-index: 5;
-
 }
 
