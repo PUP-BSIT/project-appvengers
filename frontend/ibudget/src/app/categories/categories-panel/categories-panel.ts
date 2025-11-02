@@ -29,12 +29,25 @@ export class CategoriesPanel implements OnInit {
       {
         label: 'Bar Dataset',
         data: [65, 59, 80, 81, 56, 55, 40, 45, 60, 70, 75, 90],
-        type: 'bar'
+        type: 'bar',
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.4)',
+          'rgba(255, 159, 64, 0.4)',
+          'rgba(255, 205, 86, 0.4)',
+          'rgba(75, 192, 192, 0.4)',
+          'rgba(54, 162, 235, 0.4)',
+          'rgba(0, 108, 74, 0.4)',
+          'rgba(255, 66, 249, 0.4)',
+          'rgba(255, 179, 0, 0.4)',
+          'rgba(0, 11, 159, 0.4)',
+        ],
       },
       {
         label: 'Line Dataset',
         data: [65, 59, 80, 81, 56, 55, 40, 45, 60, 70, 75, 90],
-        type: 'line'
+        type: 'line',
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
       }
     ]
   }
