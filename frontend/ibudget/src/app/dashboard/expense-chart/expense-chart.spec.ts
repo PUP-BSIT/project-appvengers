@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DoughnutChart } from './doughnut-chart';
+import { ExpenseChart } from './expense-chart';
 
-describe('DoughnutChart', () => {
-  let component: DoughnutChart;
-  let fixture: ComponentFixture<DoughnutChart>;
+describe('ExpenseChart', () => {
+  let component: ExpenseChart;
+  let fixture: ComponentFixture<ExpenseChart>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DoughnutChart]
+      imports: [ExpenseChart]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DoughnutChart);
+    fixture = TestBed.createComponent(ExpenseChart);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
