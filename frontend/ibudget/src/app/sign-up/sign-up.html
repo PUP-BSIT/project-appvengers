@@ -11,23 +11,25 @@
       </div>
 
       <!-- Form -->
+      @if(successMessage()) {
+        <div class="alert alert-success">{{ successMessage() }}</div>
+      }
+      @else if(errorMessage()) {
+        <div class="alert alert-danger">{{ errorMessage() }}</div>
+      }
+
       <form class="login-form">
         <!-- Username Field -->
         <div class="mb-3">
-          <label for="username" class="form-label">
-            Username
-          </label>
+          <label for="username" class="form-label">Username</label>
           <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              id="username"
+            <input type="text" class="form-control" id="username" 
               formControlName="username"
-              placeholder="Choose a username">
-            <span class="input-group-text">
-              <i class="bi bi-person"></i>
-            </span>
+              placeholder="Choose a username"
+              (blur)="checkUsername()">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
           </div>
+
           @if(username?.hasError('required') && username?.touched) {
             <div class="text-danger small mt-1">
               Username is required
@@ -38,24 +40,24 @@
               Username must be at least 12 characters
             </div>
           }
+          @if(username?.hasError('usernameTaken')) {
+            <div class="text-danger small mt-1">
+              Username is already taken
+            </div>
+          }
         </div>
 
         <!-- Email Field -->
         <div class="mb-3">
-          <label for="email" class="form-label">
-            Email
-          </label>
+          <label for="email" class="form-label">Email</label>
           <div class="input-group">
-            <input
-              type="email"
-              class="form-control"
-              id="email"
+            <input type="email" class="form-control" id="email"
               formControlName="email"
-              placeholder="Enter your email">
-            <span class="input-group-text">
-              <i class="bi bi-envelope"></i>
-            </span>
+              placeholder="Enter your email"
+              (blur)="checkEmail()">
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
           </div>
+
           @if(email?.hasError('required') && email?.touched) {
             <div class="text-danger small mt-1">
               Email is required
@@ -66,25 +68,27 @@
               Please enter a valid email
             </div>
           }
+          @if(email?.hasError('emailTaken')) {
+            <div class="text-danger small mt-1">
+              Email is already registered
+            </div>
+          }
         </div>
 
         <!-- Password Field -->
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
           <div class="input-group">
-            <input
-              [type]="hidePassword() ? 'password' : 'text'"
+            <input [type]="hidePassword() ? 'password' : 'text'"
               class="form-control"
               id="password"
               formControlName="password"
               placeholder="Create a password">
-            <button
-              class="btn btn-outline-secondary"
-              type="button"
+            <button class="btn btn-outline-secondary" type="button"
               (click)="hidePassword.set(!hidePassword())">
-              <i
-                class="bi" [class.bi-eye]="!hidePassword()"
-                [class.bi-eye-slash]="hidePassword()"></i>
+              <i class="bi" [class.bi-eye]="!hidePassword()"
+                [class.bi-eye-slash]="hidePassword()">
+              </i>
             </button>
           </div>
 
@@ -100,10 +104,25 @@
           }
         </div>
 
-        <button
-          type="submit"
-          class="btn login-button w-100" routerLink="/email-verification">
-            Create Account
+        <!-- Confirm Password Field -->
+        <div class="mb-3">
+          <label for="confirmPassword" class="form-label">
+            Confirm Password
+          </label>
+          <input type="password" class="form-control" id="confirmPassword"
+            formControlName="confirmPassword"
+            placeholder="Confirm your password">
+
+          @if(signupForm.hasError('passwordMismatch') && submitted()) {
+            <div class="text-danger small mt-1">
+              Passwords do not match
+            </div>
+          }
+        </div>
+
+        <button type="submit" class="btn login-button w-100"
+          [disabled]="signupForm.invalid || loading()">
+          {{ loading() ? 'Creating Account...' : 'Create Account' }}
         </button>
       </form>
 
