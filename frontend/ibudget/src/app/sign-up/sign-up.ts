@@ -111,7 +111,6 @@ export class SignUp {
     }
   }
 
-
   get username() { return this.signupForm.get('username'); }
   get email() { return this.signupForm.get('email'); }
   get password() { return this.signupForm.get('password'); }
