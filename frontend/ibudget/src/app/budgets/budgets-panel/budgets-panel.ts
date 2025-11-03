@@ -3,14 +3,16 @@ import { Expenses } from '../../model/user.model';
 import { ExpensesService } from '../../../services/expenses';
 import { Income } from '../../model/user.model';
 import { IncomeService } from '../../../services/income';
+import { KpiPanel } from "../kpi-panel/kpi-panel";
 
 @Component({
   selector: 'app-budgets-panel',
-  imports: [],
+  imports: [KpiPanel],
   templateUrl: './budgets-panel.html',
   styleUrl: './budgets-panel.scss',
 })
 export class BudgetsPanel implements OnInit {
+  months = signal(['January', 'February', 'March'])
   staticExpenses = signal(<Expenses[]>[]);
   staticIncome = signal(<Income[]>[]);
 
