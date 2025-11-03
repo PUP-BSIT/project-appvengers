@@ -106,6 +106,7 @@ export class SignUp {
               control.setErrors(null);
             }
           }
+        }
       });
     }
   }
