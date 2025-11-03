@@ -1,7 +1,17 @@
 # Copilot Instructions for iBudget Project
 
-**Last Updated**: November 3, 2025  
-**Document Version**: 2.0
+**Last Updated**: November 4, 2025
+**Document Version**: 3.0
+
+when conducting a code review, ensure that the code follows best practices and adheres to the project's coding standards. Additionally, review the code for any potential security vulnerabilities and ensure that it is properly documented. When reviewing code, consider the following:
+
+- Code readability and maintainability
+- Code organization and structure
+- Code performance and efficiency
+- Code security and privacy
+- Code documentation and comments
+
+When performing a code review, respond in Filipino.
 
 ## Repository Overview
 
@@ -182,7 +192,7 @@ spring.datasource.password=[REDACTED - see application.properties]
   - Styles: Bootstrap CSS and icons preloaded globally
   - Style preprocessor: SCSS with `src/styles` as include path
   - Assets: `public/` and `src/assets/` directories
-  
+
 - **package.json**: NPM dependencies and scripts
   - Prettier configuration included for code formatting
   - Key dependencies: Angular 20, Bootstrap 5, Chart.js, ng2-charts
@@ -264,10 +274,10 @@ spring.datasource.password=[REDACTED - see application.properties]
 @CrossOrigin(origins = "http://localhost:4200")
 public class ResourceController {
     private final ResourceService service;
-    
+
     @GetMapping
     public ResponseEntity<List<Resource>> getAll() { ... }
-    
+
     @PostMapping
     public ResponseEntity<ApiResponse> create(@Valid @RequestBody ResourceDto dto) { ... }
 }
@@ -364,7 +374,7 @@ chmod +x mvnw
 **Problem**: `npm install` fails or `npm start` errors
 
 **Solutions**:
-1. Delete `node_modules` and `package-lock.json`: 
+1. Delete `node_modules` and `package-lock.json`:
    ```bash
    rm -rf node_modules package-lock.json
    npm install
@@ -465,10 +475,10 @@ public class EntityName {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(nullable = false)
     private String field;
-    
+
     // Relationships, timestamps, etc.
 }
 ```
