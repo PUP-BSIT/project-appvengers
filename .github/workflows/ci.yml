@@ -1,0 +1,147 @@
+name: I-Budget CI Testing Workflow (Angular + Spring Boot)
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect changed folders
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          base: ${{ github.event.repository.default_branch || 'main' }}
+          filters: |
+            frontend:
+              - 'frontend/**'
+            backend:
+              - 'backend/**'
+
+  dependency-review:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+
+  # Frontend (Angular)
+  frontend-check:
+    runs-on: ubuntu-latest
+    needs: check-changes
+    if: needs.check-changes.outputs.frontend == 'true'
+    defaults:
+      run:
+        working-directory: frontend/ibudget
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/ibudget/package-lock.json
+
+      - name: Install Chrome dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
+        working-directory: .
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular app
+        run: npm run build --if-present
+
+      - name: Run tests with coverage
+        run: npx ng test --watch=false --browsers=ChromeHeadless --code-coverage
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-test-results
+          path: frontend/ibudget/coverage/
+          retention-days: 7
+
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          files: frontend/ibudget/coverage/lcov.info
+          flags: frontend
+          fail_ci_if_error: false
+
+  # Backend (Spring Boot w/ Maven)
+  backend-check:
+    runs-on: ubuntu-latest
+    needs: check-changes
+    if: needs.check-changes.outputs.backend == 'true'
+    defaults:
+      run:
+        working-directory: backend/appvengers
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+          cache: maven
+
+      - name: Build and test with Maven
+        run: ./mvnw -B clean verify
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-results
+          path: |
+            backend/appvengers/target/surefire-reports/
+            backend/appvengers/target/site/jacoco/
+          retention-days: 7
+
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          files: backend/appvengers/target/site/jacoco/jacoco.xml
+          flags: backend
+          fail_ci_if_error: false
+
+  # Summary job - ensures all checks pass
+  ci-success:
+    runs-on: ubuntu-latest
+    needs: [check-changes, frontend-check, backend-check]
+    if: always()
+    steps:
+      - name: Check all jobs
+        run: |
+          if [[ "${{ needs.frontend-check.result }}" == "failure" ]] || [[ "${{ needs.backend-check.result }}" == "failure" ]]; then
+            echo "One or more jobs failed"
+            exit 1
+          elif [[ "${{ needs.frontend-check.result }}" == "skipped" ]] && [[ "${{ needs.backend-check.result }}" == "skipped" ]]; then
+            echo "No code changes detected - skipping CI"
+          else
+            echo "All checks passed!"
+          fi
