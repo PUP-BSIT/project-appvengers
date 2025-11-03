@@ -82,8 +82,11 @@ export class SignUp {
     if (username && username.length >= 3) {
       this.auth.checkUsername(username).subscribe({
         next: (response) => {
+          const control = this.signupForm.get('username');
           if (response.data.exists) {
-            this.signupForm.get('username')?.setErrors({ usernameTaken: true });
+            control?.setErrors({ usernameTaken: true });
+          } else if (control?.hasError('usernameTaken')) {
+            control.setErrors(null);
           }
         }
       });
