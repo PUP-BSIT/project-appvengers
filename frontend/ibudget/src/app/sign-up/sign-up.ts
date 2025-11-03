@@ -1,6 +1,7 @@
-import { CommonModule, } from '@angular/common';
-import { Component, signal, inject  } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, signal, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 import {
   FormBuilder,
   FormGroup,
@@ -10,7 +11,8 @@ import {
 
 @Component({
   selector: 'app-sign-up',
-    imports: [
+  standalone: true,
+  imports: [
     ReactiveFormsModule,
     CommonModule,
     RouterLink
@@ -18,59 +20,90 @@ import {
   templateUrl: './sign-up.html',
   styleUrl: './sign-up.scss'
 })
+
 export class SignUp {
+  fb = inject(FormBuilder);
+  auth = inject(AuthService);
+  router = inject(Router);
+
   signupForm: FormGroup;
   hidePassword = signal(true);
   submitted = signal(false);
-
-  fb = inject(FormBuilder);
+  loading = signal(false);
+  errorMessage = signal('');
+  successMessage = signal('');
 
   constructor() {
     this.signupForm = this.fb.group({
-      username: ['', {
-        validators: [Validators.required, Validators.minLength(3)]
-      }],
-      email: ['', {
-        validators: [Validators.required, Validators.email]
-      }],
-      password: ['', {
-        validators: [Validators.required, Validators.minLength(6)]
-      }],
-      confirmPassword: ['', {
-        validators: [Validators.required]
-      }]
-    }, {
-      validators: this.passwordMatchValidator
-    });
-  }
-
-  onSignup(): void {
-    this.submitted.set(true);
-    if (this.signupForm.valid) {
-      console.log("Signup data:", this.signupForm.value);
-    }
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, { validators: this.passwordMatchValidator });
   }
 
   private passwordMatchValidator(control: AbstractControl) {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
-
-    if (password && confirmPassword &&
-        password.value !== confirmPassword.value) {
-      return { passwordMismatch: true };
+    if (password && confirmPassword && password.value !== confirmPassword.value) {
+      confirmPassword.setErrors({ passwordMismatch: true });
     }
     return null;
   }
 
-  get username() {
-    return this.signupForm.get('username');
+  onSignup(): void {
+    this.submitted.set(true);
+    this.errorMessage.set('');
+    this.successMessage.set('');
+
+    if (this.signupForm.invalid) return;
+
+    this.loading.set(true);
+    this.auth.signup(this.signupForm.value).subscribe({
+      next: (response) => {
+        this.loading.set(false);
+        if (response.success) {
+          this.successMessage.set(response.message);
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 2000);
+        }
+      },
+      error: (error) => {
+        this.loading.set(false);
+        const msg = error?.error?.message || 'An error occurred during registration';
+        this.errorMessage.set(msg);
+      }
+    });
   }
 
-  get email() {
-    return this.signupForm.get('email');
+  checkUsername(): void {
+    const username = this.signupForm.get('username')?.value;
+    if (username && username.length >= 3) {
+      this.auth.checkUsername(username).subscribe({
+        next: (response) => {
+          if (response.data.exists) {
+            this.signupForm.get('username')?.setErrors({ usernameTaken: true });
+          }
+        }
+      });
+    }
   }
 
-  get password() {
-    return this.signupForm.get('password');
+  checkEmail(): void {
+    const email = this.signupForm.get('email')?.value;
+    if (email && this.signupForm.get('email')?.valid) {
+      this.auth.checkEmail(email).subscribe({
+        next: (response) => {
+          if (response.data.exists) {
+            this.signupForm.get('email')?.setErrors({ emailTaken: true });
+          }
+        }
+      });
+    }
   }
+
+  get username() { return this.signupForm.get('username'); }
+  get email() { return this.signupForm.get('email'); }
+  get password() { return this.signupForm.get('password'); }
 }
