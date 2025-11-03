@@ -106,9 +106,11 @@ export class SignUp {
               control.setErrors(null);
             }
           }
+        }
       });
     }
   }
+
 
   get username() { return this.signupForm.get('username'); }
   get email() { return this.signupForm.get('email'); }
