@@ -1,10 +1,14 @@
 <div class="budgets-panel-container">
-  <div class="page-title mb-4">
-    <span class="h2">Monthly Budgets - November 2025</span>
+  <div class="date-wrapper input-group">
+    <span class="input-group-text">Budgets for</span>
+    <input class="form-control" type="date"/>
+  </div>
+
+  <div class="kpi-wrapper">
+    <app-kpi-panel></app-kpi-panel>
   </div>
 
   <div class="expenses-wrapper">
-   <h3>Expense</h3>
     @for(expense of staticExpenses(); track $index) {
       <div class="card">
         <div class="card-body">
@@ -17,12 +21,15 @@
           </div>
 
           <div>
-            <div class="progress" role="progressbar" aria-label="sample progressbar">
-              <div 
-                  class="progress-bar text-bg-success" 
-                  [style.width]="expense.percentageUsed + '%'">
-                {{ expense.percentageUsed }}%
-              </div>
+            <div 
+              class="progress" 
+              role="progressbar" 
+              aria-label="sample progressbar">
+                <div 
+                    class="progress-bar text-bg-success" 
+                    [style.width]="expense.percentageUsed + '%'">
+                  {{ expense.percentageUsed }}%
+                </div>
             </div>
           </div>
         </div>
@@ -30,7 +37,7 @@
     }
   </div>
 
-  <div class="income-wrapper">
+  <!-- <div class="income-wrapper">
     <h3>Income</h3>
     @for(income of staticIncome(); track $index) {
       <div class="card">
@@ -55,6 +62,5 @@
         </div>
       </div>
     }
-    
-  </div>
+  </div> -->
 </div>

@@ -31,3 +31,9 @@ export type Income = {
   amount: number;
   percentageCompleted: number;
 };
+
+export type TransactionHistory = {
+  amount: number;
+  category: string;
+  type: string;
+}

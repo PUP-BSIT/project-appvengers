@@ -14,26 +14,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Income</td>
-            <td>Allowance</td>
-            <td>&#8369; 300.00</td>
-          </tr>
-          <tr>
-            <td>Income</td>
-            <td>Allowance</td>
-            <td>&#8369; 300.00</td>
-          </tr>
-          <tr>
-            <td>Income</td>
-            <td>Allowance</td>
-            <td>&#8369; 300.00</td>
-          </tr>
-          <tr>
-            <td>Income</td>
-            <td>Allowance</td>
-            <td>&#8369; 300.00</td>
-          </tr>
+          @for(transaction of staticTransactionsHistory(); track $index) {
+            <tr>
+              <td>{{ transaction.type }}</td>
+              <td>{{ transaction.category }}</td>
+              <td class="fw-semibold">&#8369; {{ transaction.amount }}</td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>
