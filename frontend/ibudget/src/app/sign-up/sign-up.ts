@@ -100,8 +100,12 @@ export class SignUp {
         next: (response) => {
           if (response.data.exists) {
             this.signupForm.get('email')?.setErrors({ emailTaken: true });
+          } else {
+            const control = this.signupForm.get('email');
+            if (control?.hasError('emailTaken')) {
+              control.setErrors(null);
+            }
           }
-        }
       });
     }
   }
