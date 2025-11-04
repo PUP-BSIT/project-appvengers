@@ -105,6 +105,16 @@ export class BudgetList implements OnInit {
       
       const updatedBudgets = this.mockupService.updateMockBudget(updatedBudget);
       this.budgets.set(updatedBudgets);
+
+      // reset selection and form after successful update
+      this.selectedBudget = undefined;
+      this.budgetForm.reset({
+        category: '',
+        limit_amount: '0',
+        current_amount: 0,
+        start_date: '',
+        end_date: ''
+      });
     }
   }
 
