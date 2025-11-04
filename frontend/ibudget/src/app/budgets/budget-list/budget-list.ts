@@ -120,7 +120,8 @@ export class BudgetList implements OnInit {
 
   // Deletes a budget inside the array
   deleteBudget() {
-    const updated = this.mockupService.deleteMockBudget(this.selectedBudget!.id);
+    if (!this.selectedBudget) return;
+    const updated = this.mockupService.deleteMockBudget(this.selectedBudget.id);
     this.budgets.set(updated);
 
     // reset selection and form
