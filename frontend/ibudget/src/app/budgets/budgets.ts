@@ -11,5 +11,5 @@ import { BudgetList } from "./budget-list/budget-list";
   styleUrl: './budgets.scss',
 })
 export class Budgets {
-
+  
 }
