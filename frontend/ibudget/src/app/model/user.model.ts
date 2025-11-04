@@ -49,6 +49,7 @@ export type Budget = {
   category_name: string;
   limit_amount: number;
   savings_goal?: number;
-  period: string;
+  start_date: Date;
+  end_date: Date;
   current_amount: number;
 }
