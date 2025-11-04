@@ -46,10 +46,10 @@ export type ExpensesCategories = {
 export type Budget = {
   id: number;
   category_id: number;
-  category_name: string;
+  category_name: string;  
   limit_amount: number;
   savings_goal?: number;
-  start_date: Date;
-  end_date: Date;
+  start_date: string;
+  end_date: string;
   current_amount: number;
 }
