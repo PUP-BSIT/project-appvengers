@@ -67,6 +67,7 @@
           <form [formGroup]="budgetForm">
             <label>Category</label>
             <select formControlName="category" class="form-select mb-3">
+              <option selected disabled>-- Select Category --</option>
               @for(category of categories; track $index) {
                 <option [value]="category.id">{{ category.name }}</option>
               }
