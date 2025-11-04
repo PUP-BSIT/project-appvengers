@@ -37,3 +37,20 @@ export type TransactionHistory = {
   category: string;
   type: string;
 }
+
+export type ExpensesCategories = {
+  id: number;
+  name: string;
+  amount: number;
+}
+
+export type Budget = {
+  id: number;
+  category_id: number;
+  category_name: string;
+  limit_amount: number;
+  savings_goal?: number;
+  period: string;
+  current_amount: number;
+  percentage: number;
+}
