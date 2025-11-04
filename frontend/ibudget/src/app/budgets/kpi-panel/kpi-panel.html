@@ -1,52 +1,42 @@
-<div class="kpi-panel-wrapper">
+<div class="kpi-panel-container">
   <div class="card">
-    <div 
-        class="card-header p-4 d-flex justify-content-between align-items-center">
-      <span class="h4 mb-0">Budget Overview</span>
-      <button class="btn btn-primary">Add new budget</button>
+    <div class="card-header p-4">
+      <h4 class="mb-0">Budget Overview</h4>
     </div>
 
     <div class="card-body">
-      <div class="panel-info-wrapper">
-        <div class="d-flex flex-column">
-          <div>
-            <span class="h1 text-primary fw-bold">&#8369; </span>
-            <span class="h1 text-primary fw-bold">400.00</span>
-          </div>
-          
+      <div class="budget-info-wrapper">
+        <div>
+          <h2 class="text-primary fw-bold mb-0">5000.00</h2>
           <span class="text-secondary">Remaining Budget</span>
         </div>
-      </div>
-      
-      <div class="circle-progress-wrapper">
-        <round-progress
-          [current]="50"
-          [max]="100"
-          [radius]="65"
-          [stroke]="10"
-          [color]="'#198754'"
-          [background]="'#e9ecef'"
-          [duration]="800"
-          [animation]="'easeInOutQuart'"
-          [animationDelay]="0"></round-progress>
 
-          <span class="progress-text">50%</span>
+        <div class="progress-container">
+          <round-progress
+            [current]="100"
+            [max]="100"
+            [color]="'#45ccce'"
+            [background]="'#eaeaea'"
+            [radius]="100"
+            [stroke]="20"
+            [animation]="'easeInOutQuart'"
+            [animationDelay]="0"
+          />
+
+          <span class="progress-text">100%</span>
+        </div>
       </div>
     </div>
 
-    <div class="card-footer">
+    <div class="card-footer d-flex justify-content-center gap-5">
       <div>
-        <div class="total-budget-container">
-          <div>
-            <span class="h6">Total Budget: &#8369; </span>
-            <span class="text-success fw-semibold">400.00</span>
-          </div>
-
-          <div class="total-expense-container">
-            <span class="h6">Total Expense: &#8369; </span>
-            <span class="text-danger fw-semibold">200.00</span>
-          </div>
-        </div>
+        <span class="h6">Total Budget: &#8369; </span>
+        <span class="text-success fw-semibold">5000.00</span>
+      </div>
+      
+      <div>
+        <span class="h6">Total Expenses: &#8369; </span>
+        <span class="text-warning fw-semibold">0</span>
       </div>
     </div>
   </div>

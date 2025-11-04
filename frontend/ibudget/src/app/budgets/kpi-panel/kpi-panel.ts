@@ -8,5 +8,5 @@ import { RoundProgressComponent } from 'angular-svg-round-progressbar';
   styleUrl: './kpi-panel.scss',
 })
 export class KpiPanel {
-  
+
 }
