@@ -86,8 +86,9 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: always()
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: frontend/ibudget/coverage/lcov.info
           flags: frontend
           fail_ci_if_error: false
@@ -128,8 +129,9 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: always()
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: backend/appvengers/target/site/jacoco/jacoco.xml
           flags: backend
           fail_ci_if_error: false
