@@ -51,5 +51,4 @@ export type Budget = {
   savings_goal?: number;
   period: string;
   current_amount: number;
-  percentage: number;
 }
