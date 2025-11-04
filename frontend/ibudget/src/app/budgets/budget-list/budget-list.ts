@@ -90,13 +90,31 @@ export class BudgetList implements OnInit {
   // Updates a budget inside the budgets array
   updateBudget() {
     if (this.selectedBudget && this.budgetForm.valid) {
+      const formValue = this.budgetForm.value;
+      const category = this.categories.find(c => c.id === +formValue.category);
+      if (!category) return;
       const updatedBudget: Budget = {
         ...this.selectedBudget,
-        ...this.budgetForm.value,
+        category_id: category.id,
+        category_name: category.name,
+        limit_amount: +formValue.limit_amount,
+        // current_amount: this.selectedBudget.current_amount, // retain current_amount unless editable
+        start_date: formValue.start_date,
+        end_date: formValue.end_date,
       };
       
       const updatedBudgets = this.mockupService.updateMockBudget(updatedBudget);
       this.budgets.set(updatedBudgets);
+
+      // reset selection and form after successful update
+      this.selectedBudget = undefined;
+      this.budgetForm.reset({
+        category: '',
+        limit_amount: '0',
+        current_amount: 0,
+        start_date: '',
+        end_date: ''
+      });
     }
   }
 
