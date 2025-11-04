@@ -41,7 +41,6 @@ export type TransactionHistory = {
 export type ExpensesCategories = {
   id: number;
   name: string;
-  amount: number;
 }
 
 export type Budget = {
