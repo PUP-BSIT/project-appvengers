@@ -29,6 +29,12 @@ $sidebar-width: 100px;
   padding-bottom: 10px;
 }
 
+.table-wrapper {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 200px;
+}
+
 .report-table {
   width: 100%;
   border-collapse: collapse;

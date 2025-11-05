@@ -4,47 +4,53 @@
 <main class="reports-container">
   <section class="report-section">
     <h2>Expense Report</h2>
-    <table class="report-table">
-      <thead>
-        <tr>
-          <th>Category</th>
-          <th>Current Amount</th>
-          <th>Allocated Amount</th>
-          <th>Percentage Used</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let expense of expenses">
-          <td>{{ expense.name }}</td>
-          <td>{{ expense.currentAmount | currency:'PHP':'symbol':'1.0-0' }}</td>
-          <td>{{ expense.allocatedAmount | currency:'PHP':'symbol':'1.0-0' }}</td>
-          <td>{{ expense.percentageUsed }}%</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-wrapper">
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Current Amount</th>
+            <th>Allocated Amount</th>
+            <th>Percentage Used</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (expense of expenses; track expense.name) {
+            <tr>
+              <td>{{ expense.name }}</td>
+              <td>{{ expense.currentAmount | currency:'PHP':'symbol':'1.0-0' }}</td>
+              <td>{{ expense.allocatedAmount | currency:'PHP':'symbol':'1.0-0' }}</td>
+              <td>{{ expense.percentageUsed }}%</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section class="report-section">
     <h2>Income Report</h2>
-    <table class="report-table">
-      <thead>
-        <tr>
-          <th>Source</th>
-          <th>Current Amount</th>
-          <th>Total Amount</th>
-          <th>Percentage Completed</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let inc of income">
-          <td>{{ inc.name }}</td>
-          <td>{{ inc.currentAmount | currency:'PHP':'symbol':'1.0-0' }}</td>
-          <td>{{ inc.amount | currency:'PHP':'symbol':'1.0-0' }}</td>
-          <td>{{ inc.percentageCompleted }}%</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-wrapper">
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Current Amount</th>
+            <th>Total Amount</th>
+            <th>Percentage Completed</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (inc of income; track inc.name) {
+            <tr>
+              <td>{{ inc.name }}</td>
+              <td>{{ inc.currentAmount | currency:'PHP':'symbol':'1.0-0' }}</td>
+              <td>{{ inc.amount | currency:'PHP':'symbol':'1.0-0' }}</td>
+              <td>{{ inc.percentageCompleted }}%</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </section>
-
-
 </main>
