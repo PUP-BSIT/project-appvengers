@@ -47,7 +47,7 @@ export class ExpensesService {
       currentAmount: 200,
       allocatedAmount: 250,
       percentageUsed: 80
-    },
+    }
   ];
 
   getStaticExpenses(): Expenses[] {
