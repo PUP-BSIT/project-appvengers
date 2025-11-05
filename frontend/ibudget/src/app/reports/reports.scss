@@ -3,10 +3,11 @@ $sidebar-width: 100px;
 
 .reports-container {
   margin-left: $sidebar-width;
-  padding: 20px;
-  height: 100%;
+  padding: 40px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: $background-color;
-  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  color: #333;
 }
 
 .reports-container h1 {
@@ -49,8 +50,8 @@ $sidebar-width: 100px;
 }
 
 .report-table th {
-  background-color: #f8f9fa;
-  color: #333;
+  background: #1e2022;
+  color: white;
   font-weight: bold;
 }
 
