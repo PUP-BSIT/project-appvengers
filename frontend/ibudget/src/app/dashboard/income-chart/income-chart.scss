@@ -8,3 +8,11 @@ $card-drop-shadow: #00000040;
 h4 {
   text-align: center;
 }
+
+@media (max-width: 320px) {
+  .income-chart-container {
+    width: 100%;
+    padding: 0;
+    box-shadow: 3px 3px $card-drop-shadow;
+  }
+}

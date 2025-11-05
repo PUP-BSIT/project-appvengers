@@ -2,13 +2,16 @@ $card-drop-shadow: #00000040;
 
 .table-container {
   height: 340px;
-  width: 370px;
+  width: 100%;
+  max-width: 357px;
+  box-sizing: border-box;
   overflow-y: auto;
+  overflow-x: auto;
   box-shadow: 5px 5px $card-drop-shadow;
   padding: 20px;
 }
 
-.card-title {
+.card-header {
   position: sticky;
   top: 20px;
   margin-bottom: 0;
@@ -24,3 +27,21 @@ table th {
   z-index: 5;
 }
 
+@media (max-width: 320px) {
+  .table-container {
+    width: 300px;
+    padding: 20px;
+    margin: 0 auto;
+  }
+
+  .card-header {
+    top: 18px;
+    left: 18px;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}

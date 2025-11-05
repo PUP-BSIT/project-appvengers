@@ -7,3 +7,10 @@ html, body {
   width: 100%;
   scroll-behavior: smooth;
 }
+
+@media (max-width: 320px) {
+  html, body {
+    height: auto;
+    width: auto;
+  }
+}
