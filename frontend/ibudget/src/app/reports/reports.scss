@@ -3,7 +3,55 @@ $sidebar-width: 100px;
 
 .reports-container {
   margin-left: $sidebar-width;
-  padding: 10px;
+  padding: 20px;
   height: 100%;
   background-color: $background-color;
+  font-family: Arial, sans-serif;
+}
+
+.reports-container h1 {
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.report-section {
+  margin-bottom: 40px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.report-section h2 {
+  color: #555;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #c9cefa;
+  padding-bottom: 10px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.report-table th,
+.report-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.report-table th {
+  background-color: #f8f9fa;
+  color: #333;
+  font-weight: bold;
+}
+
+.report-table tbody tr:hover {
+  background-color: #f1f3f4;
+}
+
+.report-table td {
+  color: #666;
 }
