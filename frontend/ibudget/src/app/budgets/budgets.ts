@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
-import { BudgetsPanel } from "./budgets-panel/budgets-panel";
+import { KpiPanel } from "./kpi-panel/kpi-panel";
+import { BudgetList } from "./budget-list/budget-list";
 
 @Component({
   selector: 'app-budgets',
-  imports: [Sidebar, Header, BudgetsPanel],
+  imports: [Sidebar, Header, KpiPanel, BudgetList],
   templateUrl: './budgets.html',
   styleUrl: './budgets.scss',
 })

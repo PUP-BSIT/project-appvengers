@@ -73,6 +73,8 @@ jobs:
 
       - name: Run tests with coverage
         run: npx ng test --watch=false --browsers=ChromeHeadless --code-coverage
+        env:
+          CHROME_BIN: /usr/bin/chromium-browser
 
       - name: Upload test results
         if: always()
@@ -107,6 +109,9 @@ jobs:
           distribution: 'temurin'
           java-version: 21
           cache: maven
+
+      - name: Make Maven Wrapper Executable
+        run: chmod +x mvnw
 
       - name: Build and test with Maven
         run: ./mvnw -B clean verify

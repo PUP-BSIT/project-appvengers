@@ -1,33 +1,25 @@
-.circle-progress-wrapper {
-  position: relative;   
+.kpi-panel-container {
+  margin: 10px 50px;
+}
+
+.budget-info-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 100px;
+}
+
+.progress-container {
+  position: relative;
   display: inline-block;
 }
 
 .progress-text {
-  // 2. Overlay the text
   position: absolute;
   top: 50%;
   left: 50%;
-  
-  // 3. Use translate to truly center the element relative to its own size
   transform: translate(-50%, -50%);
-  
-  // Style the text
-  font-size: 14px;
+  font-size: 24px;
   font-weight: bold;
-  color: #333; // Choose a color with good contrast
-}
-
-.card-body {
-  display: flex;
-  flex-direction: row;
-  padding: 30px 100px;
-  justify-content: space-between;
-}
-
-.total-budget-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 3em;
 }
