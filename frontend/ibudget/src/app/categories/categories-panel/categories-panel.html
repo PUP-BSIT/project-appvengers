@@ -4,18 +4,24 @@
       <h2>{{ activeChartTitle() }}</h2>
     </div>
 
-    <div class="card-body chart-container">
+    <div class="card-body">
       <select class="form-select mb-3" #categoryType 
           (change)="logCategoryType()">
         <option value="1" selected>Expenses</option>
         <option value="2">Income</option>
       </select>
       
-      <canvas baseChart
-        [data]="activeChartData"
-        [type]="chartType"
-        width="400"
-        height="130"></canvas>
+      <div class="chart-scroll-container">
+        <div class="chart-container">
+          <canvas baseChart
+          [data]="activeChartData"
+          [type]="chartType"
+          [options]="chartOptions"
+          width="400"
+          height="130"></canvas>
+        </div>
+      </div>
+      
     </div>
   </div>
 </div>
