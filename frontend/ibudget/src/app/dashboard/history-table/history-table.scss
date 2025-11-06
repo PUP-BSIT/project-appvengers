@@ -45,3 +45,18 @@ table th {
     align-items: center;
   }
 }
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .table-container {
+    width: 90%;
+    height: 300px;
+    box-shadow: 3px 3px $card-drop-shadow;
+    margin: 0 auto;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}

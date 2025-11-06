@@ -16,3 +16,13 @@ h4 {
     box-shadow: 3px 3px $card-drop-shadow;
   }
 }
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .income-chart-container {
+    height: 90%;
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
