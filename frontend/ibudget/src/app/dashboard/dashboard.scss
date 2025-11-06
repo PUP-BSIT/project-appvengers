@@ -139,10 +139,8 @@ $page-margin-left: 100px;
   }
 
   .card-body {
-    display: grid;
-    grid-template-areas:
-      "header-part"
-      "content-part";
+    display: flex;
+    flex-direction: row;
   }
 
   .chart-panel {
