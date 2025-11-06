@@ -19,7 +19,8 @@ main {
   max-height: 12em;
   box-shadow: 5px 4px $card-drop-shadow;
   grid-area: item1;
-  margin: auto;
+  margin: 0 auto;
+  align-self: start;
 }
 
 .chart-panel {
@@ -115,5 +116,47 @@ main {
     grid-template-areas:
       "header-part"
       "content-part";
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  main {
+    margin-left: $page-margin-left;
+    grid-template-areas: 
+    "item1 item1 item1"
+    "item2 item3 item4"; 
+    gap: .5em;
+    height: 100%;
+    width: 100%;
+    align-items: start;
+  }
+
+  .card {
+    width: 85%;
+    height: 11em;
+    max-height: 11em;
+    margin: auto;
+  }
+
+  .card-body {
+    display: grid;
+    grid-template-areas:
+      "header-part"
+      "content-part";
+  }
+
+  .chart-panel {
+    height: auto;
+    width: auto;
+  }
+
+  .income-chart-panel {
+    height: auto;
+    width: auto;
+  }
+
+  .history-panel {
+    width: auto;
+    height: auto;
   }
 }

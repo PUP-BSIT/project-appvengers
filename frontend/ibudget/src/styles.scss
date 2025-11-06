@@ -14,3 +14,10 @@ html, body {
     width: auto;
   }
 }
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  html, body {
+    height: auto;
+    width: auto;
+  }
+}
