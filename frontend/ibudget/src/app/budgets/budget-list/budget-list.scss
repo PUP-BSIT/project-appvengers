@@ -5,3 +5,27 @@
 .budget-list-container {
   margin-top: 30px;
 }
+
+.budget-info-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+@media(max-width: 768px) {
+  .budget-container {
+    margin: 10px 20px;
+  }
+
+  .budget-info-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    .budget-list-title {
+      text-align: center;
+    }
+  }
+}
