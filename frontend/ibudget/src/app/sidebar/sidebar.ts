@@ -18,8 +18,4 @@ export class Sidebar {
   logout(): void {
     console.log("Logout successfully.")
   }
-
-  closeSidebar() {
-    this.sidebarService.isOpen.set(false);
-  }
 }
