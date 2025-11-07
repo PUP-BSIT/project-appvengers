@@ -1,13 +1,16 @@
 package com.backend.appvengers.service;
 
 import com.backend.appvengers.dto.SignupRequest;
+import com.backend.appvengers.dto.LoginRequest;
+import com.backend.appvengers.dto.ApiResponse;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.UserRepository;
+import com.backend.appvengers.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Optional;
 
 @Service
@@ -16,28 +19,62 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     @Transactional
     public User registerUser(SignupRequest signupRequest) {
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
-            throw new RuntimeException("Username is already taken!");
+            throw new IllegalArgumentException("Username is already taken!");
         }
 
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
-            throw new RuntimeException("Email is already registered!");
+            throw new IllegalArgumentException("Email is already registered!");
         }
 
         if (!signupRequest.getPassword().equals(signupRequest.getConfirmPassword())) {
-            throw new RuntimeException("Passwords do not match!");
+            throw new IllegalArgumentException("Passwords do not match!");
         }
 
         User user = new User();
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
+
+        // No email verification for now → active immediately
         user.setActive(true);
 
         return userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public ApiResponse login(LoginRequest request) {
+        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
+
+        // Dummy hash to mitigate timing attacks
+        String dummyHash = "$2a$10$CwTycUXWue0Thq9StjUM0uJ8fQx5QyQbYyQ5QyQ5QyQ5QyQ5QyQ5Qy";
+        User user = optionalUser.orElse(null);
+
+        boolean passwordMatches = passwordEncoder.matches(
+            request.getPassword(),
+            user != null ? user.getPassword() : dummyHash
+        );
+
+        if (user == null || !passwordMatches) {
+            return new ApiResponse(false, "Invalid email or password");
+        }
+
+        if (!user.isActive()) {
+            return new ApiResponse(false, "Account is not active");
+        }
+
+        UserDetails userDetails = org.springframework.security.core.userdetails.User
+            .withUsername(user.getEmail())  
+            .password(user.getPassword())
+            .authorities("ROLE_USER")       
+            .build();
+
+        String token = jwtService.generateToken(userDetails);
+        return new ApiResponse(true, "Login successful", token);
     }
 
     public boolean existsByUsername(String username) {
@@ -50,17 +87,5 @@ public class UserService {
 
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
-    }
-
-    public User findByVerificationToken(String token) {
-        return userRepository.findByVerificationToken(token)
-                .orElseThrow(() -> new RuntimeException("Invalid verification token"));
-    }
-
-    @Transactional
-    public void verifyEmail(String token) {
-        User user = findByVerificationToken(token);
-        user.setVerificationToken(null);
-        userRepository.save(user);
     }
 }
