@@ -29,7 +29,7 @@ export class Login {
 
   fb = inject(FormBuilder);
   router = inject(Router);
-  authService = inject(AuthService); 
+  authService = inject(AuthService);
 
   constructor() {
     this.loginForm = this.fb.group({
