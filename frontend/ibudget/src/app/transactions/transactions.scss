@@ -365,6 +365,13 @@ $sidebar-width: 100px;
   box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
+.error-message {
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
 .radio-group {
   display: flex;
   gap: 1.5rem;

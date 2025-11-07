@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BudgetsPanel } from './budgets-panel';
+import { ExpenseChart } from './expense-chart';
 
-describe('BudgetsPanel', () => {
-  let component: BudgetsPanel;
-  let fixture: ComponentFixture<BudgetsPanel>;
+describe('ExpenseChart', () => {
+  let component: ExpenseChart;
+  let fixture: ComponentFixture<ExpenseChart>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BudgetsPanel]
+      imports: [ExpenseChart]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BudgetsPanel);
+    fixture = TestBed.createComponent(ExpenseChart);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

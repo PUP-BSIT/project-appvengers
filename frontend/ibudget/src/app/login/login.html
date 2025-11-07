@@ -66,11 +66,11 @@
           }
         </div>
 
-        <button
-          type="submit"
-          class="btn login-button w-100" routerLink="/dashboard">
-            Login
-        </button>
+        @if(errorMessage()) {  
+          <div class="alert alert-danger mt-2">{{ errorMessage() }}</div>  
+        }  
+        
+        <button type="submit" class="btn login-button w-100">Login</button>
       </form>
 
       <!-- Signup Link -->

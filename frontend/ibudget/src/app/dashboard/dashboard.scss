@@ -9,8 +9,8 @@ main {
   height: 100%;
   display: grid;
   grid-template-areas: 
-  "item1 item1"
-  "item2 item3";
+  "item1 item1 item1"
+  "item2 item3 item4"; 
 }
 
 .card {
@@ -30,11 +30,19 @@ main {
   grid-area: item2;
 }
 
+.income-chart-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  grid-area: item3
+}
+
 .history-panel {
   display: flex;
   align-items: center;
   justify-content: center;
-  grid-area: item3;
+  grid-area: item4;
 }
 
 .card-body {

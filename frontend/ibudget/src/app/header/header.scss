@@ -16,6 +16,14 @@ $card-drop-shadow: #00000040;
   border-bottom: $border-color 1px solid;
 }
 
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #333;
+  margin-right: auto;
+}
+
 .about-nav {
   display: flex;
   justify-content: center;
@@ -73,5 +81,19 @@ $card-drop-shadow: #00000040;
     box-shadow: 0 4px 8px $card-drop-shadow;
     border-radius: 50%;
     color: $icon-hovered-color;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    margin-left: 0;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .about-nav {
+    display: none;
   }
 }
