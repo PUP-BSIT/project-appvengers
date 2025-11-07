@@ -1,4 +1,5 @@
-<div class="sidebar">
+<app-sidebar-overlay></app-sidebar-overlay>
+<div class="sidebar" [ngClass]="{ 'mobile-open': isOpen() }">
   <!-- Logo Section -->
   <div class="logo">
     <div class="logo-container">
