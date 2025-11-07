@@ -8,6 +8,7 @@ import { Dashboard } from './dashboard/dashboard';
 import { Budgets } from './budgets/budgets';
 import { Transactions } from './transactions/transactions';
 import { Categories } from './categories/categories';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -38,7 +39,8 @@ export const routes: Routes = [
   {
     path: 'dashboard', 
     loadComponent: () => import('./dashboard/dashboard')
-      .then(m => m.Dashboard)
+      .then(m => m.Dashboard),
+    canActivate: [authGuard]
   },
   {
     path: 'transactions', 
