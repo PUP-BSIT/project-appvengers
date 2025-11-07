@@ -1,23 +1,17 @@
 import { Component, computed, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SidebarService } from '../../services/sidebar.service';
-import { SidebarOverlay } from '../sidebar-overlay/sidebar-overlay';
 
 @Component({
-  selector: 'app-sidebar',
-  imports: [RouterModule, CommonModule, SidebarOverlay],
-  templateUrl: './sidebar.html',
-  styleUrl: './sidebar.scss'
+  selector: 'app-sidebar-overlay',
+  imports: [CommonModule],
+  templateUrl: './sidebar-overlay.html',
+  styleUrl: './sidebar-overlay.scss'
 })
-export class Sidebar {
+export class SidebarOverlay {
   private sidebarService = inject(SidebarService);
 
   isOpen = computed(() => this.sidebarService.isOpen());
-
-  logout(): void {
-    console.log("Logout successfully.")
-  }
 
   closeSidebar() {
     this.sidebarService.isOpen.set(false);
