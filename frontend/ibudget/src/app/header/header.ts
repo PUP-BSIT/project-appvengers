@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NotificationService } from '../../services/notification';
+import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
   selector: 'app-header',
@@ -9,9 +10,14 @@ import { NotificationService } from '../../services/notification';
   styleUrl: './header.scss',
 })
 export class Header {
-  constructor(private notificationService: NotificationService) {}
+  private notificationService = inject(NotificationService);
+  private sidebarService = inject(SidebarService);
 
   getUnreadCount(): number {
     return this.notificationService.getUnreadCount();
+  }
+
+  toggleSidebar() {
+    this.sidebarService.toggle();
   }
 }

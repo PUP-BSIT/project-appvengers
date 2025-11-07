@@ -1,4 +1,8 @@
 <div class="header-container">
+  <div class="menu-toggle" (click)="toggleSidebar()">
+    <i class="bi bi-list"></i>
+  </div>
+
   <div class="about-nav">
     <p>About</p>
   </div>
@@ -16,12 +20,12 @@
   </div>
 
   <div class="profile-nav">
-    <a 
+    <a
       class="nav-link"
-      routerLink="/dashboard" 
+      routerLink="/dashboard"
       routerLinkActive="active">
         <i class="bi bi-person"></i>
     </a>
-    
+
   </div>
 </div>
