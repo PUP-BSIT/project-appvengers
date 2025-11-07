@@ -1,13 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -21,11 +18,13 @@ import {
   styleUrl: './login.scss'
 })
 
-export class Login {
+export class Login implements OnDestroy {
   loginForm: FormGroup;
   hidePassword = signal(true);
   submitted = signal(false);
   errorMessage = signal('');
+
+  private destroy$ = new Subject<void>();
 
   fb = inject(FormBuilder);
   router = inject(Router);
@@ -33,12 +32,8 @@ export class Login {
 
   constructor() {
     this.loginForm = this.fb.group({
-      email: ['', {
-        validators: [Validators.required, Validators.email]
-      }],
-      password: ['', {
-        validators: [Validators.required]
-      }]
+      email: ['', { validators: [Validators.required, Validators.email] }],
+      password: ['', { validators: [Validators.required] }]
     });
   }
 
@@ -49,27 +44,30 @@ export class Login {
     if (this.loginForm.valid) {
       const loginData = this.loginForm.value;
 
-      this.authService.login(loginData).subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.router.navigate(['/dashboard']); // Navigate to dashboard on success
-          } else {
-            this.errorMessage.set(response.message || 'Login failed');
+      this.authService.login(loginData)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            if (response.success) {
+              console.log('Login successful:', response);
+              this.router.navigate(['/dashboard']);
+            } else {
+              this.errorMessage.set(response.message || 'Login failed');
+            }
+          },
+          error: (err) => {
+            console.error('Login failed:', err);
+            this.errorMessage.set('Invalid email or password');
           }
-        },
-        error: (err) => {
-          console.error('Login failed:', err);
-          this.errorMessage.set('Invalid email or password');
-        }
-      });
+        });
     }
   }
 
-  get email() {
-    return this.loginForm.get('email');
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  get password() {
-    return this.loginForm.get('password');
-  }
+  get email() { return this.loginForm.get('email'); }
+  get password() { return this.loginForm.get('password'); }
 }
