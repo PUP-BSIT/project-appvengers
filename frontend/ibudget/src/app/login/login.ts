@@ -1,15 +1,18 @@
-import { CommonModule, } from '@angular/common';
-import { Component, signal, inject  } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, signal, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service'; 
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators } from '@angular/forms';
+  Validators
+} from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-    imports: [
+  standalone: true,
+  imports: [
     ReactiveFormsModule,
     CommonModule,
     RouterLink
@@ -17,13 +20,16 @@ import {
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
+
 export class Login {
   loginForm: FormGroup;
   hidePassword = signal(true);
   submitted = signal(false);
+  errorMessage = signal('');
 
   fb = inject(FormBuilder);
   router = inject(Router);
+  authService = inject(AuthService); 
 
   constructor() {
     this.loginForm = this.fb.group({
@@ -38,10 +44,21 @@ export class Login {
 
   onLogin(): void {
     this.submitted.set(true);
+    this.errorMessage.set('');
+
     if (this.loginForm.valid) {
-      console.log(this.loginForm.value);
-      // Navigate to dashboard or home page after successful login
-      this.router.navigate(['/dashboard']);
+      const loginData = this.loginForm.value;
+
+      this.authService.login(loginData).subscribe({
+        next: (response) => {
+          console.log('Login successful:', response);
+          this.router.navigate(['/dashboard']); // Navigate to dashboard on success
+        },
+        error: (err) => {
+          console.error('Login failed:', err);
+          this.errorMessage.set('Invalid email or password');
+        }
+      });
     }
   }
 
