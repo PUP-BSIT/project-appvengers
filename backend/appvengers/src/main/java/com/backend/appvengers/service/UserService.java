@@ -3,6 +3,7 @@ package com.backend.appvengers.service;
 import com.backend.appvengers.dto.SignupRequest;
 import com.backend.appvengers.dto.LoginRequest;
 import com.backend.appvengers.dto.ApiResponse;
+import com.backend.appvengers.dto.AuthResponse;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.UserRepository;
 import com.backend.appvengers.security.JwtService;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Optional;
 
 @Service
@@ -22,7 +24,7 @@ public class UserService {
     private final JwtService jwtService;
 
     @Transactional
-    public User registerUser(SignupRequest signupRequest) {
+    public ApiResponse registerUser(SignupRequest signupRequest) {
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
             throw new IllegalArgumentException("Username is already taken!");
         }
@@ -39,11 +41,19 @@ public class UserService {
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
+        user.setActive(true); // No email verification for now → active immediately
 
-        // No email verification for now → active immediately
-        user.setActive(true);
+        userRepository.save(user);
 
-        return userRepository.save(user);
+        UserDetails userDetails = org.springframework.security.core.userdetails.User
+            .withUsername(user.getEmail())
+            .password(user.getPassword())
+            .authorities("ROLE_USER")
+            .build();
+
+        String token = jwtService.generateToken(userDetails);
+        AuthResponse response = new AuthResponse(user.getUsername(), user.getEmail(), token);
+        return new ApiResponse(true, "Signup successful", response);
     }
 
     @Transactional(readOnly = true)
@@ -68,13 +78,14 @@ public class UserService {
         }
 
         UserDetails userDetails = org.springframework.security.core.userdetails.User
-            .withUsername(user.getEmail())  
+            .withUsername(user.getEmail())
             .password(user.getPassword())
-            .authorities("ROLE_USER")       
+            .authorities("ROLE_USER")
             .build();
 
         String token = jwtService.generateToken(userDetails);
-        return new ApiResponse(true, "Login successful", token);
+        AuthResponse response = new AuthResponse(user.getUsername(), user.getEmail(), token);
+        return new ApiResponse(true, "Login successful", response);
     }
 
     public boolean existsByUsername(String username) {
