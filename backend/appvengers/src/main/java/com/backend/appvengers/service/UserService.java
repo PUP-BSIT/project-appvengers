@@ -39,8 +39,6 @@ public class UserService {
         user.setEmail(signupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setActive(true);
-        // user.setEmailVerified(false);
-        // user.setVerificationToken(UUID.randomUUID().toString());
 
         return userRepository.save(user);
     }
