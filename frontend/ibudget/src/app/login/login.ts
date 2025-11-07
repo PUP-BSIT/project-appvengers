@@ -52,7 +52,6 @@ export class Login {
       this.authService.login(loginData).subscribe({
         next: (response) => {
           if (response.success) {
-            console.log('Login successful:', response);
             this.router.navigate(['/dashboard']); // Navigate to dashboard on success
           } else {
             this.errorMessage.set(response.message || 'Login failed');
