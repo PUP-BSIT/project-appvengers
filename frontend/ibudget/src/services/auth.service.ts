@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 interface SignupRequest {
   username: string;
@@ -22,7 +22,7 @@ interface ApiResponse {
 export class AuthService {
   private apiUrl = 'http://localhost:8081/api/auth';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   signup(userData: SignupRequest): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${this.apiUrl}/signup`, userData);
@@ -38,5 +38,28 @@ export class AuthService {
 
   verifyEmail(token: string): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(`${this.apiUrl}/verify-email?token=${token}`);
+  }
+
+  login(credentials: { email: string; password: string }): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(`${this.apiUrl}/login`, credentials).pipe(
+      tap((res: ApiResponse) => {
+        if (res.success && res.data) {
+          // store JWT in localStorage
+          localStorage.setItem('authToken', res.data);
+        }
+      })
+    );
+  }
+
+  logout(): void {
+    localStorage.removeItem('authToken');
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('authToken');
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getToken();
   }
 }
