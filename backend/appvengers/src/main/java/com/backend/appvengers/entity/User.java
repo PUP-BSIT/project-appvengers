@@ -42,8 +42,8 @@ public class User {
     @Column(name = "is_active")
     private boolean isActive = false;
 
-    @Column(name = "email_verified")
-    private boolean emailVerified = false;
+    // @Column(name = "email_verified")
+    // private boolean emailVerified = false;
 
     @Column(name = "verification_token")
     private String verificationToken;

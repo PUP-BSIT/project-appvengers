@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
+// import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +39,8 @@ public class UserService {
         user.setEmail(signupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setActive(true);
-        user.setEmailVerified(false);
-        user.setVerificationToken(UUID.randomUUID().toString());
+        // user.setEmailVerified(false);
+        // user.setVerificationToken(UUID.randomUUID().toString());
 
         return userRepository.save(user);
     }
@@ -61,7 +61,7 @@ public class UserService {
     @Transactional
     public void verifyEmail(String token) {
         User user = findByVerificationToken(token);
-        user.setEmailVerified(true);
+        // user.setEmailVerified(true);
         user.setVerificationToken(null);
         userRepository.save(user);
     }
@@ -79,9 +79,9 @@ public class UserService {
             return new ApiResponse(false, "Invalid email or password");
         }
 
-        if (!user.isEmailVerified()) {
-            return new ApiResponse(false, "Please verify your email before logging in");
-        }
+        // if (!user.isEmailVerified()) {
+        //     return new ApiResponse(false, "Please verify your email before logging in");
+        // }
 
         return new ApiResponse(true, "Login successful", user);
     }
