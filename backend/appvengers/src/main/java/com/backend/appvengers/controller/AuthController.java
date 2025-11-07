@@ -1,6 +1,7 @@
 package com.backend.appvengers.controller;
 
 import com.backend.appvengers.dto.ApiResponse;
+import com.backend.appvengers.dto.LoginRequest;
 import com.backend.appvengers.dto.SignupRequest;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.service.UserService;
@@ -48,6 +49,12 @@ public class AuthController {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse(false, e.getMessage()));
         }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse> login(@RequestBody @Valid LoginRequest request) {
+        ApiResponse response = userService.login(request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/check-username/{username}")

@@ -1,13 +1,16 @@
 package com.backend.appvengers.service;
 
+import com.backend.appvengers.dto.LoginRequest;
 import com.backend.appvengers.dto.SignupRequest;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.UserRepository;
+import com.backend.appvengers.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -61,5 +64,25 @@ public class UserService {
         user.setEmailVerified(true);
         user.setVerificationToken(null);
         userRepository.save(user);
+    }
+
+    public ApiResponse login(LoginRequest request) {
+        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
+
+        if (optionalUser.isEmpty()) {
+            return new ApiResponse(false, "Invalid email or password");
+        }
+
+        User user = optionalUser.get();
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            return new ApiResponse(false, "Invalid email or password");
+        }
+
+        if (!user.isEmailVerified()) {
+            return new ApiResponse(false, "Please verify your email before logging in");
+        }
+
+        return new ApiResponse(true, "Login successful", user);
     }
 }
