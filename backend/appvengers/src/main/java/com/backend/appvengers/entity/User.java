@@ -42,11 +42,14 @@ public class User {
     @Column(name = "is_active")
     private boolean isActive = false;
 
-    // @Column(name = "email_verified")
-    // private boolean emailVerified = false;
-
     @Column(name = "verification_token")
     private String verificationToken;
+
+    @Column(name = "failed_attempts", nullable = false)
+    private int failedAttempts = 0;
+
+    @Column(name = "locked_until")
+    private LocalDateTime lockedUntil;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -56,26 +57,34 @@ public class UserService {
         return new ApiResponse(true, "Signup successful", response);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ApiResponse login(LoginRequest request) {
         Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
+        User user = optionalUser.orElse(null);
 
         // Dummy hash to mitigate timing attacks
         String dummyHash = "$2a$10$CwTycUXWue0Thq9StjUM0uJ8fQx5QyQbYyQ5QyQ5QyQ5QyQ5QyQ5Qy";
-        User user = optionalUser.orElse(null);
-
         boolean passwordMatches = passwordEncoder.matches(
             request.getPassword(),
             user != null ? user.getPassword() : dummyHash
         );
 
         if (user == null || !passwordMatches) {
+            if (user != null) {
+                incrementFailedAttemptOrLock(user);
+            }
             return new ApiResponse(false, "Invalid email or password");
+        }
+
+        if (isLocked(user)) {
+            return new ApiResponse(false, "Account temporarily locked due to failed attempts. Please try again later.");
         }
 
         if (!user.isActive()) {
             return new ApiResponse(false, "Account is not active");
         }
+
+        resetLockout(user);
 
         UserDetails userDetails = org.springframework.security.core.userdetails.User
             .withUsername(user.getEmail())
@@ -98,5 +107,31 @@ public class UserService {
 
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    // --- Lockout helpers ---
+
+    private boolean isLocked(User user) {
+        return user.getLockedUntil() != null && LocalDateTime.now().isBefore(user.getLockedUntil());
+    }
+
+    @Transactional
+    protected void incrementFailedAttemptOrLock(User user) {
+        int attempts = user.getFailedAttempts() + 1;
+        user.setFailedAttempts(attempts);
+
+        // Threshold: 5 failed attempts → lock for 15 minutes
+        if (attempts >= 5) {
+            user.setLockedUntil(LocalDateTime.now().plusMinutes(15));
+            user.setFailedAttempts(0); // reset counter when locking
+        }
+        userRepository.save(user);
+    }
+
+    @Transactional
+    protected void resetLockout(User user) {
+        user.setFailedAttempts(0);
+        user.setLockedUntil(null);
+        userRepository.save(user);
     }
 }
