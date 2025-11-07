@@ -59,7 +59,6 @@ public class UserService {
     @Transactional
     public void verifyEmail(String token) {
         User user = findByVerificationToken(token);
-        // user.setEmailVerified(true);
         user.setVerificationToken(null);
         userRepository.save(user);
     }
@@ -76,11 +75,7 @@ public class UserService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             return new ApiResponse(false, "Invalid email or password");
         }
-
-        // if (!user.isEmailVerified()) {
-        //     return new ApiResponse(false, "Please verify your email before logging in");
-        // }
-
+        
         return new ApiResponse(true, "Login successful", user);
     }
 }
