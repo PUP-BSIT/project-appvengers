@@ -57,7 +57,15 @@ export class Login implements OnDestroy {
           },
           error: (err) => {
             console.error('Login failed:', err);
-            this.errorMessage.set('Invalid email or password');
+            if (err.status === 429) {
+              this.errorMessage.set('Too many login attempts. Please try again later.');
+            } else if(err.status === 401 && err.error?.lockedUntil) {
+              const lockedUntil = new Date(err.error.lockedUntil);
+              const minutesLeft = Math.ceil((lockedUntil.getTime() - Date.now()) / 60000);
+              this.errorMessage.set(`Account locked. Try again in ${minutesLeft} minutes.`);
+            } else {
+              this.errorMessage.set('Invalid email or password');
+            }
           }
         });
     }
