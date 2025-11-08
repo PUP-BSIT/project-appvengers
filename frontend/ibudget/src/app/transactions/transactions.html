@@ -82,12 +82,12 @@
                     <div class="popup-menu">
                       <div
                         class="menu-item"
-                        (click)="editTransaction(transaction)">
+                        (click)="editTransaction(transaction); openActionsId.set(null)">
                           Edit
                       </div>
                       <div
                         class="menu-item"
-                        (click)="deleteTransaction(transaction.id)">
+                        (click)="deleteTransaction(transaction.id); openActionsId.set(null)">
                           Delete
                       </div>
                     </div>
