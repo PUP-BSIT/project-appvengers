@@ -14,7 +14,7 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    @Value("${jwt.secret}")
+@Value("${jwt.secret}")
     private String SECRET_KEY;
 
     private Key getSigningKey() {
