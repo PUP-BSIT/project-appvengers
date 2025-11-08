@@ -75,26 +75,13 @@
                   </span>
                   <button
                     class="btn-dots"
-                    (click)="toggleActions(transaction.id)"
+                    (click)="toggleActions($event, transaction.id)"
                     aria-label="Open actions menu"
-                    [attr.aria-expanded]="openActionsId() === transaction.id"
+                    [attr.aria-expanded]="showPopup() &&
+                      selectedTransactionId() === transaction.id"
                     aria-haspopup="true">
                     <i class="fas fa-ellipsis-v"></i>
                   </button>
-                  @if (openActionsId() === transaction.id) {
-                    <div class="popup-menu">
-                      <div
-                        class="menu-item"
-                        (click)="editTransaction(transaction); openActionsId.set(null)">
-                          Edit
-                      </div>
-                      <div
-                        class="menu-item"
-                        (click)="deleteTransaction(transaction.id); openActionsId.set(null)">
-                          Delete
-                      </div>
-                    </div>
-                  }
               </td>
             </tr>
           }
@@ -237,6 +224,25 @@
             </div>
           </form>
         </div>
+      </div>
+    </div>
+  }
+
+  <!-- Popup Menu -->
+  @if (showPopup()) {
+    <div
+      class="popup-menu"
+      [style.top.px]="popupTop()"
+      [style.left.px]="popupLeft()">
+      <div
+        class="menu-item"
+        (click)="editTransaction(getSelectedTransaction()!); showPopup.set(false)">
+        Edit
+      </div>
+      <div
+        class="menu-item"
+        (click)="deleteTransaction(selectedTransactionId()!); showPopup.set(false)">
+        Delete
       </div>
     </div>
   }
