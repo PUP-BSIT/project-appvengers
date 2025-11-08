@@ -52,7 +52,6 @@
             <th>DESCRIPTION</th>
             <th>CATEGORY</th>
             <th>AMOUNT</th>
-            <th>ACTIONS</th>
           </tr>
         </thead>
         <tbody>
@@ -69,26 +68,26 @@
               </td>
               <td
                 [ngClass]="{'income': transaction.type === 'income',
-                            'expense': transaction.type === 'expense'}">
-                  {{ transaction.amount | currency : 'PHP' }}
-              </td>
-              <td>
-                <button
-                  class="btn-edit"
-                  (click)="editTransaction(transaction)">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button
-                  class="btn-delete"
-                  (click)="deleteTransaction(transaction.id)">
-                  <i class="fas fa-trash"></i>
-                </button>
+                            'expense': transaction.type === 'expense'}"
+                class="amount-cell">
+                  <span class="amount-text">
+                    {{ transaction.amount | currency : 'PHP' }}
+                  </span>
+                  <button
+                    class="btn-dots"
+                    (click)="toggleActions($event, transaction.id)"
+                    aria-label="Open actions menu"
+                    [attr.aria-expanded]="showPopup() &&
+                      selectedTransactionId() === transaction.id"
+                    aria-haspopup="true">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
               </td>
             </tr>
           }
           @if (filteredTransactions.length === 0) {
             <tr>
-              <td colspan="5" class="no-data">No transactions found</td>
+              <td colspan="4" class="no-data">No transactions found</td>
             </tr>
           }
         </tbody>
@@ -225,6 +224,25 @@
             </div>
           </form>
         </div>
+      </div>
+    </div>
+  }
+
+  <!-- Popup Menu -->
+  @if (showPopup()) {
+    <div
+      class="popup-menu"
+      [style.top.px]="popupTop()"
+      [style.left.px]="popupLeft()">
+      <div
+        class="menu-item"
+        (click)="editTransaction(getSelectedTransaction()!); showPopup.set(false)">
+        Edit
+      </div>
+      <div
+        class="menu-item"
+        (click)="deleteTransaction(selectedTransactionId()!); showPopup.set(false)">
+        Delete
       </div>
     </div>
   }

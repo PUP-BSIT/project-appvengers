@@ -247,6 +247,64 @@ $sidebar-width: 100px;
   font-weight: 600;
 }
 
+.amount-cell {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.amount-text {
+  flex: 1;
+  text-align: center;
+}
+
+.btn-dots {
+  background: none;
+  border: none;
+  color: #7f8c8d;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.btn-dots:hover {
+  background: #f1f1f1;
+}
+
+.popup-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 10;
+  width: 100px;
+}
+
+.menu-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 0.9rem;
+}
+
+.menu-item:hover {
+  background: #f8f9fa;
+}
+
+.menu-item:first-child {
+  border-radius: 4px 4px 0 0;
+}
+
+.menu-item:last-child {
+  border-radius: 0 0 4px 4px;
+}
+
 .btn-edit {
   background: #f39c12;
   color: white;
@@ -255,7 +313,6 @@ $sidebar-width: 100px;
   padding: 0.5rem;
   cursor: pointer;
   transition: background 0.2s;
-  margin-right: 0.5rem;
 }
 
 .btn-edit:hover {
