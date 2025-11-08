@@ -15,6 +15,7 @@ export class Transactions {
   showAddModal = signal(false);
   showNotification = signal(false);
   notificationMessage = signal('');
+  openActionsId = signal<number | null>(null);
 
   transactions: Transaction[] = [
     {
@@ -195,5 +196,13 @@ export class Transactions {
     setTimeout(() => {
       this.showNotification.set(false);
     }, 3000);
+  }
+
+  toggleActions(id: number) {
+    if (this.openActionsId() === id) {
+      this.openActionsId.set(null);
+    } else {
+      this.openActionsId.set(id);
+    }
   }
 }
