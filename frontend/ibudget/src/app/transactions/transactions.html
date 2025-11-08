@@ -75,7 +75,10 @@
                   </span>
                   <button
                     class="btn-dots"
-                    (click)="toggleActions(transaction.id)">
+                    (click)="toggleActions(transaction.id)"
+                    aria-label="Open actions menu"
+                    [attr.aria-expanded]="openActionsId() === transaction.id"
+                    aria-haspopup="true">
                     <i class="fas fa-ellipsis-v"></i>
                   </button>
                   @if (openActionsId() === transaction.id) {
