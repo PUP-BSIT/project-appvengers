@@ -232,14 +232,14 @@
   @if (showPopup()) {
     <div
       class="popup-menu"
-      [style.position]="'fixed'"
+      role="menu"
+      tabindex="-1"
       [style.top.px]="popupTop()"
       [style.left.px]="popupLeft()">
       <div
         class="menu-item"
         (click)="getSelectedTransaction() && 
-          editTransaction(getSelectedTransaction()!);
-          showPopup.set(false)">
+          editTransaction(getSelectedTransaction()!); showPopup.set(false)">
           Edit
       </div>
       @if (selectedTransactionId(); as id) {
