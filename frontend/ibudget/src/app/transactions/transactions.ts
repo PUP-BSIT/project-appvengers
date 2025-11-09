@@ -207,7 +207,7 @@ export class Transactions implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.unlisten = this.renderer.listen('document', 'click', (event: Event) =>
-{
+    {
       const target = event.target as HTMLElement;
       if (!target.closest('.btn-dots') && !target.closest('.popup-menu')) {
         this.showPopup.set(false);
