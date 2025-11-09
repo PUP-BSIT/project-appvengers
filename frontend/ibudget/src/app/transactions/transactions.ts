@@ -231,7 +231,7 @@ export class Transactions implements OnInit, OnDestroy {
     this.showPopup.set(true);
   }
 
-  getSelectedTransaction() {
+  getSelectedTransaction(): Transaction | undefined {
     return this.transactions.find(t => t.id === this.selectedTransactionId());
   }
 }
