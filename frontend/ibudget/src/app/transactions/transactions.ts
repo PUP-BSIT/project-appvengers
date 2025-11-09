@@ -207,7 +207,7 @@ export class Transactions implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.unlisten = this.renderer.listen('document', 'click', (event: Event) =>
-      {
+{
       const target = event.target as HTMLElement;
       if (!target.closest('.btn-dots') && !target.closest('.popup-menu')) {
         this.showPopup.set(false);
@@ -223,7 +223,7 @@ export class Transactions implements OnInit, OnDestroy {
 
   toggleActions(event: MouseEvent, id: number) {
     event.stopPropagation();
-    const button = event.target as HTMLElement;
+    const button = (event.currentTarget as HTMLElement).closest('.btn-dots') as HTMLElement;
     const rect = button.getBoundingClientRect();
     this.popupTop.set(rect.top + window.scrollY);
     this.popupLeft.set(rect.left - 80 + window.scrollX);
