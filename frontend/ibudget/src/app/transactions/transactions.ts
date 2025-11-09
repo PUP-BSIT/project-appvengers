@@ -223,7 +223,8 @@ export class Transactions implements OnInit, OnDestroy {
 
   toggleActions(event: MouseEvent, id: number) {
     event.stopPropagation();
-    const button = (event.currentTarget as HTMLElement).closest('.btn-dots') as HTMLElement;
+    const button = (event.currentTarget as HTMLElement)
+      .closest('.btn-dots') as HTMLElement;
     const rect = button.getBoundingClientRect();
     this.popupTop.set(rect.top + window.scrollY);
     this.popupLeft.set(rect.left - 80 + window.scrollX);
