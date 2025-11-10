@@ -232,6 +232,14 @@ export class Transactions implements OnInit, OnDestroy {
     this.showPopup.set(true);
   }
 
+  // Open the edit modal for the currently selected transaction (used by popup menu)
+  editSelected() {
+    const tx = this.getSelectedTransaction();
+    if (!tx) return;
+    this.editTransaction(tx);
+    this.showPopup.set(false);
+  }
+
   getSelectedTransaction(): Transaction | undefined {
     return this.transactions.find(t => t.id === this.selectedTransactionId());
   }

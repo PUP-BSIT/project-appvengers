@@ -238,8 +238,7 @@
       [style.left.px]="popupLeft()">
       <div
         class="menu-item"
-        (click)="getSelectedTransaction() && 
-          editTransaction(getSelectedTransaction()!); showPopup.set(false)">
+        (click)="editSelected()">
           Edit
       </div>
       @if (selectedTransactionId(); as id) {
