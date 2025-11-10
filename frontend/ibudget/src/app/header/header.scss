@@ -14,6 +14,9 @@ $card-drop-shadow: #00000040;
   padding: 0 20px;
   margin-left: $header-margin-left;
   border-bottom: $border-color 1px solid;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .menu-toggle {
