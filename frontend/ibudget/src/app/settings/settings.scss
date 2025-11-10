@@ -2,10 +2,13 @@ $sidebar-width: 100px;
 $background-color: #c9cefa;
 
 .settings-container {
-  margin-left: $sidebar-width;
+  margin-left: $sidebar-width; 
   padding: 10px;
   height: auto;
   background-color: $background-color;
+  box-sizing: border-box;   
+  width: 100%;
+  max-width: 100%;
 }
 
 .account-form-container {
@@ -21,7 +24,8 @@ $background-color: #c9cefa;
   gap: 2em;
 
   .first-row-input {
-    width: 90vw;
+    flex: 1 1 0;
+    min-width: 0;
   }
 }
 
@@ -47,7 +51,8 @@ $background-color: #c9cefa;
   margin-bottom: 10px;
 
   .fifth-row-input {
-    width: 90vw;
+    flex: 1 1 0;
+    min-width: 0;
   }
 }
 
@@ -56,4 +61,85 @@ $background-color: #c9cefa;
   flex-direction: column;
   padding: 15px;
   gap: 1em;
+}
+
+.first-panel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  margin: 50px 0;
+  grid-area: first-panel;
+}
+
+.second-panel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  margin: 50px 0;
+  grid-area: second-panel;
+}
+
+.third-panel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  margin: 50px 0;
+  grid-area: third-panel;
+}
+
+@media(max-width: 320px) {
+  main.settings-container{
+    width: 100%; 
+  }
+
+  .first-panel,
+  .second-panel,
+  .third-panel {
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;   
+    margin-left: 0;
+    padding: 0;
+  }
+}
+
+@media(max-width: 768px) {
+  .settings-container {
+    margin-left: 0 !important;
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-areas: 
+      "first-panel"
+      "second-panel"
+      "third-panel";
+    box-sizing: border-box;
+  }
+
+  .first-panel, .second-panel, .third-panel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .card.w-50 {
+    width: 100% !important;
+    max-width: 100%;
+  }
+
+  .card.h-50 {
+    height: auto !important;
+    min-height: auto;
+  }
+
+  .first-row, .fifth-row {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
 }
