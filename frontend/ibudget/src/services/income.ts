@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { Income } from '../models/user.model';
 
