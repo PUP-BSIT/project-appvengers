@@ -1,4 +1,4 @@
-  import { Component, signal } from '@angular/core';
+import { Component, signal, Renderer2, OnInit, OnDestroy } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe, DatePipe, CommonModule } from '@angular/common';
@@ -11,10 +11,18 @@ import { Header } from '../header/header';
   templateUrl: './transactions.html',
   styleUrl: './transactions.scss',
 })
-export class Transactions {
+export class Transactions implements OnInit, OnDestroy {
+  private unlisten: (() => void) | null = null;
+
+  constructor(private renderer: Renderer2) {}
+
   showAddModal = signal(false);
   showNotification = signal(false);
   notificationMessage = signal('');
+  selectedTransactionId = signal<number | null>(null);
+  popupTop = signal(0);
+  popupLeft = signal(0);
+  showPopup = signal(false);
 
   transactions: Transaction[] = [
     {
@@ -195,5 +203,36 @@ export class Transactions {
     setTimeout(() => {
       this.showNotification.set(false);
     }, 3000);
+  }
+
+  ngOnInit() {
+    this.unlisten = this.renderer.listen('document', 'click', (event: Event) =>
+    {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.btn-dots') && !target.closest('.popup-menu')) {
+        this.showPopup.set(false);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.unlisten) {
+      this.unlisten();
+    }
+  }
+
+  toggleActions(event: MouseEvent, id: number) {
+    event.stopPropagation();
+    const button = (event.currentTarget as HTMLElement)
+      .closest('.btn-dots') as HTMLElement;
+    const rect = button.getBoundingClientRect();
+    this.popupTop.set(rect.top + window.scrollY);
+    this.popupLeft.set(rect.left - 80 + window.scrollX);
+    this.selectedTransactionId.set(id);
+    this.showPopup.set(true);
+  }
+
+  getSelectedTransaction(): Transaction | undefined {
+    return this.transactions.find(t => t.id === this.selectedTransactionId());
   }
 }
