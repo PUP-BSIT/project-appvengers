@@ -6,7 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test --code-coverage --watch=false --browsers=ChromeHeadless"
+    "test": "ng test --code-coverage --watch=false --browsers=ChromeHeadless",
+    "test:watch": "ng test --code-coverage",
+    "test:coverage": "ng test --code-coverage --watch=false --browsers=ChromeHeadless && start coverage/index.html",
+    "test:no-coverage": "ng test --watch=false --browsers=ChromeHeadless"
   },
   "prettier": {
     "printWidth": 100,
