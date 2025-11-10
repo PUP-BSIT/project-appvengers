@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { TransactionHistory } from '../../model/user.model';
+import { TransactionHistory } from '../../../models/user.model';
 import { HistoryService } from '../../../services/history';
 
 @Component({
