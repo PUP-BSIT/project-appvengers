@@ -43,3 +43,21 @@ a {
     color: #6f42c1;  
   }
 }
+
+@media(max-width: 768px) {
+  .sub-header-wrapper {
+    margin-left: 0;
+    width: 100%;
+    padding: 10px 10px 0 10px;
+  }
+
+  .sub-header-selections {
+    gap: 2em;
+    margin-left: 10px;
+
+    a {
+      font-size: 14px;
+      text-align: center;
+    }
+  }
+}
