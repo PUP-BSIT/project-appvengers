@@ -11,7 +11,7 @@ when conducting a code review, ensure that the code follows best practices and a
 - Code security and privacy
 - Code documentation and comments
 
-When performing a code review, respond in Filipino.
+When performing a code review, respond in English.
 
 ## Repository Overview
 
