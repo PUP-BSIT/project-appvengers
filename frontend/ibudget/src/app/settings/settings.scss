@@ -63,26 +63,8 @@ $background-color: #c9cefa;
   gap: 1em;
 }
 
-.first-panel {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 50px;
-  margin: 50px 0;
-  grid-area: first-panel;
-}
-
-.second-panel {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 50px;
-  margin: 50px 0;
-  grid-area: second-panel;
-}
-
+.first-panel,
+.second-panel,
 .third-panel {
   display: flex;
   flex-direction: row;
@@ -90,6 +72,17 @@ $background-color: #c9cefa;
   justify-content: center;
   gap: 50px;
   margin: 50px 0;
+}
+
+.first-panel {
+  grid-area: first-panel;
+}
+
+.second-panel {
+  grid-area: second-panel;
+}
+
+.third-panel {
   grid-area: third-panel;
 }
 
