@@ -28,6 +28,12 @@
   gap: 50px;
 }
 
+@media (min-width: 320px) and (max-width: 424px) {
+  .card-footer {
+    gap: 18px;
+  }
+}
+
 @media (max-width: 768px) {
   .kpi-panel-container {
     margin: 10px 10px;
@@ -40,12 +46,6 @@
   }
 
   .card-footer {
-    gap: 5px;
-  }
-}
-
-@media (min-width: 425px) and (max-width: 768px) {
-  .card-footer {
-    gap: 50px;
+    gap: 16px;
   }
 }
