@@ -86,23 +86,7 @@ $background-color: #c9cefa;
   grid-area: third-panel;
 }
 
-@media (max-width: 320px) {
-  main.settings-container{
-    width: 100%; 
-  }
-
-  .first-panel,
-  .second-panel,
-  .third-panel {
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;   
-    margin-left: 0;
-    padding: 0;
-  }
-}
-
-@media(max-width: 768px) {
+@media (min-width: 320px) and (max-width: 768px) {
   .settings-container {
     margin-left: 0 !important;
     width: 100%;
@@ -115,10 +99,14 @@ $background-color: #c9cefa;
     box-sizing: border-box;
   }
 
-  .first-panel, .second-panel, .third-panel {
-    display: flex;
+  .first-panel,
+  .second-panel,
+  .third-panel {
     flex-direction: column;
-    width: 100%;
+    gap: 20px;
+    width: 100%;   
+    margin-left: 0;
+    padding: 0;
   }
 
   .card.w-50 {
