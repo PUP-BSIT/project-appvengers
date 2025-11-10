@@ -7,3 +7,24 @@ html, body {
   width: 100%;
   scroll-behavior: smooth;
 }
+
+@media (max-width: 320px) {
+  html, body {
+    height: 100vh;
+    width: 100vw;
+  }
+}
+
+@media (max-width: 768px) {
+  html, body {
+    height: auto;
+    width: auto;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  html, body {
+    height: auto;
+    width: auto;
+  }
+}
