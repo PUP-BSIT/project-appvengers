@@ -46,7 +46,7 @@ export type Categories = {
 
 export type Budget = {
   id: number;
-  category_id: number;
+  category_id?: number;
   category_name: string;  
   limit_amount: number;
   savings_goal?: number;
