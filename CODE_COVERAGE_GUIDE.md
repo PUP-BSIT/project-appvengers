@@ -76,22 +76,9 @@ backend/appvengers/target/site/jacoco/
 ```bash
 # Enable symlinks for this repository
 git config core.symlinks true
-
-# Or enable globally for all repositories
-git config --global core.symlinks true
 ```
 
-### Step 2: Enable Developer Mode (Windows 10/11)
-
-This allows Git to create symlinks without admin privileges:
-
-1. Open **Settings** → **Update & Security** → **For Developers**
-2. Toggle **Developer Mode** to **ON**
-3. Restart your terminal/IDE
-
-**Alternative:** If you can't enable Developer Mode, run Git Bash/terminal as Administrator when pulling.
-
-### Step 3: Pull or Re-checkout
+### Step 2: Pull or Re-checkout
 
 ```bash
 # If you already pulled before enabling symlinks, re-checkout:
@@ -428,8 +415,8 @@ ng test --watch=false --browsers=ChromeHeadless
 
 ---
 
-**Last Updated**: November 11, 2025  
-**Test Status**: 29/29 tests passing ✅  
+**Last Updated**: November 11, 2025
+**Test Status**: 29/29 tests passing ✅
 **Current Coverage**: ~49% statements, ~13% branches
 
 For questions or issues, refer to the team's testing documentation or ask in the team chat.
