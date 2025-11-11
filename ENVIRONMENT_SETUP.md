@@ -180,9 +180,11 @@ npm run build
 ### ✅ DO:
 - **Keep `.env` files local** - Never commit to Git
 - **Use `.env.example`** - Provide templates with placeholder values
-- **Rotate secrets regularly** - Update JWT secrets and passwords periodically
-- **Use strong secrets** - Minimum 32 characters for JWT secrets
+- **Rotate secrets regularly** - Update JWT secrets and passwords periodically (especially if exposed)
+- **Use cryptographically strong secrets** - Minimum 32 bytes, recommended 64+ bytes for JWT
+- **Generate secrets with crypto libraries** - Use OpenSSL/PowerShell/crypto.randomBytes() (NOT keyboard mashing!)
 - **Set proper permissions** - Restrict `.env` file access (chmod 600 on Linux/Mac)
+- **Use different secrets per environment** - Separate secrets for dev/staging/production
 
 ### ❌ DON'T:
 - **Never commit `.env`** - Already excluded in `.gitignore`
