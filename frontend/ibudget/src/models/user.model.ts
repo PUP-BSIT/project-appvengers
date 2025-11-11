@@ -38,9 +38,10 @@ export type TransactionHistory = {
   type: string;
 }
 
-export type ExpensesCategories = {
+export type Categories = {
   id: number;
   name: string;
+  type: string;
 }
 
 export type Budget = {
