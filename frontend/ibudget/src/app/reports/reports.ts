@@ -3,7 +3,7 @@ import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
 import { ExpensesService } from '../../services/expenses';
 import { IncomeService } from '../../services/income';
-import { Expenses, Income } from '../model/user.model';
+import { Expenses, Income } from '../../models/user.model';
 import { CurrencyPipe } from '@angular/common';
 
 @Component({

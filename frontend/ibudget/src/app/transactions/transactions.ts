@@ -2,7 +2,7 @@ import { Component, signal, Renderer2, OnInit, OnDestroy } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe, DatePipe, CommonModule } from '@angular/common';
-import {Transaction} from "../model/user.model";
+import {Transaction} from "../../models/user.model";
 import { Header } from '../header/header';
 
 @Component({
@@ -230,6 +230,14 @@ export class Transactions implements OnInit, OnDestroy {
     this.popupLeft.set(rect.left - 80 + window.scrollX);
     this.selectedTransactionId.set(id);
     this.showPopup.set(true);
+  }
+
+  // Open the edit modal for the currently selected transaction (used by popup menu)
+  editSelected() {
+    const tx = this.getSelectedTransaction();
+    if (!tx) return;
+    this.editTransaction(tx);
+    this.showPopup.set(false);
   }
 
   getSelectedTransaction(): Transaction | undefined {

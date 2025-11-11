@@ -5,7 +5,7 @@ import {
     FormGroup,
     Validators
   } from '@angular/forms';
-import { Budget, ExpensesCategories } from '../../model/user.model';
+import { Budget, ExpensesCategories } from '../../../models/user.model';
 import { MockupsService } from '../../../services/mockups.service';
 
 @Component({
