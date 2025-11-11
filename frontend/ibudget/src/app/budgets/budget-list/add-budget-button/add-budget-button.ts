@@ -117,6 +117,8 @@ export class AddBudgetButton implements OnInit, OnChanges {
     modal?.hide();
 
     this.budgetForm.reset();
+    // Restore the id field after reset to prevent it being null
+    this.budgetForm.patchValue({ id: this.mockBudgetId() });
     this.openAddBudgetModalBtn.nativeElement.focus();
   }
 
