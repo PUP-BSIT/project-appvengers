@@ -22,29 +22,26 @@ export class BudgetList implements OnInit {
   mockupService = inject(MockupsService);
 
   ngOnInit(): void {
-    this.budgets.set(this.mockupService.getMockBudgets());
+    this.getBudgets();
   }
 
-  // Inserts/Add New Budget
-  addBudget() {
-
-  }
-
-  loadBudgetToUpdate(budget: Budget) {
-
-  }
-
-  // Updates a budget inside the budgets array
-  updateBudget() {
-
-  }
-
-  // Deletes a budget inside the array
-  deleteBudget() {
-
+  getBudgets() {
+    this.mockupService.getMockBudgets().subscribe(budgets => {
+      this.budgets.set(budgets);
+    });
   }
 
   onBudgetAdded(newBudget: Budget) {
     this.budgets.set([...this.budgets(), newBudget]);
+  }
+
+  onBudgetUpdated(updatedBudget: Budget) {
+    this.budgets.update(budgetList => budgetList.map(budget => 
+      budget.id === updatedBudget.id ? updatedBudget : budget
+    ));
+  }
+
+  onBudgetDeleted(updatedBudgets: Budget[]) {
+    this.budgets.set(updatedBudgets);
   }
 }

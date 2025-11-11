@@ -6,9 +6,12 @@ import {
     Component, 
     ElementRef, 
     inject, 
+    input, 
+    OnChanges, 
     OnInit, 
     output, 
     signal, 
+    SimpleChanges, 
     ViewChild 
   } from '@angular/core';
 import { 
@@ -24,7 +27,7 @@ import {
   templateUrl: './add-budget-button.html',
   styleUrl: './add-budget-button.scss',
 })
-export class AddBudgetButton implements OnInit {
+export class AddBudgetButton implements OnInit, OnChanges {
   @ViewChild('addBudgetModal') addBudgetModal!: ElementRef;
   @ViewChild('openAddBudgetModalBtn') 
     openAddBudgetModalBtn!: ElementRef<HTMLButtonElement>;
@@ -32,11 +35,14 @@ export class AddBudgetButton implements OnInit {
   addedBudget = output<Budget>();
   formBuilder = inject(FormBuilder);  
   mockupService = inject(MockupsService);
+  mockBudgetId = input(<number>(0));
   categoriesService = inject(CategoriesService);
   categories = signal(<Categories[]>[]);
 
   constructor() {
     this.budgetForm = this.formBuilder.group({
+      id: [],
+      category_id: [],
       category_name: ['', {
         validators: [Validators.required]
       }],
@@ -54,7 +60,51 @@ export class AddBudgetButton implements OnInit {
   }
 
   ngOnInit() {
+    const budgetId = this.mockBudgetId();
     this.categories.set(this.categoriesService.getExpenseCategories());
+
+    this.budgetForm = this.formBuilder.group({
+      id: [budgetId],
+      category_id: [],
+      category_name: ['', {
+        validators: [Validators.required]
+      }],
+      limit_amount: [0, {
+        validators: [Validators.required]
+      }],
+      current_amount: [0],
+      start_date: ['', {
+        validators: [Validators.required]
+      }],
+      end_date: ['', {
+        validators: [Validators.required]
+      }]
+    });
+  }
+
+  // If the parent changes, the added budget id should update accordingly
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['mockBudgetId']) {
+      const budgetId = changes['mockBudgetId'].currentValue;
+
+      this.budgetForm = this.formBuilder.group({
+        id: [budgetId],
+        category_id: [],
+        category_name: ['', {
+          validators: [Validators.required]
+        }],
+        limit_amount: [0, {
+          validators: [Validators.required]
+        }],
+        current_amount: [0],
+        start_date: ['', {
+          validators: [Validators.required]
+        }],
+        end_date: ['', {
+          validators: [Validators.required]
+        }]
+      });
+    }
   }
 
   openModal() {
@@ -71,13 +121,18 @@ export class AddBudgetButton implements OnInit {
   }
 
   addBudget() {
-    console.log('Adding budget...');
-    if (this.budgetForm.invalid) {
-      console.log('Form is invalid');
-      return;
-    }
+    if (this.budgetForm.invalid) return;
 
-    this.addedBudget.emit(this.budgetForm.value as Budget);
-    this.closeModal();
+    this.mockupService.addMockBudget(this.budgetForm.value)
+      .subscribe((newBudget: Budget) => {
+        this.addedBudget.emit(newBudget);
+        this.closeModal();
+    });
+  }
+
+  // Sets the value of the category_id based on the category_name value
+  afterCategorySelection() {
+    const categoryValue = this.budgetForm.get('category_name')?.value;
+    this.budgetForm.get('category_id')?.setValue(categoryValue);
   }
 }

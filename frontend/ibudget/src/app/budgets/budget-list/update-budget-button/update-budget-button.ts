@@ -1,7 +1,7 @@
 import { Modal } from 'bootstrap';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { Budget } from '../../../../models/user.model';
-import { Categories } from '../../../categories/categories';
+import { Categories } from '../../../../models/user.model';
 import { MockupsService } from '../../../../services/mockups.service';
 import { bootstrapThreeDotsVertical } from '@ng-icons/bootstrap-icons'
 import { CategoriesService } from '../../../../services/categories.service';
@@ -9,6 +9,7 @@ import {
           Component, 
           ElementRef, 
           inject, 
+          input, 
           OnInit, 
           output, 
           signal, 
@@ -30,12 +31,14 @@ import {
     provideIcons({bootstrapThreeDotsVertical})
   ]
 })
-export class UpdateBudgetButton {
+export class UpdateBudgetButton implements OnInit {
   @ViewChild('updateBudgetModal') updateBudgetModal!: ElementRef;
   @ViewChild('openUpdateBudgetModalBtn') 
     openUpdateBudgetModalBtn!: ElementRef<HTMLButtonElement>;
   budgetForm: FormGroup;
-  addedBudget = output<Budget>();
+  budgetId = input(<number>(0));
+  updatedBudgetResponse = output<Budget>();
+  deletedBudgetResponse = output<Budget[]>();
   formBuilder = inject(FormBuilder);  
   mockupService = inject(MockupsService);
   categoriesService = inject(CategoriesService);
@@ -43,7 +46,8 @@ export class UpdateBudgetButton {
 
   constructor() {
     this.budgetForm = this.formBuilder.group({
-      category_name: ['', {
+      category_id: [],
+      category_name: [{value: '', disabled: true}, {
         validators: [Validators.required]
       }],
       limit_amount: [0, {
@@ -57,6 +61,10 @@ export class UpdateBudgetButton {
         validators: [Validators.required]
       }]
     });
+  }
+
+  ngOnInit(): void {
+    this.getCategories();
   }
 
   openModal() {
@@ -73,15 +81,41 @@ export class UpdateBudgetButton {
   }
 
   openUpdateBudgetModal() {
-    console.log('Open Update Budget Modal');
+    if(!this.budgetId()) return;
+
     this.openModal();
+    this.mockupService.getMockBudgetsById(this.budgetId())
+      .subscribe((fetchedBudget: Budget) => {
+        this.budgetForm.setValue({
+          category_id: fetchedBudget.category_id,
+          category_name: fetchedBudget.category_id,
+          limit_amount: fetchedBudget.limit_amount,
+          current_amount: fetchedBudget.current_amount,
+          start_date: fetchedBudget.start_date,
+          end_date: fetchedBudget.end_date
+        });
+      });
   }
 
   updateBudget() {
-    console.log('Updating budget...');
+    this.mockupService.updateMockBudget(this.budgetId(), this.budgetForm.value)
+      .subscribe((updatedBudget: Budget) => {
+        this.updatedBudgetResponse.emit(updatedBudget);
+        this.budgetForm.reset();
+        this.closeModal();
+      });
   }
 
   deleteBudget() {
-    console.log('Deleting budget...');
+    this.mockupService.deleteMockBudget(this.budgetId())
+      .subscribe((updatedBudgets: Budget[]) => {
+        this.deletedBudgetResponse.emit(updatedBudgets);
+        this.budgetForm.reset();
+        this.closeModal();
+      });
+  }
+
+  getCategories() {
+    this.categories.set(this.categoriesService.getExpenseCategories());
   }
 }

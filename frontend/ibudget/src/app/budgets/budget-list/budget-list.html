@@ -9,11 +9,17 @@
     </div>
 
     <div class="d-flex justify-content-end">
-      <app-add-budget-button (addedBudget)="onBudgetAdded($event)"/>
+      <app-add-budget-button 
+        (addedBudget)="onBudgetAdded($event)"
+        [mockBudgetId]="budgets().length + 1"/>
     </div>
   </div>
   
   <div class="budget-list-container">
+    @if(!budgets().length) {
+      <span>No budgets available.</span>
+    }
+
     @for(budget of budgets(); track $index) {
       <div class="card mb-4">
         <div 
@@ -26,7 +32,10 @@
           </div>
 
           <div class="update-btn-container">
-            <app-update-budget-button/>
+            <app-update-budget-button 
+              (updatedBudgetResponse)="onBudgetUpdated($event)"
+              (deletedBudgetResponse)="onBudgetDeleted($event)"
+              [budgetId]="budget.id"/>
           </div>
         </div>
       </div>
