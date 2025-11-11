@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { Dashboard } from './dashboard';
 
@@ -8,7 +10,11 @@ describe('Dashboard', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Dashboard]
+      imports: [Dashboard],
+      providers: [
+        provideRouter([]),
+        provideCharts(withDefaultRegisterables())
+      ]
     })
     .compileComponents();
 
