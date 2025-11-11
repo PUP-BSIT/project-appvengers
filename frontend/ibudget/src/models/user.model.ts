@@ -39,7 +39,7 @@ export type TransactionHistory = {
 }
 
 export type Categories = {
-  id: number;
+  category_id: number;
   name: string;
   type: string;
 }

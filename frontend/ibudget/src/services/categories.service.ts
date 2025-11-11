@@ -10,13 +10,13 @@ export class CategoriesService {
 
   // Mock Expense Categories
   EXPENSE_CATEGORIES: Categories[] = [
-    { id: 1, name: 'Housing', type: 'expense' },
-    { id: 2, name: 'Transportation', type: 'expense' },
-    { id: 3, name: 'Utilities', type: 'expense' },
-    { id: 4, name: 'Insurance', type: 'expense' },
-    { id: 5, name: 'Healthcare', type: 'expense' },
-    { id: 6, name: 'Food', type: 'expense' },
-    { id: 7, name: 'Other', type: 'expense' }
+    { category_id: 1, name: 'Housing', type: 'expense' },
+    { category_id: 2, name: 'Transportation', type: 'expense' },
+    { category_id: 3, name: 'Utilities', type: 'expense' },
+    { category_id: 4, name: 'Insurance', type: 'expense' },
+    { category_id: 5, name: 'Healthcare', type: 'expense' },
+    { category_id: 6, name: 'Food', type: 'expense' },
+    { category_id: 7, name: 'Other', type: 'expense' }
   ];
 
   getExpenseCategories(): Categories[] {

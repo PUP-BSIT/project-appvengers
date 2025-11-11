@@ -20,7 +20,7 @@
             <select formControlName="category_name" class="form-select mb-3">
               <option selected disabled>-- Select Category --</option>
               @for(category of categories(); track $index) {
-                <option [value]="category.id">{{ category.name }}</option>
+                <option [value]="category.category_id">{{ category.name }}</option>
               }
             </select>
             
