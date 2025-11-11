@@ -208,18 +208,10 @@ export class Reports implements OnInit {
     const incWs = XLSX.utils.json_to_sheet(incData);
     // Set column widths for Income sheet
     incWs['!cols'] = [
-      {
-        wch: 30
-      },
-      {
-        wch: 18
-      },
-      {
-        wch: 18
-      },
-      {
-        wch: 14
-      }
+      { wch: 30 },
+      { wch: 18 },
+      { wch: 18 },
+      { wch: 14 }
     ];
     const incRange = XLSX.utils.decode_range(incWs['!ref'] as string);
     // Style header row for Income
