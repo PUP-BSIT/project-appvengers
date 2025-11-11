@@ -8,10 +8,11 @@ import {
 import { Budget } from '../../../models/user.model';
 import { MockupsService } from '../../../services/mockups.service';
 import { AddBudgetButton } from "./add-budget-button/add-budget-button";
+import { UpdateBudgetButton } from "./update-budget-button/update-budget-button";
 
 @Component({
   selector: 'app-budget-list',
-  imports: [ReactiveFormsModule, AddBudgetButton],
+  imports: [ReactiveFormsModule, AddBudgetButton, UpdateBudgetButton],
   templateUrl: './budget-list.html',
   styleUrl: './budget-list.scss',
 })
