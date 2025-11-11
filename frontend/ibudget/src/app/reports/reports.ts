@@ -43,8 +43,8 @@ export class Reports implements OnInit {
     this.netSavings = this.totalIncome - this.totalExpenses;
     const totalAllocated = this.expenses.reduce((sum, exp) =>
       sum + exp.allocatedAmount, 0);
-    this.budgetAdherence = totalAllocated > 0 ? (
-      (totalAllocated - this.totalExpenses) / totalAllocated) * 100 : 0;
+    this.budgetAdherence = totalAllocated > 0 ? Math.max(0,
+      ((totalAllocated - this.totalExpenses) / totalAllocated) * 100) : 0;
   }
 
   isOverspent(expense: Expenses): boolean {
