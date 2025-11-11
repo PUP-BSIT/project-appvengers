@@ -1,1 +1,7 @@
+# Environment variables (contains sensitive data)
 .env
+.env.local
+.env.*.local
+
+# Agent instructions (project-specific)
+AGENTS.md
