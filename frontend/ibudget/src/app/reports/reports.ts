@@ -160,29 +160,14 @@ export class Reports implements OnInit {
 
     // Set column widths for readability
     expWs['!cols'] = [
-      {
-        wch: 30
-      },
-      {
-        wch: 18
-      },
-      { 
-        wch: 18
-      }, 
+      { wch: 30 },
+      { wch: 18 },
+      { wch: 18 },
       { wch: 14 }
     ];
 
     // Get range
     const expRange = XLSX.utils.decode_range(expWs['!ref'] as string);
-    // Style header row (row 1)
-    for (let C = expRange.s.c; C <= expRange.e.c; ++C) {
-      const cellAddress = { c: C, r: 0 };
-      const cellRef = XLSX.utils.encode_cell(cellAddress);
-      if (!expWs[cellRef]) continue;
-      (expWs[cellRef] as any).s = (expWs[cellRef] as any).s || {};
-      (expWs[cellRef] as any).s.fill = headerFill;
-      (expWs[cellRef] as any).s.font = headerFont;
-    }
 
     // Style body rows, check overspent by comparing numeric values in expData
     for (let R = 0; R < expData.length; ++R) {
