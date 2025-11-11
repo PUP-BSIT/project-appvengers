@@ -28,6 +28,24 @@ ng test --code-coverage --browsers=Chrome
 
 ## 📁 Where to Find the Reports
 
+### Quick Access (Recommended)
+
+Coverage reports are accessible from the **project root** via symlinks:
+```
+coverage/
+├── frontend/index.html  ← Frontend coverage (Angular)
+└── backend/index.html   ← Backend coverage (Spring Boot/JaCoCo)
+```
+
+**To view reports:**
+```bash
+# From project root
+start coverage/frontend/index.html  # Frontend
+start coverage/backend/index.html   # Backend
+```
+
+### Original Locations
+
 After running tests, coverage reports are generated in:
 ```
 frontend/ibudget/coverage/
@@ -36,12 +54,65 @@ frontend/ibudget/coverage/
 ├── services/           ← Service-specific reports
 ├── lcov.info           ← For CI/CD tools
 └── [other files]       ← Supporting files
+
+backend/appvengers/target/site/jacoco/
+├── index.html          ← Backend coverage report
+└── [other files]       ← JaCoCo generated files
 ```
 
-**To view the HTML report:**
-- **Windows**: `start coverage/index.html`
-- **Mac/Linux**: `open coverage/index.html`
-- **Or**: Just double-click `coverage/index.html` in File Explorer
+**Alternative viewing methods:**
+- **Windows**: `start frontend/ibudget/coverage/index.html`
+- **Mac/Linux**: `open frontend/ibudget/coverage/index.html`
+- **Or**: Just double-click the `index.html` file in File Explorer
+
+---
+
+## ⚙️ First-Time Setup for Team Members
+
+**Important:** After cloning the repo or pulling these changes, you need to enable symlink support in Git:
+
+### Step 1: Enable Git Symlinks
+
+```bash
+# Enable symlinks for this repository
+git config core.symlinks true
+
+# Or enable globally for all repositories
+git config --global core.symlinks true
+```
+
+### Step 2: Enable Developer Mode (Windows 10/11)
+
+This allows Git to create symlinks without admin privileges:
+
+1. Open **Settings** → **Update & Security** → **For Developers**
+2. Toggle **Developer Mode** to **ON**
+3. Restart your terminal/IDE
+
+**Alternative:** If you can't enable Developer Mode, run Git Bash/terminal as Administrator when pulling.
+
+### Step 3: Pull or Re-checkout
+
+```bash
+# If you already pulled before enabling symlinks, re-checkout:
+git checkout HEAD -- coverage/
+
+# Or simply pull normally:
+git pull origin DevOps
+```
+
+The `coverage/` folder will now contain working symlinks! ✅
+
+**Verification:**
+```bash
+# Check symlinks were created
+dir /AL coverage  # Windows
+ls -la coverage   # Mac/Linux
+
+# Should show:
+# coverage/frontend -> frontend/ibudget/coverage
+# coverage/backend -> backend/appvengers/target/site/jacoco
+```
 
 ---
 
@@ -273,9 +344,9 @@ Example GitHub Action:
 
 ---
 
-## 📝 Suggested NPM Scripts
+## 📝 Available NPM Scripts
 
-Add these to `frontend/ibudget/package.json` for easier commands:
+The project already includes these helpful npm scripts in `frontend/ibudget/package.json`:
 
 ```json
 {
@@ -288,7 +359,7 @@ Add these to `frontend/ibudget/package.json` for easier commands:
 }
 ```
 
-Then teammates can use:
+You can use these commands:
 ```bash
 npm run test:coverage    # Run tests and auto-open report
 npm run test:watch       # Run tests in watch mode with coverage
