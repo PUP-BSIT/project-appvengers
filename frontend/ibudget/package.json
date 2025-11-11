@@ -32,6 +32,7 @@
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
     "@ng-icons/bootstrap-icons": "^32.4.0",
+    "@ng-icons/core": "^32.4.0",
     "angular-svg-round-progressbar": "^15.0.0",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
