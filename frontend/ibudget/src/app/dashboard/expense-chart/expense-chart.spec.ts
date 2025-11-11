@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Chart, registerables } from 'chart.js';
 
 import { ExpenseChart } from './expense-chart';
 
@@ -7,6 +8,8 @@ describe('ExpenseChart', () => {
   let fixture: ComponentFixture<ExpenseChart>;
 
   beforeEach(async () => {
+    Chart.register(...registerables);
+    
     await TestBed.configureTestingModule({
       imports: [ExpenseChart]
     })
