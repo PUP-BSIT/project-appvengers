@@ -30,30 +30,18 @@
     </div>
   </section>
 
-  <!-- Period Filter and Export Actions -->
+  <!-- Period Filter -->
   <section class="filter-section">
-    <div class="filter-header">
-      <h3>View Reports By:
-        <select
-          [(ngModel)]="selectedPeriod"
-          (ngModelChange)="setPeriod($event)"
-          class="period-select">
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-        </select>
-      </h3>
-      <div class="export-buttons">
-        <button class="btn-export btn-pdf" (click)="exportPDF()">
-          <i class="fas fa-file-pdf"></i>
-          Export PDF
-        </button>
-        <button class="btn-export btn-excel" (click)="exportExcel()">
-          <i class="fas fa-file-excel"></i>
-          Export Excel
-        </button>
-      </div>
-    </div>
+    <h3>View Reports By:
+      <select
+        [(ngModel)]="selectedPeriod"
+        (ngModelChange)="setPeriod($event)"
+        class="period-select">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+      </select>
+    </h3>
   </section>
 
   <section class="report-section">

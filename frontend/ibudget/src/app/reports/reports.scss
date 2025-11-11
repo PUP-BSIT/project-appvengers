@@ -78,61 +78,9 @@ $sidebar-width: 100px;
   border-radius: 8px;
   padding: 20px;
 
-  .filter-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-
-    h3 {
-      margin: 0;
-      color: #555;
-    }
-  }
-}
-
-.export-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-export {
-  padding: 10px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s ease;
-
-  i {
-    font-size: 1rem;
-  }
-
-  &.btn-pdf {
-    background-color: #dc3545;
-    color: white;
-
-    &:hover {
-      background-color: #c82333;
-      transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
-    }
-  }
-
-  &.btn-excel {
-    background-color: #28a745;
-    color: white;
-
-    &:hover {
-      background-color: #218838;
-      transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
-    }
+  h3 {
+    margin: 0 0 10px 0;
+    color: #555;
   }
 }
 
