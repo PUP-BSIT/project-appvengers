@@ -58,7 +58,7 @@
         </thead>
         <tbody>
           @for (expense of expenses; track expense.name) {
-             <tr [class.overspent]="isOverspent(expense)">
+            <tr>
               <td>{{ expense.name }}</td>
               <td>
                 {{ expense.currentAmount | currency:'PHP':'symbol':'1.0-0' }}

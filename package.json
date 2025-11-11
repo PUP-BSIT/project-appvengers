@@ -35,12 +35,9 @@
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "chart.js": "^4.5.1",
-    "jspdf": "^3.0.3",
-    "jspdf-autotable": "^5.0.2",
     "ng2-charts": "^8.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "xlsx": "^0.18.5",
     "zone.js": "^0.15.1"
   },
   "devDependencies": {
@@ -49,7 +46,6 @@
     "@angular/cli": "^20.3.4",
     "@angular/compiler-cli": "^20.3.0",
     "@types/jasmine": "~5.1.0",
-    "@types/xlsx": "^0.0.35",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
