@@ -52,5 +52,5 @@ export type Budget = {
   savings_goal?: number;
   start_date: string;
   end_date: string;
-  current_amount: number;
+  current_amount?: number;
 }
