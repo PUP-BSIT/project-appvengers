@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { SetupAccount } from "./setup-account/setup-account";
-import { ROUTER_CONFIGURATION, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
+import { NgxLoadingBar } from '@ngx-loading-bar/core';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, NgxLoadingBar],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
