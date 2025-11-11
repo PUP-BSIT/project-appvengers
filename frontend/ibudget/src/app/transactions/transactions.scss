@@ -243,6 +243,15 @@ $sidebar-width: 100px;
   flex-shrink: 0;
 }
 
+.amount-text.income {
+  color: #27ae60;
+  font-weight: 600;
+}
+.amount-text.expense {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
 .category-tag {
   border-radius: 20px;
   font-size: 0.85rem;
@@ -934,8 +943,8 @@ $sidebar-width: 100px;
   }
 }
 
-/* Specific for 412x892 resolution */
-@media (width: 412px) and (height: 892px) {
+/* Small mobile devices 412px wide */
+@media (min-width: 400px) and (max-height: 425px) {
   .summary-cards {
     grid-template-columns: 1fr;
     gap: 1rem;
