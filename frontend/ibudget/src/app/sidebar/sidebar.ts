@@ -1,8 +1,9 @@
 import { Component, computed, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SidebarService } from '../../services/sidebar.service';
 import { SidebarOverlay } from '../sidebar-overlay/sidebar-overlay';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,10 +13,14 @@ import { SidebarOverlay } from '../sidebar-overlay/sidebar-overlay';
 })
 export class Sidebar {
   private sidebarService = inject(SidebarService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   isOpen = computed(() => this.sidebarService.isOpen());
 
   logout(): void {
-    console.log("Logout successfully.")
+    this.authService.logout();
+    this.router.navigate(['/login-page']);
+    console.log('Logout successfully.');
   }
 }
