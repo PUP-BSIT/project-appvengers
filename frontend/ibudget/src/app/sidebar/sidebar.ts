@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SidebarService } from '../../services/sidebar.service';
@@ -18,22 +18,20 @@ export class Sidebar {
 
   isOpen = computed(() => this.sidebarService.isOpen());
 
-  // local UI state for logout confirmation modal
-  showLogoutModal = false;
+  showLogoutModal = signal(false);
 
   openLogoutModal(): void {
-    this.showLogoutModal = true;
+    this.showLogoutModal.set(true);
   }
 
   cancelLogout(): void {
-    this.showLogoutModal = false;
+    this.showLogoutModal.set(false);
   }
 
   confirmLogout(): void {
     // perform logout then navigate
     this.authService.logout();
     this.router.navigate(['/login-page']);
-    this.showLogoutModal = false;
-    console.log('Logout confirmed and performed.');
+    this.showLogoutModal.set(false);
   }
 }
