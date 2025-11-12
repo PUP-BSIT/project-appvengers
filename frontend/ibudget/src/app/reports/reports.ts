@@ -42,7 +42,7 @@ export class Reports implements OnInit {
 
     this.totalIncome = (incomes ?? []).reduce((s, it) => {
       if (!it) return s;
-      const val = (it.amount !== undefined ? it.amount : it.currentAmount);
+      const val = it.amount ?? it.currentAmount;
       return s + (Number(val) || 0);
     }, 0);
 
