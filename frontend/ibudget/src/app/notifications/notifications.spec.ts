@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 
 import { Notifications } from './notifications';
 
@@ -10,7 +11,10 @@ describe('Notifications', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Notifications],
-      providers: [provideRouter([])]
+      providers: [
+        provideRouter([]),
+        provideHttpClient()
+      ]
     })
     .compileComponents();
 

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { Dashboard } from './dashboard';
@@ -13,6 +14,7 @@ describe('Dashboard', () => {
       imports: [Dashboard],
       providers: [
         provideRouter([]),
+        provideHttpClient(),
         provideCharts(withDefaultRegisterables())
       ]
     })
