@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
@@ -32,7 +33,7 @@ public class JwtService {
             );
         }
 
-        byte[] keyBytes = SECRET_KEY.getBytes();
+        byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
         int minBytesForHS256 = 32; // 256 bits = 32 bytes (industry standard)
         int recommendedBytes = 64;  // 512 bits = 64 bytes (best practice)
 
@@ -59,7 +60,7 @@ public class JwtService {
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = SECRET_KEY.getBytes();
+        byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
         return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 
