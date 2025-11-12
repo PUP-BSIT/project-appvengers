@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal, HostListener } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SidebarService } from '../../services/sidebar.service';
@@ -11,6 +11,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss'
 })
+
 export class Sidebar {
   private sidebarService = inject(SidebarService);
   private authService = inject(AuthService);
@@ -18,9 +19,29 @@ export class Sidebar {
 
   isOpen = computed(() => this.sidebarService.isOpen());
 
-  logout(): void {
+  showLogoutModal = signal(false);
+
+  openLogoutModal(): void {
+    this.showLogoutModal.set(true);
+  }
+
+  cancelLogout(): void {
+    this.showLogoutModal.set(false);
+  }
+
+  confirmLogout(): void {
+    // perform logout then navigate
     this.authService.logout();
     this.router.navigate(['/login-page']);
-    console.log('Logout successfully.');
+    this.showLogoutModal.set(false);
   }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscapeKey(event: Event): void {
+    if (this.showLogoutModal()) {
+      this.cancelLogout();
+      event.preventDefault();
+    }
+  }
+
 }
