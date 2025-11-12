@@ -196,13 +196,3 @@ $sidebar-width: 100px;
 .report-table tbody tr.overspent:hover {
   background-color: #ffcccc;
 }
-
-// Overspent row styling
-.report-table tbody tr.overspent {
-  background-color: #ffe6e6;
-  border-left: 4px solid #dc3545;
-}
-
-.report-table tbody tr.overspent:hover {
-  background-color: #ffcccc;
-}
