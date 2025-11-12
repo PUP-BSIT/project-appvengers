@@ -36,11 +36,13 @@ export class Reports implements OnInit {
 
   computeTotals(): void {
     this.totalIncome = (this.income ?? []).reduce((s, it) => {
+      if (!it) return s;
       const val = (it.amount !== undefined ? it.amount : it.currentAmount);
       return s + (Number(val) || 0);
     }, 0);
 
     this.totalExpenses = (this.expenses ?? []).reduce((s, it) => {
+      if (!it) return s;
       const val = (it.currentAmount !== undefined ? it.currentAmount :
         it.allocatedAmount);
       return s + (Number(val) || 0);
