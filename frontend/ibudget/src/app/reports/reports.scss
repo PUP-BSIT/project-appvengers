@@ -4,15 +4,112 @@ $sidebar-width: 100px;
 .reports-container {
   margin-left: $sidebar-width;
   padding: 40px;
+  padding-top: 110px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: $background-color;
   min-height: 100vh;
   color: #333;
 }
 
+:host ::ng-deep app-header .header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .reports-container h1 {
   color: #333;
   margin-bottom: 30px;
+  text-align: center;
+}
+
+// Summary Section Styles
+.summary-section {
+  margin-bottom: 40px;
+}
+
+.summary-cards {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.summary-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+
+  h3 {
+    margin: 0 0 10px 0;
+    color: #555;
+    font-size: 1.1em;
+  }
+
+  .amount {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #28a745;
+    margin: 0;
+
+    &.negative {
+      color: #dc3545;
+    }
+  }
+
+  .percentage {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #007bff;
+    margin: 0;
+  }
+}
+
+// Filter Section Styles
+.filter-section {
+  border-radius: 8px;
+  padding: 20px;
+
+  h3 {
+    margin: 0 0 10px 0;
+    color: #555;
+  }
+}
+
+.period-select {
+  margin-left: 10px;
+  padding: 8px 12px;
+  border: 2px solid #373738;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  font-size: 1rem;
+  cursor: pointer;
+  outline: none;
+
+  &:hover {
+    border-color: #a8b4fa;
+    box-shadow: 0 0 5px rgba(201, 206, 250, 0.5);
+  }
+
+  &:focus {
+    border-color: #6f42c1;
+    box-shadow: 0 0 8px rgba(111, 66, 193, 0.3);
+  }
+
+  option {
+    padding: 10px;
+    background-color: #fff;
+    color: #333;
+  }
 }
 
 .report-section {
@@ -88,4 +185,14 @@ $sidebar-width: 100px;
   overflow-x: auto;
   white-space: nowrap;
   max-width: 0;
+}
+
+// Overspent row styling
+.report-table tbody tr.overspent {
+  background-color: #ffe6e6;
+  border-left: 4px solid #dc3545;
+}
+
+.report-table tbody tr.overspent:hover {
+  background-color: #ffcccc;
 }
