@@ -100,7 +100,7 @@
 </div>
 
 <!-- Logout confirmation modal -->
-<div class="logout-modal-backdrop" *ngIf="showLogoutModal" (click)="cancelLogout()">
+<div class="logout-modal-backdrop" *ngIf="showLogoutModal()" (click)="cancelLogout()">
   <div class="logout-modal" (click)="$event.stopPropagation()">
     <div class="logout-modal-header">
       <h3>Confirm Logout</h3>
