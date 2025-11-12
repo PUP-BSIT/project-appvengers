@@ -10,10 +10,16 @@ interface SignupRequest {
   confirmPassword: string;
 }
 
-interface ApiResponse {
+interface AuthData {
+  username: string;
+  email: string;
+  token: string;
+}
+
+interface ApiResponse<T = any> {
   success: boolean;
   message: string;
-  data?: any;
+  data?: T;
 }
 
 @Injectable({
@@ -41,23 +47,23 @@ export class AuthService {
     return this.http.get<ApiResponse>(`${this.apiUrl}/verify-email?token=${token}`);
   }
 
-  login(credentials: { email: string; password: string }): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${this.apiUrl}/login`, credentials).pipe(
-      tap((res: ApiResponse) => {
-        if (res.success && res.data) {
-          // store JWT in localStorage
-          localStorage.setItem('authToken', res.data);
+  login(credentials: { email: string; password: string }): Observable<ApiResponse<AuthData>> {
+    return this.http.post<ApiResponse<AuthData>>(`${this.apiUrl}/login`, credentials).pipe(
+      tap((res: ApiResponse<AuthData>) => {
+        if (res.success && res.data?.token) {
+          // store JWT token string in localStorage
+          localStorage.setItem('iBudget_authToken', res.data.token);
         }
       })
     );
   }
 
   logout(): void {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('iBudget_authToken');
   }
 
   getToken(): string | null {
-    return localStorage.getItem('authToken');
+    return localStorage.getItem('iBudget_authToken');
   }
 
   isLoggedIn(): boolean {
