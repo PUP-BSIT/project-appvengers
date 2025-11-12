@@ -2,6 +2,48 @@
 <app-header></app-header>
 
 <main class="reports-container">
+    <!-- Financial Summary Section -->
+  <section class="summary-section">
+    <div class="summary-cards">
+      <div class="summary-card">
+        <h3>Total Income</h3>
+        <p class="amount">
+          {{ totalIncome | currency:'PHP':'symbol':'1.2-2' }}
+        </p>
+      </div>
+      <div class="summary-card">
+        <h3>Total Expenses</h3>
+        <p class="amount">
+          {{ totalExpenses | currency:'PHP':'symbol':'1.2-2' }}
+        </p>
+      </div>
+      <div class="summary-card">
+        <h3>Net Savings</h3>
+        <p class="amount" [class.negative]="netSavings < 0">
+          {{ netSavings | currency:'PHP':'symbol':'1.2-2' }}
+        </p>
+      </div>
+      <div class="summary-card">
+        <h3>Budget Adherence</h3>
+        <p class="percentage">{{ budgetAdherence | number:'1.0-0' }}%</p>
+      </div>
+    </div>
+  </section>
+  <!-- Period Filter -->
+  <section class="filter-section">
+    <h3>View Reports By:
+      <select
+        [(ngModel)]="selectedPeriod"
+        (ngModelChange)="setPeriod($event)"
+        class="period-select">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+      </select>
+    </h3>
+  </section>
+
+  <!-- Expense and Income Reports -->
   <section class="report-section">
     <h2>Expense Report</h2>
     <div class="table-wrapper">
@@ -18,8 +60,12 @@
           @for (expense of expenses; track expense.name) {
             <tr>
               <td>{{ expense.name }}</td>
-              <td>{{ expense.currentAmount | currency:'PHP':'symbol':'1.0-0' }}</td>
-              <td>{{ expense.allocatedAmount | currency:'PHP':'symbol':'1.0-0' }}</td>
+              <td>
+                {{ expense.currentAmount | currency:'PHP':'symbol':'1.0-0' }}
+              </td>
+              <td>
+                {{ expense.allocatedAmount | currency:'PHP':'symbol':'1.0-0' }}
+              </td>
               <td>{{ expense.percentageUsed }}%</td>
             </tr>
           }

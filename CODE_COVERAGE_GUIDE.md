@@ -94,37 +94,70 @@ backend/appvengers/target/site/jacoco/
 
 ## ⚙️ First-Time Setup for Team Members
 
-**Important:** After cloning the repo or pulling these changes, you need to enable symlink support in Git:
+**Important:** This is a **ONE-TIME setup per developer machine**. After completing these steps, you'll **NEVER** need to run them again - symlinks will work automatically on every `git pull`!
 
-### Step 1: Enable Git Symlinks
+### Prerequisites
+
+- **Windows users**: Must run these commands in **Git Bash as Administrator**
+- **Mac/Linux users**: Can run in normal terminal (no admin needed)
+
+### Step 1: Enable Git Symlinks (ONE-TIME)
+
+Open **Git Bash as Administrator** (Windows) or terminal (Mac/Linux) and run:
 
 ```bash
-# Enable symlinks for this repository
+# Navigate to your project-appvengers directory
+cd /path/to/your/project-appvengers
+
+# Enable symlinks for this repository (ONE-TIME setting)
 git config core.symlinks true
 ```
 
-### Step 2: Pull or Re-checkout
+**Example paths:**
+- Windows Git Bash: `cd /c/Users/YourName/Documents/project-appvengers`
+- Mac/Linux: `cd ~/Documents/project-appvengers`
+
+**Note for Windows users**: If you get a "permission denied" error, make sure you're running Git Bash **as Administrator** (right-click Git Bash → "Run as Administrator").
+
+### Step 2: Restore Coverage Symlinks (ONE-TIME)
 
 ```bash
-# If you already pulled before enabling symlinks, re-checkout:
-git checkout HEAD -- coverage/
-
-# Or simply pull normally:
-git pull origin DevOps
+# Restore the symlinks from the repository
+git restore coverage/backend coverage/frontend
 ```
 
-The `coverage/` folder will now contain working symlinks! ✅
+**Alternative if `git restore` doesn't work:**
+```bash
+# Re-checkout the coverage directory
+git checkout HEAD -- coverage/
+```
 
-**Verification:**
+### Step 3: Verify Symlinks Work
+
 ```bash
 # Check symlinks were created
 dir /AL coverage  # Windows
 ls -la coverage   # Mac/Linux
 
 # Should show:
-# coverage/frontend -> frontend/ibudget/coverage
-# coverage/backend -> backend/appvengers/target/site/jacoco
+# coverage/frontend -> ../frontend/ibudget/coverage
+# coverage/backend -> ../backend/appvengers/target/site/jacoco
 ```
+
+### ✅ You're Done!
+
+**From now on:**
+- ✅ `git pull` will automatically maintain symlinks
+- ✅ `git checkout` will preserve symlinks
+- ✅ No need to run any special commands again!
+
+**What if symlinks break?**
+If symlinks ever stop working, just re-run Step 2 once:
+```bash
+git restore coverage/backend coverage/frontend
+```
+
+This is extremely rare and usually only happens if you manually delete the `coverage/` directory.
 
 ---
 
