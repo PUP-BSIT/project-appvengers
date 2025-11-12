@@ -8,19 +8,19 @@
       <div class="summary-card">
         <h3>Total Income</h3>
         <p class="amount">
-          {{ totalIncome | currency:'PHP':'symbol':'1.0-0' }}
+          {{ totalIncome | currency:'PHP':'symbol':'1.2-2' }}
         </p>
       </div>
       <div class="summary-card">
         <h3>Total Expenses</h3>
         <p class="amount">
-          {{ totalExpenses | currency:'PHP':'symbol':'1.0-0' }}
+          {{ totalExpenses | currency:'PHP':'symbol':'1.2-2' }}
         </p>
       </div>
       <div class="summary-card">
         <h3>Net Savings</h3>
         <p class="amount" [class.negative]="netSavings < 0">
-          {{ netSavings | currency:'PHP':'symbol':'1.0-0' }}
+          {{ netSavings | currency:'PHP':'symbol':'1.2-2' }}
         </p>
       </div>
       <div class="summary-card">
