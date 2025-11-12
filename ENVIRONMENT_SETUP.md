@@ -71,33 +71,43 @@ export JWT_SECRET="your_secret"
 export SERVER_PORT="8081"
 ```
 
-#### Option B: Using dotenv-java Library (For Local Development)
+#### Option B: Using spring-dotenv Library (For Local Development)
 
-1. Add dependency to `pom.xml`:
+The project uses `spring-dotenv` which automatically loads `.env` files with zero configuration.
+
+1. **Dependency** (already in `pom.xml`):
 ```xml
 <dependency>
-    <groupId>io.github.cdimascio</groupId>
-    <artifactId>dotenv-java</artifactId>
-    <version>3.0.0</version>
+    <groupId>me.paulschwarz</groupId>
+    <artifactId>spring-dotenv</artifactId>
+    <version>4.0.0</version>
 </dependency>
 ```
 
-2. Create a configuration class to load `.env`:
-```java
-@Configuration
-public class DotenvConfig {
-    @PostConstruct
-    public void loadEnv() {
-        Dotenv dotenv = Dotenv.configure()
-            .directory("./")
-            .ignoreIfMissing()
-            .load();
-        
-        dotenv.entries().forEach(entry -> 
-            System.setProperty(entry.getKey(), entry.getValue())
-        );
-    }
-}
+2. **How it works**:
+   - **Automatic loading** - Spring Boot automatically loads `.env` from `backend/appvengers/` on startup
+   - **No configuration needed** - No `@Configuration` class required
+   - **Precedence**: System environment variables > `.env` file values
+   - **Spring integration** - Values available via `${ENV_VAR}` in `application.properties`
+
+3. **Optional configuration** (create `.env.properties` if needed):
+```properties
+# Only needed if you want to customize default behavior
+directory=./
+filename=.env
+ignoreIfMissing=true
+systemProperties=true
+```
+
+**Example**:
+With this in `.env`:
+```env
+DB_PASSWORD=mySecretPassword123
+```
+
+Spring automatically makes it available in `application.properties`:
+```properties
+spring.datasource.password=${DB_PASSWORD}
 ```
 
 #### Option C: IntelliJ IDEA Environment Variables
@@ -240,7 +250,7 @@ npm run build
 
 - [Spring Boot External Configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config)
 - [Angular Environment Configuration](https://angular.dev/tools/cli/environments)
-- [Dotenv Java Documentation](https://github.com/cdimascio/dotenv-java)
+- [Spring Dotenv Documentation](https://github.com/paulschwarz/spring-dotenv)
 
 ---
 
