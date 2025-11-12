@@ -33,7 +33,7 @@ export class Reports implements OnInit {
     this.income = this.incomeService.getStaticIncome();
     this.computeTotals();
   }
-  
+
   computeTotals(): void {
     this.totalIncome = (this.income ?? []).reduce((s, it) => {
       const val = (it.amount !== undefined ? it.amount : it.currentAmount);
@@ -53,22 +53,5 @@ export class Reports implements OnInit {
   setPeriod(period: string): void {
     this.selectedPeriod = period;
     this.computeTotals();
-  }
-
-  private hasName(item: unknown): item is { name: string } {
-    const rec = item as Record<string, unknown> | null;
-    return !!rec && typeof rec['name'] === 'string';
-  }
-
-  trackByName(index: number, item: Expenses | Income | null | undefined): string | number {
-    if (this.hasName(item)) return item.name;
-    return index;
-  }
-
-  isOverspent(expense: Expenses): boolean {
-    if (!expense) return false;
-    const current = Number(expense.currentAmount) || 0;
-    const allocated = Number(expense.allocatedAmount) || 0;
-    return current > allocated;
   }
 }
