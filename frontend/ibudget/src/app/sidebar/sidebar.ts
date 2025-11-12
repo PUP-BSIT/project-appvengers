@@ -18,9 +18,22 @@ export class Sidebar {
 
   isOpen = computed(() => this.sidebarService.isOpen());
 
-  logout(): void {
+  // local UI state for logout confirmation modal
+  showLogoutModal = false;
+
+  openLogoutModal(): void {
+    this.showLogoutModal = true;
+  }
+
+  cancelLogout(): void {
+    this.showLogoutModal = false;
+  }
+
+  confirmLogout(): void {
+    // perform logout then navigate
     this.authService.logout();
     this.router.navigate(['/login-page']);
-    console.log('Logout successfully.');
+    this.showLogoutModal = false;
+    console.log('Logout confirmed and performed.');
   }
 }
