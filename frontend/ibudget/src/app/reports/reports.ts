@@ -90,7 +90,8 @@ export class Reports implements OnInit {
         }
         case 'monthly':
         default:
-          return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+          return d.getFullYear() === now.getFullYear() &&
+                 d.getMonth() === now.getMonth();
       }
     });
   }
