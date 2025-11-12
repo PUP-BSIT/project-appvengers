@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
+@Slf4j
 @Service
 public class JwtService {
 
@@ -49,13 +51,9 @@ public class JwtService {
         }
 
         if (keyBytes.length < recommendedBytes) {
-            System.err.println(
-                String.format(
-                    "WARNING: JWT secret key length (%d bytes) is below recommended size (%d bytes). " +
-                    "Consider generating a stronger secret for production use.",
-                    keyBytes.length, recommendedBytes
-                )
-            );
+            log.warn("JWT secret key length ({} bytes) is below recommended size ({} bytes). " +
+                     "Consider generating a stronger secret for production use.",
+                     keyBytes.length, recommendedBytes);
         }
     }
 
