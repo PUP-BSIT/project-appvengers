@@ -37,6 +37,7 @@
     "@ngx-loading-bar/http-client": "^7.0.0",
     "@ngx-loading-bar/router": "^7.0.0",
     "angular-svg-round-progressbar": "^15.0.0",
+    "boolbase": "^1.0.0",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "chart.js": "^4.5.1",
