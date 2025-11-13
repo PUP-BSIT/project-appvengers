@@ -53,6 +53,7 @@ jobs:
     - name: Start backend server
       working-directory: backend/appvengers
       run: |
+        chmod +x mvnw
         ./mvnw spring-boot:run &
         echo $! > backend.pid
         # Wait for backend to be ready
