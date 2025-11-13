@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Budget } from '../app/model/user.model';
+import { Budget } from '../models/user.model';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class MockupsService {
     {
       id: 1,
       category_id: 1,
-      category_name: 'Food',
+      category_name: 'Housing',
       limit_amount: 500,
       current_amount: 200,
       start_date: '2025-11-04',
@@ -26,26 +27,42 @@ export class MockupsService {
     }
   ];
 
-  getMockBudgets(): Budget[] {
-    return [...this.MOCK_BUDGETS];
+  getMockBudgets(): Observable<Budget[]> {
+    return of([...this.MOCK_BUDGETS]);
   }
 
-  addMockBudget(newBudget: Budget): Budget[] {
+  getMockBudgetsById(id: number): Observable<Budget>  {
+    const matchedBudget = this.MOCK_BUDGETS.find(budget => budget.id === id);
+
+    if (!matchedBudget) {
+      throw new Error(`Budget with id ${id} not found.`);
+    }
+
+    return of(matchedBudget);
+  }
+
+  addMockBudget(newBudget: Budget): Observable<Budget> {
     this.MOCK_BUDGETS = [...this.MOCK_BUDGETS, newBudget];
-    return [...this.MOCK_BUDGETS];
+    return of(newBudget);
   }
 
-  updateMockBudget(updated: Budget): Budget[] {
-    const index = this.MOCK_BUDGETS.findIndex(b => b.id === updated.id);
+  updateMockBudget(id: number, budget: Budget): Observable<Budget> {
+    this.MOCK_BUDGETS = this.MOCK_BUDGETS
+      .map(existingBudget => existingBudget.id === id ?
+        {...existingBudget, ...budget} : existingBudget
+    );
 
-    if (index === -1) return [...this.MOCK_BUDGETS];
+    const updatedBudget = this.MOCK_BUDGETS.find(budget => budget.id === id);
 
-    this.MOCK_BUDGETS[index] = { ...this.MOCK_BUDGETS[index], ...updated };
-    return [...this.MOCK_BUDGETS];
+    if(!updatedBudget) {
+      throw new Error(`Failed to update because budget not found.`);
+    }
+
+    return of(updatedBudget);
   }
 
-  deleteMockBudget(id: number) {
+  deleteMockBudget(id: number): Observable<Budget[]> {
     this.MOCK_BUDGETS = this.MOCK_BUDGETS.filter(budget => budget.id !== id);
-    return [...this.MOCK_BUDGETS];
+    return of(this.MOCK_BUDGETS);
   }
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
-import { Notification } from '../model/user.model';
+import { Notification } from '../../models/user.model';
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { NotificationService } from '../../services/notification';
 
