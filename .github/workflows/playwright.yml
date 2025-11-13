@@ -47,7 +47,9 @@ jobs:
     # Build backend
     - name: Build backend
       working-directory: backend/appvengers
-      run: ./mvnw clean install -DskipTests
+      run: |
+        chmod +x mvnw
+        ./mvnw clean install -DskipTests
     
     # Start backend server
     - name: Start backend server
