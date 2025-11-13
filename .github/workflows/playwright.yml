@@ -1,0 +1,107 @@
+name: Playwright E2E Tests
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'frontend/ibudget/**'
+      - 'backend/appvengers/**'
+      - '.github/workflows/playwright.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'frontend/ibudget/**'
+      - 'backend/appvengers/**'
+      - '.github/workflows/playwright.yml'
+
+jobs:
+  e2e-tests:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    
+    env:
+      DB_URL: ${{ secrets.DB_URL }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET_CI }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    # Setup Java for backend
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+        cache: 'maven'
+    
+    # Setup Node.js for frontend
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+        cache: 'npm'
+        cache-dependency-path: frontend/ibudget/package-lock.json
+    
+    # Build backend
+    - name: Build backend
+      working-directory: backend/appvengers
+      run: ./mvnw clean install -DskipTests
+    
+    # Start backend server
+    - name: Start backend server
+      working-directory: backend/appvengers
+      run: |
+        ./mvnw spring-boot:run &
+        echo $! > backend.pid
+        # Wait for backend to be ready
+        timeout 60 bash -c 'until curl -f http://localhost:8081/actuator/health 2>/dev/null || curl -f http://localhost:8081 2>/dev/null; do sleep 2; done' || echo "Backend started"
+    
+    # Install frontend dependencies
+    - name: Install frontend dependencies
+      working-directory: frontend/ibudget
+      run: npm ci
+    
+    # Start frontend dev server
+    - name: Start frontend dev server
+      working-directory: frontend/ibudget
+      run: |
+        npm start &
+        echo $! > frontend.pid
+        # Wait for frontend to be ready
+        timeout 120 bash -c 'until curl -f http://localhost:4200 2>/dev/null; do sleep 2; done'
+    
+    # Install Playwright browsers
+    - name: Install Playwright browsers
+      working-directory: frontend/ibudget
+      run: npx playwright install --with-deps chromium firefox webkit
+    
+    # Run Playwright E2E tests
+    - name: Run Playwright tests
+      working-directory: frontend/ibudget
+      run: npx playwright test
+    
+    # Cleanup: Stop servers
+    - name: Stop servers
+      if: always()
+      run: |
+        [ -f backend/appvengers/backend.pid ] && kill $(cat backend/appvengers/backend.pid) || true
+        [ -f frontend/ibudget/frontend.pid ] && kill $(cat frontend/ibudget/frontend.pid) || true
+    
+    # Upload artifacts
+    - name: Upload Playwright report
+      uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: frontend/ibudget/playwright-report/
+        retention-days: 30
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-results
+        path: frontend/ibudget/test-results/
+        retention-days: 30
