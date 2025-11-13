@@ -69,4 +69,16 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
+
+  getProfile(): Observable<ApiResponse<{ username: string; email: string }>> {
+    const token = this.getToken();
+    return this.http.get<ApiResponse<{ username: string; email: string }>>(
+      `${environment.apiUrl}/user/profile`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+  }
 }
