@@ -128,15 +128,30 @@ $sidebar-width: 100px;
 }
 
 .table-wrapper {
-  overflow-y: scroll;
   max-height: 300px;
 }
 
 .report-table {
-  width: auto;
-  min-width: 100%;
+  width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
+  table-layout: fixed;
+}
+
+.report-table thead {
+  display: table-header-group;
+}
+
+.report-table tbody {
+  display: block;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.report-table thead tr,
+.report-table tbody tr {
+  display: table;
+  width: 100%;
   table-layout: fixed;
 }
 
@@ -184,7 +199,6 @@ $sidebar-width: 100px;
   color: #666;
   overflow-x: auto;
   white-space: nowrap;
-  max-width: 0;
 }
 
 // Overspent row styling
