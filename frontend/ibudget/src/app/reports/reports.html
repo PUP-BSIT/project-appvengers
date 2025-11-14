@@ -31,16 +31,19 @@
   </section>
   <!-- Period Filter -->
   <section class="filter-section">
-    <h3>View Reports By:
-      <select
-        [(ngModel)]="selectedPeriod"
-        (ngModelChange)="setPeriod($event)"
-        class="period-select">
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-      </select>
-    </h3>
+    <div class="filter-header">
+      <h3>View Reports By:
+        <select
+          [(ngModel)]="selectedPeriod"
+          (ngModelChange)="setPeriod($event)"
+          class="period-select">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+        </select>
+      </h3>
+      <button class="export-btn">Export PDF</button>
+    </div>
   </section>
 
   <!-- Expense and Income Reports -->
