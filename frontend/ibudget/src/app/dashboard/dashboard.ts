@@ -5,7 +5,7 @@ import { HistoryTable } from "./history-table/history-table";
 import { Header } from "../header/header";
 import { IncomeChart } from "./income-chart/income-chart";
 import { DecimalPipe } from '@angular/common';
-import { HttpClient} from "@angular/common/http";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,22 +15,25 @@ import { HttpClient} from "@angular/common/http";
     Header, 
     IncomeChart, 
     ExpenseChart, 
-    DecimalPipe
+    DecimalPipe,
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
-export class Dashboard {
-  username: string = '';
+
+export class Dashboard{
+  username: string = 'User';
   remainingBudget: number = 0;
 
-  constructor(private http: HttpClient) {}
+  constructor(private auth: AuthService) {}
 
-  ngOnInit() {
-    this.http.get<any>('api/user/profile').subscribe({
+  ngOnInit(): void {
+    this.auth.getProfile().subscribe({
       next: (res) => {
-        this.username = res.username;
-        this.remainingBudget = res.remainingBudget;
+        if (res.success && res.data) {
+          this.username = res.data.username;
+          // this.remainingBudget = res.data.remainingBudget ?? 0;
+        }
       },
       error: () => {
         this.username = 'User';
@@ -39,3 +42,4 @@ export class Dashboard {
     });
   }
 }
+
