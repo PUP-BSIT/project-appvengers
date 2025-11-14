@@ -33,6 +33,9 @@ public class UserService {
     @Value("${app.verification.base-url:http://localhost:8081/api/auth/verify-email?token=}")
     private String verificationBaseUrl;
 
+    @Value("${app.email.from:change@me.com}")
+    private String emailFrom;
+
     @Transactional
     public ApiResponse registerUser(SignupRequest signupRequest) {
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
@@ -63,7 +66,7 @@ public class UserService {
         // Send Verification Email Template
         String verificationLink = verificationBaseUrl + emailToken;
         try {
-            emailService.sendHtmlEmail("team.appvengers12@gmail.com", user.getEmail(), "Verify your iBudget account", verificationLink, user.getUsername());
+            emailService.sendHtmlEmail(emailFrom, user.getEmail(), "Verify your iBudget account", verificationLink, user.getUsername());
         } catch (MessagingException | IOException e) {
             throw new RuntimeException("Failed to send verification email");
         }
