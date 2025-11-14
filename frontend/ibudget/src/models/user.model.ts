@@ -1,3 +1,41 @@
+export type User = {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+  emailVerificationToken: string;
+  emailVerified: boolean;
+  verificationToken: string;
+  failedAttempts: number;
+  lockedUntil: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  active: boolean;
+}
+
+export type ExistResponse = {
+  exists: boolean;
+}
+
+export type SignupRequest = {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export type AuthData = {
+  username: string;
+  email: string;
+  token: string;
+}
+
+export type ApiResponse<T = any> = {
+  success: boolean;
+  message: string;
+  data?: T;
+}
+
 export type Transaction = {
   id: number;
   date: Date;

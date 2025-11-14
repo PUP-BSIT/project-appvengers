@@ -2,25 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../environments/environment';
-
-interface SignupRequest {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
-interface AuthData {
-  username: string;
-  email: string;
-  token: string;
-}
-
-interface ApiResponse<T = any> {
-  success: boolean;
-  message: string;
-  data?: T;
-}
+import { ApiResponse, AuthData, SignupRequest } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
