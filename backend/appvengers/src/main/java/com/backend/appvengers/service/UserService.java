@@ -51,7 +51,7 @@ public class UserService {
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
-        user.setActive(true); // No email verification for now → active immediately
+        user.setActive(true); // User is active immediately but requires email verification
         user.setEmailVerified(false); // Set email verified to false
 
         // Set email verification token
