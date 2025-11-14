@@ -1,0 +1,83 @@
+<div 
+  #updateBudgetModal
+  class="modal fade" 
+  data-bs-backdrop="static" 
+  data-bs-keyboard="false" 
+  tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">
+            Update Budget
+          </h1>
+          <button 
+            type="button" 
+            class="btn-close"
+            (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="budgetForm">
+            <input type="hidden" formControlName="category_id"/>
+
+            <label for="category_name">Category</label>
+            <select 
+              formControlName="category_name" 
+              id="category_name"
+              class="form-select mb-3">
+                <option selected disabled>-- Select Category --</option>
+                @for(category of categories(); track $index) {
+                  <option [value]="category.category_id">
+                    {{ category.name }}
+                  </option>
+                }
+            </select>
+            
+            <label for="limit_amount">Set Budget</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text fw-bold">&#8369;</span>
+              <input 
+                formControlName="limit_amount"
+                class="form-control"
+                id="limit_amount"
+                type="number" 
+                min="0"/>
+            </div>
+            
+            <label for="start_date">Start Date</label>
+            <input 
+              formControlName="start_date"
+              class="form-control mb-3"
+              id="start_date"
+              type="date"/>
+
+            <label for="end_date">End Date</label>
+            <input 
+              formControlName="end_date"
+              class="form-control mb-3"
+              id="end_date"
+              type="date"/>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button 
+            type="button" 
+            class="btn btn-danger"
+            (click)="deleteBudget()">
+              Delete
+          </button>
+          <button 
+            (click)="updateBudget()"
+            type="button" 
+            class="btn btn-primary">Update</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<button 
+  #openUpdateBudgetModalBtn
+  type="button" 
+  class="btn"
+  (click)="openUpdateBudgetModal()">
+    <ng-icon name="bootstrapThreeDotsVertical"/>
+</button>

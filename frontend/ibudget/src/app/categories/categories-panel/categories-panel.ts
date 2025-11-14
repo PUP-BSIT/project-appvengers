@@ -23,6 +23,11 @@ export class CategoriesPanel implements OnInit {
     'Salary', 'Business', 'Investments', 'Gifts', 'Others'
   ]);
 
+  chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+
   expensesChartData: ChartData<'bar' | 'line'> = {
     labels: this.expensesCategories(),
     datasets: [

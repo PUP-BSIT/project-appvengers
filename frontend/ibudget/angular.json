@@ -31,6 +31,9 @@
                 "output": "assets"
               }
             ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "src/styles"
@@ -43,20 +46,26 @@
             ]
           },
           "configurations": {
-            "production": {
-              "budgets": [
+             "production": {
+               "budgets": [
+                 {
+                   "type": "initial",
+                   "maximumWarning": "1MB",
+                   "maximumError": "2MB"
+                 },
+                 {
+                   "type": "anyComponentStyle",
+                   "maximumWarning": "1MB",
+                   "maximumError": "2MB"
+                 }
+               ],
+              "outputHashing": "all",
+              "fileReplacements": [
                 {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.production.ts"
                 }
-              ],
-              "outputHashing": "all"
+              ]
             },
             "development": {
               "optimization": false,
@@ -84,6 +93,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
+            "karmaConfig": "karma.conf.js",
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -98,7 +108,8 @@
             "polyfills": [
               "zone.js",
               "zone.js/testing"
-            ]
+            ],
+            "codeCoverage": true
           }
         }
       }

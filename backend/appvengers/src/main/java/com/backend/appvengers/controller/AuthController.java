@@ -78,4 +78,15 @@ public class AuthController {
         boolean exists = userService.existsByEmail(email);
         return ResponseEntity.ok(new ApiResponse(true, "", Map.of("exists", exists)));
     }
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<ApiResponse> verifyEmail(@RequestParam("token") String token) {
+        ApiResponse response = userService.verifyEmailToken(token);
+
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 }

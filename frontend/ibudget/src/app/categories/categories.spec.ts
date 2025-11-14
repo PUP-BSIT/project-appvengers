@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { Categories } from './categories';
 
@@ -8,7 +11,12 @@ describe('Categories', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Categories]
+      imports: [Categories],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        provideCharts(withDefaultRegisterables())
+      ]
     })
     .compileComponents();
 

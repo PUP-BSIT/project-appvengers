@@ -23,3 +23,29 @@
   font-size: 24px;
   font-weight: bold;
 }
+
+.card-footer {
+  gap: 50px;
+}
+
+@media (min-width: 320px) and (max-width: 424px) {
+  .card-footer {
+    gap: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .kpi-panel-container {
+    margin: 10px 10px;
+  }
+
+  .budget-info-wrapper {
+    flex-direction: column-reverse;
+    padding: 20px 20px;
+    gap: 20px;
+  }
+
+  .card-footer {
+    gap: 16px;
+  }
+}

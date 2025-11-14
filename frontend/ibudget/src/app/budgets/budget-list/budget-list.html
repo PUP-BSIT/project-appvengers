@@ -1,22 +1,25 @@
 <div class="budget-container">
-  <div class="d-flex align-items-center justify-content-between mt-5">
+  <div class="budget-info-container">
     <div class="budget-list-title">
       <h4><i class="bi bi-bookmark-dash-fill text-success"></i> Budget List</h4>
-      <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</span>
+      <span>
+        You don&#8217;t have to see the whole staircase, just take the first step. 
+          &mdash; Martin Luther King, Jr.
+      </span>
     </div>
 
     <div class="d-flex justify-content-end">
-      <button 
-        type="button" 
-        class="btn btn-primary" 
-        data-bs-toggle="modal" 
-        data-bs-target="#add_budget_form_modal">
-          Add new budget
-      </button>
+      <app-add-budget-button 
+        (addedBudget)="onBudgetAdded($event)"
+        [mockBudgetId]="budgets().length + 1"/>
     </div>
   </div>
   
   <div class="budget-list-container">
+    @if(!budgets().length) {
+      <span>No budgets available.</span>
+    }
+
     @for(budget of budgets(); track $index) {
       <div class="card mb-4">
         <div 
@@ -29,161 +32,13 @@
           </div>
 
           <div class="update-btn-container">
-            <button 
-              type="button" 
-              class="btn btn-warning"
-              data-bs-toggle="modal" 
-              data-bs-target="#update_budget_form_modal"
-              (click)="loadBudgetToUpdate(budget)">
-              <i class="bi bi-pencil-square"></i>
-            </button>
+            <app-update-budget-button 
+              (updatedBudgetResponse)="onBudgetUpdated($event)"
+              (deletedBudgetResponse)="onBudgetDeleted($event)"
+              [budgetId]="budget.id"/>
           </div>
         </div>
       </div>
     }
   </div>
-</div>
-
-<!-- Add New Budget Modal -->
-<div 
-  class="modal fade" 
-  id="add_budget_form_modal" 
-  data-bs-backdrop="static" 
-  data-bs-keyboard="false" 
-  tabindex="-1" 
-  aria-labelledby="staticBackdropLabel" 
-  aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Budget</h1>
-          <button 
-            type="button" 
-            class="btn-close" 
-            data-bs-dismiss="modal" 
-            aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="budgetForm">
-            <label>Category</label>
-            <select formControlName="category" class="form-select mb-3">
-              <option selected disabled>-- Select Category --</option>
-              @for(category of categories; track $index) {
-                <option [value]="category.id">{{ category.name }}</option>
-              }
-            </select>
-            
-            <label>Set Budget</label>
-            <div class="input-group mb-3">
-              <span class="input-group-text fw-bold">&#8369;</span>
-              <input 
-                formControlName="limit_amount"
-                type="number" 
-                class="form-control"
-                min="0"/>
-            </div>
-            
-
-            <label>Start Date</label>
-            <input 
-              formControlName="start_date"
-              type="date"
-              class="form-control mb-3"/>
-
-            <label>End Date</label>
-            <input 
-              formControlName="end_date"
-              type="date"
-              class="form-control mb-3"/>
-
-            <!-- Hidden Current Amount -->
-            <input formControlName="current_amount" type="hidden"/>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button 
-            type="button" 
-            class="btn btn-secondary" 
-            data-bs-dismiss="modal">
-              Close
-          </button>
-          <button 
-            (click)="addBudget()"
-            type="button" 
-            class="btn btn-primary"
-            data-bs-dismiss="modal">Save</button>
-        </div>
-      </div>
-    </div>
-</div>
-
-<!-- Update Budget Modal -->
-<div 
-  class="modal fade" 
-  id="update_budget_form_modal" 
-  data-bs-backdrop="static" 
-  data-bs-keyboard="false" 
-  tabindex="-1" 
-  aria-labelledby="staticBackdropLabel" 
-  aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">
-            Update Budget
-          </h1>
-          <button 
-            type="button" 
-            class="btn-close" 
-            data-bs-dismiss="modal" 
-            aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="budgetForm">
-            <label>Category</label>
-            <input 
-              [value]="selectedBudget?.category_name"
-              type="text" 
-              class="form-control mb-3" 
-              disabled/>
-            
-            <label>Set Budget</label>
-            <div class="input-group mb-3">
-              <span class="input-group-text fw-bold">&#8369;</span>
-              <input 
-                formControlName="limit_amount"
-                type="number" 
-                class="form-control"
-                min="0"/>
-            </div>
-            
-            <label>Start Date</label>
-            <input 
-              formControlName="start_date"
-              type="date"
-              class="form-control mb-3"/>
-
-            <label>End Date</label>
-            <input 
-              formControlName="end_date"
-              type="date"
-              class="form-control mb-3"/>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button 
-            type="button" 
-            class="btn btn-danger"
-            (click)="deleteBudget()"
-            data-bs-dismiss="modal">
-              Delete
-          </button>
-          <button 
-            (click)="updateBudget()"
-            type="button" 
-            class="btn btn-primary"
-            data-bs-dismiss="modal">Update</button>
-        </div>
-      </div>
-    </div>
 </div>

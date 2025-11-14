@@ -1,0 +1,40 @@
+# Gitleaks Configuration for iBudget Project
+# This config extends the default gitleaks config and allowlists known safe secrets
+# Default config: https://github.com/gitleaks/gitleaks/blob/master/config/gitleaks.toml
+
+title = "iBudget Gitleaks Configuration"
+
+[extend]
+# Extend the default gitleaks configuration
+useDefault = true
+
+[allowlist]
+description = "Allowlist for test secrets, examples, and rotated secrets"
+
+# Allowlist specific commits with rotated secrets (no longer in use)
+commits = [
+  "a3bf93205b1ec6fc611c0b3dc42005476beda3d8",  # Old JWT secret (rotated)
+  "9d6237c85512ada6292b7b72d8a42b3a963aa621",  # Old JWT secret (rotated)
+]
+
+# Allowlist file paths that should contain dummy/test secrets
+paths = [
+  '''backend/appvengers/src/test/resources/application\.properties''',  # H2 test config
+  '''\.env\.example$''',  # Environment example files
+  '''\.(md|txt|pdf)$''',  # Documentation files
+  '''gitleaks-report\.json''',  # Gitleaks reports
+]
+
+# Allowlist specific secret patterns for test/example values
+regexes = [
+  '''VGVzdFNlY3JldEtleUZvckgySW5NZW1vcnlEYXRhYmFzZVRlc3RpbmdPbmx5MTIzNDU2Nzg5MA==''',  # H2 test JWT secret
+  '''b7f9c2e1a8d4e6f3c9a1b2d3f4e5g6h7''',  # Old production JWT secret (rotated)
+  '''your-secret-key-here''',  # .env.example placeholder
+  '''your-jwt-secret-key-here''',  # .env.example placeholder
+]
+
+# Custom rules can be added here if needed
+# [[rules]]
+# description = "Custom rule for specific secret pattern"
+# regex = '''your-pattern-here'''
+# tags = ["custom"]

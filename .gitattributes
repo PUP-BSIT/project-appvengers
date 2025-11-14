@@ -1,0 +1,3 @@
+# Declare symlinks for cross-platform Git support
+coverage/frontend symlink
+coverage/backend symlink
