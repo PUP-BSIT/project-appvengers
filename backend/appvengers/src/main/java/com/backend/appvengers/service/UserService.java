@@ -7,14 +7,19 @@ import com.backend.appvengers.dto.AuthResponse;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.UserRepository;
 import com.backend.appvengers.security.JwtService;
+
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +28,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final EmailService emailService;
+
+    @Value("${app.verification.base-url:http://localhost:8081/api/auth/verify-email?token=}")
+    private String verificationBaseUrl;
+
+    @Value("${app.email.from:change@me.com}")
+    private String emailFrom;
 
     @Transactional
     public ApiResponse registerUser(SignupRequest signupRequest) {
@@ -42,9 +54,22 @@ public class UserService {
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
-        user.setActive(true); // No email verification for now → active immediately
+        user.setActive(true); // User is active immediately but requires email verification
+        user.setEmailVerified(false); // Set email verified to false
+
+        // Set email verification token
+        String emailToken = UUID.randomUUID().toString();
+        user.setEmailVerificationToken(emailToken);
 
         userRepository.save(user);
+
+        // Send Verification Email Template
+        String verificationLink = verificationBaseUrl + emailToken;
+        try {
+            emailService.sendHtmlEmail(emailFrom, user.getEmail(), "Verify your iBudget account", verificationLink, user.getUsername());
+        } catch (MessagingException | IOException e) {
+            throw new RuntimeException("Failed to send verification email");
+        }
 
         UserDetails userDetails = org.springframework.security.core.userdetails.User
             .withUsername(user.getEmail())
@@ -54,7 +79,18 @@ public class UserService {
 
         String token = jwtService.generateToken(userDetails);
         AuthResponse response = new AuthResponse(user.getUsername(), user.getEmail(), token);
-        return new ApiResponse(true, "Signup successful", response);
+        return new ApiResponse(true, "Signup successful, Please check your email.", response);
+    }
+
+    public ApiResponse verifyEmailToken(String token) {
+        return userRepository.findByEmailVerificationToken(token)
+            .map(user -> {
+                user.setEmailVerified(true);
+                user.setEmailVerificationToken(null);
+                userRepository.save(user);
+                return new ApiResponse(true, "Email verified successfully", user);
+            })
+            .orElseGet(() -> new ApiResponse(false, "Invalid verification token"));
     }
 
     @Transactional

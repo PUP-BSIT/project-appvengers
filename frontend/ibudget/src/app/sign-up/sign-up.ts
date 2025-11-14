@@ -65,14 +65,14 @@ export class SignUp {
         if (response.success) {
           this.successMessage.set(response.message);
           setTimeout(() => {
-            this.router.navigate(['/login']);
+            this.router.navigate(['/login-page']);
           }, 2000);
         }
       },
       error: (error) => {
         this.loading.set(false);
         const msg = error?.error?.message || 'An error occurred during registration';
-        this.errorMessage.set(msg);
+        this.errorMessage.set(msg); 
       }
     });
   }

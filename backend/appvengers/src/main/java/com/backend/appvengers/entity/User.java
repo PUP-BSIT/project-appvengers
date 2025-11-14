@@ -39,6 +39,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "email_verification_token")
+    private String emailVerificationToken;
+
+    @Column(name = "email_verified")
+    private boolean emailVerified = false;
+
     @Column(name = "is_active")
     private boolean isActive = false;
 
