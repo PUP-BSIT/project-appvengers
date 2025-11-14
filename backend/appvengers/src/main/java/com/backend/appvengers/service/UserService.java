@@ -30,7 +30,7 @@ public class UserService {
     private final JwtService jwtService;
     private final EmailService emailService;
 
-    @Value("${app.verification.base-url:http://localhost:8081/api/auth/verify?token=}")
+    @Value("${app.verification.base-url:http://localhost:8081/api/auth/verify-email?token=}")
     private String verificationBaseUrl;
 
     @Transactional
