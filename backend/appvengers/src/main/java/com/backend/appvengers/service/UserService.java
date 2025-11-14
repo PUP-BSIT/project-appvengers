@@ -33,7 +33,7 @@ public class UserService {
     @Value("${app.verification.base-url:http://localhost:8081/api/auth/verify-email?token=}")
     private String verificationBaseUrl;
 
-    @Value("${app.email.from:change@me.com}")
+    @Value("${app.email.from:noreply@ibudget.site}")
     private String emailFrom;
 
     @Transactional
