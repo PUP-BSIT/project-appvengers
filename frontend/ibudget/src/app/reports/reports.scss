@@ -77,12 +77,22 @@ $sidebar-width: 100px;
 .filter-section {
   border-radius: 8px;
   padding: 20px;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
 
   h3 {
-    margin: 0 0 10px 0;
+    margin: 0;
     color: #555;
   }
 }
+
+
 
 .period-select {
   margin-left: 10px;
@@ -125,6 +135,34 @@ $sidebar-width: 100px;
   margin-bottom: 20px;
   border-bottom: 2px solid #c9cefa;
   padding-bottom: 10px;
+}
+
+.export-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.export-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #c82333;
+  }
+
+  &:active {
+    background-color: #bd2130;
+  }
 }
 
 .table-wrapper {
