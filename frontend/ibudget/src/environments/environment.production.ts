@@ -2,5 +2,5 @@
 export const environment = {
   production: true,
   apiUrl: 'https://i-budget.site/api',
-  n8nWebhookUrl: 'https://n8n-j3he.onrender.com/webhook/e28117bf-8896-4a38-8002-07819dbf1e86/chat'
+   n8nWebhookUrl: 'https://n8n-j3he.onrender.com/webhook/00a671bf-4606-4030-a2a2-65aa9e3b6c44/chat'
 };
