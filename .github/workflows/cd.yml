@@ -1,0 +1,121 @@
+name: I-Budget CD Deployment Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/ibudget/package-lock.json
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+          cache: maven
+
+      - name: Build Frontend
+        working-directory: frontend/ibudget
+        run: |
+          npm ci
+          npm run build --configuration=production
+
+      - name: Build Backend
+        working-directory: backend/appvengers
+        run: |
+          chmod +x mvnw
+          ./mvnw clean package -DskipTests
+
+      - name: Prepare prod branch
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          
+          # Create or checkout prod branch
+          git checkout prod 2>/dev/null || git checkout -b prod
+          
+          # Remove old build artifacts if they exist
+          git rm -rf frontend/ibudget/dist backend/appvengers/target 2>/dev/null || true
+          
+          # Copy new build artifacts
+          mkdir -p frontend/ibudget/dist
+          mkdir -p backend/appvengers/target
+          
+          cp -r frontend/ibudget/dist/ibudget frontend/ibudget/dist/
+          cp backend/appvengers/target/*.jar backend/appvengers/target/ 2>/dev/null || true
+          
+          # Add build artifacts
+          git add -f frontend/ibudget/dist/
+          git add -f backend/appvengers/target/*.jar
+          
+          # Commit changes
+          git commit -m "Deploy: Build from main branch $(git rev-parse --short main) at $(date -u +%Y-%m-%dT%H:%M:%SZ)" || echo "No changes to commit"
+          
+          # Push to prod branch
+          git push origin prod --force
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          script: |
+            /var/www/ibudget/scripts/deploy.sh
+
+      - name: Verify Deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          script: |
+            echo "=== Checking Service Status ==="
+            systemctl is-active ibudget-backend nginx
+            
+            echo ""
+            echo "=== Backend Logs (last 20 lines) ==="
+            journalctl -u ibudget-backend -n 20 --no-pager
+            
+            echo ""
+            echo "=== Testing Frontend ==="
+            curl -s -o /dev/null -w "Frontend Status: %{http_code}\n" https://i-budget.site
+            
+            echo ""
+            echo "=== Testing API ==="
+            curl -s -o /dev/null -w "API Status: %{http_code}\n" https://i-budget.site/api/categories/all
+
+      - name: Notify on Success
+        if: success()
+        run: |
+          echo "✅ Deployment successful!"
+          echo "Frontend: https://i-budget.site"
+          echo "Deployed at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+      - name: Notify on Failure
+        if: failure()
+        run: |
+          echo "❌ Deployment failed!"
+          echo "Check the logs above for details"
+          exit 1
