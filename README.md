@@ -6,6 +6,7 @@
 
 [![Live Demo](https://img.shields.io/badge/demo-live-success?style=for-the-badge&logo=vercel)](https://i-budget.site/)
 [![CI](https://img.shields.io/github/actions/workflow/status/PUP-BSIT/project-appvengers/ci.yml?branch=main&style=for-the-badge&logo=github&label=CI)](https://github.com/PUP-BSIT/project-appvengers/actions/workflows/ci.yml)
+[![CD](https://img.shields.io/github/actions/workflow/status/PUP-BSIT/project-appvengers/cd.yml?branch=main&style=for-the-badge&logo=github&label=CD)](https://github.com/PUP-BSIT/project-appvengers/actions/workflows/cd.yml)
 [![Security](https://img.shields.io/github/actions/workflow/status/PUP-BSIT/project-appvengers/gitleaks.yml?branch=main&style=for-the-badge&logo=security&label=Security)](https://github.com/PUP-BSIT/project-appvengers/actions/workflows/gitleaks.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
@@ -251,12 +252,15 @@ cd backend/appvengers
 
 ## 📊 CI/CD Pipeline
 
-Our GitHub Actions workflows ensure code quality:
+Our GitHub Actions workflows ensure code quality and automated deployment:
 
-- ✅ **Continuous Integration** - Automated builds and tests
+- ✅ **Continuous Integration** - Automated builds and tests on every PR
+- 🚀 **Continuous Deployment** - Automated deployment to production on merge to main
 - 🔒 **Security Scanning** - Gitleaks secret detection
 - 📈 **Code Coverage** - JaCoCo (Backend) + Karma (Frontend)
 - 🎉 **PR Greetings** - Automated contributor welcome
+
+**Deployment Flow:** `Push to main` → `CI Tests` → `Build Artifacts` → `Deploy to prod branch` → `VPS Deployment` → `Live at i-budget.site`
 
 ---
 
@@ -291,7 +295,7 @@ We use Notion for:
     <td align="center" width="25%">
       <img src="https://github.com/identicons/qa.png" width="100px;" alt="QA"/><br />
       <sub><b>James Michael Mejares</b></sub><br />
-      <sup>Tester / Developer</sup>
+      <sup>DevOps Engineer / Tester / Developer</sup>
     </td>
     <td align="center" width="25%">
       <img src="https://github.com/identicons/ux.png" width="100px;" alt="UX"/><br />
