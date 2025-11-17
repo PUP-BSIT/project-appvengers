@@ -50,18 +50,24 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           
+          # Save build artifacts to temp location
+          mkdir -p /tmp/build-artifacts/frontend
+          mkdir -p /tmp/build-artifacts/backend
+          cp -r frontend/ibudget/dist/ibudget /tmp/build-artifacts/frontend/
+          cp backend/appvengers/target/*.jar /tmp/build-artifacts/backend/ 2>/dev/null || true
+          
           # Create or checkout prod branch
-          git checkout prod 2>/dev/null || git checkout -b prod
+          git fetch origin prod || true
+          git checkout prod 2>/dev/null || git checkout --orphan prod
           
-          # Remove old build artifacts if they exist
-          git rm -rf frontend/ibudget/dist backend/appvengers/target 2>/dev/null || true
+          # Clean prod branch (keep only build artifacts)
+          git rm -rf . 2>/dev/null || true
           
-          # Copy new build artifacts
+          # Copy build artifacts from temp
           mkdir -p frontend/ibudget/dist
           mkdir -p backend/appvengers/target
-          
-          cp -r frontend/ibudget/dist/ibudget frontend/ibudget/dist/
-          cp backend/appvengers/target/*.jar backend/appvengers/target/ 2>/dev/null || true
+          cp -r /tmp/build-artifacts/frontend/ibudget frontend/ibudget/dist/
+          cp /tmp/build-artifacts/backend/*.jar backend/appvengers/target/ 2>/dev/null || true
           
           # Add build artifacts
           git add -f frontend/ibudget/dist/
