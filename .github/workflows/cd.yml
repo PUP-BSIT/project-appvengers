@@ -126,6 +126,27 @@ jobs:
             echo "✓ Environment file deployed successfully"
             echo "Variables count: $(grep -c "^[^#]" /etc/ibudget/backend.env || echo 0)"
 
+      - name: Copy Deployment Script to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          source: "scripts/deploy.sh"
+          target: "/var/www/ibudget/"
+          overwrite: true
+
+      - name: Set Script Permissions
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          script: |
+            chmod +x /var/www/ibudget/scripts/deploy.sh
+
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
