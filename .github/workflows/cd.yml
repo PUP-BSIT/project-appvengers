@@ -79,6 +79,53 @@ jobs:
           # Push to prod branch
           git push origin prod --force
 
+      - name: Deploy Environment File to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          script: |
+            # Create secure directory
+            sudo mkdir -p /etc/ibudget
+            sudo chmod 750 /etc/ibudget
+            
+            # Create environment file from GitHub Secrets
+            sudo tee /etc/ibudget/backend.env > /dev/null << 'EOF'
+            # iBudget Production Environment Variables
+            # Auto-deployed by GitHub Actions CD Pipeline
+            # Updated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            
+            # Database Configuration
+            DB_URL=${{ secrets.DB_URL }}
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            
+            # JWT Configuration
+            JWT_SECRET=${{ secrets.JWT_SECRET_PROD }}
+            
+            # Server Configuration
+            SERVER_PORT=8081
+            
+            # Email Configuration
+            MAIL_HOST=smtp.gmail.com
+            MAIL_PORT=587
+            MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
+            MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
+            
+            # Application URLs
+            APP_VERIFICATION_BASE=https://i-budget.site/api/auth/verify-email?token=
+            APP_EMAIL_FROM=${{ secrets.APP_EMAIL_FROM }}
+            EOF
+            
+            # Secure the file
+            sudo chmod 640 /etc/ibudget/backend.env
+            sudo chown root:root /etc/ibudget/backend.env
+            
+            echo "✓ Environment file deployed successfully"
+            echo "Variables count: $(grep -c "^[^#]" /etc/ibudget/backend.env || echo 0)"
+
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
