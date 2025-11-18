@@ -160,18 +160,69 @@ ssh root@72.61.114.163 "systemctl status ibudget-backend nginx"
 
 ## Troubleshooting
 
-### CD Workflow Fails at "Deploy to VPS" Step
-- Check if SSH key is correctly added to GitHub Secrets
-- Verify VPS is accessible: `ssh root@72.61.114.163`
+### CD Workflow Fails at "Deploy to VPS" Step with SSH Error
+
+**Symptom**: Error message in workflow logs:
+```
+ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey]
+```
+
+**Solution**: The SSH key authentication is failing. Follow these steps:
+
+1. **Verify SSH key exists on VPS**:
+   ```bash
+   ssh root@72.61.114.163 "cat ~/.ssh/authorized_keys"
+   ```
+   Look for a key with comment `github-actions@ibudget`
+
+2. **If missing or incorrect, regenerate the SSH key pair**:
+   ```bash
+   # On your local machine
+   ssh-keygen -t ed25519 -C "github-actions@ibudget-cd" -f ~/.ssh/ibudget_github_actions -N ""
+   
+   # Copy public key to VPS
+   ssh-copy-id -i ~/.ssh/ibudget_github_actions.pub root@72.61.114.163
+   
+   # Test the connection
+   ssh -i ~/.ssh/ibudget_github_actions root@72.61.114.163 "echo 'Success!'"
+   ```
+
+3. **Update GitHub Secret with new private key**:
+   ```bash
+   # Using GitHub CLI
+   gh secret set VPS_SSH_KEY < ~/.ssh/ibudget_github_actions
+   
+   # Or via web: https://github.com/PUP-BSIT/project-appvengers/settings/secrets/actions
+   # Paste the ENTIRE content of ~/.ssh/ibudget_github_actions including headers
+   ```
+
+4. **Trigger workflow again**:
+   ```bash
+   git commit --allow-empty -m "test: Retry CD workflow with updated SSH key"
+   git push origin main
+   ```
+
+For detailed SSH troubleshooting, see [SSH_KEY_FIX.md](./SSH_KEY_FIX.md)
+
+### CD Workflow Fails at "Prepare prod Branch"
+
+**Symptom**: Error about circular copy or file conflicts
+
+**Solution**: This has been fixed in the latest version. Make sure your `cd.yml` uses temporary storage:
+```bash
+git pull origin main
+```
 
 ### Backend Service Fails to Start
 - Check logs: `journalctl -u ibudget-backend -n 50`
 - Verify JAR file exists: `ls -lh /var/www/ibudget/backend/appvengers/target/*.jar`
+- Check if port 8081 is already in use: `netstat -tulpn | grep 8081`
 
 ### Frontend Not Updating
-- Check if build artifacts are in prod branch
-- Verify Nginx is serving from correct directory
-- Clear browser cache
+- Check if build artifacts are in prod branch: `git checkout prod && ls frontend/ibudget/dist/`
+- Verify Nginx is serving from correct directory: `cat /etc/nginx/sites-available/ibudget.conf`
+- Clear browser cache (Ctrl+Shift+R)
+- Check Nginx logs: `tail -f /var/log/nginx/error.log`
 
 ## Security Notes
 - SSH private key is stored securely in GitHub Secrets
