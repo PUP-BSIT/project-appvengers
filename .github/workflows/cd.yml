@@ -50,11 +50,13 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           
-          # Save build artifacts to temp location
+          # Save build artifacts and deployment scripts to temp location
           mkdir -p /tmp/build-artifacts/frontend
           mkdir -p /tmp/build-artifacts/backend
+          mkdir -p /tmp/build-artifacts/scripts
           cp -r frontend/ibudget/dist/ibudget /tmp/build-artifacts/frontend/
           cp backend/appvengers/target/*.jar /tmp/build-artifacts/backend/ 2>/dev/null || true
+          cp -r scripts/ /tmp/build-artifacts/
           
           # Create or checkout prod branch
           git fetch origin prod || true
@@ -63,15 +65,17 @@ jobs:
           # Clean prod branch (keep only build artifacts)
           git rm -rf . 2>/dev/null || true
           
-          # Copy build artifacts from temp
+          # Copy build artifacts and scripts from temp
           mkdir -p frontend/ibudget/dist
           mkdir -p backend/appvengers/target
           cp -r /tmp/build-artifacts/frontend/ibudget frontend/ibudget/dist/
           cp /tmp/build-artifacts/backend/*.jar backend/appvengers/target/ 2>/dev/null || true
+          cp -r /tmp/build-artifacts/scripts/ .
           
-          # Add build artifacts
+          # Add build artifacts and scripts
           git add -f frontend/ibudget/dist/
           git add -f backend/appvengers/target/*.jar
+          git add -f scripts/
           
           # Commit changes
           git commit -m "Deploy: Build from main branch $(git rev-parse --short main) at $(date -u +%Y-%m-%dT%H:%M:%SZ)" || echo "No changes to commit"
