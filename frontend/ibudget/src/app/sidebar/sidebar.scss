@@ -155,6 +155,16 @@
   justify-content: center;
   background: rgba(0, 0, 0, 0.45);
   z-index: 1200;
+  animation: fadeIn 300ms ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .logout-modal {
