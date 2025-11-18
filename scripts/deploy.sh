@@ -14,6 +14,8 @@ echo "=========================================="
 APP_DIR="/var/www/ibudget"
 BACKUP_DIR="/var/www/ibudget-backups"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+BACKEND_HEALTH_URL="http://localhost:8081/api/categories/all"
+MAX_WAIT_TIME=30  # seconds
 
 # Create backup directory if it doesn't exist
 mkdir -p "$BACKUP_DIR"
@@ -53,15 +55,44 @@ fi
 # Start backend service
 systemctl start ibudget-backend
 
-# Wait for backend to start
-echo "Waiting for backend to start..."
-sleep 5
+# Wait for backend to start with health check
+echo "Waiting for backend to start (max ${MAX_WAIT_TIME}s)..."
+ELAPSED=0
+BACKEND_READY=false
+
+while [ $ELAPSED -lt $MAX_WAIT_TIME ]; do
+    if curl -s -f "$BACKEND_HEALTH_URL" > /dev/null 2>&1; then
+        BACKEND_READY=true
+        echo "✓ Backend health check passed after ${ELAPSED}s"
+        break
+    fi
+    sleep 2
+    ELAPSED=$((ELAPSED + 2))
+    echo "  ... waiting (${ELAPSED}s/${MAX_WAIT_TIME}s)"
+done
 
 # Check if backend started successfully
-if systemctl is-active --quiet ibudget-backend; then
+if [ "$BACKEND_READY" = true ] && systemctl is-active --quiet ibudget-backend; then
     echo "✓ Backend service started successfully"
 else
     echo "✗ Backend service failed to start! Rolling back..."
+    echo ""
+    echo "=== Backend Service Status ==="
+    systemctl status ibudget-backend --no-pager -l || true
+    echo ""
+    echo "=== Last 100 lines of backend logs ==="
+    journalctl -u ibudget-backend -n 100 --no-pager
+    echo ""
+    echo "=== Environment File Check ==="
+    if [ -f "/etc/ibudget/backend.env" ]; then
+        echo "✓ Environment file exists at /etc/ibudget/backend.env"
+        echo "Environment variables count: $(grep -c "^[^#]" /etc/ibudget/backend.env 2>/dev/null || echo 0)"
+    else
+        echo "✗ Environment file NOT FOUND at /etc/ibudget/backend.env"
+    fi
+    
+    # Rollback
+    systemctl stop ibudget-backend
     cp "$BACKUP_DIR/$TIMESTAMP"/*.jar backend/appvengers/target/ 2>/dev/null || true
     systemctl start ibudget-backend
     exit 1
@@ -97,5 +128,9 @@ echo ""
 echo "Service Status:"
 systemctl is-active ibudget-backend && echo "✓ Backend: Running" || echo "✗ Backend: Not running"
 systemctl is-active nginx && echo "✓ Nginx: Running" || echo "✗ Nginx: Not running"
+
+echo ""
+echo "Backend Health:"
+curl -s -o /dev/null -w "Health Check Status: %{http_code}\n" "$BACKEND_HEALTH_URL"
 
 exit 0
