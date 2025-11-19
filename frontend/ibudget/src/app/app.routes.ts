@@ -58,6 +58,11 @@ export const routes: Routes = [
       .then(m => m.Savings)
   },
   {
+    path: 'savings/add-saving',
+    loadComponent: () => import('./savings/add-saving/add-saving')
+      .then(m => m.AddSaving)
+  },
+  {
     path: 'categories', 
     loadComponent: () => import('./categories/categories')
       .then(m => m.Categories)
