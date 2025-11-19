@@ -57,7 +57,9 @@ systemctl start ibudget-backend
 
 # Wait for backend to start with health check
 echo "Waiting for backend to start (max ${MAX_WAIT_TIME}s)..."
-ELAPSED=0
+# Give backend a moment to initialize before checking
+sleep 3
+ELAPSED=3
 BACKEND_READY=false
 
 while [ $ELAPSED -lt $MAX_WAIT_TIME ]; do
@@ -133,6 +135,7 @@ systemctl is-active nginx && echo "✓ Nginx: Running" || echo "✗ Nginx: Not r
 
 echo ""
 echo "Backend Health:"
-curl -s -o /dev/null -w "Health Check Status: %{http_code}\n" "$BACKEND_HEALTH_URL"
+HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BACKEND_HEALTH_URL" 2>/dev/null || echo "000")
+echo "Health Check Status: $HTTP_STATUS"
 
 exit 0
