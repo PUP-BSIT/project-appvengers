@@ -92,3 +92,14 @@ export type Budget = {
   end_date: string;
   current_amount?: number;
 }
+
+export type Saving = {
+  savings_id?: number;
+  user_id: number;
+  name: string;
+  target_amount: number;
+  current_amount: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+}
