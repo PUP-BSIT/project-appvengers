@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
+import { Saving } from '../../models/user.model';
+import { SavingsService } from '../../services/savings.service';
 
 @Component({
   selector: 'app-savings',
@@ -8,6 +10,17 @@ import { Header } from "../header/header";
   templateUrl: './savings.html',
   styleUrl: './savings.scss',
 })
-export class Savings {
+export class Savings implements OnInit {
+  savings = signal(<Saving[]>[]);
+  savingsService = inject(SavingsService);
 
+  ngOnInit() {
+    this.getBudgets();
+  }
+
+  getBudgets() {
+    this.savingsService.getSavings().subscribe((savingsData) => {
+      this.savings.set(savingsData);
+    });
+  }
 }

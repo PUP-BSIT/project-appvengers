@@ -2,5 +2,35 @@
 <app-sidebar/>
 
 <main>
-  <p>savings works!</p>
+  <div class="actions-container">
+    <div>
+      <h2>Savings</h2>
+      <p>Manage your savings goals and track your progress.</p>
+    </div>
+
+    <div>
+      <button class="btn btn-success">Add New Saving</button>
+    </div>
+  </div>
+  
+  <div class="savings-container">
+    @for(saving of savings(); track $index) {
+      <div class="card">
+        <img 
+          src="https://placehold.co/20?text=Category+Image" 
+          class="card-img-top" 
+          alt="category_image"/>
+
+        <div class="card-body">
+          <h5 class="card-title">{{ saving.name }}</h5>
+          <p class="card-text">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ullam
+          </p>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-primary">View Details</button>
+        </div>
+      </div>
+    }
+  </div>
 </main>
