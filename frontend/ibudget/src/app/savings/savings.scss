@@ -1,5 +1,30 @@
 @use '../../styles/mixins' as m;
 
 main {
-  @include m.page-layout;
+  @include m.page-layout(70px, auto);
+  display: flex;
+  flex-direction: column;
+}
+
+.actions-container {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+
+  div:nth-child(2) {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.savings-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1em;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 18rem;
 }
