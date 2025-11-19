@@ -97,6 +97,8 @@ export type Saving = {
   savings_id?: number;
   user_id: number;
   name: string;
+  goal_date: string;
+  frequency: string;
   target_amount: number;
   current_amount: number;
   created_at: string;
