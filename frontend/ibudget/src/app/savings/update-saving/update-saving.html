@@ -1,0 +1,60 @@
+<app-sidebar/>
+<app-header/>
+
+<main>
+  <div class="form-container">
+    <h2>Update Saving</h2>
+    <p>Fill in the details below to create a new saving goal.</p>
+  
+    <form>
+      <div class="mb-3">
+        <label for="saving_name" class="form-label">Saving Name</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="saving_name" 
+          placeholder="Enter saving name">
+      </div>
+  
+      <div class="mb-3">
+        <label for="target_amount" class="form-label">Target Amount</label>
+        <input 
+          type="number" 
+          class="form-control" 
+          id="target_amount" 
+          placeholder="Enter target amount">
+      </div>
+
+      <div class="mb-3">
+        <label for="frequency" class="form-label">Frequency</label>
+        <select class="form-select" id="frequency">
+          <option selected>Select frequency</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="goal_date" class="form-label">Goal Date</label>
+        <input 
+          type="date" 
+          class="form-control" 
+          id="goal_date">
+      </div>
+  
+      <div class="mb-3">
+        <label for="current_amount" class="form-label">Current Amount</label>
+        <input 
+          type="number" 
+          class="form-control" 
+          id="current_amount" 
+          placeholder="0.00"
+          value="0"
+          disabled>
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
+</main>

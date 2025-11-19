@@ -1,0 +1,17 @@
+@use 'mixins' as m;
+
+$white-bg: #f9f9f9;
+$form-border: #ccc;
+
+main {
+  @include m.page-layout(50px, auto);
+}
+
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid $form-border;
+  border-radius: 8px;
+  background-color: $white-bg;
+}
