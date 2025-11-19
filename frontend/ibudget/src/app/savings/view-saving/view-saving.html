@@ -1,0 +1,55 @@
+<app-sidebar/>
+<app-header/>
+
+<main>
+  <div class="card">
+    <div class="card-header">
+      <h3>Name of the Saving</h3>
+    </div>
+
+    <div class="card-body">
+      <p>Details of the selected saving will be displayed here.</p>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <!-- History of Saving Transactions -->
+    <div class="history-container">
+      <div class="header-container">
+        <div class="title">
+          <h4>History</h4>
+        </div>
+        
+        <div class="action-container">
+          <button class="btn btn-primary">Add Saving Transaction</button>
+        </div>
+      </div>
+      
+      <div class="table-container">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Sample transaction row -->
+            <tr>
+              <td>2024-06-01</td>
+              <td>Deposit</td>
+              <td>$100.00</td>
+            </tr>
+            <tr>
+              <td>2024-06-05</td>
+              <td>Withdrawal</td>
+              <td>$50.00</td>
+            </tr>
+            <!-- More transactions can be added here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
