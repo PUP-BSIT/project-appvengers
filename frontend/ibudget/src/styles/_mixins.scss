@@ -4,10 +4,10 @@
 $page-margin-left: 100px;
 $background-color: #c9cefa;
 
-@mixin page-layout {
+@mixin page-layout($padding: 10px, $page-height: 100%) {
   margin-left: $page-margin-left;
   background-color: $background-color;
-  padding: 10px;
-  height: 100%;
+  padding: $padding;
+  height: $page-height;
   min-height: 100vh;
 }
