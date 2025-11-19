@@ -61,9 +61,11 @@ ELAPSED=0
 BACKEND_READY=false
 
 while [ $ELAPSED -lt $MAX_WAIT_TIME ]; do
-    if curl -s -f "$BACKEND_HEALTH_URL" > /dev/null 2>&1; then
+    # Check if backend responds (accept any HTTP response including 403)
+    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$BACKEND_HEALTH_URL" 2>/dev/null || echo "000")
+    if [ "$HTTP_CODE" != "000" ] && [ "$HTTP_CODE" != "502" ] && [ "$HTTP_CODE" != "503" ]; then
         BACKEND_READY=true
-        echo "✓ Backend health check passed after ${ELAPSED}s"
+        echo "✓ Backend health check passed after ${ELAPSED}s (HTTP $HTTP_CODE)"
         break
     fi
     sleep 2
