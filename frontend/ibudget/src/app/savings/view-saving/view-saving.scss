@@ -1,0 +1,24 @@
+@use 'mixins' as m;
+
+main {
+  @include m.page-layout(70px, auto);
+}
+
+.card {
+  
+  .card-header {
+    padding: 20px;
+  }
+}
+
+.history-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
