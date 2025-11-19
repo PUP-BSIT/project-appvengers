@@ -1,2 +1,13 @@
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
+
+$page-margin-left: 100px;
+$background-color: #c9cefa;
+
+@mixin page-layout {
+  margin-left: $page-margin-left;
+  background-color: $background-color;
+  padding: 10px;
+  height: 100%;
+  min-height: 100vh;
+}
