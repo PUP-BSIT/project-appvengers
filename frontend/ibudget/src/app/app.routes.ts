@@ -68,6 +68,11 @@ export const routes: Routes = [
       .then(m => m.UpdateSaving)
   },
   {
+    path: 'savings/view-saving/:id',
+    loadComponent: () => import('./savings/view-saving/view-saving')
+      .then(m => m.ViewSaving)
+  },
+  {
     path: 'categories', 
     loadComponent: () => import('./categories/categories')
       .then(m => m.Categories)
