@@ -12,6 +12,10 @@
 
       <!-- Form -->
       <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+        @if(errorMessage()) {  
+          <div class="alert alert-danger mt-2">{{ errorMessage() }}</div>  
+        }
+        
         <!-- Email Field -->
         <div class="mb-3">
           <label for="email" class="form-label">
@@ -66,10 +70,6 @@
           }
         </div>
 
-        @if(errorMessage()) {  
-          <div class="alert alert-danger mt-2">{{ errorMessage() }}</div>  
-        }  
-        
         <button type="submit" class="btn login-button w-100">Login</button>
       </form>
 
