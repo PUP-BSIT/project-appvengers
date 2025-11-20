@@ -12,7 +12,7 @@ export class CategoriesPanel implements OnInit {
   @ViewChild('categoryType') categoryType!: ElementRef;
   chartType: ChartType = 'bar';
   activeChartTitle = signal('Expenses Overview');
-  activeChartData!: ChartData<'bar' | 'line'> ;
+  activeChartData!: ChartData<'bar' | 'line'>;
 
   expensesCategories = signal([
     'Bills', 'Food', 'Shopping', 'Entertainment', 'Health', 'Transport', 
