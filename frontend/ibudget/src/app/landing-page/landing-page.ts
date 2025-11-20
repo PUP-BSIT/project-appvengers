@@ -13,7 +13,7 @@ export class LandingPage implements OnInit, OnDestroy {
 
   private fullText: string = 'Simple tracking. Smarter spending.';
   private textIndex: number = 0;
-  private typingSpeed: number = 80;
+  private typingSpeed = 80;
   private timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   ngOnInit(): void {
