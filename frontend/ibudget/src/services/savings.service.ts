@@ -70,7 +70,8 @@ export class SavingsService {
   }
 
   getSavingById(savingId: number): Observable<Saving> {
-    const matchedSaving = this.MOCK_SAVINGS.find(s => s.savings_id === savingId);
+    const matchedSaving = this.MOCK_SAVINGS
+      .find(s => s.savings_id === savingId);
 
     if (!matchedSaving) {
       throw new Error(`Saving with id ${savingId} not found.`);
@@ -82,5 +83,27 @@ export class SavingsService {
   addSaving(newSaving: Saving): Observable<Saving> {
     this.MOCK_SAVINGS = [...this.MOCK_SAVINGS, newSaving];
     return of(newSaving);
+  }
+
+  updateSaving(savingId: number, saving: Saving): Observable<Saving> {
+    this.MOCK_SAVINGS = this.MOCK_SAVINGS
+      .map(existingSaving => existingSaving.savings_id === savingId ?
+        {...existingSaving, ...saving} : existingSaving
+    );
+
+    const updatedSaving = this.MOCK_SAVINGS
+      .find(s => s.savings_id === savingId);
+
+    if(!updatedSaving) {
+      throw new Error(`Failed to update because saving not found.`);
+    }
+
+    return of(updatedSaving);
+  }
+
+  deleteSaving(savingId: number): Observable<Saving[]> {
+    this.MOCK_SAVINGS = this.MOCK_SAVINGS
+      .filter(s => s.savings_id !== savingId);
+    return of(this.MOCK_SAVINGS);
   }
 }
