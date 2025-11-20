@@ -6,7 +6,7 @@ import { Header } from "../../header/header";
   selector: 'app-view-saving',
   imports: [Sidebar, Header],
   templateUrl: './view-saving.html',
-  styleUrl: './view-saving.scss',
+  styleUrls: ['./view-saving.scss'],
 })
 export class ViewSaving {
 
