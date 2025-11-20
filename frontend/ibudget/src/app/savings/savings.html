@@ -19,7 +19,7 @@
     </div>
     
     <div class="savings-container">
-      @for(saving of savings(); track $index) {
+      @for(saving of savings(); track saving.savings_id) {
         <div class="card">
           <!-- <img 
             src="https://placehold.co/20?text=Saving+Image" 
