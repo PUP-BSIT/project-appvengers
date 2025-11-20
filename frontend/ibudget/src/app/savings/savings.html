@@ -5,31 +5,39 @@
   <div class="inner-wrapper">
     <div class="actions-container">
       <div>
-        <h2>Savings</h2>
+        <h3>Savings</h3>
         <p>Manage your savings goals and track your progress.</p>
       </div>
 
       <div>
-        <button class="btn btn-success">Add New Saving</button>
+        <button 
+          class="btn btn-sm btn-success"
+          routerLink="/savings/add-saving">
+            Add New Saving
+        </button>
       </div>
     </div>
     
     <div class="savings-container">
       @for(saving of savings(); track $index) {
         <div class="card">
-          <img 
-            src="https://placehold.co/20?text=Category+Image" 
+          <!-- <img 
+            src="https://placehold.co/20?text=Saving+Image" 
             class="card-img-top" 
-            alt="category_image"/>
+            alt="saving_image"/> -->
 
           <div class="card-body">
             <h5 class="card-title">{{ saving.name }}</h5>
             <p class="card-text">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ullam
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit.
             </p>
           </div>
           <div class="card-footer">
-            <button class="btn btn-primary">View Details</button>
+            <button 
+              class="btn btn-sm btn-primary"
+              [routerLink]="'/savings/view-saving/' + saving.savings_id">
+                View Details
+            </button>
           </div>
         </div>
       }

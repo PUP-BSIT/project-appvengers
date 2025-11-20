@@ -3,10 +3,11 @@ import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
 import { Saving } from '../../models/user.model';
 import { SavingsService } from '../../services/savings.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-savings',
-  imports: [Sidebar, Header],
+  imports: [Sidebar, Header, RouterLink],
   templateUrl: './savings.html',
   styleUrl: './savings.scss',
 })
