@@ -43,7 +43,7 @@ public class TransactionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> update(@PathVariable Integer id,
+    public ResponseEntity<ApiResponse> update(@PathVariable Long id,
                                               @Valid @RequestBody TransactionRequest req,
                                               BindingResult bindingResult,
                                               Authentication auth) {
@@ -57,7 +57,7 @@ public class TransactionController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> delete(@PathVariable Integer id, Authentication auth) {
+    public ResponseEntity<ApiResponse> delete(@PathVariable Long id, Authentication auth) {
         String email = auth.getName();
         transactionService.delete(email, id);
         return ResponseEntity.ok(new ApiResponse(true, "Transaction deleted"));
