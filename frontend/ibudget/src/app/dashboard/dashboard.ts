@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { SpendingChart } from "./spending-chart/spending-chart";
 import { OnInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,7 +28,11 @@ export class Dashboard implements OnInit{
   username: string | null = null;
   remainingBudget: number = 0;
 
-  constructor(public auth: AuthService, private cd: ChangeDetectorRef) {}
+  constructor(
+    public auth: AuthService, 
+    private cd: ChangeDetectorRef,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.auth.getProfile().subscribe({
@@ -39,9 +44,8 @@ export class Dashboard implements OnInit{
         }
       },
       error: () => {
-        this.username = 'User';
-        this.remainingBudget = 0;
-        this.cd.detectChanges();
+        this.auth.logout();
+        this.router.navigate(['/login-page']);
       }
     });
   }
