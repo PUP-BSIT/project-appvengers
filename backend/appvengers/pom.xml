@@ -117,9 +117,16 @@
 
 	<!-- For sending emails -->
 	<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-			<version>3.5.7</version>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-mail</artifactId>
+		<version>3.5.7</version>
+	</dependency>
+
+	<!-- Automatic ./mvnw spring-boot:run -->
+	<dependency>
+  		<groupId>org.springframework.boot</groupId>
+  		<artifactId>spring-boot-devtools</artifactId>
+  		<optional>true</optional>
 	</dependency>
 </dependencies>
 
