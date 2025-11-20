@@ -2,9 +2,10 @@
 
 $card-color: #fff;
 $border-color: #ccc;
+$box-shadow-definition: 2px 2px 8px rgba(0, 0, 0, 0.1);
 
 main {
-  @include m.page-layout(50px, auto);
+  @include m.page-layout(10px, auto);
 }
 
 .inner-wrapper  {
@@ -14,7 +15,7 @@ main {
   padding: 40px;
   border-radius: 8px;
   border: 1px solid $border-color;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: $box-shadow-definition;
 }
 
 .actions-container {
