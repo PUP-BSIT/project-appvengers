@@ -9,6 +9,14 @@ main {
   .card-header {
     padding: 20px;
   }
+
+  .card-body {
+    display: flex;
+    flex-direction: row;
+    gap: 2em;
+    align-items: center;
+    padding: 20px;
+  }
 }
 
 .history-container {

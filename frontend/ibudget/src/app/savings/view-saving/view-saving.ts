@@ -3,7 +3,8 @@ import { Sidebar } from "../../sidebar/sidebar";
 import { Header } from "../../header/header";
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HistoryService } from '../../../services/history';
-import { SavingTransaction } from '../../../models/user.model';
+import { Saving, SavingTransaction } from '../../../models/user.model';
+import { SavingsService } from '../../../services/savings.service';
 
 @Component({
   selector: 'app-view-saving',
@@ -14,7 +15,9 @@ import { SavingTransaction } from '../../../models/user.model';
 export class ViewSaving implements OnInit{
   transactionHistories = signal(<SavingTransaction[]>[]);
   filteredTransactions = signal(<SavingTransaction[]>[]);
+  currentSaving = signal(<Saving>{});
   historyService = inject(HistoryService);
+  savingService = inject(SavingsService);
   activatedRoute = inject(ActivatedRoute);
   savingId = signal(0);
 
@@ -23,6 +26,7 @@ export class ViewSaving implements OnInit{
     const savingsId = this.activatedRoute.snapshot.paramMap.get('id') ?? '';
     this.savingId.set(+savingsId);
     this.filterTransactions();
+    this.getSavingsData();
   }
 
   getSavingsTransactionHistories() {
@@ -35,5 +39,11 @@ export class ViewSaving implements OnInit{
     const filtered = this.transactionHistories()
       .filter((transaction) => transaction.id === this.savingId());
     this.filteredTransactions.set(filtered);
+  }
+
+  getSavingsData() {
+    this.savingService.getSavingById(this.savingId()).subscribe((savingData) => {
+      this.currentSaving.set(savingData);
+    });
   }
 }
