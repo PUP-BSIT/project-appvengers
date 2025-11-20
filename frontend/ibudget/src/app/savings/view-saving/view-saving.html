@@ -26,15 +26,24 @@
 
     <div class="card-footer d-flex gap-2">
       <button 
+        type="button"
         class="btn btn-sm btn-secondary"
         routerLink="/savings">
           Back to Savings
       </button>
 
       <button 
+        type="button"
         class="btn btn-sm btn-warning"
         [routerLink]="['/savings/update-saving', savingId()]">
           Edit Saving
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-sm btn-danger"
+        (click)="deleteSaving()">
+          Delete Saving
       </button>
     </div>
   </div>
