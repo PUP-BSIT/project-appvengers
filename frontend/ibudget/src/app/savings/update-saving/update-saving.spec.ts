@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideRouter, ActivatedRoute, convertToParamMap } from '@angular/router';
 import { UpdateSaving } from './update-saving';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('UpdateSaving', () => {
   let component: UpdateSaving;
@@ -12,7 +12,8 @@ describe('UpdateSaving', () => {
       imports: [UpdateSaving],
       providers: [
         provideRouter([]),
-        provideHttpClient()
+        provideHttpClient(),
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: convertToParamMap({ id: '1' }) } } }
       ]
     })
     .compileComponents();

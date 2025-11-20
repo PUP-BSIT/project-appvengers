@@ -24,9 +24,15 @@ export class ViewSaving implements OnInit{
 
   // Initialize component and fetch data
   ngOnInit(): void {
-    this.getSavingsTransactionHistories();
     const savingsId = this.activatedRoute.snapshot.paramMap.get('id') ?? '';
     this.savingId.set(+savingsId);
+
+    if(!savingsId || isNaN(+savingsId)) {
+      this.router.navigate(['/savings']);
+      return;
+    }
+
+    this.getSavingsTransactionHistories();
     this.filterTransactions();
     this.getSavingsData();
   }
@@ -47,7 +53,11 @@ export class ViewSaving implements OnInit{
 
   // Fetch current saving data
   getSavingsData() {
-    this.savingService.getSavingById(this.savingId()).subscribe((savingData) => {
+    const savingsId = this.savingId();
+    
+    if(!savingsId) return;
+
+    this.savingService.getSavingById(savingsId).subscribe((savingData) => {
       this.currentSaving.set(savingData);
     });
   }
