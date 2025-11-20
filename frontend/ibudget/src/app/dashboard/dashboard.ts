@@ -1,22 +1,22 @@
 import { Component } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { ExpenseChart } from './expense-chart/expense-chart';
-import { HistoryTable } from "./history-table/history-table";
 import { Header } from "../header/header";
 import { IncomeChart } from "./income-chart/income-chart";
 import { DecimalPipe } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { SpendingChart } from "./spending-chart/spending-chart";
 
 @Component({
   selector: 'app-dashboard',
   imports: [
-    Sidebar, 
-    HistoryTable, 
-    Header, 
-    IncomeChart, 
-    ExpenseChart, 
+    Sidebar,
+    Header,
+    IncomeChart,
+    ExpenseChart,
     DecimalPipe,
-  ],
+    SpendingChart
+],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
