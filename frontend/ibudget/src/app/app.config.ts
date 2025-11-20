@@ -3,7 +3,8 @@ import { provideLoadingBarRouter } from '@ngx-loading-bar/router'
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideLoadingBarInterceptor } from '@ngx-loading-bar/http-client';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from '../services/auth.interceptor';
 import { 
         ApplicationConfig, 
         provideBrowserGlobalErrorListeners, 
@@ -21,7 +22,7 @@ export const appConfig: ApplicationConfig = {
       })
     ),
     provideCharts(withDefaultRegisterables()),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideLoadingBarInterceptor(),
     provideLoadingBarRouter()
   ]

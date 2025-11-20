@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CurrencyPipe, DatePipe, CommonModule } from '@angular/common';
 import {Transaction} from "../../models/user.model";
 import { Header } from '../header/header';
+import { TransactionsService } from '../../services/transactions.service';
 
 @Component({
   selector: 'app-transactions',
@@ -14,7 +15,7 @@ import { Header } from '../header/header';
 export class Transactions implements OnInit, OnDestroy {
   private unlisten: (() => void) | null = null;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2, private txService: TransactionsService) {}
 
   showAddModal = signal(false);
   showNotification = signal(false);
@@ -24,48 +25,7 @@ export class Transactions implements OnInit, OnDestroy {
   popupLeft = signal(0);
   showPopup = signal(false);
 
-  transactions: Transaction[] = [
-    {
-      id: 1,
-      date: new Date('2023-09-08'),
-      description: 'Part-time Job Payment',
-      category: 'Income',
-      amount: 14527.88,
-      type: 'income'
-    },
-    {
-      id: 2,
-      date: new Date('2023-09-03'),
-      description: 'Netflix Subscription',
-      category: 'Entertainment',
-      amount: 929.20,
-      type: 'expense'
-    },
-    {
-      id: 3,
-      date: new Date('2023-09-01'),
-      description: 'Electricity Bill',
-      category: 'Bills',
-      amount: 3806.30,
-      type: 'expense'
-    },
-    {
-      id: 4,
-      date: new Date('2023-09-01'),
-      description: 'New Shoes Purchase',
-      category: 'Shopping',
-      amount: 5229.45,
-      type: 'expense'
-    },
-    {
-      id: 5,
-      date: new Date('2023-09-10'),
-      description: 'Grocery Shopping at Supermarket',
-      category: 'Shopping',
-      amount: 2616.82,
-      type: 'expense'
-    }
-  ];
+  transactions: Transaction[] = [];
 
   filteredTransactions: Transaction[] = [...this.transactions];
 
@@ -124,26 +84,42 @@ export class Transactions implements OnInit, OnDestroy {
   addTransaction() {
     if (this.newTransaction.description &&
         this.newTransaction.category && this.newTransaction.amount > 0) {
-      const newTransaction: Transaction = {
-        id: this.transactions.length + 1,
-        date: new Date(this.newTransaction.date),
-        description: this.newTransaction.description,
-        category: this.newTransaction.category,
+      const payload = {
         amount: this.newTransaction.amount,
-        type: this.newTransaction.type
+        type: this.newTransaction.type,
+        category: this.newTransaction.category,
+        description: this.newTransaction.description,
+        transactionDate: this.newTransaction.date
       };
-      this.transactions.push(newTransaction);
-      this.filterTransactions();
-      this.closeAddModal();
-      this.showNotificationMessage('Transaction added successfully!');
+
+      this.txService.create(payload).subscribe(created => {
+        const createdTx: Transaction = {
+          id: created.id,
+          date: created.date ? new Date(created.date as any) : new Date(),
+          description: created.description,
+          category: created.category,
+          amount: created.amount,
+          type: created.type
+        };
+        this.transactions.push(createdTx);
+        this.filterTransactions();
+        this.closeAddModal();
+        this.showNotificationMessage('Transaction added successfully!');
+      }, () => {
+        this.showNotificationMessage('Failed to add transaction');
+      });
     }
   }
 
   deleteTransaction(id: number) {
-    this.transactions = this.transactions.filter(
-        transaction => transaction.id !== id);
-    this.filterTransactions();
-    this.showNotificationMessage('Transaction deleted successfully!');
+    this.txService.delete(id).subscribe(() => {
+      this.transactions = this.transactions.filter(
+          transaction => transaction.id !== id);
+      this.filterTransactions();
+      this.showNotificationMessage('Transaction deleted successfully!');
+    }, () => {
+      this.showNotificationMessage('Failed to delete transaction');
+    });
   }
 
   getTotalIncome(): number {
@@ -175,21 +151,33 @@ export class Transactions implements OnInit, OnDestroy {
     if (this.editingTransactionId !== null &&
         this.newTransaction.description &&
         this.newTransaction.category && this.newTransaction.amount > 0) {
-      const index = this.transactions.findIndex(
-        t => t.id === this.editingTransactionId);
-      if (index !== -1) {
-        this.transactions[index] = {
-          ...this.transactions[index],
-          date: new Date(this.newTransaction.date),
-          description: this.newTransaction.description,
-          category: this.newTransaction.category,
-          amount: this.newTransaction.amount,
-          type: this.newTransaction.type
-        };
+      const payload = {
+        amount: this.newTransaction.amount,
+        type: this.newTransaction.type,
+        category: this.newTransaction.category,
+        description: this.newTransaction.description,
+        transactionDate: this.newTransaction.date
+      };
+
+      this.txService.update(this.editingTransactionId, payload).subscribe(updated => {
+        const index = this.transactions.findIndex(
+          t => t.id === this.editingTransactionId);
+        if (index !== -1) {
+          this.transactions[index] = {
+            ...this.transactions[index],
+            date: updated.date ? new Date(updated.date as any) : new Date(this.newTransaction.date),
+            description: updated.description,
+            category: updated.category,
+            amount: updated.amount,
+            type: updated.type
+          };
+        }
         this.filterTransactions();
         this.closeAddModal();
         this.showNotificationMessage('Transaction updated successfully!');
-      }
+      }, () => {
+        this.showNotificationMessage('Failed to update transaction');
+      });
     }
   }
 
@@ -206,6 +194,18 @@ export class Transactions implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // load transactions from backend
+    this.txService.getAll().subscribe((txs) => {
+      // convert potential date strings to Date
+      this.transactions = txs.map(t => ({
+        ...t,
+        date: t.date ? new Date(t.date as any) : new Date()
+      }));
+      this.filterTransactions();
+    }, () => {
+      // ignore errors for now; component will continue to work with in-memory data
+    });
+
     this.unlisten = this.renderer.listen('document', 'click', (event: Event) =>
     {
       const target = event.target as HTMLElement;
