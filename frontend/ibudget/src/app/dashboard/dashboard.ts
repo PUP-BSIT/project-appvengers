@@ -6,6 +6,8 @@ import { IncomeChart } from "./income-chart/income-chart";
 import { DecimalPipe } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { SpendingChart } from "./spending-chart/spending-chart";
+import { OnInit } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,23 +23,25 @@ import { SpendingChart } from "./spending-chart/spending-chart";
   styleUrl: './dashboard.scss'
 })
 
-export class Dashboard{
-  username: string = 'User';
+export class Dashboard implements OnInit{
+  username: string | null = null;
   remainingBudget: number = 0;
 
-  constructor(private auth: AuthService) {}
+  constructor(public auth: AuthService, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.auth.getProfile().subscribe({
       next: (res) => {
         if (res.success && res.data) {
           this.username = res.data.username;
-          // this.remainingBudget = res.data.remainingBudget ?? 0;
+          this.cd.detectChanges();
+          //this.remainingBudget = res.data.remainingBudget ?? 0;
         }
       },
       error: () => {
         this.username = 'User';
         this.remainingBudget = 0;
+        this.cd.detectChanges();
       }
     });
   }

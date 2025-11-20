@@ -6,7 +6,11 @@
     <div class="card">
       <div class="card-body">
         <div class="budget-info-container">
-          <h2>Hello, {{ username }}!</h2>
+          @if (username) {
+            <h2>Hello, {{ username }}!</h2>
+          } @else {
+            <h2>loading profile...</h2>
+          }
           <p>Your remaining budget is</p>
         </div>
 
