@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -8,12 +8,13 @@ import { CommonModule } from '@angular/common';
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.scss'
 })
-export class LandingPage implements OnInit {
+export class LandingPage implements OnInit, OnDestroy {
   displayedText = signal('');
 
   private fullText: string = 'Simple tracking. Smarter spending.';
   private textIndex: number = 0;
   private typingSpeed: number = 80;
+  private timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   ngOnInit(): void {
     this.typeEffect();
@@ -25,16 +26,20 @@ export class LandingPage implements OnInit {
       // Update the signal with the new text slice
       this.displayedText.update(current => current + nextChar);
       this.textIndex++;
-      
-      // Schedule the next character to be typed
-      setTimeout(() => this.typeEffect(), this.typingSpeed);
+      this.timeoutId = setTimeout(() => this.typeEffect(), this.typingSpeed);
     } else {
-      // Pause briefly at the end, then restart to loop the animation
-      setTimeout(() => {
+      this.timeoutId = setTimeout(() => {
         this.displayedText.set('');
         this.textIndex = 0;
         this.typeEffect();
       }, 1500);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.timeoutId !== null) {
+      clearTimeout(this.timeoutId as number);
+      this.timeoutId = null;
     }
   }
 
