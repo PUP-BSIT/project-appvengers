@@ -3,7 +3,7 @@ import { Sidebar } from "../../sidebar/sidebar";
 import { Header } from "../../header/header";
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HistoryService } from '../../../services/history';
-import { Saving, SavingTransaction } from '../../../models/user.model';
+import { SavingTransaction } from '../../../models/user.model';
 
 @Component({
   selector: 'app-view-saving',
