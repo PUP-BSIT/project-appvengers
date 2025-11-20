@@ -1,105 +1,43 @@
 <app-sidebar></app-sidebar>
 <app-header></app-header>
 
-<main class="reports-container">
-    <!-- Financial Summary Section -->
-  <section class="summary-section">
-    <div class="summary-cards">
-      <div class="summary-card">
-        <h3>Total Income</h3>
-        <p class="amount">
-          {{ totalIncome | currency:'PHP':'symbol':'1.2-2' }}
-        </p>
-      </div>
-      <div class="summary-card">
-        <h3>Total Expenses</h3>
-        <p class="amount">
-          {{ totalExpenses | currency:'PHP':'symbol':'1.2-2' }}
-        </p>
-      </div>
-      <div class="summary-card">
-        <h3>Net Savings</h3>
-        <p class="amount" [class.negative]="netSavings < 0">
-          {{ netSavings | currency:'PHP':'symbol':'1.2-2' }}
-        </p>
-      </div>
-      <div class="summary-card">
-        <h3>Budget Adherence</h3>
-        <p class="percentage">{{ budgetAdherence | number:'1.0-0' }}%</p>
-      </div>
-    </div>
-  </section>
-  <!-- Period Filter -->
-  <section class="filter-section">
-    <div class="filter-header">
-      <h3>View Reports By:
-        <select
-          [(ngModel)]="selectedPeriod"
-          (ngModelChange)="setPeriod($event)"
-          class="period-select">
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-        </select>
-      </h3>
-      <button class="export-btn">Export PDF</button>
-    </div>
-  </section>
+<main class="reports-container container-fluid">
+  @if (reports && reports.length > 0) {
+    <div class="reports-list">
+      <div class="reports-cards-container">
+        @for (r of reports; track r.reports_id) {
+        <div class="report-card">
+          <div class="report-card-header">
+            <div class="report-card-date">
+              <i class="fas fa-calendar-alt"></i>
+              {{ r.period_start | date:'MMM d, y' }} -
+              {{ r.period_end | date:'MMM d, y' }}
+            </div>
+            <div class="report-card-actions">
+              <!-- optional actions for reports (edit/delete) can go here -->
+            </div>
+          </div>
 
-  <!-- Expense and Income Reports -->
-  <section class="report-section">
-    <h2>Expense Report</h2>
-    <div class="table-wrapper">
-      <table class="report-table">
-        <thead>
-          <tr>
-            <th>Category</th>
-            <th>Current Amount</th>
-            <th>Allocated Amount</th>
-            <th>Percentage Used</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (expense of expenses; track expense.name) {
-            <tr>
-              <td>{{ expense.name }}</td>
-              <td>
-                {{ expense.currentAmount | currency:'PHP':'symbol':'1.0-0' }}
-              </td>
-              <td>
-                {{ expense.allocatedAmount | currency:'PHP':'symbol':'1.0-0' }}
-              </td>
-              <td>{{ expense.percentageUsed }}%</td>
-            </tr>
-          }
-        </tbody>
-      </table>
+          <div class="report-card-body">
+            <div class="report-card-description">
+              <div class="report-card-details">
+                <div class="report-category-section">
+                  <div class="mt-3">
+                    <p class="report-card-text">{{ r.report }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
     </div>
-  </section>
+  }
 
-  <section class="report-section">
-    <h2>Income Report</h2>
-    <div class="table-wrapper">
-      <table class="report-table">
-        <thead>
-          <tr>
-            <th>Source</th>
-            <th>Current Amount</th>
-            <th>Total Amount</th>
-            <th>Percentage Completed</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (inc of income; track inc.name) {
-            <tr>
-              <td>{{ inc.name }}</td>
-              <td>{{ inc.currentAmount | currency:'PHP':'symbol':'1.0-0' }}</td>
-              <td>{{ inc.amount | currency:'PHP':'symbol':'1.0-0' }}</td>
-              <td>{{ inc.percentageCompleted }}%</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </section>
+  @if (!reports || reports.length === 0) {
+    <section class="no-reports">
+      <div class="alert alert-info">No reports available.</div>
+    </section>
+  }
 </main>
