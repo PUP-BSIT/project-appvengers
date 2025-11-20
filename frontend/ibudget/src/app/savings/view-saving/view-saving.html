@@ -4,11 +4,25 @@
 <main>
   <div class="card">
     <div class="card-header">
-      <h3>Name of the Saving</h3>
+      <h4>Name of the Saving</h4>
     </div>
 
     <div class="card-body">
       <p>Details of the selected saving will be displayed here.</p>
+    </div>
+
+    <div class="card-footer d-flex gap-2">
+      <button 
+        class="btn btn-sm btn-secondary"
+        routerLink="/savings">
+          Back to Savings
+      </button>
+
+      <button 
+        class="btn btn-sm btn-warning"
+        routerLink="/savings/update-saving/1">
+          Edit Saving
+      </button>
     </div>
   </div>
 
@@ -21,32 +35,42 @@
         </div>
         
         <div class="action-container">
-          <button class="btn btn-primary">Add Saving Transaction</button>
+          <button class="btn btn-sm btn-primary">Add Saving Transaction</button>
         </div>
       </div>
       
       <div class="table-container">
         <table class="table table-striped">
           <thead>
-            <tr>
+            <tr class="table-dark">
               <th>Date</th>
               <th>Type</th>
               <th>Amount</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Sample transaction row -->
-            <tr>
-              <td>2024-06-01</td>
-              <td>Deposit</td>
-              <td>$100.00</td>
-            </tr>
-            <tr>
-              <td>2024-06-05</td>
-              <td>Withdrawal</td>
-              <td>$50.00</td>
-            </tr>
-            <!-- More transactions can be added here -->
+            @if(filteredTransactions().length === 0) {
+              <tr>
+                <td colspan="4" class="text-center">
+                  No transaction history available.
+                </td>
+              </tr>
+            }
+            
+            @if(filteredTransactions().length > 0) {
+              @for(transaction of filteredTransactions(); track $index) {
+                <tr>
+                  <td>{{ transaction.transaction_date }}</td>
+                  <td>{{ transaction.savings_action }}</td>
+                  <td>${{ transaction.amount.toFixed(2) }}</td>
+                  <td class="d-flex gap-1 justify-content-center">
+                    <button class="btn btn-sm btn-warning">Edit</button>
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                  </td>
+                </tr>
+              }
+            }
           </tbody>
         </table>
       </div>
