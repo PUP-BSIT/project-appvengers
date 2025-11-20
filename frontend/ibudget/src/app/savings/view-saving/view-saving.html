@@ -59,7 +59,7 @@
             }
             
             @if(filteredTransactions().length > 0) {
-              @for(transaction of filteredTransactions(); track $index) {
+              @for(transaction of filteredTransactions(); track transaction.id) {
                 <tr>
                   <td>{{ transaction.transaction_date }}</td>
                   <td>{{ transaction.savings_action }}</td>
