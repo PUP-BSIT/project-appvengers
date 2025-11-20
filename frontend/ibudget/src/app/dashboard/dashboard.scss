@@ -15,7 +15,7 @@ main {
   "item1 item1"
   "item2 item3"
   "item4 item4";
-  gap: 2em;
+  gap: .5em;
 }
 
 .card {
@@ -125,20 +125,23 @@ main {
   }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1440px) {
   main {
-    @include m.page-layout(10px, 100%);
+    @include m.page-layout(10px, auto);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .content-container {
-    // margin-left: $page-margin-left;
     grid-template-areas: 
     "item1 item1"
-    "item2 item3"; 
+    "item2 item3"
+    "item4 item4";  
     height: 100%;
     width: 100%;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
   }
 
   .card {
