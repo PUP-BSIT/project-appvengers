@@ -19,7 +19,7 @@ export class UpdateSaving implements OnInit{
   updateSavingForm: FormGroup;
   formBuilder = inject(FormBuilder);
   currentSaving = signal(<Saving>{});
-  savingId = signal(0);
+  savingId = signal(1);
 
   constructor() {
     this.updateSavingForm = this.formBuilder.group({
