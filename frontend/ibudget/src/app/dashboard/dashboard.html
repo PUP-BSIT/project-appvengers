@@ -9,7 +9,9 @@
           @if (username) {
             <h2>Hello, {{ username }}!</h2>
           } @else {
-            <h2>loading profile...</h2>
+            <p class="placeholder-glow">
+              <span class="placeholder col-12"></span>
+            </p>
           }
           <p>Your remaining budget is</p>
         </div>
