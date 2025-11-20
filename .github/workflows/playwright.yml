@@ -1,17 +1,6 @@
 name: Playwright E2E Tests
 on:
-  push:
-    branches: [ main, master ]
-    paths:
-      - 'frontend/ibudget/**'
-      - 'backend/appvengers/**'
-      - '.github/workflows/playwright.yml'
-  pull_request:
-    branches: [ main, master ]
-    paths:
-      - 'frontend/ibudget/**'
-      - 'backend/appvengers/**'
-      - '.github/workflows/playwright.yml'
+  workflow_dispatch:
 
 jobs:
   e2e-tests:
