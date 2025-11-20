@@ -32,7 +32,7 @@ export class Sidebar {
   confirmLogout(): void {
     // perform logout then navigate
     this.authService.logout();
-    this.router.navigate(['/login-page']);
+    this.router.navigate(['/']);
     this.showLogoutModal.set(false);
   }
 
