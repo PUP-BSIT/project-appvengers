@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -15,6 +15,8 @@ export class LandingPage implements OnInit, OnDestroy {
   private textIndex: number = 0;
   private typingSpeed = 80;
   private timeoutId: ReturnType<typeof setTimeout> | null = null;
+  @ViewChild('aboutSection', { static: false })
+    aboutSection!: ElementRef<HTMLElement> | null;
 
   ngOnInit(): void {
     this.typeEffect();
@@ -23,7 +25,6 @@ export class LandingPage implements OnInit, OnDestroy {
   private typeEffect(): void {
     if (this.textIndex < this.fullText.length) {
       const nextChar = this.fullText.charAt(this.textIndex);
-      // Update the signal with the new text slice
       this.displayedText.update(current => current + nextChar);
       this.textIndex++;
       this.timeoutId = setTimeout(() => this.typeEffect(), this.typingSpeed);
@@ -48,7 +49,7 @@ export class LandingPage implements OnInit, OnDestroy {
     if (event) {
       event.preventDefault();
     }
-    const el = document.getElementById('about');
+    const el = this.aboutSection?.nativeElement;
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
