@@ -7,7 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 @Data
 @NoArgsConstructor
@@ -26,5 +27,5 @@ public class TransactionRequest {
 
     private String description;
 
-    private LocalDateTime transactionDate;
+    private LocalDate transactionDate;
 }
