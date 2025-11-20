@@ -20,7 +20,7 @@ export class ViewSaving implements OnInit{
   savingService = inject(SavingsService);
   activatedRoute = inject(ActivatedRoute);
   router = inject(Router);
-  savingId = signal(0);
+  savingId = signal(1);
 
   // Initialize component and fetch data
   ngOnInit(): void {

@@ -19,7 +19,7 @@ export class AddSaving implements OnInit {
   addSavingForm: FormGroup;
   formBuilder = inject(FormBuilder);
   currentSaving = signal(<Saving>{});
-  savingsLength = signal(0);
+  savingsLength = signal(1);
 
   constructor() {
     this.addSavingForm = this.formBuilder.group({
