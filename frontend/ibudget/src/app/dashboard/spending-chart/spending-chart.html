@@ -1,0 +1,20 @@
+<!-- Spending Chart Panel -->
+<div class="spending-chart-container">
+  <div class="card">
+    <div class="card-header p-4">
+      <h4>Spending Overview</h4>
+    </div>
+
+    <div class="card-body">
+      <div class="chart-scroll-container">
+        <div class="chart-container">
+          <canvas baseChart
+          [data]="spendingChartData"
+          [type]="chartType"
+          width="700"
+          height="300"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
