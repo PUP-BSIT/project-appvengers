@@ -7,7 +7,9 @@ export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   if (!authService.isLoggedIn()) {
-    router.navigate(['/login-page']);
+    // Redirect unauthenticated users to the landing page instead of the
+    // login page so logout flows return to the public landing view.
+    router.navigate(['/']);
     return false;
   }
   return true;
