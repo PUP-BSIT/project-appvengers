@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TransactionRequest {
 
-    private Integer id;
+    private Long id;
 
     @NotNull
     private BigDecimal amount;

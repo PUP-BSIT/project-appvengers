@@ -47,7 +47,7 @@ public class TransactionService {
     }
 
     @Transactional
-    public TransactionResponse update(String email, Integer id, TransactionRequest req) {
+    public TransactionResponse update(String email, Long id, TransactionRequest req) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -69,7 +69,7 @@ public class TransactionService {
     }
 
     @Transactional
-    public void delete(String email, Integer id) {
+    public void delete(String email, Long id) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
