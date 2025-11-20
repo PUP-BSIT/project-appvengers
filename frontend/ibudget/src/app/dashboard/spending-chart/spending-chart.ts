@@ -4,6 +4,7 @@ import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-spending-chart',
+  standalone: true,
   imports: [BaseChartDirective],
   templateUrl: './spending-chart.html',
   styleUrl: './spending-chart.scss',
@@ -12,6 +13,10 @@ export class SpendingChart implements OnInit{
   // Chart configuration and data would go here
   chartType: ChartType = 'bar';
   spendingChartData!: ChartData<'bar'>;
+  chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+  };
   
   ngOnInit(): void {
     this.setupSpendingChart();
@@ -38,6 +43,9 @@ export class SpendingChart implements OnInit{
       },
     }
 
-    this.spendingChartData = config.data;
+    this.spendingChartData = {
+      labels: labels,
+      datasets: data.datasets,
+    }
   }
 }

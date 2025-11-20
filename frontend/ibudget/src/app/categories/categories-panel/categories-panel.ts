@@ -4,6 +4,7 @@ import { BaseChartDirective } from "ng2-charts";
 
 @Component({
   selector: 'app-categories-panel',
+  standalone: true,
   imports: [BaseChartDirective],
   templateUrl: './categories-panel.html',
   styleUrl: './categories-panel.scss',
