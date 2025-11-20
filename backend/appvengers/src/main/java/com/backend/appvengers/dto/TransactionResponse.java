@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransactionResponse {
-    private Integer id;
+    private Long id;
     private BigDecimal amount;
     private String type;
     private String category;
