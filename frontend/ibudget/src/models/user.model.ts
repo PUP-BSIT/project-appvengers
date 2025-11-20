@@ -56,19 +56,13 @@ export type Notification = {
   category?: string;
 }
 
-export type Expenses = {
-  name: string;
-  currentAmount: number;
-  allocatedAmount: number;
-  percentageUsed: number;
-};
-
-export type Income = {
-  name: string;
-  currentAmount: number;
-  amount: number;
-  percentageCompleted: number;
-};
+export type ReportRecord = {
+  reports_id: number;
+  user_id: number;
+  period_start: string;
+  period_end: string;
+  report: string;
+}
 
 export type SavingTransaction = {
   id: number;
