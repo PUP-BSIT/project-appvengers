@@ -6,13 +6,14 @@
     <h2>Add New Saving</h2>
     <p>Fill in the details below to create a new saving goal.</p>
   
-    <form>
+    <form [formGroup]="addSavingForm">
       <div class="mb-3">
         <label for="saving_name" class="form-label">Saving Name</label>
         <input 
           type="text" 
           class="form-control" 
           id="saving_name" 
+          formControlName="name"
           placeholder="Enter saving name">
       </div>
   
@@ -22,12 +23,13 @@
           type="number" 
           class="form-control" 
           id="target_amount" 
+          formControlName="target_amount"
           placeholder="Enter target amount">
       </div>
 
       <div class="mb-3">
         <label for="frequency" class="form-label">Frequency</label>
-        <select class="form-select" id="frequency">
+        <select class="form-select" id="frequency" formControlName="frequency">
           <option selected>Select frequency</option>
           <option value="daily">Daily</option>
           <option value="weekly">Weekly</option>
@@ -40,6 +42,7 @@
         <input 
           type="date" 
           class="form-control" 
+          formControlName="goal_date"
           id="goal_date">
       </div>
   
@@ -50,14 +53,22 @@
           class="form-control" 
           id="current_amount" 
           placeholder="0.00"
-          value="0"
-          disabled>
+          formControlName="current_amount"
+          title="This is readonly and cannot be changed manually."
+          readonly>
       </div>
+
+      <button
+      type="button"
+      class="btn btn-secondary me-2"
+      routerLink="/savings">
+        Cancel
+      </button>
   
       <button 
         type="button" 
         class="btn btn-primary"
-        routerLink="/savings">
+        (click)="addSaving()">
           Save
       </button>
     </form>
