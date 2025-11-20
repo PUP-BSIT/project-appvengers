@@ -6,7 +6,6 @@ import { EmailVerification } from './email-verification/email-verification';
 import { SetupAccount } from './setup-account/setup-account';
 import { Dashboard } from './dashboard/dashboard';
 import { Budgets } from './budgets/budgets';
-import { Transactions } from './transactions/transactions';
 import { Categories } from './categories/categories';
 import { authGuard } from './guards/auth.guard';
 
@@ -45,7 +44,8 @@ export const routes: Routes = [
   {
     path: 'transactions', 
     loadComponent: () => import('./transactions/transactions')
-      .then(m => m.Transactions)
+      .then(m => m.Transactions),
+    canActivate: [authGuard]
   },
   {
     path: 'budgets', 
