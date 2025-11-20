@@ -3,12 +3,25 @@
 
 <main>
   <div class="card">
-    <div class="card-header">
-      <h4>Name of the Saving</h4>
+    <div class="card-header bg-dark text-white">
+      <h4>{{ currentSaving().name }}</h4>
     </div>
 
     <div class="card-body">
-      <p>Details of the selected saving will be displayed here.</p>
+      <div class="mh-3">
+        <h5>Target Amount:</h5>
+        <span>${{ currentSaving().target_amount.toFixed(2) }}</span>
+      </div>
+
+      <div class="mh-3">
+        <h5>Frequency:</h5>
+        <span>{{ currentSaving().frequency }}</span>
+      </div>
+
+      <div class="mh-3">
+        <h5>Goal Date:</h5>
+        <span>{{ currentSaving().goal_date }}</span>
+      </div>
     </div>
 
     <div class="card-footer d-flex gap-2">

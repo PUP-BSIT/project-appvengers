@@ -32,7 +32,7 @@ export class SavingsService {
     {
       savings_id: 3,
       user_id: 1,
-      name: 'Utilities',
+      name: 'New Laptop',
       goal_date: '2023-10-31',
       frequency: 'monthly',
       target_amount: 2000,
@@ -43,7 +43,7 @@ export class SavingsService {
     {
       savings_id: 4,
       user_id: 1,
-      name: 'Electricity Bill',
+      name: 'New Phone',
       goal_date: '2023-09-30',
       frequency: 'monthly',
       target_amount: 1500,
@@ -53,7 +53,7 @@ export class SavingsService {
     }, {
       savings_id: 5,
       user_id: 1,
-      name: 'Other Bills',
+      name: 'Airpods',
       goal_date: '2023-08-31',
       frequency: 'monthly',
       target_amount: 1000,
@@ -67,6 +67,16 @@ export class SavingsService {
 
   getSavings(): Observable<Saving[]> {
     return of(this.MOCK_SAVINGS);
+  }
+
+  getSavingById(savingId: number): Observable<Saving> {
+    const matchedSaving = this.MOCK_SAVINGS.find(s => s.savings_id === savingId);
+
+    if (!matchedSaving) {
+      throw new Error(`Saving with id ${savingId} not found.`);
+    }
+
+    return of(matchedSaving);
   }
 
   addSaving(newSaving: Saving): Observable<Saving> {
