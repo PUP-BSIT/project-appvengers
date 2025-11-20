@@ -70,10 +70,14 @@ export type Income = {
   percentageCompleted: number;
 };
 
-export type TransactionHistory = {
+export type SavingTransaction = {
+  id: number;
+  user_id?: number;
+  transaction_date?: string;
+  savings_action?: 'Deposit' | 'Withdrawal';
+  date: Date;
+  description: string;
   amount: number;
-  category: string;
-  type: string;
 }
 
 export type Categories = {
