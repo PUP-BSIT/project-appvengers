@@ -16,10 +16,10 @@ export class Savings implements OnInit {
   savingsService = inject(SavingsService);
 
   ngOnInit() {
-    this.getBudgets();
+    this.getSavings();
   }
 
-  getBudgets() {
+  getSavings() {
     this.savingsService.getSavings().subscribe((savingsData) => {
       this.savings.set(savingsData);
     });
