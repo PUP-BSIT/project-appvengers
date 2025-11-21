@@ -8,10 +8,11 @@ import {
     FormBuilder,
     Validators
   } from '@angular/forms';
+import { SubHeader } from "../sub-header/sub-header";
 
 @Component({
   selector: 'app-account',
-  imports: [Sidebar, Header, ReactiveFormsModule],
+  imports: [Sidebar, Header, ReactiveFormsModule, SubHeader],
   templateUrl: './account.html',
   styleUrl: './account.scss',
 })
