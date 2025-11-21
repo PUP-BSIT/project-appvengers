@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { KpiPanel } from './kpi-panel';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('KpiPanel', () => {
   let component: KpiPanel;
@@ -8,7 +8,7 @@ describe('KpiPanel', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [KpiPanel]
+      imports: [KpiPanel, HttpClientTestingModule]
     })
     .compileComponents();
 
