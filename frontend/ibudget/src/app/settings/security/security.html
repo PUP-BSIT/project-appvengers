@@ -7,100 +7,123 @@
     <div class="info-container">
       <h5 class="fw-semibold">Security</h5>
       <p class="text-muted">
-        Lorem ipsum dolor sit amet consectetur, adipisicing.
+        Manage your password and privacy settings.
       </p>
     </div>
   </div>
 
-  <div class="card">
-      <div class="card-header p-4">
-        <h6 class="fw-semibold m-0">Privacy</h6>
+  <div class="card security-settings-panel">
+    <div class="card-header p-4">
+      <h6 class="fw-semibold m-0">Password</h6>
+    </div>
+
+    <div class="card-body">
+      <form [formGroup]="securitySettingsForm" class="security-form-wrapper">
+        <div>
+          <label>Current Password</label>
+          <div class="input-group">
+            <input 
+            class="form-control" 
+            formControlName="current_password"
+            placeholder="Current Password"
+            [type]="hideCurrentPassword() ? 'password' : 'text'"/>
+            
+            <button 
+              class="btn btn-outline-secondary"
+              (click)="hideCurrentPassword.set(!hideCurrentPassword())">
+                <i
+                class="bi" [class.bi-eye]="!hideCurrentPassword()"
+                [class.bi-eye-slash]="hideCurrentPassword()"></i>
+            </button>
+          </div>
+
+          @if(currentPassword?.errors?.['required'] 
+                && currentPassword?.touched) {
+              <span class="text-danger small mt-1">
+                Current Password is required.
+              </span>
+            } 
+        </div>
+        
+        <div>
+          <label>New Password</label>
+          <div class="input-group">
+            <input 
+              class="form-control"
+              formControlName="new_password"
+              placeholder="New Password"
+              type="password"
+              [type]="hideNewPassword() ? 'password' : 'text'"/>
+
+            <button 
+              class="btn btn-outline-secondary"
+              (click)="hideNewPassword.set(!hideNewPassword())">
+                <i
+                class="bi" [class.bi-eye]="!hideNewPassword()"
+                [class.bi-eye-slash]="hideNewPassword()"></i>
+            </button>
+          </div>
+
+          @if(newPassword?.errors?.['minlength'] && newPassword?.touched) {
+            <span class="text-danger small mt-1">
+              Password must be minimum or greater than 12 characters.
+            </span>
+          }
+        </div>
+        
+        <div>
+          <label>Confirm Password</label>
+          <div class="input-group">
+            <input 
+            class="form-control"
+            formControlName="confirm_password"
+            placeholder="Confirm Password"
+            type="password"
+            [type]="hideConfirmPassword() ? 'password' : 'text'"/>
+
+            <button 
+              class="btn btn-outline-secondary"
+              (click)="hideConfirmPassword.set(!hideConfirmPassword())">
+                <i
+                class="bi" [class.bi-eye]="!hideConfirmPassword()"
+                [class.bi-eye-slash]="hideConfirmPassword()"></i>
+            </button>
+          </div>
+
+          @if(confirmPassword?.errors?.['required'] 
+              && confirmPassword?.touched) {
+            <span class="text-danger small mt-1">
+              Confirm Password is required.
+            </span>
+          }
+        </div>
+
+        <button class="btn btn-primary">Save</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="privacy-panel">
+    <div class="card">
+      <div class="card-header p-3">
+        <h5>Privacy</h5>
       </div>
 
       <div class="card-body">
-        <form [formGroup]="securitySettingsForm" class="security-form-wrapper">
-          <div>
-            <label>Current Password</label>
-            <div class="input-group">
-              <input 
-              class="form-control" 
-              formControlName="current_password"
-              placeholder="Current Password"
-              [type]="hideCurrentPassword() ? 'password' : 'text'"/>
-              
-              <button 
-                class="btn btn-outline-secondary"
-                (click)="hideCurrentPassword.set(!hideCurrentPassword())">
-                  <i
-                  class="bi" [class.bi-eye]="!hideCurrentPassword()"
-                  [class.bi-eye-slash]="hideCurrentPassword()"></i>
-              </button>
-            </div>
+        <button 
+          type="button"
+          class="btn btn-sm btn-secondary"
+          routerLink="/">
+            Deactivate Account
+        </button>
 
-            @if(currentPassword?.errors?.['required'] 
-                  && currentPassword?.touched) {
-                <span class="text-danger small mt-1">
-                  Current Password is required.
-                </span>
-              } 
-          </div>
-          
-          <div>
-            <label>New Password</label>
-            <div class="input-group">
-              <input 
-                class="form-control"
-                formControlName="new_password"
-                placeholder="New Password"
-                type="password"
-                [type]="hideNewPassword() ? 'password' : 'text'"/>
-
-              <button 
-                class="btn btn-outline-secondary"
-                (click)="hideNewPassword.set(!hideNewPassword())">
-                  <i
-                  class="bi" [class.bi-eye]="!hideNewPassword()"
-                  [class.bi-eye-slash]="hideNewPassword()"></i>
-              </button>
-            </div>
-
-            @if(newPassword?.errors?.['minlength'] && newPassword?.touched) {
-              <span class="text-danger small mt-1">
-                Password must be minimum or greater than 12 characters.
-              </span>
-            }
-          </div>
-          
-          <div>
-            <label>Confirm Password</label>
-            <div class="input-group">
-              <input 
-              class="form-control"
-              formControlName="confirm_password"
-              placeholder="Confirm Password"
-              type="password"
-              [type]="hideConfirmPassword() ? 'password' : 'text'"/>
-
-              <button 
-                class="btn btn-outline-secondary"
-                (click)="hideConfirmPassword.set(!hideConfirmPassword())">
-                  <i
-                  class="bi" [class.bi-eye]="!hideConfirmPassword()"
-                  [class.bi-eye-slash]="hideConfirmPassword()"></i>
-              </button>
-            </div>
-
-            @if(confirmPassword?.errors?.['required'] 
-                && confirmPassword?.touched) {
-              <span class="text-danger small mt-1">
-                Confirm Password is required.
-              </span>
-            }
-          </div>
-
-          <button class="btn btn-primary">Save</button>
-        </form>
+        <button
+          type="button"
+          class="btn btn-sm btn-danger"
+          routerLink="/">
+            Delete Account
+        </button>
       </div>
     </div>
+  </div>
 </main>
-

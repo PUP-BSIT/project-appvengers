@@ -1,6 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { Sidebar } from "../../sidebar/sidebar";
 import { Header } from "../../header/header";
+import { SubHeader } from "../sub-header/sub-header";
+import { RouterLink } from '@angular/router';
 import { 
     FormGroup, 
     FormControl,
@@ -8,11 +10,10 @@ import {
     FormBuilder,
     Validators
   } from '@angular/forms';
-import { SubHeader } from "../sub-header/sub-header";
 
 @Component({
   selector: 'app-security',
-  imports: [Sidebar, Header, ReactiveFormsModule, SubHeader],
+  imports: [Sidebar, Header, ReactiveFormsModule, SubHeader, RouterLink],
   templateUrl: './security.html',
   styleUrl: './security.scss',
 })
