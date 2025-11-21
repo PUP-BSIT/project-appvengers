@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { UpdateSavingTransaction } from './update-saving-transaction';
 
 describe('UpdateSavingTransaction', () => {
@@ -8,7 +9,10 @@ describe('UpdateSavingTransaction', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UpdateSavingTransaction]
+      imports: [UpdateSavingTransaction],
+      providers: [
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: convertToParamMap({ id: '1' }) } } },
+      ] 
     })
     .compileComponents();
 
