@@ -9,8 +9,4 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class SubHeader {
   router = inject(Router);
-
-  selectSettingPanel(panel: string) {
-    this.router.navigate([panel]);
-  }
 }
