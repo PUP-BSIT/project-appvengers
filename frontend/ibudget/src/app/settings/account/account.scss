@@ -4,8 +4,8 @@ main {
   @include m.page-layout(30px, auto);
   display: flex;
   justify-content: center;
-  padding-left: 100px;
-  padding-right: 100px;
+  padding-left: 110px;
+  padding-right: 110px;
 }
 
 .account-settings-panel {
@@ -24,7 +24,7 @@ main {
 
 .card {
   width: 100%;
-  margin: 20px 0;
+  margin: 0 0;
   
   .card-body {
     padding: 40px;
