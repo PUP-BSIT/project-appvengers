@@ -1,21 +1,12 @@
+@use '../../styles/mixins' as m;
+
 $sidebar-width: 100px;
-$background-color: #E8E9EB;
 
-.settings-container {
-  margin-left: $sidebar-width; 
-  padding: 10px;
-  height: auto;
-  background-color: $background-color;
-  box-sizing: border-box;   
-  width: 100%;
-  max-width: 100%;
-}
-
-.security-form-wrapper {
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  gap: 1em;
+main {
+  @include m.page-layout(30px, auto);
+  padding-left: calc($sidebar-width + 20px + 100px);
+  padding-right: 120px;
+  min-height: 100%;
 }
 
 .first-panel,
