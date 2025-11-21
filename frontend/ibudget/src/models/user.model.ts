@@ -73,6 +73,9 @@ export type SavingTransaction = {
   date: Date;
   description: string;
   amount: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
 }
 
 export type Categories = {
