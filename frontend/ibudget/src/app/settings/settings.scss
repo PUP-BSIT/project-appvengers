@@ -11,51 +11,6 @@ $background-color: #E8E9EB;
   max-width: 100%;
 }
 
-.account-form-container {
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-}
-
-.first-row {
-  display: flex;
-  flex-direction: row;
-  gap: 2em;
-
-  .first-row-input {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-}
-
-.second-row {
-  display: flex;
-  flex-direction: column;
-}
-
-.third-row {
-  display: flex;
-  flex-direction:column;
-}
-
-.fourth-row {
-  display: flex;
-  flex-direction: column;
-}
-
-.fifth-row {
-  display: flex;
-  flex-direction: row;
-  gap: 2em;
-  margin-bottom: 10px;
-
-  .fifth-row-input {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-}
-
 .security-form-wrapper {
   display: flex;
   flex-direction: column;
