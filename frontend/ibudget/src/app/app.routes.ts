@@ -92,6 +92,13 @@ export const routes: Routes = [
     loadComponent: () => import('./settings/settings')
       .then(m => m.Settings)
   },
-  { path: '**', loadComponent: () =>
-      import('./not-found/not-found').then(m => m.NotFound) }
+  {
+    path: 'settings/account/:id',
+    loadComponent: () => import('./settings/account/account')
+      .then(m => m.Account)
+  },
+  { 
+    path: '**', loadComponent: () =>
+      import('./not-found/not-found').then(m => m.NotFound) 
+  }
 ];
