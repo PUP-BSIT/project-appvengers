@@ -4,9 +4,32 @@ main {
   @include m.page-layout(30px, auto);
   padding-left: 120px;
   padding-right: 120px;
+  display: grid;
+  grid-template-areas:
+    "third-panel third-panel"
+    "security-settings-panel privacy-panel";
+  gap: 1em;
+}
+
+.privacy-panel {
+  grid-area: privacy-panel;
+}
+
+.privacy-panel { 
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+}
+
+.security-settings-panel {
+  grid-area: security-settings-panel;
 }
 
 .third-panel {
+  grid-area: third-panel;
   margin-top: 2%;
 }
 
