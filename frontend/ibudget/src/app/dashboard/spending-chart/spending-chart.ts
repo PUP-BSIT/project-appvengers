@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartData, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { ChartData, ChartType,} from 'chart.js';
 
 @Component({
   selector: 'app-spending-chart',
@@ -32,15 +32,6 @@ export class SpendingChart implements OnInit{
           data: [1200, 1500, 1000, 1700, 1300, 1600, 1800],
           backgroundColor: 'rgba(54, 162, 235, 0.4)',
         }]
-    }
-
-    const config = {
-      type: 'bar',
-      data: data,
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
     }
 
     this.spendingChartData = {
