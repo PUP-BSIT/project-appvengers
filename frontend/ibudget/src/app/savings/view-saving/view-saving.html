@@ -57,7 +57,9 @@
         </div>
         
         <div class="action-container">
-          <button class="btn btn-sm btn-primary">Add Saving Transaction</button>
+          <app-add-saving-transaction 
+            [transactionsLength]="transactionsCount()"
+            (addedTransaction)="onSavingsTransactionAdded($event)"/>
         </div>
       </div>
       
@@ -81,7 +83,7 @@
             }
             
             @if(filteredTransactions().length > 0) {
-              @for(transaction of filteredTransactions(); track transaction.id) {
+              @for(transaction of filteredTransactions(); track transaction.transaction_id) {
                 <tr>
                   <td>{{ transaction.transaction_date }}</td>
                   <td>{{ transaction.savings_action }}</td>
