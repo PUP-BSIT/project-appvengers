@@ -7,13 +7,15 @@
     <div class="card-body">
       <div class="budget-info-wrapper">
         <div>
-          <h2 class="text-primary fw-bold mb-0">5000.00</h2>
+          <h2 class="text-primary fw-bold mb-0">
+            {{ remainingBudget | number:'1.2-2' }}
+          </h2>
           <span class="text-secondary">Remaining Budget</span>
         </div>
 
         <div class="progress-container">
           <round-progress
-            [current]="100"
+            [current]="budgetPercent"
             [max]="100"
             [color]="'#45ccce'"
             [background]="'#eaeaea'"
@@ -23,7 +25,7 @@
             [animationDelay]="0"
           />
 
-          <span class="progress-text">100%</span>
+          <span class="progress-text">{{budgetPercent}}%</span>
         </div>
       </div>
     </div>
@@ -31,12 +33,16 @@
     <div class="card-footer d-flex justify-content-center">
       <div>
         <span class="h6">Total Budget: &#8369; </span>
-        <span class="text-success fw-semibold">5000.00</span>
+        <span class="text-success fw-semibold">
+          {{ totalBudget | number:'1.2-2' }}
+        </span>
       </div>
       
       <div>
         <span class="h6">Total Expenses: &#8369; </span>
-        <span class="text-warning fw-semibold">0</span>
+        <span class="text-warning fw-semibold">
+          {{ totalExpenses | number:'1.2-2' }}
+        </span>
       </div>
     </div>
   </div>
