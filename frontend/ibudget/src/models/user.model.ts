@@ -65,7 +65,8 @@ export type ReportRecord = {
 }
 
 export type SavingTransaction = {
-  id: number;
+  transaction_id: number;
+  savings_id?: number;
   user_id?: number;
   transaction_date?: string;
   savings_action?: 'Deposit' | 'Withdrawal';
