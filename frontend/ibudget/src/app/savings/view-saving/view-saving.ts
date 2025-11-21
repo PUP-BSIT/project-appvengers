@@ -96,9 +96,6 @@ export class ViewSaving implements OnInit{
     // update total and filtered list
     this.transactionsCount.set(updated.length);
     this.filterTransactions();
-    console.log('New Transaction Added:', newTransaction);
-    console.log('Updated Transactions List:', this.transactionHistories());
-    console.log('Filtered Transactions List:', this.filteredTransactions());
   }
 
   onSavingsTransactionUpdated(updatedTransaction: SavingTransaction) {
