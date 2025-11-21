@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideHttpClient } from '@angular/common/http';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Account } from './account';
 
 describe('Account', () => {
@@ -8,7 +9,19 @@ describe('Account', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Account]
+      imports: [Account],
+      providers: [
+        provideHttpClient(),
+        {provide: ActivatedRoute, 
+          useValue: { 
+            snapshot: { 
+              paramMap: convertToParamMap(
+                {id: '1'}
+              ) 
+            } 
+          }
+        }
+      ]
     })
     .compileComponents();
 
