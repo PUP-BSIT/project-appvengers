@@ -1,0 +1,77 @@
+@use '../../../styles/mixins' as m;
+
+main {
+  @include m.page-layout(30px, auto);
+  display: flex;
+  justify-content: center;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.account-settings-panel {
+  padding: 10px;
+  height: auto;
+  box-sizing: border-box;   
+  width: 100%;
+  max-width: 100%;
+}
+
+.outer-card-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  width: 100%;
+  margin: 20px 0;
+  
+  .card-body {
+    padding: 40px;
+  }
+}
+
+.account-form-container {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.first-row {
+  display: flex;
+  flex-direction: row;
+  gap: 2em;
+
+  .first-row-input {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+.second-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.third-row {
+  display: flex;
+  flex-direction:column;
+}
+
+.fourth-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.fifth-row {
+  display: flex;
+  flex-direction: row;
+  gap: 2em;
+  margin-bottom: 10px;
+
+  .fifth-row-input {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
