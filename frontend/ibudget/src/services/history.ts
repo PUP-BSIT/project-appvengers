@@ -16,6 +16,9 @@ export class HistoryService {
       date: new Date('2025-11-20'),
       description: 'Remaining Allowance',
       amount: 300,
+      created_at: '2025-11-20',
+      updated_at: '2025-11-20',
+      deleted_at: ''
     },
     {
       transaction_id: 2,
@@ -26,6 +29,9 @@ export class HistoryService {
       date: new Date('2025-11-20'),
       description: 'Remaining Allowance',
       amount: 100,
+      created_at: '2025-11-20',
+      updated_at: '2025-11-20',
+      deleted_at: ''
     },
     {
       transaction_id: 3,
@@ -36,6 +42,9 @@ export class HistoryService {
       date: new Date('2025-11-21'),
       description: 'Remaining Allowance',
       amount: 100,
+      created_at: '2025-11-21',
+      updated_at: '2025-11-21',
+      deleted_at: ''
     },
     {
       transaction_id: 4,
@@ -46,6 +55,9 @@ export class HistoryService {
       date: new Date('2025-11-22'),
       description: 'Remaining Allowance',
       amount: 100,
+      created_at: '2025-11-22',
+      updated_at: '2025-11-22',
+      deleted_at: ''
     },
     {
       transaction_id: 5,
@@ -56,6 +68,9 @@ export class HistoryService {
       date: new Date('2025-11-25'),
       description: 'Income from Work',
       amount: 200,
+      created_at: '2025-11-25',
+      updated_at: '2025-11-25',
+      deleted_at: ''
     },
   ];
   
@@ -74,5 +89,26 @@ export class HistoryService {
   addSavingTransaction(newTransaction: SavingTransaction): Observable<SavingTransaction> {
     this.STATIC_HISTORY = [...this.STATIC_HISTORY, newTransaction];
     return of(newTransaction);
+  }
+
+  updateSavingTransaction(savings_id: number, transaction_id: number, updatedTransaction: SavingTransaction): Observable<SavingTransaction> {
+    const index = this.STATIC_HISTORY.findIndex(transaction => 
+      transaction.savings_id === savings_id && transaction.transaction_id === transaction_id
+    );
+
+    if (index !== -1) {
+      this.STATIC_HISTORY[index] = updatedTransaction;
+      return of(updatedTransaction);
+    } else {
+      // Handle the case where the transaction is not found
+      throw new Error('Transaction not found');
+    }
+  }
+
+  deleteSavingTransaction(savings_id: number, transaction_id: number): Observable<SavingTransaction[]> {
+    this.STATIC_HISTORY = this.STATIC_HISTORY.filter(transaction => 
+      !(transaction.savings_id === savings_id && transaction.transaction_id === transaction_id)
+    );
+    return of(this.STATIC_HISTORY);
   }
 }
