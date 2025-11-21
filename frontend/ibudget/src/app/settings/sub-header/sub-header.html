@@ -1,14 +1,17 @@
 <div class="sub-header-wrapper">
   <div class="sub-header-selections">
-    <div class="selection-container"
+    <!-- <div class="selection-container"
          routerLinkActive="active"
          [routerLinkActiveOptions]="{ exact: true }">
       <a [routerLink]="['/settings']" class="fw-semibold text-decoration-none">
         General
       </a>
-    </div>
+    </div> -->
 
-    <div class="selection-container" routerLinkActive="active">
+    <div 
+      class="selection-container"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }">
       <a 
         [routerLink]="['/settings/account/1']" 
         class="fw-semibold text-decoration-none">
