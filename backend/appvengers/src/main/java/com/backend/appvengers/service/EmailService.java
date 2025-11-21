@@ -38,7 +38,7 @@ public class EmailService {
     message.setRecipients(MimeMessage.RecipientType.TO, to);
     message.setSubject(subject);
 
-    String htmlTemplate = readFile("src/main/resources/template.html");
+    String htmlTemplate = readFileFromClasspath("template.html");
     String htmlContent = htmlTemplate.replace("${name}", username)
                                      .replace("${verificationLink}", verificationLink);
 
@@ -47,9 +47,13 @@ public class EmailService {
     emailSender.send(message);
   }
 
-  // Read the path to template.html and send as email content
-  public String readFile(String filePath) throws IOException {
-    Path path = Paths.get(filePath);
-    return Files.readString(path, StandardCharsets.UTF_8);
+  // Read the template.html from classpath (works in both dev and production JAR)
+  public String readFileFromClasspath(String fileName) throws IOException {
+    try (var inputStream = getClass().getClassLoader().getResourceAsStream(fileName)) {
+      if (inputStream == null) {
+        throw new IOException("Template file not found: " + fileName);
+      }
+      return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+    }
   }
 }
