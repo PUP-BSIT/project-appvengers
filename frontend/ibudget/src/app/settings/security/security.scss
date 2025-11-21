@@ -1,0 +1,24 @@
+@use '../../../styles/mixins' as m;
+
+main {
+  @include m.page-layout(30px, auto);
+  padding-left: 120px;
+  padding-right: 120px;
+}
+
+.third-panel {
+  margin-top: 2%;
+}
+
+.security-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  gap: 1em;
+}
+
+.card {
+  box-sizing: border-box;   
+  width: 100%;
+  max-width: 100%;
+}
