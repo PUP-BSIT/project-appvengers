@@ -1,24 +1,24 @@
 <div class="sub-header-wrapper">
   <div class="sub-header-selections">
-    <div class="selection-container">
-      <a
-        (click)="selectPanel('generalSettingsPanel')" 
-        class="fw-semibold text-decoration-none">
+    <div class="selection-container"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }">
+      <a [routerLink]="['/settings']" class="fw-semibold text-decoration-none">
         General
       </a>
     </div>
 
-    <div class="selection-container">
+    <div class="selection-container" routerLinkActive="active">
       <a 
-        (click)="selectPanel('accountSettingsPanel')" 
+        [routerLink]="['/settings/account/1']" 
         class="fw-semibold text-decoration-none">
         Account Settings
       </a>
     </div>
-  
-    <div class="selection-container">
-      <a
-        (click)="selectPanel('securitySettingsPanel')"  
+
+    <div class="selection-container" routerLinkActive="active">
+      <a 
+        [routerLink]="['/settings/security/1']" 
         class="fw-semibold text-decoration-none">
         Security Settings
       </a>

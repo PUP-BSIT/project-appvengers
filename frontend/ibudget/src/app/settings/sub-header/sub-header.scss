@@ -33,6 +33,16 @@ $header-margin-left: 100px;
     color: #6f42c1;
     border-bottom: 2px solid #6f42c1;
   }
+
+  &.active {
+    color: #6f42c1;
+
+    a {
+      color: #6f42c1;
+    }
+
+    border-bottom: 2px solid #6f42c1;
+  }
 }
 
 a {
