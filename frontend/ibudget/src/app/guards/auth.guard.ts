@@ -1,16 +1,36 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { AuthService } from '..//../services/auth.service';
+import { AuthService } from '../../services/auth.service';
+import { of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 export const authGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (!authService.isLoggedIn()) {
-    // Redirect unauthenticated users to the landing page instead of the
-    // login page so logout flows return to the public landing view.
-    router.navigate(['/']);
+  // check if a token exists locally
+  const token = authService.getToken();
+  if (!token) {
+    router.navigate(['/login-page']);
     return false;
   }
-  return true;
+
+  // validate the token with the backend using getProfile()
+  return authService.getProfile().pipe(
+    map(res => {
+      if (res.success) {
+        return true; // token is valid, allow navigation
+      } else {
+        authService.logout();
+        router.navigate(['/login-page']);
+        return false;
+      }
+    }),
+    catchError(() => {
+      // backend unreachable or token invalid
+      authService.logout();
+      router.navigate(['/login-page']);
+      return of(false);
+    })
+  );
 };
