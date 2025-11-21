@@ -1,10 +1,11 @@
-import { Component, signal, Renderer2, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, Renderer2, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe, DatePipe, CommonModule } from '@angular/common';
 import {Transaction} from "../../models/user.model";
 import { Header } from '../header/header';
 import { TransactionsService } from '../../services/transactions.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-transactions',
@@ -15,7 +16,7 @@ import { TransactionsService } from '../../services/transactions.service';
 export class Transactions implements OnInit, OnDestroy {
   private unlisten: (() => void) | null = null;
 
-  constructor(private renderer: Renderer2, private txService: TransactionsService) {}
+  constructor(private renderer: Renderer2, private txService: TransactionsService, private authService: AuthService, private cd: ChangeDetectorRef) {}
 
   showAddModal = signal(false);
   showNotification = signal(false);
@@ -50,14 +51,17 @@ export class Transactions implements OnInit, OnDestroy {
   editingTransactionId: number | null = null;
 
     filterTransactions() {
-    if (this.selectedCategory === 'All Categories') {
-      this.filteredTransactions = [...this.transactions];
-    } else {
-      this.filteredTransactions = this.transactions.filter(
-        transaction => transaction.category === this.selectedCategory
-      );
+      const sel = (this.selectedCategory ||
+                    'All Categories').toString().toLowerCase();
+      if (sel === 'all categories') {
+        this.filteredTransactions = [...this.transactions];
+      } else {
+        this.filteredTransactions = this.transactions.filter(
+          transaction => (transaction.category ||
+                          '').toString().toLowerCase() === sel
+        );
+      }
     }
-  }
 
   onCategoryChange() {
     this.filterTransactions();
@@ -93,6 +97,11 @@ export class Transactions implements OnInit, OnDestroy {
       };
 
       this.txService.create(payload).subscribe(created => {
+        console.log('create response:', created);
+        // re-fetch all transactions from backend to verify persistence
+        this.txService.getAll().subscribe(all => {
+          console.log('transactions after create (from backend):', all);
+        }, err => console.error('getAll after create failed', err));
         const createdTx: Transaction = {
           id: created.id,
           date: created.date ? new Date(created.date as any) : new Date(),
@@ -195,6 +204,8 @@ export class Transactions implements OnInit, OnDestroy {
 
   ngOnInit() {
     // load transactions from backend
+    console.log('Transactions: auth token present?', !!this.authService.getToken());
+    console.log('Transactions: auth token (first 24 chars):', this.authService.getToken()?.slice(0, 24));
     this.txService.getAll().subscribe((txs) => {
       // convert potential date strings to Date
       this.transactions = txs.map(t => ({
@@ -202,8 +213,17 @@ export class Transactions implements OnInit, OnDestroy {
         date: t.date ? new Date(t.date as any) : new Date()
       }));
       this.filterTransactions();
-    }, () => {
-      // ignore errors for now; component will continue to work with in-memory data
+      // ensure change detection runs so template updates on first navigation
+      try {
+        this.cd.detectChanges();
+      } catch (e) {
+        // fallback: schedule a microtask
+        setTimeout(() => {}, 0);
+      }
+    }, (err) => {
+      console.error('Failed to load transactions on init', err);
+      // show a notification so devs notice this on the UI too
+      this.showNotificationMessage('Unable to load transactions (check console)');
     });
 
     this.unlisten = this.renderer.listen('document', 'click', (event: Event) =>
