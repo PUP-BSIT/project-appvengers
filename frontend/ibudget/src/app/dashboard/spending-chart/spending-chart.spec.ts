@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SpendingChart } from './spending-chart';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 describe('SpendingChart', () => {
   let component: SpendingChart;
@@ -8,7 +9,10 @@ describe('SpendingChart', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SpendingChart]
+      imports: [SpendingChart],
+      providers: [
+        provideCharts(withDefaultRegisterables())
+      ]
     })
     .compileComponents();
 
