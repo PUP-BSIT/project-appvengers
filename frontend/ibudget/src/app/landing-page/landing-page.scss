@@ -83,7 +83,7 @@
 
 /* Login hover border effect */
 .login-btn {
-  border: 2px solid transparent;
+  border: 2px solid #3B82F6;
   transition:
     border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
@@ -183,6 +183,9 @@
   font-size: 3.5rem;
 }
 
+/* Typed subtitle placed under the main heading */
+/* typed-subtitle removed: typing now used inside main heading */
+
 .hero-right .lead {
   color: #3a3a3a;
   line-height: 1.7;
@@ -207,6 +210,27 @@
   animation: blink 0.7s infinite step-end;
   font-weight: 300;
   color: #3B82F6;
+}
+
+/* Typing wrapper: reserve space and overlay typed text so layout doesn't shift */
+.typing-wrapper {
+  display: inline-block;
+  position: relative;
+  line-height: 1;
+}
+
+.typing-reserve {
+  visibility: hidden;
+  white-space: nowrap;
+  display: block;
+}
+
+.typing-display {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: pre-line;
+  display: block;
 }
 
 /* Animation for page load */
