@@ -6,10 +6,11 @@ import { HistoryService } from '../../../services/history';
 import { Saving, SavingTransaction } from '../../../models/user.model';
 import { SavingsService } from '../../../services/savings.service';
 import { AddSavingTransaction } from "./add-saving-transaction/add-saving-transaction";
+import { UpdateSavingTransaction } from "./update-saving-transaction/update-saving-transaction";
 
 @Component({
   selector: 'app-view-saving',
-  imports: [Sidebar, Header, RouterLink, AddSavingTransaction],
+  imports: [Sidebar, Header, RouterLink, AddSavingTransaction, UpdateSavingTransaction],
   templateUrl: './view-saving.html',
   styleUrls: ['./view-saving.scss'],
 })
@@ -76,8 +77,35 @@ export class ViewSaving implements OnInit{
     });
   }
 
+  deleteSavingsTransaction(transactionId: number) {
+    this.historyService.deleteSavingTransaction(this.savingId(), transactionId)
+      .subscribe(() => {
+        const updatedTransactions = this.transactionHistories()
+          .filter(transaction => transaction.transaction_id !== transactionId);
+
+        this.transactionHistories.set(updatedTransactions);
+        this.filterTransactions();
+    });
+  }
+
   onSavingsTransactionAdded(newTransaction: SavingTransaction) {
-    const updatedTransactions = [...this.transactionHistories(), newTransaction];
+    // append canonical saved record (returned by service)
+    const updated = [...this.transactionHistories(), newTransaction];
+    this.transactionHistories.set(updated);
+
+    // update total and filtered list
+    this.transactionsCount.set(updated.length);
+    this.filterTransactions();
+    console.log('New Transaction Added:', newTransaction);
+    console.log('Updated Transactions List:', this.transactionHistories());
+    console.log('Filtered Transactions List:', this.filteredTransactions());
+  }
+
+  onSavingsTransactionUpdated(updatedTransaction: SavingTransaction) {
+    const updatedTransactions = this.transactionHistories().map(transaction => 
+      transaction.transaction_id === updatedTransaction.transaction_id ? 
+        updatedTransaction : transaction
+    );
 
     this.transactionHistories.set(updatedTransactions);
     this.filterTransactions();
