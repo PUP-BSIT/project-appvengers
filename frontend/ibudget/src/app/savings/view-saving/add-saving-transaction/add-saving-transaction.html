@@ -16,9 +16,6 @@
         </div>
         <div class="modal-body">
           <form [formGroup]="transactionForm">
-            <!-- <input type="hidden" formControlName="id" [value]="mockBudgetId()"/>
-            <input type="hidden" formControlName="category_id" /> -->
-
             <label for="savings_action">Transaction Type</label>
             <select 
               formControlName="savings_action" 
@@ -65,13 +62,13 @@
           <button 
             type="button" 
             class="btn btn-primary"
-            (click)="addSavingTransaction()">Add Saving Transaction</button>
+            (click)="addSavingTransaction()">Add Transaction</button>
         </div>
       </div>
     </div>
 </div>
 
-<!-- Button for Opening Add Budget Modal -->
+<!-- Button for Opening Add Transaction Modal -->
 <button 
   #openSavingTransactionModalBtn
   type="button" 
