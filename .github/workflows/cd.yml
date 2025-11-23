@@ -120,6 +120,7 @@ jobs:
             
             # Application URLs
             APP_VERIFICATION_BASE=https://i-budget.site/api/auth/verify-email?token=
+            PASSWORD_RESET_FRONTEND_URL=https://i-budget.site/reset-password?token=
             APP_EMAIL_FROM=${{ secrets.APP_EMAIL_FROM }}
             EOF
             
