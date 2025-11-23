@@ -57,6 +57,21 @@ public class User {
     @Column(name = "locked_until")
     private LocalDateTime lockedUntil;
 
+    @Column(name = "password_reset_token")
+    private String passwordResetToken;
+
+    @Column(name = "password_reset_token_expiry")
+    private LocalDateTime passwordResetTokenExpiry;
+
+    @Column(name = "password_reset_attempts", nullable = false, columnDefinition = "INT DEFAULT 0")
+    private int passwordResetAttempts = 0;
+
+    @Column(name = "last_password_reset_request")
+    private LocalDateTime lastPasswordResetRequest;
+
+    @Column(name = "password_changed_at")
+    private LocalDateTime passwordChangedAt;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
