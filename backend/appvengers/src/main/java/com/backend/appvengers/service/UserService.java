@@ -4,6 +4,8 @@ import com.backend.appvengers.dto.SignupRequest;
 import com.backend.appvengers.dto.LoginRequest;
 import com.backend.appvengers.dto.ApiResponse;
 import com.backend.appvengers.dto.AuthResponse;
+import com.backend.appvengers.dto.ForgotPasswordRequest;
+import com.backend.appvengers.dto.ResetPasswordRequest;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.UserRepository;
 import com.backend.appvengers.security.JwtService;
@@ -35,6 +37,9 @@ public class UserService {
 
     @Value("${app.email.from:noreply@ibudget.site}")
     private String emailFrom;
+
+    @Value("${app.password-reset.frontend-url:http://localhost:4200/reset-password?token=}")
+    private String passwordResetFrontendUrl;
 
     @Transactional
     public ApiResponse registerUser(SignupRequest signupRequest) {
@@ -169,5 +174,136 @@ public class UserService {
         user.setFailedAttempts(0);
         user.setLockedUntil(null);
         userRepository.save(user);
+    }
+
+    // --- Password Reset Methods ---
+
+    @Transactional
+    public ApiResponse requestPasswordReset(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        
+        // Return success even if user doesn't exist (prevent user enumeration)
+        if (optionalUser.isEmpty()) {
+            return new ApiResponse(true, "If an account with that email exists, a password reset link has been sent.");
+        }
+
+        User user = optionalUser.get();
+
+        // Check rate limiting (3 requests per hour)
+        if (isPasswordResetRateLimited(user)) {
+            return new ApiResponse(false, "Too many password reset requests. Please try again later.");
+        }
+
+        // Generate secure token
+        String resetToken = UUID.randomUUID().toString();
+        
+        // Set token expiry (15 minutes)
+        user.setPasswordResetToken(resetToken);
+        user.setPasswordResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
+        
+        // Update rate limiting fields
+        user.setLastPasswordResetRequest(LocalDateTime.now());
+        user.setPasswordResetAttempts(user.getPasswordResetAttempts() + 1);
+        
+        userRepository.save(user);
+
+        // Send password reset email
+        String resetLink = passwordResetFrontendUrl + resetToken;
+        try {
+            emailService.sendPasswordResetEmail(emailFrom, user.getEmail(), user.getUsername(), resetLink);
+        } catch (MessagingException | IOException e) {
+            throw new RuntimeException("Failed to send password reset email");
+        }
+
+        return new ApiResponse(true, "If an account with that email exists, a password reset link has been sent.");
+    }
+
+    public ApiResponse validateResetToken(String token) {
+        Optional<User> optionalUser = userRepository.findByPasswordResetToken(token);
+        
+        if (optionalUser.isEmpty()) {
+            return new ApiResponse(false, "Invalid or expired reset token");
+        }
+
+        User user = optionalUser.get();
+        
+        // Check if token is expired
+        if (user.getPasswordResetTokenExpiry() == null || 
+            LocalDateTime.now().isAfter(user.getPasswordResetTokenExpiry())) {
+            return new ApiResponse(false, "Reset token has expired");
+        }
+
+        return new ApiResponse(true, "Token is valid");
+    }
+
+    @Transactional
+    public ApiResponse resetPassword(ResetPasswordRequest request) {
+        // Validate passwords match
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+
+        // Find user by token
+        Optional<User> optionalUser = userRepository.findByPasswordResetToken(request.getToken());
+        
+        if (optionalUser.isEmpty()) {
+            throw new IllegalArgumentException("Invalid or expired reset token");
+        }
+
+        User user = optionalUser.get();
+
+        // Check token expiry
+        if (user.getPasswordResetTokenExpiry() == null || 
+            LocalDateTime.now().isAfter(user.getPasswordResetTokenExpiry())) {
+            throw new IllegalArgumentException("Reset token has expired");
+        }
+
+        // Update password
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        
+        // Clear reset token
+        user.setPasswordResetToken(null);
+        user.setPasswordResetTokenExpiry(null);
+        
+        // Reset failed login attempts and unlock account
+        user.setFailedAttempts(0);
+        user.setLockedUntil(null);
+        
+        // Update password changed timestamp
+        user.setPasswordChangedAt(LocalDateTime.now());
+        
+        userRepository.save(user);
+
+        // Send confirmation email
+        try {
+            emailService.sendSimpleEmail(
+                user.getEmail(),
+                "iBudget Password Changed",
+                "Your password has been successfully changed. If you didn't make this change, please contact support immediately."
+            );
+        } catch (Exception e) {
+            // Log but don't fail the operation
+            System.err.println("Failed to send password change confirmation email: " + e.getMessage());
+        }
+
+        return new ApiResponse(true, "Password has been reset successfully");
+    }
+
+    // Helper method for rate limiting
+    private boolean isPasswordResetRateLimited(User user) {
+        if (user.getLastPasswordResetRequest() == null) {
+            return false;
+        }
+        
+        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
+        boolean withinHour = user.getLastPasswordResetRequest().isAfter(oneHourAgo);
+        
+        // Reset counter if more than an hour has passed
+        if (!withinHour) {
+            user.setPasswordResetAttempts(0);
+            return false;
+        }
+        
+        return user.getPasswordResetAttempts() >= 3;
     }
 }
