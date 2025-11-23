@@ -31,6 +31,16 @@ export const routes: Routes = [
       .then(m => m.EmailVerification)
   },
   {
+    path: 'forgot-password',
+    loadComponent: () => import('./forgot-password/forgot-password')
+      .then(m => m.ForgotPassword)
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () => import('./reset-password/reset-password')
+      .then(m => m.ResetPassword)
+  },
+  {
     path: 'setup-account', 
     loadComponent: () => import('./setup-account/setup-account')
       .then(m => m.SetupAccount)
