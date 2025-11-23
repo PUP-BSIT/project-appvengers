@@ -118,6 +118,12 @@ form {
     width: 100%;
     background-color: #44397B;
     border: #44397B;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #af40ff;
+      border: #6a0dad;
+    }
   }
 }
 
