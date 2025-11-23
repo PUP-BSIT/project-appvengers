@@ -13,6 +13,7 @@ export class SetupAccount {
   setupAccountForm: FormGroup;
   formBuilder = inject(FormBuilder);
   isDisabled = signal(true); 
+  isAlertShown = signal(false);
 
   constructor() {
     this.setupAccountForm = this.formBuilder.group( {
@@ -53,6 +54,14 @@ export class SetupAccount {
       this.isDisabled.set(false);
     } else {
       this.isDisabled.set(true);
+    }
+  }
+
+  submitForm() {
+    if(this.setupAccountForm.valid) {
+      this.isAlertShown.set(false);
+    } else {
+      this.isAlertShown.set(true);
     }
   }
 }

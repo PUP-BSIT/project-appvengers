@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @use "bootstrap/scss/bootstrap";
 @import url('https://fonts.cdnfonts.com/css/patua-one');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 html, body {
   height: 100%;
@@ -10,21 +11,21 @@ html, body {
 
 @media (max-width: 320px) {
   html, body {
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
   }
 }
 
-@media (max-width: 768px) {
+@media (min-width: 426px) and (max-width: 768px) {
   html, body {
-    height: auto;
-    width: auto;
+    height: 100%;
+    width: 100%;
   }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
   html, body {
-    height: auto;
+    height: 100%;
     width: auto;
   }
 }
