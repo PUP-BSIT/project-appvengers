@@ -3,6 +3,8 @@ package com.backend.appvengers.controller;
 import com.backend.appvengers.dto.ApiResponse;
 import com.backend.appvengers.dto.LoginRequest;
 import com.backend.appvengers.dto.SignupRequest;
+import com.backend.appvengers.dto.ForgotPasswordRequest;
+import com.backend.appvengers.dto.ResetPasswordRequest;
 import com.backend.appvengers.security.LoginRateLimiter;
 import com.backend.appvengers.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -87,6 +89,59 @@ public class AuthController {
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request,
+                                                       BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, "Validation failed", errors));
+        }
+
+        try {
+            ApiResponse response = userService.requestPasswordReset(request.getEmail());
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+
+    @GetMapping("/validate-reset-token")
+    public ResponseEntity<ApiResponse> validateResetToken(@RequestParam("token") String token) {
+        ApiResponse response = userService.validateResetToken(token);
+        
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse> resetPassword(@Valid @RequestBody ResetPasswordRequest request,
+                                                      BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, "Validation failed", errors));
+        }
+
+        try {
+            ApiResponse response = userService.resetPassword(request);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, e.getMessage()));
         }
     }
 }
