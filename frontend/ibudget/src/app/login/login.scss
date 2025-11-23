@@ -124,6 +124,16 @@ $link-color-hover: #283593;
 .signup-link {
   color: $link-color;
   text-decoration: none;
+}
+
+.forgot-password-link {
+  color: $link-color;
+  font-size: 0.875rem;
+
+  &:hover {
+    color: $link-color-hover;
+    text-decoration: underline;
+  }
   cursor: pointer;
   font-weight: 600;
   transition: color 0.3s ease;
