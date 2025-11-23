@@ -63,4 +63,16 @@ export class AuthService {
       }
     );
   }
+
+  forgotPassword(data: { email: string }): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(`${this.apiUrl}/forgot-password`, data);
+  }
+
+  validateResetToken(token: string): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${this.apiUrl}/validate-reset-token?token=${token}`);
+  }
+
+  resetPassword(data: { token: string; newPassword: string; confirmPassword: string }): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(`${this.apiUrl}/reset-password`, data);
+  }
 }
