@@ -18,7 +18,21 @@
     </div>
 
     <div class="card-body">
-      <form [formGroup]="securitySettingsForm" class="security-form-wrapper">
+      @if(successMessage()) {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          {{ successMessage() }}
+          <button type="button" class="btn-close" (click)="successMessage.set(null)"></button>
+        </div>
+      }
+      
+      @if(errorMessage()) {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ errorMessage() }}
+          <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
+        </div>
+      }
+
+      <form [formGroup]="securitySettingsForm" (ngSubmit)="onSubmit()" class="security-form-wrapper">
         <div>
           <label>Current Password</label>
           <div class="input-group">
@@ -64,9 +78,14 @@
             </button>
           </div>
 
+          @if(newPassword?.errors?.['required'] && newPassword?.touched) {
+            <span class="text-danger small mt-1">
+              New Password is required.
+            </span>
+          }
           @if(newPassword?.errors?.['minlength'] && newPassword?.touched) {
             <span class="text-danger small mt-1">
-              Password must be minimum or greater than 12 characters.
+              Password must be at least 8 characters.
             </span>
           }
         </div>
@@ -98,7 +117,14 @@
           }
         </div>
 
-        <button class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting() || securitySettingsForm.invalid">
+          @if(isSubmitting()) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Saving...
+          } @else {
+            Save
+          }
+        </button>
       </form>
     </div>
   </div>
