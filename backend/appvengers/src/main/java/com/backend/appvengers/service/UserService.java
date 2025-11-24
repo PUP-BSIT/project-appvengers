@@ -325,7 +325,11 @@ public class UserService {
         
         // Send confirmation email
         try {
-            emailService.sendPasswordChangeConfirmation(user.getEmail(), user.getFirstName());
+            emailService.sendSimpleEmail(
+                user.getEmail(),
+                "iBudget Password Changed",
+                "Your password has been successfully changed. If you didn't make this change, please contact support immediately."
+            );
         } catch (Exception e) {
             System.err.println("Failed to send password change confirmation email: " + e.getMessage());
         }
