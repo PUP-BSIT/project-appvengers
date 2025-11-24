@@ -6,6 +6,7 @@ import com.backend.appvengers.dto.ApiResponse;
 import com.backend.appvengers.dto.AuthResponse;
 import com.backend.appvengers.dto.ForgotPasswordRequest;
 import com.backend.appvengers.dto.ResetPasswordRequest;
+import com.backend.appvengers.dto.ChangePasswordRequest;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.UserRepository;
 import com.backend.appvengers.security.JwtService;
@@ -287,6 +288,49 @@ public class UserService {
         }
 
         return new ApiResponse(true, "Password has been reset successfully");
+    }
+
+    @Transactional
+    public ApiResponse changePassword(String username, ChangePasswordRequest request) {
+        // Validate passwords match
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("New password and confirm password do not match");
+        }
+        
+        // Find user by username
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        // Verify current password
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+        
+        // Check if new password is same as current
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("New password must be different from current password");
+        }
+        
+        // Update password
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        
+        // Reset failed login attempts
+        user.setFailedAttempts(0);
+        user.setLockedUntil(null);
+        
+        // Update password changed timestamp
+        user.setPasswordChangedAt(LocalDateTime.now());
+        
+        userRepository.save(user);
+        
+        // Send confirmation email
+        try {
+            emailService.sendPasswordChangeConfirmation(user.getEmail(), user.getFirstName());
+        } catch (Exception e) {
+            System.err.println("Failed to send password change confirmation email: " + e.getMessage());
+        }
+        
+        return new ApiResponse(true, "Password has been changed successfully");
     }
 
     // Helper method for rate limiting
