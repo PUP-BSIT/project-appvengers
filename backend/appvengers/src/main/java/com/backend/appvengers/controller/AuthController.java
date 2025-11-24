@@ -5,6 +5,7 @@ import com.backend.appvengers.dto.LoginRequest;
 import com.backend.appvengers.dto.SignupRequest;
 import com.backend.appvengers.dto.ForgotPasswordRequest;
 import com.backend.appvengers.dto.ResetPasswordRequest;
+import com.backend.appvengers.dto.ChangePasswordRequest;
 import com.backend.appvengers.security.LoginRateLimiter;
 import com.backend.appvengers.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import io.github.bucket4j.Bucket;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -138,6 +140,29 @@ public class AuthController {
 
         try {
             ApiResponse response = userService.resetPassword(request);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<ApiResponse> changePassword(@Valid @RequestBody ChangePasswordRequest request,
+                                                       BindingResult bindingResult,
+                                                       Principal principal) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, "Validation failed", errors));
+        }
+
+        try {
+            String username = principal.getName();
+            ApiResponse response = userService.changePassword(username, request);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
