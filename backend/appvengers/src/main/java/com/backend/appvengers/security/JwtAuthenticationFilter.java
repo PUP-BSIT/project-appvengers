@@ -24,6 +24,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         String path = request.getServletPath();
+        // Don't skip JWT filter for change-password (requires authentication)
+        if (path.equals("/api/auth/change-password")) {
+            return false;
+        }
         return path.startsWith("/api/auth/");
     }
 
