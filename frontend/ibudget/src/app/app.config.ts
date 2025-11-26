@@ -21,6 +21,7 @@ export const appConfig: ApplicationConfig = {
         scrollPositionRestoration: 'top',
       })
     ),
+    provideHttpClient(),
     provideCharts(withDefaultRegisterables()),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideLoadingBarInterceptor(),
