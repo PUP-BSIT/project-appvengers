@@ -3,6 +3,7 @@ package com.backend.appvengers.controller;
 import com.backend.appvengers.dto.ApiResponse;
 import com.backend.appvengers.dto.LoginRequest;
 import com.backend.appvengers.dto.SignupRequest;
+import com.backend.appvengers.entity.User;
 import com.backend.appvengers.dto.ForgotPasswordRequest;
 import com.backend.appvengers.dto.ResetPasswordRequest;
 import com.backend.appvengers.dto.ChangePasswordRequest;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import io.github.bucket4j.Bucket;
 import java.security.Principal;
+
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,12 +86,34 @@ public class AuthController {
         return ResponseEntity.ok(new ApiResponse(true, "", Map.of("exists", exists)));
     }
 
+    // Verifies email using the token sent to user's email
     @GetMapping("/verify-email")
     public ResponseEntity<ApiResponse> verifyEmail(@RequestParam("token") String token) {
         ApiResponse response = userService.verifyEmailToken(token);
 
         if (response.isSuccess()) {
-            return ResponseEntity.ok(response);
+            URI redirectUri = URI
+                .create("http://i-budget.site/setup-account?token=" + token 
+                    + "&username=" + response.getData());
+            return ResponseEntity.status(HttpStatus.FOUND).location(redirectUri).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    // Changes user's email_verified status to true after account setup
+    @PutMapping("/verify-account-setup")
+    public ResponseEntity<ApiResponse> verifyAccountSetup(
+            @RequestParam("token") String token, 
+            @RequestParam("username") String username, 
+            @RequestBody User user
+        ) 
+    {
+        ApiResponse response = userService.verifyAccountSetupToken(token);
+
+        if (response.isSuccess()) {
+            userService.updateUserInformation(username, user);
+            return ResponseEntity.ok(response); // Return 200 OK with response
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
