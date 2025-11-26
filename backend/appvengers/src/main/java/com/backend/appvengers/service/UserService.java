@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,6 +37,12 @@ public class UserService {
 
     @Value("${app.verification.base-url:http://localhost:8081/api/auth/verify-email?token=}")
     private String verificationBaseUrl;
+
+    @Value("${app.verification.expiration:24}")
+    private long verificationExpirationHours;
+
+    @Value("${app.verification.resend-cooldown-minutes:10}")
+    private long verificationResendCooldownMinutes;
 
     @Value("${app.email.from:noreply@ibudget.site}")
     private String emailFrom;
@@ -64,9 +71,11 @@ public class UserService {
         user.setActive(true); // User is active immediately but requires email verification
         user.setEmailVerified(false); // Set email verified to false
 
-        // Set email verification token
+        // Set email verification token + expiry (e.g. 24 hours)
         String emailToken = UUID.randomUUID().toString();
         user.setEmailVerificationToken(emailToken);
+        // 30 seconds for testing purposes
+        user.setEmailVerificationExpiration(LocalDateTime.now().plusHours(24));
 
         userRepository.save(user);
 
@@ -93,7 +102,16 @@ public class UserService {
     public ApiResponse verifyEmailToken(String token) {
         return userRepository.findByEmailVerificationToken(token)
             .map(user -> {
-                return new ApiResponse(true, "Email verified successfully", user.getUsername());
+                LocalDateTime expiry = user.getEmailVerificationExpiration();
+                if (expiry == null || LocalDateTime.now().isAfter(expiry)) {
+                    // token expired: clear token and expiry to force re-send flow if needed
+                    user.setEmailVerificationToken(null);
+                    user.setEmailVerificationExpiration(null);
+                    userRepository.save(user);
+                    return new ApiResponse(false, "Verification token has expired");
+                }
+                // keep token until account setup completes (frontend will call verify-account-setup)
+                return new ApiResponse(true, "Verification token is valid", user.getUsername());
             })
             .orElseGet(() -> new ApiResponse(false, "Invalid verification token"));
     }
@@ -103,8 +121,17 @@ public class UserService {
     public ApiResponse verifyAccountSetupToken(String token) {
         return userRepository.findByEmailVerificationToken(token)
             .map(user -> {
+                LocalDateTime expiry = user.getEmailVerificationExpiration();
+                if (expiry == null || LocalDateTime.now().isAfter(expiry)) {
+                    user.setEmailVerificationToken(null);
+                    user.setEmailVerificationExpiration(null);
+                    userRepository.save(user);
+                    return new ApiResponse(false, "Account setup token has expired");
+                }
+
                 user.setEmailVerified(true);
                 user.setEmailVerificationToken(null);
+                user.setEmailVerificationExpiration(null);
                 userRepository.save(user);
                 return new ApiResponse(true, "Account setup verified successfully", user.getUsername());
             })
@@ -460,6 +487,45 @@ public class UserService {
         }
 
         return new ApiResponse(true, "Account has been deleted successfully");
+    }
+
+    public ApiResponse resendVerificationEmail(String email) {
+        Optional<User> opt = userRepository.findByEmail(email);
+        // avoid user enumeration: return generic success when user not found
+        if (opt.isEmpty()) {
+            return new ApiResponse(true, "If an account with that email exists, a verification email has been sent.");
+        }
+
+        User user = opt.get();
+
+        if (user.isEmailVerified()) {
+            return new ApiResponse(false, "Email already verified");
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime lastSent = user.getLastVerificationEmailSent();
+
+        if (lastSent != null && now.isBefore(lastSent.plusMinutes(verificationResendCooldownMinutes))) {
+            long waitMin = Duration.between(now, lastSent.plusMinutes(verificationResendCooldownMinutes)).toMinutes();
+            return new ApiResponse(false, "Too many requests. Please wait " + waitMin + " minutes before trying again.");
+        }
+
+        // generate new token (or reuse existing if you prefer)
+        String newToken = UUID.randomUUID().toString();
+        user.setEmailVerificationToken(newToken);
+        user.setEmailVerificationExpiration(now.plusHours(verificationExpirationHours));
+        user.setLastVerificationEmailSent(now);
+        userRepository.save(user);
+
+        String verificationLink = verificationBaseUrl + newToken;
+        try {
+            emailService.sendHtmlEmail(emailFrom, user.getEmail(), "Verify your iBudget account", verificationLink, user.getUsername());
+        } catch (Exception e) {
+            // TODO: Enhance Logging
+            return new ApiResponse(false, "Failed to send verification email. Please try again later.");
+        }
+
+        return new ApiResponse(true, "Verification email sent");
     }
 
     // Helper method for rate limiting

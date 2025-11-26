@@ -58,11 +58,17 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "email_verified")
+    private boolean emailVerified = false;
+
     @Column(name = "email_verification_token")
     private String emailVerificationToken;
 
-    @Column(name = "email_verified")
-    private boolean emailVerified = false;
+    @Column(name = "email_verification_expiration")
+    private LocalDateTime emailVerificationExpiration;
+
+    @Column(name = "last_verification_email_sent")
+    private LocalDateTime lastVerificationEmailSent;
 
     @Column(name = "is_active")
     private boolean isActive = false;
