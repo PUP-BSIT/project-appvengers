@@ -89,7 +89,7 @@ public class TransactionService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<Object[]> rows = transactionRepository.findExpenseSummaryByUser(user);
+        List<Object[]> rows = transactionRepository.findExpenseSummaryByUserAndType(user, "EXPENSE");
         List<String> labels = new ArrayList<>();
         List<Double> values = new ArrayList<>();
 
