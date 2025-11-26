@@ -1,6 +1,6 @@
 import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import {
   FormBuilder,
@@ -15,7 +15,6 @@ import {
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    RouterLink
   ],
   templateUrl: './sign-up.html',
   styleUrl: './sign-up.scss'
