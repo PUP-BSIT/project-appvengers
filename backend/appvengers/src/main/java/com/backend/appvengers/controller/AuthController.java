@@ -93,11 +93,15 @@ public class AuthController {
 
         if (response.isSuccess()) {
             URI redirectUri = URI
-                .create("http://i-budget.site/setup-account?token=" + token 
+                .create("http://localhost:4200/setup-account?token=" + token 
                     + "&username=" + response.getData());
-            return ResponseEntity.status(HttpStatus.FOUND).location(redirectUri).build();
+            return ResponseEntity.status(HttpStatus.FOUND)
+                .location(redirectUri)
+                .build();
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            // redirect the browser to a frontend page that shows a friendly error
+            URI failRedirectUri = URI.create("http://localhost:4200/verify-failed");
+            return ResponseEntity.status(HttpStatus.FOUND).location(failRedirectUri).build();
         }
     }
 
@@ -115,7 +119,9 @@ public class AuthController {
             userService.updateUserInformation(username, user);
             return ResponseEntity.ok(response); // Return 200 OK with response
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+              // redirect the browser to a frontend page that shows a friendly error
+            URI failRedirectUri = URI.create("http://localhost:4200/verify-failed");
+            return ResponseEntity.status(HttpStatus.FOUND).location(failRedirectUri).build();
         }
     }
 
@@ -192,6 +198,18 @@ public class AuthController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<ApiResponse> resendVerification(@RequestParam("email") String email) {
+        ApiResponse response = userService.resendVerificationEmail(email);
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        } else {
+              // redirect the browser to a frontend page that shows a friendly error
+            URI failRedirectUri = URI.create("http://localhost:4200/resend-verification-failed");
+            return ResponseEntity.status(HttpStatus.FOUND).location(failRedirectUri).build();
         }
     }
 }
