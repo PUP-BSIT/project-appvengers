@@ -232,6 +232,17 @@ $link-color-hover: #283593;
   font-size: 1rem;
 }
 
+/* Keep the password-eye icon color stable (avoid Bootstrap outline inverting to white on hover) */
+.input-group .btn i {
+  color: $text-color-title
+}
+
+.input-group .btn:hover i,
+.input-group .btn:focus i,
+.input-group .btn:active i {
+  color: $text-color-title !important;
+}
+
 /* Normalize vertical padding so icons align with inputs */
 .input-group .form-control,
 .input-group-text,
