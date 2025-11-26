@@ -1,5 +1,6 @@
 package com.backend.appvengers.service;
 
+import com.backend.appvengers.dto.ExpenseSummary;
 import com.backend.appvengers.dto.TransactionRequest;
 import com.backend.appvengers.dto.TransactionResponse;
 import com.backend.appvengers.entity.Transaction;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,6 +83,22 @@ public class TransactionService {
         }
 
         transactionRepository.delete(t);
+    }
+
+    public ExpenseSummary getExpenseSummary(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Object[]> rows = transactionRepository.findExpenseSummaryByUser(user);
+        List<String> labels = new ArrayList<>();
+        List<Double> values = new ArrayList<>();
+
+        for (Object[] r : rows) {
+            labels.add((String) r[0]);
+            values.add(((Number) r[1]).doubleValue());
+        }
+
+        return new ExpenseSummary(labels, values);
     }
 
     private TransactionResponse toResponse(Transaction t) {
