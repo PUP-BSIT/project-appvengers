@@ -54,9 +54,19 @@ $link-color-hover: #283593;
   font-size: 0.92rem;
 }
 
+/* Consolidated auth embedded button styling */
 .auth-form-container .login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 240px;
+  max-width: 100%;
   height: 40px;
   font-size: 0.95rem;
+  margin: 8px auto 0;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  text-align: center;
 }
 
 .auth-form-container .form-label {
@@ -72,27 +82,6 @@ $link-color-hover: #283593;
 .auth-form-container .input-group-text,
 .auth-form-container .input-group .btn {
   padding: 0.34rem 0.45rem !important;
-}
-
-.auth-form-container .login-button {
-  width: 180px !important;
-  height: 36px !important;
-  margin: 8px auto 0 !important;
-  font-size: 0.9rem !important;
-}
-
-/* Center the submit button inside auth form and make it a fixed comfortable width */
-.auth-form-container .login-button {
-  display: block;
-  width: 240px;
-  max-width: 100%;
-  margin: 8px auto 0;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* On very small screens make button full width */
