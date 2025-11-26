@@ -33,4 +33,10 @@ export class TransactionsService {
       map(() => undefined)
     );
   }
+
+  getExpenseSummary(): Observable<{ labels: string[]; values: number[] }> {
+    return this.http.get<ApiResponse>(`${environment.apiUrl}/expenses/summary`).pipe(
+      map((res: ApiResponse) => res.data as { labels: string[]; values: number[] })
+    );
+  }
 }
