@@ -46,6 +46,11 @@ export const routes: Routes = [
       .then(m => m.SetupAccount)
   },
   {
+    path: 'resend-verification', 
+    loadComponent: () => import('./resend-verification/resend-verification')
+      .then(m => m.ResendVerification)
+  },
+  {
     path: 'dashboard', 
     loadComponent: () => import('./dashboard/dashboard')
       .then(m => m.Dashboard),
