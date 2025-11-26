@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
 import { SetupAccountService } from './setup-account.service';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('SetupAccountService', () => {
   let service: SetupAccountService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient()],
+    });
     service = TestBed.inject(SetupAccountService);
   });
 
