@@ -71,11 +71,4 @@ public class TransactionController {
         transactionService.delete(email, id);
         return ResponseEntity.ok(new ApiResponse(true, "Transaction deleted"));
     }
-
-    @GetMapping("/summary")
-    public ResponseEntity<ApiResponse> summary(Authentication auth) {
-        String email = auth.getName();
-        ExpenseSummary summary = transactionService.getExpenseSummary(email);
-        return ResponseEntity.ok(new ApiResponse(true, "Expense summary fetched", summary));
-    }
 }
