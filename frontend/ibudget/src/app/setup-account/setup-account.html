@@ -13,8 +13,8 @@
 
     <div class="setup-acc-container">
       @if(isAlertShown()) {
-        <div class="alert alert-danger" role="alert">
-          Please fill all required fields to continue.
+        <div class="alert alert-{{alertType()}}" role="alert">
+          {{ alertMessage() }}
         </div>
       }
       
@@ -27,8 +27,7 @@
               class="form-control"
               formControlName="firstName" 
               type="text" 
-              placeholder="John"
-              (input)="checkFields()"/>
+              placeholder="John">
               
             @if(firstName?.touched) {
               @if(firstName?.errors?.['required']) {
@@ -44,8 +43,7 @@
               class="form-control"
               formControlName="lastName" 
               type="text" 
-              placeholder="Doe"
-              (input)="checkFields()"/>
+              placeholder="Doe"/>
 
             @if(lastName?.touched) {
               @if(lastName?.errors?.['required']) {
@@ -73,8 +71,7 @@
               class="form-control"
               formControlName="birthdate" 
               type="date" 
-              placeholder="Birthdate"
-              (input)="checkFields()"/>
+              placeholder="Birthdate">
 
             @if(birthdate?.touched) {
               @if(birthdate?.errors?.['required']) {
@@ -83,7 +80,7 @@
             }
           </div>
 
-          <div class="form-input" (change)="checkFields()">
+          <div class="form-input">
             <label for="gender">Gender</label>
             <select class="form-select" id="gender" formControlName="gender">
               <option value="" selected disabled>Gender</option>
