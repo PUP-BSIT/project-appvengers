@@ -15,11 +15,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Transaction> findByUser(User user);
 
     @Query("""
-        SELECT COALESCE(c.name, 'Uncategorized'), SUM(t.amount)
-        FROM Transaction t
-        LEFT JOIN t.category c
-        WHERE t.isDeleted = false AND t.user = :user
-        GROUP BY COALESCE(c.name, 'Uncategorized')
+    SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
+    FROM Transaction t
+    WHERE t.user = :user
+    GROUP BY COALESCE(t.category, 'Uncategorized')
     """)
     List<Object[]> findExpenseSummaryByUser(@Param("user") User user);
 }
