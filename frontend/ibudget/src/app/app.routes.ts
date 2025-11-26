@@ -16,15 +16,20 @@ export const routes: Routes = [
       .then(m => m.LandingPage)
   },
   {
-    path: 'login-page', 
-    loadComponent: () => import('./login/login')
-      .then(m => m.Login)
+    path: 'auth-page',
+    loadComponent: () => import('./auth-page/auth-page')
+      .then(m => m.AuthPage)
   },
-  {
-    path: 'signup-page', 
-    loadComponent: () => import('./sign-up/sign-up')
-      .then(m => m.SignUp)
-  },
+  // {
+  //   path: 'login-page', 
+  //   loadComponent: () => import('./login/login')
+  //     .then(m => m.Login)
+  // },
+  // {
+  //   path: 'signup-page', 
+  //   loadComponent: () => import('./sign-up/sign-up')
+  //     .then(m => m.SignUp)
+  // },
   {
     path: 'email-verification', 
     loadComponent: () => import('./email-verification/email-verification')
