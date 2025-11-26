@@ -6,19 +6,15 @@
 
     <div class="chart-wrapper">
       <div class="description">
-        <p>
-          A look into your expense summary.
-        </p>
+        <p>A look into your expense summary.</p>
       </div>
 
-      <div>
+      <div class="chart-canvas">
         <canvas
           baseChart
-          width="250"
-          height="200"
-          type="doughnut"
           [data]="pieChartData"
-          [options]="pieChartOptions">
+          [options]="pieChartOptions"
+          [type]="'doughnut'">
         </canvas>
       </div>
     </div>
