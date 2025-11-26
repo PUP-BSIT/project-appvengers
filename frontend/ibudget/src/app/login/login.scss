@@ -5,21 +5,139 @@ $text-color-signup: #666;
 $text-color-title: black;
 $text-color-button: white;
 $border-color: #ddd;
-$border-color-input: #C16EF8;
+$border-color-input: #0d6efd;
 $box-shadow-hover: rgba(193, 110, 248, 0.25);
 $input-group-text: #f8f9fa;
-$button-hover-bg: #b45ef2;
+$button-hover-bg: #1061db;
 $disable-bg: #d9b4fa;
 $disable-text-color: #e5e7eb;
 $link-color: #3f51b5;
 $link-color-hover: #283593;
+
+/* When embedded inside the auth page container, don't use full-page layout */
+.auth-form-container .login-container {
+  min-height: unset;
+  display: block;
+  justify-content: flex-start;
+  align-items: stretch;
+  background: transparent;
+  padding: 0;
+}
+
+.auth-form-container .login-card {
+  max-width: 100%;
+  padding: 0.6rem;
+  margin: 0;
+  box-shadow: none;
+  border-radius: 8px;
+}
+
+.auth-form-container .login-card .card-body {
+  padding: 0;
+}
+
+/* Smaller labels and inputs when embedded in the auth layout */
+.auth-form-container .form-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.auth-form-container .form-control {
+  padding: 0.56rem;
+  font-size: 0.92rem;
+  border-radius: 6px;
+}
+
+.auth-form-container .input-group-text {
+  padding: 0.45rem 0.6rem;
+  font-size: 0.92rem;
+}
+
+.auth-form-container .login-button {
+  height: 40px;
+  font-size: 0.95rem;
+}
+
+/* Additional compact styling for embedded login form */
+.auth-form-container .login-card {
+  padding: 8px !important;
+  box-shadow: none !important;
+}
+
+.auth-form-container .form-label {
+  font-size: 0.82rem !important;
+}
+
+.auth-form-container .form-control {
+  padding: 0.44rem !important;
+  font-size: 0.9rem !important;
+  border-radius: 6px !important;
+}
+
+.auth-form-container .input-group-text,
+.auth-form-container .input-group .btn {
+  padding: 0.34rem 0.45rem !important;
+}
+
+.auth-form-container .login-button {
+  width: 180px !important;
+  height: 36px !important;
+  margin: 8px auto 0 !important; /* reduced top spacing so button sits higher */
+  font-size: 0.9rem !important;
+}
+
+/* Center the submit button inside auth form and make it a fixed comfortable width */
+.auth-form-container .login-button {
+  display: block;
+  width: 240px;
+  max-width: 100%;
+  margin: 8px auto 0; /* align with reduced spacing */
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* On very small screens make button full width */
+@media (max-width: 420px) {
+  .auth-form-container .login-button {
+    width: 100%;
+  }
+}
+
+/* Also center the login button for standalone login component (override .w-100) */
+.login-card .login-button,
+.login-card .login-button.w-100 {
+  display: block;
+  width: 240px;
+  max-width: 100%;
+  margin: 4px auto 0; /* reduced top margin */
+}
+
+/* Ensure standalone login button text is centered */
+.login-card .login-button,
+.login-card .login-button.w-100 {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 420px) {
+  .login-card .login-button,
+  .login-card .login-button.w-100 {
+    width: 100%;
+  }
+}
 
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: $background-color;
+  // background: $text-color-button;
   padding: 20px;
   overflow: hidden;
   box-sizing: border-box;
@@ -28,8 +146,8 @@ $link-color-hover: #283593;
 .login-card {
   width: 100%;
   max-width: 500px;
-  padding: 2rem;
-  box-shadow: 0 8px 32px $background-shadow;
+  // padding: 2rem;
+  // box-shadow: 0 8px 32px $background-shadow;
   border-radius: 12px;
   margin: auto;
   border: none;
@@ -52,7 +170,7 @@ $link-color-hover: #283593;
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.6rem; /* tighter gap so elements including the button sit closer */
   overflow: hidden;
 }
 
@@ -79,6 +197,67 @@ $link-color-hover: #283593;
   background-color: $input-group-text;
   border: 1px solid $border-color;
   border-left: none;
+}
+
+/* Fix icon alignment and sizing inside input groups */
+.input-group {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+}
+
+.input-group .form-control {
+  border-right: none; /* avoid double border between input and icon */
+  flex: 1 1 auto;
+  width: auto; /* allow flex sizing instead of forcing 100% */
+  min-width: 0; /* allow input to shrink in flex containers */
+}
+
+.input-group-text, .input-group .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  padding: 0.45rem 0.6rem;
+  background: $input-group-text;
+  border: 1px solid $border-color;
+}
+
+/* Ensure icon container doesn't wrap below the input */
+.input-group-text {
+  flex: 0 0 auto;
+  align-self: center; /* vertically center icon container */
+  white-space: nowrap; /* prevent icon from wrapping to next line */
+}
+
+.input-group .btn {
+  border-left: none; /* visually join with input */
+  border-radius: 0 8px 8px 0;
+}
+
+.input-group .form-control:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.input-group-text i, .input-group .btn i {
+  font-size: 1rem;
+}
+
+/* Normalize vertical padding so icons align with inputs */
+.input-group .form-control,
+.input-group-text,
+.input-group .btn {
+  padding-top: 0.56rem;
+  padding-bottom: 0.56rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Ensure the toggle button matches visual height of the input */
+.input-group .btn {
+  height: auto;
 }
 
 .login-button {
