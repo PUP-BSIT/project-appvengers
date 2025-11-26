@@ -7,6 +7,8 @@ import com.backend.appvengers.dto.AuthResponse;
 import com.backend.appvengers.dto.ForgotPasswordRequest;
 import com.backend.appvengers.dto.ResetPasswordRequest;
 import com.backend.appvengers.dto.ChangePasswordRequest;
+import com.backend.appvengers.dto.DeactivateAccountRequest;
+import com.backend.appvengers.dto.DeleteAccountRequest;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.UserRepository;
 import com.backend.appvengers.security.JwtService;
@@ -101,6 +103,12 @@ public class UserService {
 
     @Transactional
     public ApiResponse login(LoginRequest request) {
+        // First check if this is a deleted account (bypassing @SQLRestriction)
+        Optional<User> deletedUser = userRepository.findByEmailIncludingDeleted(request.getEmail());
+        if (deletedUser.isPresent() && deletedUser.get().isDeleted()) {
+            return new ApiResponse(false, "This account has been deleted. Please contact support if you believe this is an error.");
+        }
+
         Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
         User user = optionalUser.orElse(null);
 
@@ -335,6 +343,97 @@ public class UserService {
         }
         
         return new ApiResponse(true, "Password has been changed successfully");
+    }
+
+    // --- Account Deactivation ---
+
+    @Transactional
+    public ApiResponse deactivateAccount(String email, DeactivateAccountRequest request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Verify password
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
+
+        // Check if already deactivated
+        if (!user.isActive()) {
+            throw new IllegalArgumentException("Account is already deactivated");
+        }
+
+        // Deactivate account
+        user.setActive(false);
+        user.setDeactivatedAt(LocalDateTime.now());
+        user.setDeactivationReason(request.getReason());
+
+        userRepository.save(user);
+
+        // Send confirmation email
+        try {
+            emailService.sendSimpleEmail(
+                user.getEmail(),
+                "iBudget Account Deactivated",
+                "Your iBudget account has been deactivated. You can reactivate it by logging in again or contacting support."
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to send account deactivation email: " + e.getMessage());
+        }
+
+        return new ApiResponse(true, "Account has been deactivated successfully");
+    }
+
+    @Transactional
+    public ApiResponse reactivateAccount(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (user.isActive()) {
+            return new ApiResponse(true, "Account is already active");
+        }
+
+        user.setActive(true);
+        user.setDeactivatedAt(null);
+        user.setDeactivationReason(null);
+
+        userRepository.save(user);
+
+        return new ApiResponse(true, "Account has been reactivated successfully");
+    }
+
+    // --- Soft Delete Account ---
+
+    @Transactional
+    public ApiResponse softDeleteAccount(String email, DeleteAccountRequest request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Verify password
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
+
+        // Set deletion metadata before triggering @SQLDelete
+        user.setDeletionReason(request.getReason());
+
+        // Save the reason first
+        userRepository.save(user);
+
+        // Now delete (triggers @SQLDelete which sets is_deleted=true and deleted_at=NOW())
+        userRepository.delete(user);
+
+        // Send confirmation email
+        try {
+            emailService.sendSimpleEmail(
+                email,
+                "iBudget Account Deleted",
+                "Your iBudget account has been permanently deleted. All your data will be removed within 30 days. If you didn't request this, please contact support immediately."
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to send account deletion email: " + e.getMessage());
+        }
+
+        return new ApiResponse(true, "Account has been deleted successfully");
     }
 
     // Helper method for rate limiting
