@@ -1,6 +1,7 @@
 package com.backend.appvengers.controller;
 
 import com.backend.appvengers.dto.ApiResponse;
+import com.backend.appvengers.dto.ExpenseSummary;
 import com.backend.appvengers.dto.TransactionRequest;
 import com.backend.appvengers.dto.TransactionResponse;
 import com.backend.appvengers.service.TransactionService;
@@ -34,12 +35,17 @@ public class TransactionController {
                                               BindingResult bindingResult,
                                               Authentication auth) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(new ApiResponse(false, "Validation failed", Map.of("errors", bindingResult.getFieldErrors())));
+            return ResponseEntity.badRequest().body(
+                new ApiResponse(false, "Validation failed",
+                    Map.of("errors", bindingResult.getFieldErrors()))
+            );
         }
 
         String email = auth.getName();
         TransactionResponse created = transactionService.create(email, req);
-        return ResponseEntity.status(201).body(new ApiResponse(true, "Transaction created", created));
+        return ResponseEntity.status(201).body(
+            new ApiResponse(true, "Transaction created", created)
+        );
     }
 
     @PutMapping("/{id}")
@@ -48,7 +54,10 @@ public class TransactionController {
                                               BindingResult bindingResult,
                                               Authentication auth) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(new ApiResponse(false, "Validation failed", Map.of("errors", bindingResult.getFieldErrors())));
+            return ResponseEntity.badRequest().body(
+                new ApiResponse(false, "Validation failed",
+                    Map.of("errors", bindingResult.getFieldErrors()))
+            );
         }
 
         String email = auth.getName();
@@ -61,5 +70,12 @@ public class TransactionController {
         String email = auth.getName();
         transactionService.delete(email, id);
         return ResponseEntity.ok(new ApiResponse(true, "Transaction deleted"));
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<ApiResponse> summary(Authentication auth) {
+        String email = auth.getName();
+        ExpenseSummary summary = transactionService.getExpenseSummary(email);
+        return ResponseEntity.ok(new ApiResponse(true, "Expense summary fetched", summary));
     }
 }
