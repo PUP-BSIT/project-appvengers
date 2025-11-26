@@ -10,6 +10,7 @@ import { TransactionsService } from '../../../services/transactions.service';
   templateUrl: './expense-chart.html',
   styleUrls: ['./expense-chart.scss'],
 })
+
 export class ExpenseChart implements OnInit {
   constructor(private transactionsService: TransactionsService) {}
 
@@ -19,13 +20,7 @@ export class ExpenseChart implements OnInit {
       {
         data: [] as number[],
         label: 'Expense Summary',
-        backgroundColor: [
-          '#FF6384', // Bills
-          '#36A2EB', // Income
-          '#FFCE56', // Food
-          '#4BC0C0', // Transport
-          '#9966FF', // Others
-        ],
+        backgroundColor: [] as string[],
       },
     ],
   };
@@ -34,7 +29,7 @@ export class ExpenseChart implements OnInit {
     responsive: true,
     plugins: {
       legend: {
-        position: 'bottom', // ✅ now typed correctly
+        position: 'bottom',
         labels: {
           color: '#333',
         },
@@ -56,8 +51,18 @@ export class ExpenseChart implements OnInit {
       next: (data) => {
         this.pieChartData.labels = data.labels;
         this.pieChartData.datasets[0].data = data.values;
+        this.pieChartData.datasets[0].backgroundColor = this.generateColors(data.labels.length);
       },
       error: (err) => console.error('Failed to load expense summary', err),
     });
+  }
+
+  private generateColors(count: number): string[] {
+    const palette = [
+      '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+      '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360',
+      '#C9CBCF', '#8E44AD', '#2ECC71', '#E67E22', '#1ABC9C'
+    ];
+    return Array.from({ length: count }, (_, i) => palette[i % palette.length]);
   }
 }
