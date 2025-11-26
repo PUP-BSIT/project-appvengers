@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { AuthPage } from './auth-page';
 
@@ -8,7 +10,7 @@ describe('AuthPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AuthPage]
+      imports: [AuthPage, HttpClientTestingModule, RouterTestingModule]
     })
     .compileComponents();
 
