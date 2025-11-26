@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartOptions } from 'chart.js';
+import { ChartOptions, ChartDataset } from 'chart.js';
 import { TransactionsService } from '../../../services/transactions.service';
 
 @Component({
@@ -10,19 +10,12 @@ import { TransactionsService } from '../../../services/transactions.service';
   templateUrl: './expense-chart.html',
   styleUrls: ['./expense-chart.scss'],
 })
-
 export class ExpenseChart implements OnInit {
   constructor(private transactionsService: TransactionsService) {}
 
   pieChartData = {
     labels: [] as string[],
-    datasets: [
-      {
-        data: [] as number[],
-        label: 'Expense Summary',
-        backgroundColor: [] as string[],
-      },
-    ],
+    datasets: [] as ChartDataset<'doughnut'>[],
   };
 
   pieChartOptions: ChartOptions<'doughnut'> = {
@@ -30,9 +23,7 @@ export class ExpenseChart implements OnInit {
     plugins: {
       legend: {
         position: 'bottom',
-        labels: {
-          color: '#333',
-        },
+        labels: { color: '#333' },
       },
       tooltip: {
         callbacks: {
@@ -49,9 +40,17 @@ export class ExpenseChart implements OnInit {
   ngOnInit(): void {
     this.transactionsService.getExpenseSummary().subscribe({
       next: (data) => {
-        this.pieChartData.labels = data.labels;
-        this.pieChartData.datasets[0].data = data.values;
-        this.pieChartData.datasets[0].backgroundColor = this.generateColors(data.labels.length);
+        this.pieChartData = {
+          labels: data.labels,
+          datasets: [
+            {
+              data: data.values,
+              label: 'Expense Summary',
+              backgroundColor: this.generateColors(data.labels.length),
+            },
+          ],
+        };
+        console.log('Chart data:', this.pieChartData);
       },
       error: (err) => console.error('Failed to load expense summary', err),
     });
