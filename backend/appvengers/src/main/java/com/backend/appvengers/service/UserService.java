@@ -4,7 +4,6 @@ import com.backend.appvengers.dto.SignupRequest;
 import com.backend.appvengers.dto.LoginRequest;
 import com.backend.appvengers.dto.ApiResponse;
 import com.backend.appvengers.dto.AuthResponse;
-import com.backend.appvengers.dto.ForgotPasswordRequest;
 import com.backend.appvengers.dto.ResetPasswordRequest;
 import com.backend.appvengers.dto.ChangePasswordRequest;
 import com.backend.appvengers.dto.DeactivateAccountRequest;
@@ -90,15 +89,42 @@ public class UserService {
         return new ApiResponse(true, "Signup successful, Please check your email.", response);
     }
 
+    // This will only verify the email using the token sent to user's email (verification email).
     public ApiResponse verifyEmailToken(String token) {
+        return userRepository.findByEmailVerificationToken(token)
+            .map(user -> {
+                return new ApiResponse(true, "Email verified successfully", user.getUsername());
+            })
+            .orElseGet(() -> new ApiResponse(false, "Invalid verification token"));
+    }
+
+    // This will set the token to null and emailVerified to true if the user 
+    // submit info in the frontend (setup-account page).
+    public ApiResponse verifyAccountSetupToken(String token) {
         return userRepository.findByEmailVerificationToken(token)
             .map(user -> {
                 user.setEmailVerified(true);
                 user.setEmailVerificationToken(null);
                 userRepository.save(user);
-                return new ApiResponse(true, "Email verified successfully", user);
+                return new ApiResponse(true, "Account setup verified successfully", user.getUsername());
             })
-            .orElseGet(() -> new ApiResponse(false, "Invalid verification token"));
+            .orElseGet(() -> new ApiResponse(false, "Invalid account setup token"));
+    }
+
+    // Update user information such as first name, last name, etc. after account setup
+    public ApiResponse updateUserInformation(String username, User userData) {
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Update user fields after account setup    
+        user.setFirstName(userData.getFirstName());
+        user.setMiddleName(userData.getMiddleName());
+        user.setLastName(userData.getLastName());
+        user.setGender(userData.getGender());
+        user.setBirthdate(userData.getBirthdate());
+        userRepository.save(user);
+
+        return new ApiResponse(true, "User information updated successfully", user.getUsername());
     }
 
     @Transactional
