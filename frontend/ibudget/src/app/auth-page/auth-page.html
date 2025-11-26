@@ -1,0 +1,27 @@
+<div class="split-auth-container">
+  
+  <div class="left-panel">
+    <div class="image-placeholder">
+    
+    </div>
+    <div class="slogan">
+      Simple tracking. Smarter spending.
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="header-toggles">
+      <a (click)="setLoginMode()" [class.active]="isLoginMode()">Login</a>
+      <a (click)="setSignupMode()" [class.active]="!isLoginMode()">Signup</a>
+    </div>
+
+    <div class="auth-form-container">
+      @if (isLoginMode()) {
+        <app-login></app-login>
+      } @else {
+        <app-sign-up></app-sign-up>
+      }
+    </div>
+  </div>
+
+</div>
