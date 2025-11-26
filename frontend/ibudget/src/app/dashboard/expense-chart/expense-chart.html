@@ -7,17 +7,19 @@
     <div class="chart-wrapper">
       <div class="description">
         <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+          A look into your expense summary.
         </p>
       </div>
 
       <div>
-        <canvas 
-          baseChart 
-          width="250" 
-          height="200" 
-          type="doughnut" 
-          [data]="pieChartData"></canvas>
+        <canvas
+          baseChart
+          width="250"
+          height="200"
+          type="doughnut"
+          [data]="pieChartData"
+          [options]="pieChartOptions">
+        </canvas>
       </div>
     </div>
   </div>
