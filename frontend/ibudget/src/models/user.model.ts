@@ -36,6 +36,15 @@ export type ApiResponse<T = any> = {
   data?: T;
 }
 
+// Model for account setup verification response
+export type AccountSetupResponse = {
+  firstname: string; 
+  middlename: string; 
+  lastname: string; 
+  birthdate: string;
+  gender: string;
+}
+
 export type Transaction = {
   id: number;
   date: Date;
