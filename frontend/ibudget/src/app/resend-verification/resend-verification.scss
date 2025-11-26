@@ -1,0 +1,49 @@
+.resend-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #f5f7fa;
+  height: 100%;
+}
+
+.card {
+  background: #ffffff;
+  max-width: 520px;
+  width: 100%;
+  padding: 28px 32px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(20, 20, 30, 0.08);
+  text-align: center;
+}
+
+.card-title {
+  margin: 0 0 12px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.card-message {
+  margin: 0;
+  font-size: 15px;
+  color: #475569;
+  line-height: 1.4;
+}
+
+/* small screens */
+@media (max-width: 420px) {
+  .card {
+    padding: 20px;
+  }
+
+  .card-title {
+    font-size: 18px;
+  }
+
+  .card-message {
+    font-size: 14px;
+  }
+}
