@@ -45,3 +45,40 @@ main {
   width: 100%;
   max-width: 100%;
 }
+
+@media (max-width: 320px) {
+  main {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 768px) {
+  main {
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  main {
+    padding-left: 50px;
+    padding-right: 50px;
+    grid-template-areas: 
+      "third-panel"
+      "security-settings-panel"
+      "privacy-panel";
+  }
+}
+
+@media (max-width: 1025px) {
+  .third-panel {
+    height: 5px !important;
+  }
+}
