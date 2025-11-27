@@ -29,6 +29,12 @@ h4 {
     padding: 0;
     box-shadow: 3px 3px $card-drop-shadow;
   }
+
+  .chart-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -38,6 +44,19 @@ h4 {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .chart-wrapper {
+    height: 90%;
+    width: 90%;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 768px) {
+  .chart-container {
+    width: 100%;
+    padding: 0;
+    box-shadow: 3px 3px $card-drop-shadow;
   }
 
   .chart-wrapper {
