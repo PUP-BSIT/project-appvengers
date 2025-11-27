@@ -30,3 +30,78 @@ main {
   align-items: center;
   margin-bottom: 20px;
 }
+
+@media (max-width: 320px) {
+  main {
+    margin-left: 0;
+    padding: 10px;
+  }
+
+  .card {
+    .card-body {
+      flex-direction: column;
+      gap: 1em;
+    }
+  }
+
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 426px) {
+  main {
+    margin-left: 0;
+    padding: 10px;
+  }
+
+  .card {
+    .card-body {
+      flex-direction: column;
+      gap: 1em;
+    }
+  }
+
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (min-width: 427px) and (max-width: 768px) {
+  main {
+    margin-left: 0;
+    padding: 10px;
+  }
+
+  .card {
+    .card-body {
+      flex-direction: column;
+      gap: 1em;
+    }
+  }
+
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .actions {
+    flex-direction: row;
+    gap: 10px;
+  }
+}
