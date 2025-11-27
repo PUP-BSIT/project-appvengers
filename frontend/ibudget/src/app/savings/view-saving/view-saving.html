@@ -88,7 +88,7 @@
                   <td>{{ transaction.transaction_date }}</td>
                   <td>{{ transaction.savings_action }}</td>
                   <td>${{ transaction.amount.toFixed(2) }}</td>
-                  <td class="d-flex gap-1 justify-content-center">
+                  <td class="d-flex gap-1 justify-content-center actions">
                     <app-update-saving-transaction 
                       [transactionId]="transaction.transaction_id"
                       (updatedTransaction)="onSavingsTransactionUpdated($event)"
