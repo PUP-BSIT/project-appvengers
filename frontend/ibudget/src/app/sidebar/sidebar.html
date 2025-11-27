@@ -4,7 +4,7 @@
   <div class="logo">
     <div class="logo-container">
       <img
-        src="/assets/images/ibudget_logo.png"
+        src="/assets/images/ibudget-logo-pesos.png"
         alt="iBudget Logo"
         class="logo-image">
     </div>
@@ -19,7 +19,7 @@
         routerLink="/dashboard"
         routerLinkActive="active">
         <i class="bi bi-house-door"></i>
-        <span>Dashboard</span>
+        <!-- <span>Dashboard</span> -->
       </a>
     </div>
     
@@ -30,7 +30,7 @@
         routerLink="/transactions"
         routerLinkActive="active">
         <i class="bi bi-arrow-left-right"></i>
-        <span>Transactions</span>
+        <!-- <span>Transactions</span> -->
       </a>
     </div>
     
@@ -41,7 +41,18 @@
         routerLink="/budgets"
         routerLinkActive="active">
         <i class="bi bi-wallet2"></i>
-        <span>Budgets</span>
+        <!-- <span>Budgets</span> -->
+      </a>
+    </div>
+
+     <!-- Savings -->
+    <div class="nav-item">
+      <a 
+        class="nav-link" 
+        routerLink="/savings"
+        routerLinkActive="active">
+        <i class="bi bi-piggy-bank"></i>
+        <!-- <span>Savings</span> -->
       </a>
     </div>
     
@@ -52,7 +63,7 @@
         routerLink="/categories"
         routerLinkActive="active">
         <i class="bi bi-tags"></i>
-        <span>Categories</span>
+        <!-- <span>Categories</span> -->
       </a>
     </div>
     
@@ -63,18 +74,7 @@
         routerLink="/reports"
         routerLinkActive="active">
         <i class="bi bi-bar-chart"></i>
-        <span>Reports</span>
-      </a>
-    </div>
-    
-    <!-- Notifications -->
-    <div class="nav-item">
-      <a 
-        class="nav-link" 
-        routerLink="/savings"
-        routerLinkActive="active">
-        <i class="bi bi-piggy-bank"></i>
-        <span>Savings</span>
+        <!-- <span>Reports</span> -->
       </a>
     </div>
     
@@ -85,7 +85,7 @@
         routerLink="/settings/account/1"
         routerLinkActive="active">
         <i class="bi bi-gear"></i>
-        <span>Settings</span>
+        <!-- <span>Settings</span> -->
       </a>
     </div>
 
@@ -93,7 +93,7 @@
     <div class="nav-item">
       <a class="nav-link" (click)="openLogoutModal()">
         <i class="bi bi-box-arrow-right"></i>
-        <span>Logout</span>
+        <!-- <span>Logout</span> -->
       </a>
     </div>
   </div>
