@@ -16,3 +16,25 @@ main {
   background-color: $white-bg;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+@media (max-width: 320px) {
+  main {
+    margin-left: 0;
+    padding: 10px;
+  }
+
+  .form-container {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 768px) {
+  main {
+    margin-left: 0;
+    padding: 10px;
+  }
+
+  .form-container {
+    padding: 20px;
+  }
+}

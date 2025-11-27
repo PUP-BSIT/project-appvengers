@@ -15,3 +15,25 @@ main {
   border-radius: 8px;
   background-color: $white-bg;
 }
+
+@media (max-width: 320px) {
+  main {
+    margin-left: 0;
+    padding: 10px;
+  }
+
+  .form-container {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 768px) {
+  main {
+    margin-left: 0;
+    padding: 10px;
+  }
+
+  .form-container {
+    padding: 20px;
+  }
+}
