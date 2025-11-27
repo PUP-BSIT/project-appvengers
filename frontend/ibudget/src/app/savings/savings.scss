@@ -40,3 +40,46 @@ main {
 .card {
   width: 16rem;
 }
+
+@media (max-width: 320px) {
+  main {
+    margin-left: 0;
+  }
+
+  .inner-wrapper {
+    padding: 15px;
+  }
+
+  .actions-container {
+    flex-direction: column;
+    gap: 10px;
+
+    div:nth-child(2) {
+      justify-content: flex-start;
+    }
+  }
+
+  .savings-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 768px) {
+  main {
+    margin-left: 0;
+  }
+
+  .inner-wrapper {
+    padding: 20px;
+  }
+
+  .actions-container {
+    padding: 20px;
+    flex-direction: column;
+  }
+
+  .savings-container {
+    justify-content: center;
+  }
+}
