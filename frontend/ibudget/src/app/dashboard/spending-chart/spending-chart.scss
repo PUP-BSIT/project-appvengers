@@ -1,0 +1,47 @@
+.spending-chart-container {
+  .card {
+    .card-body {
+      padding: 1rem;
+    }
+
+    .chart-scroll-container {
+      max-height: 600px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch; 
+      padding-right: 8px; 
+    }
+
+    .chart-container {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+      min-height: 320px;
+      display: block;
+    }
+  }
+}
+
+.chart-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+.chart-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chart-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.08);
+  border-radius: 6px;
+}
+
+@media (max-width: 768px) {
+  .spending-chart-container .card .chart-scroll-container {
+    max-height: 260px;
+  }
+
+  .spending-chart-container .card canvas {
+    min-height: 240px;
+  }
+}
