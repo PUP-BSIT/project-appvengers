@@ -1,35 +1,43 @@
+@use "sass:color";
+
   $sidebar-width: 100px;
   $primary-color: #3498db;
-  $sidebar-bg: #3B82F6;
-  $active-bg: #e6f2ff;
+  // changed sidebar bg to white and set readable icon color
+  $sidebar-bg: #ffffff;
+  $nav-link-color: #374151; // slate-700
+  $active-bg: #DFD0B8;
   $sidebar-bgcolor: rgba(0, 0, 0, 0.05);
   $border-color: #eee;
+  $light-border: #e5e7eb; // light right border
   $logo-text-color: #2c3e50;
-  $nav-link-color: white;
   $nav-bg-hover: #f0f5ff;
-  $logo-bg-color: #222831;
+  $logo-bg-color: #ffffff;
+  $active-color: $primary-color;
 
 .sidebar {
   width: $sidebar-width;
-  height: 100vh;
+  height: 100%;
   background-color: $sidebar-bg;
-  box-shadow: 2px 0 10px $sidebar-bgcolor;
+  // small 1px right border and subtle box-shadow behind the sidebar
+  border-right: 1px solid $light-border;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
   display: flex;
   flex-direction: column;
   position: fixed;
   left: 0;
   top: 0;
   z-index: 1000;
+  border-radius: 0 5px 5px 0;
 }
 
 .logo {
   padding: 20px;
-  // border-bottom: 1px solid $border-color;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 70px;
-  background-color: $logo-bg-color;
+  background-color: $logo-text-color;
+  border-bottom: 1px solid $border-color;
 }
 
 .logo-container {
@@ -45,33 +53,30 @@
   object-fit: contain;
 }
 
-.logo-text {
-  font-size: 29px;
-  color: $active-bg;
-  font-weight: 700;
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
 .nav-menu {
   padding: 20px 0;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
 }
 
 .nav-item {
   margin-bottom: 2px;
   display: flex;
   justify-content: center;
+  height: 40px;
 }
 
 .nav-link {
-  color: $active-bg;
+  color: $nav-link-color;
   padding: 5px 20px;
   border-radius: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   text-decoration: none;
   cursor: pointer;
   border: none;
@@ -79,15 +84,16 @@
   width: 100%;
   
   &:hover {
-    background-color: $nav-bg-hover;
     color: $primary-color;
+    background-color: transparent;
   }
   
   &.active {
-    background-color: $active-bg;
     color: $primary-color;
-    border-left: 4px solid $primary-color;
-    padding-left: 16px;
+    /* show active indicator on the right since sidebar has right border */
+    border-right: 4px solid $primary-color;
+    padding-right: 16px;
+    padding-left: 12px;
   }
   
   i {
@@ -95,6 +101,8 @@
     font-size: 25px;
     width: 20px;
     text-align: center;
+    /* icons follow the same color as link text */
+    color: inherit;
   }
   
   span {
