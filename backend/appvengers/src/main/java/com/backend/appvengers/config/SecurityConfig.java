@@ -37,7 +37,6 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/change-password").authenticated()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/transactions/**").authenticated()
-                .requestMatchers("/api/expenses/**").authenticated()
                 .anyRequest().authenticated())
             .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
