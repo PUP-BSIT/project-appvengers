@@ -17,15 +17,14 @@
         <div class="modal-body">
           <form [formGroup]="budgetForm">
             <input type="hidden" formControlName="id" [value]="mockBudgetId()"/>
-            <input type="hidden" formControlName="category_id" />
 
             <label for="category_name">Category</label>
             <select 
-              formControlName="category_name" 
+              formControlName="category_id" 
               class="form-select mb-3"
               id="category_name"
               (change)="afterCategorySelection()">
-              <option selected disabled>-- Select Category --</option>
+              <option value="" selected disabled>-- Select Category --</option>
               @for(category of categories(); track $index) {
                 <option [value]="category.category_id">{{ category.name }}</option>
               }
