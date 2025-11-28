@@ -130,32 +130,47 @@ export class MockupsService {
     return of([...this.MOCK_BUDGET_TRANSACTIONS]);
   }
 
-  getMockBudgetTransactionsByBudgetId(budgetId: number): Observable<BudgetTransaction[]> {
-    const filteredTransactions = this.MOCK_BUDGET_TRANSACTIONS
-      .filter(transaction => transaction.budget_id === budgetId);
+  getMockBudgetTransactionsByBudgetId(
+    budgetId: number
+  ): Observable<BudgetTransaction[]> {
+    const filteredTransactions = this.MOCK_BUDGET_TRANSACTIONS.filter(
+      transaction => transaction.budget_id === budgetId
+    );
+
     return of(filteredTransactions);
   }
 
-  getMockBudgetTransactionById(id: number): Observable<BudgetTransaction>  {
-    const matchedTransaction = this.MOCK_BUDGET_TRANSACTIONS
-      .find(transaction => transaction.transaction_id === id);
+  getMockBudgetTransactionById(
+    id: number
+  ): Observable<BudgetTransaction>  {
+    const matchedTransaction = this.MOCK_BUDGET_TRANSACTIONS.find(
+      transaction => transaction.transaction_id === id
+    );
+
     if (!matchedTransaction) {
       throw new Error(`Transaction with id ${id} not found.`);
     }
+
     return of(matchedTransaction);
   }
 
-  addMockBudgetTransaction(newTransaction: BudgetTransaction): Observable<BudgetTransaction> {
-    this.MOCK_BUDGET_TRANSACTIONS = 
-      [...this.MOCK_BUDGET_TRANSACTIONS, newTransaction];
+  addMockBudgetTransaction(
+    newTransaction: BudgetTransaction
+  ): Observable<BudgetTransaction> {
+    this.MOCK_BUDGET_TRANSACTIONS = [
+      ...this.MOCK_BUDGET_TRANSACTIONS, newTransaction
+    ];
 
     return of(newTransaction);
   }
 
-  updateMockBudgetTransaction(id: number, transaction: BudgetTransaction): Observable<BudgetTransaction> {
-    this.MOCK_BUDGET_TRANSACTIONS = this.MOCK_BUDGET_TRANSACTIONS
-      .map(existingTransaction => existingTransaction.transaction_id === id ?
-        {...existingTransaction, ...transaction} : existingTransaction
+  updateMockBudgetTransaction(
+    id: number, 
+    transaction: BudgetTransaction
+  ): Observable<BudgetTransaction> {
+    this.MOCK_BUDGET_TRANSACTIONS = this.MOCK_BUDGET_TRANSACTIONS.map(
+      existingTransaction => existingTransaction.transaction_id === id ?
+      {...existingTransaction, ...transaction} : existingTransaction
     );
 
     const updatedTransaction = this.MOCK_BUDGET_TRANSACTIONS
