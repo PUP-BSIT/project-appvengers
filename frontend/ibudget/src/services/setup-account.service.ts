@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
+
 export class SetupAccountService {
   private apiUrl = `${environment.apiUrl}/auth`;
   http = inject(HttpClient);
@@ -17,7 +18,10 @@ export class SetupAccountService {
     accountSetupResponse: AccountSetupResponse
   ): Observable<ApiResponse> {
     const url =
-      `${this.apiUrl}/verify-account-setup?token=${encodeURIComponent(token)}&username=${encodeURIComponent(username)}`;
+      `
+        ${this.apiUrl}/verify-account-setup?token=${encodeURIComponent(token)}
+        &username=${encodeURIComponent(username)}
+      `;
 
     // body is the User-like object expected by the backend
     return this.http.put<ApiResponse>(url, accountSetupResponse, {
