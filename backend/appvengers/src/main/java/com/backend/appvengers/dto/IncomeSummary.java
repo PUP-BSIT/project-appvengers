@@ -1,20 +1,20 @@
 package com.backend.appvengers.dto;
-
-import java.math.BigDecimal;
-import java.util.Map;
+import java.util.List;
 
 public class IncomeSummary {
-    private Map<String, BigDecimal> categoryTotals;
+    private List<String> labels;
+    private List<Double> values;
 
-    public IncomeSummary(Map<String, BigDecimal> categoryTotals) {
-        this.categoryTotals = categoryTotals;
+    public IncomeSummary(List<String> labels, List<Double> values) {
+        this.labels = labels;
+        this.values = values;
     }
 
-    public Map<String, BigDecimal> getCategoryTotals() {
-        return categoryTotals;
+    public List<String> getLabels() {
+        return labels;
     }
 
-    public void setCategoryTotals(Map<String, BigDecimal> categoryTotals) {
-        this.categoryTotals = categoryTotals;
+    public List<Double> getValues() {
+        return values;
     }
 }
