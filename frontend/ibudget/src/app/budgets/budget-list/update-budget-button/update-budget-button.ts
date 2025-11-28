@@ -21,10 +21,12 @@ import {
           FormGroup,
           Validators
         } from '@angular/forms';
+import { KpiPanel } from "../../kpi-panel/kpi-panel";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-update-budget-button',
-  imports: [ReactiveFormsModule, NgIcon],
+  imports: [ReactiveFormsModule, NgIcon, KpiPanel],
   templateUrl: './update-budget-button.html',
   styleUrl: './update-budget-button.scss',
   viewProviders: [
@@ -36,12 +38,13 @@ export class UpdateBudgetButton implements OnInit {
   @ViewChild('openUpdateBudgetModalBtn') 
     openUpdateBudgetModalBtn!: ElementRef<HTMLButtonElement>;
   budgetForm: FormGroup;
-  budgetId = input(<number>(0));
-  updatedBudgetResponse = output<Budget>();
-  deletedBudgetResponse = output<Budget[]>();
+  router = inject(Router);
   formBuilder = inject(FormBuilder);  
   mockupService = inject(MockupsService);
   categoriesService = inject(CategoriesService);
+  budgetId = input(<number>(0));
+  updatedBudgetResponse = output<Budget>();
+  deletedBudgetResponse = output<Budget[]>();
   categories = signal(<Categories[]>[]);
 
   constructor() {
@@ -117,5 +120,26 @@ export class UpdateBudgetButton implements OnInit {
 
   getCategories() {
     this.categories.set(this.categoriesService.getExpenseCategories());
+  }
+
+  // View: open the modal in read-only mode or navigate to a details page
+  onView() {
+    if (!this.budgetId()) return;
+    this.router.navigate(['/budgets/view-budget', this.budgetId()]);
+  }
+
+  // Edit: open the modal and enable inputs
+  onEdit() {
+    if (!this.budgetId()) return;
+    this.openUpdateBudgetModal();
+    this.budgetForm.enable();
+
+    this.budgetForm.get('category_name')?.disable();
+  }
+
+  // Delete: delete budget based on budgetId
+  onDelete() {
+    if (!this.budgetId()) return;
+    this.deleteBudget();
   }
 }
