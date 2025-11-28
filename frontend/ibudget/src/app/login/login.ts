@@ -2,9 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, signal, inject, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { 
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -58,11 +62,14 @@ export class Login implements OnDestroy {
           error: (err) => {
             console.error('Login failed:', err);
             if (err.status === 429) {
-              this.errorMessage.set('Too many login attempts. Please try again later.');
+              this.errorMessage.set(
+                'Too many login attempts. Please try again later.');
             } else if(err.status === 401 && err.error?.lockedUntil) {
               const lockedUntil = new Date(err.error.lockedUntil);
-              const minutesLeft = Math.ceil((lockedUntil.getTime() - Date.now()) / 60000);
-              this.errorMessage.set(`Account locked. Try again in ${minutesLeft} minutes.`);
+              const minutesLeft = Math.ceil(
+                (lockedUntil.getTime() - Date.now()) / 60000);
+              this.errorMessage.set(
+                `Account locked. Try again in ${minutesLeft} minutes.`);
             } else {
               this.errorMessage.set('Invalid email or password');
             }
