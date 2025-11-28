@@ -38,24 +38,18 @@ export class AddBudgetButton implements OnInit, OnChanges {
   mockBudgetId = input(<number>(0));
   categoriesService = inject(CategoriesService);
   categories = signal(<Categories[]>[]);
+  currentCategoryName = signal('');
+  currentCategoryId = signal<number>(0);
 
   constructor() {
     this.budgetForm = this.formBuilder.group({
       id: [],
-      category_id: [],
-      category_name: ['', {
-        validators: [Validators.required]
-      }],
-      limit_amount: [0, {
-        validators: [Validators.required]
-      }],
+      category_id: ['', { validators: [Validators.required] }],
+      category_name: [''],
+      limit_amount: [0, { validators: [Validators.required] }],
       current_amount: [0],
-      start_date: ['', {
-        validators: [Validators.required]
-      }],
-      end_date: ['', {
-        validators: [Validators.required]
-      }]
+      start_date: ['', { validators: [Validators.required] }],
+      end_date: ['', { validators: [Validators.required] }]
     });
   }
 
@@ -65,20 +59,12 @@ export class AddBudgetButton implements OnInit, OnChanges {
 
     this.budgetForm = this.formBuilder.group({
       id: [budgetId],
-      category_id: [],
-      category_name: ['', {
-        validators: [Validators.required]
-      }],
-      limit_amount: [0, {
-        validators: [Validators.required]
-      }],
+      category_id: ['', { validators: [Validators.required] }],
+      category_name: [''],
+      limit_amount: [0, { validators: [Validators.required] }],
       current_amount: [0],
-      start_date: ['', {
-        validators: [Validators.required]
-      }],
-      end_date: ['', {
-        validators: [Validators.required]
-      }]
+      start_date: ['', { validators: [Validators.required] }],
+      end_date: ['', { validators: [Validators.required] }]
     });
   }
 
@@ -89,20 +75,12 @@ export class AddBudgetButton implements OnInit, OnChanges {
 
       this.budgetForm = this.formBuilder.group({
         id: [budgetId],
-        category_id: [],
-        category_name: ['', {
-          validators: [Validators.required]
-        }],
-        limit_amount: [0, {
-          validators: [Validators.required]
-        }],
+        category_id: ['', { validators: [Validators.required] }],
+        category_name: [''],
+        limit_amount: [0, { validators: [Validators.required] }],
         current_amount: [0],
-        start_date: ['', {
-          validators: [Validators.required]
-        }],
-        end_date: ['', {
-          validators: [Validators.required]
-        }]
+        start_date: ['', { validators: [Validators.required] }],
+        end_date: ['', { validators: [Validators.required] }]
       });
     }
   }
@@ -128,13 +106,18 @@ export class AddBudgetButton implements OnInit, OnChanges {
     this.mockupService.addMockBudget(this.budgetForm.value)
       .subscribe((newBudget: Budget) => {
         this.addedBudget.emit(newBudget);
+        console.log('Added Budget:', newBudget);
         this.closeModal();
     });
   }
 
-  // Sets the value of the category_id based on the category_name value
+  // Derive category_name from selected category_id
   afterCategorySelection() {
-    const categoryValue = this.budgetForm.get('category_name')?.value;
-    this.budgetForm.get('category_id')?.setValue(categoryValue);
+    const selectedId = Number(this.budgetForm.get('category_id')?.value);
+    const cat = this.categories().find(c => c.category_id === selectedId);
+
+    this.budgetForm.get('category_name')?.setValue(cat?.name ?? '');
+    this.currentCategoryId.set(selectedId);
+    this.currentCategoryName.set(cat?.name ?? '');
   }
 }
