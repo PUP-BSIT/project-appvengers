@@ -51,7 +51,9 @@ export class NotificationService {
   }
 
   deleteNotification(id: number) {
-    this.notifications = this.notifications.filter(notification => notification.id !== id);
+    this.notifications = this.notifications.filter(
+      notification => notification.id !== id
+    );
   }
 
   getWarningCount(): number {
