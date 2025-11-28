@@ -49,4 +49,7 @@ public class Transaction {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDate updatedAt;
+
+    @Column(nullable = false)
+    private Boolean deleted = false;
 }
