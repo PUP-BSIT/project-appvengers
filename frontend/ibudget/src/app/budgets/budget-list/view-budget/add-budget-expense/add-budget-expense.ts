@@ -1,9 +1,16 @@
-import { Component, ElementRef, inject, OnInit, output, signal, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Modal } from 'bootstrap';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MockupsService } from '../../../../../services/mockups.service';
 import { BudgetTransaction } from '../../../../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
+import { Component, 
+        ElementRef, 
+        inject, 
+        OnInit, 
+        output, 
+        signal, 
+        ViewChild 
+      } from '@angular/core';
 
 @Component({
   selector: 'app-add-budget-expense',
@@ -32,9 +39,9 @@ export class AddBudgetExpense implements OnInit {
       transaction_date: [''],
       description: [''],
       amount: [''],
-      created_at: [],
-      updated_at: [],
-      deleted_at: []
+      created_at: [''],
+      updated_at: [''],
+      deleted_at: ['']
     });
   }
 
@@ -101,7 +108,7 @@ export class AddBudgetExpense implements OnInit {
       
       // Call the mockup service to add the expense
       this.mockupService.addMockBudgetTransaction(newExpense)
-        .subscribe((response) => {
+        .subscribe((response: BudgetTransaction) => {
           console.log('New Budget Expense Added:', response);
           
           // Emit the response to the parent component

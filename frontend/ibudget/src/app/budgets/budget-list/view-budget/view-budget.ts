@@ -4,12 +4,13 @@ import { Header } from "../../../header/header";
 import { KpiPanel } from "../../kpi-panel/kpi-panel";
 import { AddBudgetExpense } from "./add-budget-expense/add-budget-expense";
 import { MockupsService } from '../../../../services/mockups.service';
-import { BudgetTransaction } from '../../../../models/user.model';
+import { Budget, BudgetTransaction } from '../../../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
+import { UpdateBudgetExpense } from "./update-budget-expense/update-budget-expense";
 
 @Component({
   selector: 'app-view-budget',
-  imports: [Sidebar, Header, KpiPanel, AddBudgetExpense],
+  imports: [Sidebar, Header, KpiPanel, AddBudgetExpense, UpdateBudgetExpense],
   templateUrl: './view-budget.html',
   styleUrl: './view-budget.scss',
 })
@@ -33,7 +34,19 @@ export class ViewBudget implements OnInit {
       });
   }
 
+  deleteBudgetExpense(transactionId: number) {
+    this.mockupService.deleteMockBudgetTransaction(transactionId)
+      .subscribe(() => {
+        this.getBudgetExpenses();
+      });
+  }
+
   onBudgetExpenseAdded(event: BudgetTransaction) {
+    // Refresh the budget expenses list
+    this.getBudgetExpenses();
+  }
+
+  onBudgetExpenseUpdated(event: BudgetTransaction) {
     // Refresh the budget expenses list
     this.getBudgetExpenses();
   }
