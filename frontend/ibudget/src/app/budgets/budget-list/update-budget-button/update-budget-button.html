@@ -1,6 +1,6 @@
 <div 
   #updateBudgetModal
-  class="modal fade" 
+  class="modal fade update-budget-modal" 
   data-bs-backdrop="static" 
   data-bs-keyboard="false" 
   tabindex="-1">
@@ -15,6 +15,7 @@
             class="btn-close"
             (click)="closeModal()"></button>
         </div>
+
         <div class="modal-body">
           <form [formGroup]="budgetForm">
             <input type="hidden" formControlName="category_id"/>
@@ -57,7 +58,12 @@
               id="end_date"
               type="date"/>
           </form>
+
+          <div class="kpi-panel-container">
+            <app-kpi-panel/>
+          </div>
         </div>
+
         <div class="modal-footer">
           <button 
             type="button" 
@@ -74,10 +80,32 @@
     </div>
 </div>
 
-<button 
-  #openUpdateBudgetModalBtn
-  type="button" 
-  class="btn"
-  (click)="openUpdateBudgetModal()">
-    <ng-icon name="bootstrapThreeDotsVertical"/>
-</button>
+<!-- Kebab menu -->
+<div class="dropdown">
+  <button 
+    #openUpdateBudgetModalBtn
+    class="btn btn-light btn-icon"
+    type="button"
+    data-bs-toggle="dropdown">
+    <ng-icon name="bootstrapThreeDotsVertical"></ng-icon>
+  </button>
+
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li>
+      <button class="dropdown-item" type="button" (click)="onView()">
+        View
+      </button>
+    </li>
+    <li>
+      <button class="dropdown-item" type="button" (click)="onEdit()">
+        Edit
+      </button>
+    </li>
+    <li><hr class="dropdown-divider"></li>
+    <li>
+      <button class="dropdown-item text-danger" type="button" (click)="onDelete()">
+        Delete
+      </button>
+    </li>
+  </ul>
+</div>
