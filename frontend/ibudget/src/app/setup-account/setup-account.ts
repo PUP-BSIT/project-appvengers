@@ -87,7 +87,7 @@ export class SetupAccount implements OnInit {
               this.alertMessage.set('Account setup verified successfully.');
 
               setTimeout(() => {
-                this.router.navigate(['/login-page']);
+                this.router.navigate(['/auth-page']);
               }, 2000);
             } else {
               this.alertType.set('danger');
