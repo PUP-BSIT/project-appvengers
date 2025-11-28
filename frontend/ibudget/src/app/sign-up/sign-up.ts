@@ -79,7 +79,7 @@ export class SignUp {
         if (response.success) {
           this.successMessage.set(response.message);
           setTimeout(() => {
-            this.router.navigate(['/login-page']);
+            this.router.navigate(['/auth-page']);
           }, 2000);
         }
       },
