@@ -78,37 +78,53 @@ export class HistoryService {
     return of(this.STATIC_HISTORY);
   }
 
-  getSavingTransactionsBySavingId(savingId: number, transactionId: number): Observable<SavingTransaction[]> {
+  getSavingTransactionsBySavingId(
+    savingId: number, 
+    transactionId: number
+  ): Observable<SavingTransaction[]> {
     const filteredTransactions = this.STATIC_HISTORY.filter(transaction => 
-      transaction.savings_id === savingId && transaction.transaction_id === transactionId
+      transaction.savings_id === savingId && 
+      transaction.transaction_id === transactionId
     );
 
     return of(filteredTransactions);
   }
 
-  addSavingTransaction(newTransaction: SavingTransaction): Observable<SavingTransaction> {
+  addSavingTransaction(
+    newTransaction: SavingTransaction
+  ): Observable<SavingTransaction> {
     this.STATIC_HISTORY = [...this.STATIC_HISTORY, newTransaction];
     return of(newTransaction);
   }
 
-  updateSavingTransaction(savings_id: number, transaction_id: number, updatedTransaction: SavingTransaction): Observable<SavingTransaction> {
+  updateSavingTransaction(
+    savings_id: number, 
+    transaction_id: number, 
+    updatedTransaction: SavingTransaction
+  ): Observable<SavingTransaction> {
     const index = this.STATIC_HISTORY.findIndex(transaction => 
-      transaction.savings_id === savings_id && transaction.transaction_id === transaction_id
+      transaction.savings_id === savings_id && 
+      transaction.transaction_id === transaction_id
     );
 
     if (index !== -1) {
       this.STATIC_HISTORY[index] = updatedTransaction;
       return of(updatedTransaction);
     } else {
-      // Handle the case where the transaction is not found
       throw new Error('Transaction not found');
     }
   }
 
-  deleteSavingTransaction(savings_id: number, transaction_id: number): Observable<SavingTransaction[]> {
+  deleteSavingTransaction(
+    savings_id: number, 
+    transaction_id: number
+  ): Observable<SavingTransaction[]> {
     this.STATIC_HISTORY = this.STATIC_HISTORY.filter(transaction => 
-      !(transaction.savings_id === savings_id && transaction.transaction_id === transaction_id)
+      !(transaction.savings_id === savings_id && 
+        transaction.transaction_id === transaction_id
+      )
     );
+    
     return of(this.STATIC_HISTORY);
   }
 }
