@@ -10,7 +10,7 @@ export class MockupsService {
     {
       id: 1,
       category_id: 1,
-      category_name: 'Housing',
+      category_name: 'Clothes',
       limit_amount: 500,
       current_amount: 200,
       start_date: '2025-11-04',
@@ -36,7 +36,7 @@ export class MockupsService {
       transaction_date: '2025-11-05',
       created_at: '2025-11-05',
       updated_at: '2025-11-05',
-      description: 'Friend payment',
+      description: 'Vintage Shirt purchase',
       amount: 200
     },
     {
@@ -69,7 +69,7 @@ export class MockupsService {
       transaction_date: '2025-11-08',
       created_at: '2025-11-08',
       updated_at: '2025-11-08',
-      description: 'Utility bill',
+      description: 'Transport to Ukay-Ukay Shop',
       amount: 50
     },
     {
@@ -80,7 +80,7 @@ export class MockupsService {
       transaction_date: '2025-11-09',
       created_at: '2025-11-09',
       updated_at: '2025-11-09',
-      description: 'Labubu',
+      description: 'Bought Labubu while traveling',
       amount: 200
     }
   ];
@@ -136,8 +136,19 @@ export class MockupsService {
     return of(filteredTransactions);
   }
 
+  getMockBudgetTransactionById(id: number): Observable<BudgetTransaction>  {
+    const matchedTransaction = this.MOCK_BUDGET_TRANSACTIONS
+      .find(transaction => transaction.transaction_id === id);
+    if (!matchedTransaction) {
+      throw new Error(`Transaction with id ${id} not found.`);
+    }
+    return of(matchedTransaction);
+  }
+
   addMockBudgetTransaction(newTransaction: BudgetTransaction): Observable<BudgetTransaction> {
-    this.MOCK_BUDGET_TRANSACTIONS = [...this.MOCK_BUDGET_TRANSACTIONS, newTransaction];
+    this.MOCK_BUDGET_TRANSACTIONS = 
+      [...this.MOCK_BUDGET_TRANSACTIONS, newTransaction];
+
     return of(newTransaction);
   }
 
@@ -147,7 +158,8 @@ export class MockupsService {
         {...existingTransaction, ...transaction} : existingTransaction
     );
 
-    const updatedTransaction = this.MOCK_BUDGET_TRANSACTIONS.find(transaction => transaction.transaction_id === id);
+    const updatedTransaction = this.MOCK_BUDGET_TRANSACTIONS
+      .find(transaction => transaction.transaction_id === id);
 
     if(!updatedTransaction) {
       throw new Error(`Failed to update because transaction not found.`);
