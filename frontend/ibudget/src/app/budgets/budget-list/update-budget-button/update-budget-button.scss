@@ -1,0 +1,22 @@
+// Kebab Menu Button Styles
+.btn-icon {
+  padding: 6px 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+}
+
+.dropdown-menu {
+  min-width: 160px;
+}
+
+// Custom styles for the update budget modal
+.update-budget-modal {
+  --bs-modal-width: min(95vw, 900px); 
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
