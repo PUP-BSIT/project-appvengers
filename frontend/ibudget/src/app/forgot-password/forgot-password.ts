@@ -53,7 +53,8 @@ export class ForgotPassword {
       },
       error: (error) => {
         this.loading.set(false);
-        this.errorMessage.set(error.error?.message || 'An error occurred. Please try again.');
+        this.errorMessage.set(error.error?.message || 
+            'An error occurred. Please try again.');
       }
     });
   }
