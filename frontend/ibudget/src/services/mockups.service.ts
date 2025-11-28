@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Budget } from '../models/user.model';
+import { Budget, BudgetTransaction } from '../models/user.model';
 import { Observable, of } from 'rxjs';
 
 @Injectable({
@@ -27,6 +27,65 @@ export class MockupsService {
     }
   ];
 
+  MOCK_BUDGET_TRANSACTIONS: BudgetTransaction[] = [
+    {
+      transaction_id: 1,
+      budget_id: 1,
+      user_id: 1,
+      category_id: 1,
+      transaction_date: '2025-11-05',
+      created_at: '2025-11-05',
+      updated_at: '2025-11-05',
+      description: 'Friend payment',
+      amount: 200
+    },
+    {
+      transaction_id: 2,
+      budget_id: 2,
+      user_id: 1,
+      category_id: 2,
+      transaction_date: '2025-11-06',
+      created_at: '2025-11-06',
+      updated_at: '2025-11-06',
+      description: 'Bus fare',
+      amount: 30
+    },
+    {
+      transaction_id: 3,
+      budget_id: 2,
+      user_id: 1,
+      category_id: 2,
+      transaction_date: '2025-11-07',
+      created_at: '2025-11-07',
+      updated_at: '2025-11-07',
+      description: 'Jeepney fare',
+      amount: 100
+    },
+    {
+      transaction_id: 4,
+      budget_id: 1,
+      user_id: 1,
+      category_id: 1,
+      transaction_date: '2025-11-08',
+      created_at: '2025-11-08',
+      updated_at: '2025-11-08',
+      description: 'Utility bill',
+      amount: 50
+    },
+    {
+      transaction_id: 5,
+      budget_id: 2,
+      user_id: 1,
+      category_id: 2,
+      transaction_date: '2025-11-09',
+      created_at: '2025-11-09',
+      updated_at: '2025-11-09',
+      description: 'Labubu',
+      amount: 200
+    }
+  ];
+
+  // Budget Methods
   getMockBudgets(): Observable<Budget[]> {
     return of([...this.MOCK_BUDGETS]);
   }
@@ -64,5 +123,42 @@ export class MockupsService {
   deleteMockBudget(id: number): Observable<Budget[]> {
     this.MOCK_BUDGETS = this.MOCK_BUDGETS.filter(budget => budget.id !== id);
     return of(this.MOCK_BUDGETS);
+  }
+
+  // Budget Transactions Methods
+  getAllMockBudgetTransactions(): Observable<BudgetTransaction[]> {
+    return of([...this.MOCK_BUDGET_TRANSACTIONS]);
+  }
+
+  getMockBudgetTransactionsByBudgetId(budgetId: number): Observable<BudgetTransaction[]> {
+    const filteredTransactions = this.MOCK_BUDGET_TRANSACTIONS
+      .filter(transaction => transaction.budget_id === budgetId);
+    return of(filteredTransactions);
+  }
+
+  addMockBudgetTransaction(newTransaction: BudgetTransaction): Observable<BudgetTransaction> {
+    this.MOCK_BUDGET_TRANSACTIONS = [...this.MOCK_BUDGET_TRANSACTIONS, newTransaction];
+    return of(newTransaction);
+  }
+
+  updateMockBudgetTransaction(id: number, transaction: BudgetTransaction): Observable<BudgetTransaction> {
+    this.MOCK_BUDGET_TRANSACTIONS = this.MOCK_BUDGET_TRANSACTIONS
+      .map(existingTransaction => existingTransaction.transaction_id === id ?
+        {...existingTransaction, ...transaction} : existingTransaction
+    );
+
+    const updatedTransaction = this.MOCK_BUDGET_TRANSACTIONS.find(transaction => transaction.transaction_id === id);
+
+    if(!updatedTransaction) {
+      throw new Error(`Failed to update because transaction not found.`);
+    }
+
+    return of(updatedTransaction);
+  }
+
+  deleteMockBudgetTransaction(id: number): Observable<BudgetTransaction[]> {
+    this.MOCK_BUDGET_TRANSACTIONS = this.MOCK_BUDGET_TRANSACTIONS
+      .filter(transaction => transaction.transaction_id !== id);
+    return of(this.MOCK_BUDGET_TRANSACTIONS);
   }
 }
