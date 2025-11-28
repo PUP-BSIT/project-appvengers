@@ -63,7 +63,7 @@
 
 .slogan {
   position: absolute;
-  bottom: 10%;
+  bottom: 85%;
   left: 50%;
   transform: translateX(-50%);
   width: 88%;
@@ -84,7 +84,7 @@
   height: 80%;
   max-width: 920px;
   max-height: 760px;
-  background-image: url('/assets/images/budget.png');
+  // background-image: url('/assets/images/budget.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -92,6 +92,14 @@
   pointer-events: none;
   opacity: 0.98;
   transform: translateX(-50%);
+
+  img {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 50px;
+    border: none;
+  }
 }
 
 /* --- RIGHT PANEL (Forms Side) --- */
@@ -102,6 +110,7 @@
   flex-direction: column;
   justify-content: center;
   position: relative;
+  padding-top: 100px; // reserve space for the .header-toggles
 }
 
 /* Constrain and center the forms inside the right panel */
@@ -109,7 +118,7 @@
   width: 100%;
   max-width: 460px;
   margin: 0 auto;
-  padding-top: 56px;
+  padding-top: 0; // was 56px; spacing is handled by .right-panel now
   position: relative;
   box-sizing: border-box;
 }
