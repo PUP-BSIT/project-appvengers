@@ -73,20 +73,6 @@ export type ReportRecord = {
   report: string;
 }
 
-export type SavingTransaction = {
-  transaction_id: number;
-  savings_id?: number;
-  user_id?: number;
-  transaction_date?: string;
-  savings_action?: 'Deposit' | 'Withdrawal';
-  date: Date;
-  description: string;
-  amount: number;
-  created_at: string;
-  updated_at: string;
-  deleted_at?: string;
-}
-
 export type Categories = {
   category_id: number;
   name: string;
@@ -115,4 +101,31 @@ export type Saving = {
   created_at: string;
   updated_at: string;
   deleted_at?: string;
+}
+
+export type SavingTransaction = {
+  transaction_id: number;
+  savings_id?: number;
+  user_id?: number;
+  transaction_date?: string;
+  savings_action?: 'Deposit' | 'Withdrawal';
+  date: Date;
+  description: string;
+  amount: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+}
+
+export type BudgetTransaction = {
+  transaction_id: number;
+  budget_id?: number;
+  user_id?: number;
+  category_id?: number;
+  transaction_date?: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  description: string;
+  amount: number;
 }
