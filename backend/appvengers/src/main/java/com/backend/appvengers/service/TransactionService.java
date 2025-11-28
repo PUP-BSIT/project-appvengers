@@ -1,6 +1,7 @@
 package com.backend.appvengers.service;
 
 import com.backend.appvengers.dto.ExpenseSummary;
+import com.backend.appvengers.dto.IncomeSummary;
 import com.backend.appvengers.dto.TransactionRequest;
 import com.backend.appvengers.dto.TransactionResponse;
 import com.backend.appvengers.entity.Transaction;
@@ -99,6 +100,22 @@ public class TransactionService {
         }
 
         return new ExpenseSummary(labels, values);
+    }
+
+    public IncomeSummary getIncomeSummary(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Object[]> rows = transactionRepository.findSummaryByUserAndType(user, "INCOME");
+        List<String> labels = new ArrayList<>();
+        List<Double> values = new ArrayList<>();
+
+        for (Object[] r : rows) {
+            labels.add((String) r[0]);
+            values.add(((Number) r[1]).doubleValue());
+        }
+
+        return new IncomeSummary(labels, values);
     }
 
     private TransactionResponse toResponse(Transaction t) {
