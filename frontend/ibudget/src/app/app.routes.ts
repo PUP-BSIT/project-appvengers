@@ -73,6 +73,11 @@ export const routes: Routes = [
       .then(m => m.Budgets)
   },
   {
+    path: 'budgets/view-budget/:id',
+    loadComponent: () => import('./budgets/budget-list/view-budget/view-budget')
+      .then(m => m.ViewBudget)
+  },
+  {
     path: 'savings', 
     loadComponent: () => import('./savings/savings')
       .then(m => m.Savings)
