@@ -1,10 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, signal, inject } from '@angular/core';
 import { RoundProgressComponent } from 'angular-svg-round-progressbar';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../../services/auth.service';
-import { Transaction } from '../../../models/user.model';
+import { Budget, Transaction } from '../../../models/user.model';
 import { DecimalPipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { MockupsService } from '../../../services/mockups.service';
 
 @Component({
   selector: 'app-kpi-panel',
@@ -18,45 +20,43 @@ export class KpiPanel implements OnInit {
   totalBudget: number = 0;
   totalExpenses: number = 0;
   budgetPercent: number = 0;
+  activatedRoute = inject(ActivatedRoute);
+  mockupService = inject(MockupsService);
+  currentBudget = signal<Budget>({} as Budget);
+  budgetId = signal<number>(Number(this.activatedRoute.snapshot.paramMap.get('id') ?? 1));
 
-  constructor(
-    private http: HttpClient,
-    private auth: AuthService,
-    private cd: ChangeDetectorRef
-  ) {}
+  // constructor(
+  //   private http: HttpClient,
+  //   private auth: AuthService,
+  //   private cd: ChangeDetectorRef
+  // ) {}
 
   ngOnInit(): void {
-    const token = this.auth.getToken();
-    const url = `${environment.apiUrl}/transactions`;
-    const headers = { Authorization: `Bearer ${token}` };
-
-    this.http.get<{ success: boolean; data: Transaction[] }>(url, {
-      headers
-    }).subscribe({
-      next: (res) => {
-        const txs = res.data;
-
-        const income = txs
-          .filter(tx => tx.type === 'income')
-          .reduce((sum, tx) => sum + tx.amount, 0);
-
-        const expenses = txs
-          .filter(tx => tx.type === 'expense')
-          .reduce((sum, tx) => sum + tx.amount, 0);
-
-        this.totalBudget = income;
-        this.totalExpenses = expenses;
-        this.remainingBudget = income - expenses;
-
-        this.budgetPercent = income > 0
-          ? Math.round((this.remainingBudget / income) * 100)
-          : 0;
-
-        this.cd.detectChanges();
-      },
-      error: () => {
-        console.error('Failed to load transactions for KPI panel');
-      }
+    // TODO: Change this to real fetch to database.
+    // React to id changes with a safe fallback (1)
+    this.activatedRoute.paramMap.subscribe((params) => {
+      const id = Number(params.get('id') ?? 1);
+      this.budgetId.set(id);
+      this.getBudgetData();
     });
+  }
+
+  // Fetch budget data based on budgetId (mockup service)
+  getBudgetData() {
+    const id = this.budgetId();
+    this.mockupService.getMockBudgetsById(id)
+      .subscribe({
+        next: (budget) => {
+          this.currentBudget.set(budget)
+          this.totalBudget = budget.limit_amount;
+
+          // For mockup purposes, let's assume totalExpenses is 60% of limit_amount
+          // TODO: Change this to real fetch to database.
+          this.totalExpenses = budget.limit_amount * 0.6;
+          this.remainingBudget = this.totalBudget - this.totalExpenses;
+          this.budgetPercent = (this.totalExpenses / this.totalBudget) * 100;
+        },
+        error: (err) => console.error('Failed to load budget for KPI panel', err)
+      });
   }
 }
