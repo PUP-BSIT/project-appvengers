@@ -34,18 +34,33 @@ export class SignUp {
 
   constructor() {
     this.signupForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
+      username: [
+        '',
+        [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
+      ],
+      email: [
+        '',
+        [Validators.required, Validators.email]
+      ],
+      password: [
+        '',
+        [Validators.required, Validators.minLength(6)]
+      ],
+      confirmPassword: [
+        '',
+        Validators.required
+      ]
     }, { validators: this.passwordMatchValidator });
   }
 
   private passwordMatchValidator(control: AbstractControl) {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
-      confirmPassword.setErrors({ ...confirmPassword.errors, passwordMismatch: true });
+    if (password && confirmPassword && password.value
+        !== confirmPassword.value) {
+      confirmPassword.setErrors(
+        { ...confirmPassword.errors, passwordMismatch: true }
+      );
     }
     return null;
   }
@@ -70,7 +85,8 @@ export class SignUp {
       },
       error: (error) => {
         this.loading.set(false);
-        const msg = error?.error?.message || 'An error occurred during registration';
+        const msg = error?.error?.message ||
+          'An error occurred during registration';
         this.errorMessage.set(msg); 
       }
     });
