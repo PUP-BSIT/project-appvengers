@@ -14,3 +14,9 @@ $sidebar-width: 100px;
     margin-left: 0;
   }
 }
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .budgets-container {
+    margin-left: 80px;
+  }
+}
