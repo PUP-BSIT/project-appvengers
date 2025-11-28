@@ -18,7 +18,9 @@ export class AuthService {
   }
 
   checkUsername(username: string): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${this.apiUrl}/check-username/${username}`);
+    return this.http.get<ApiResponse>(`
+      ${this.apiUrl}/check-username/${username}
+    `);
   }
 
   checkEmail(email: string): Observable<ApiResponse> {
@@ -26,19 +28,32 @@ export class AuthService {
   }
 
   verifyEmail(token: string): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${this.apiUrl}/verify-email?token=${token}`);
+    return this.http.get<ApiResponse>(`
+      ${this.apiUrl}/verify-email?token=${token}
+    `);
   }
 
-  login(credentials: { email: string; password: string }): Observable<ApiResponse<AuthData>> {
-    return this.http.post<ApiResponse<AuthData>>(`${this.apiUrl}/login`, credentials).pipe(
-      tap((res: ApiResponse<AuthData>) => {
-        if (res.success && res.data?.token) {
-          // store JWT token string in localStorage
-          localStorage.setItem('iBudget_authToken', res.data.token);
-        }
-      })
-    );
+  login(
+    credentials: { email: string; password: string }
+  ): Observable<ApiResponse<AuthData>> {
+    return this.http
+      .post<ApiResponse<AuthData>>(
+        `${this.apiUrl}/login`,
+        credentials
+      )
+      .pipe(
+        tap((res: ApiResponse<AuthData>) => {
+          if (res.success && res.data?.token) {
+            // store JWT token string in localStorage
+            localStorage.setItem(
+              'iBudget_authToken',
+              res.data.token
+            );
+          }
+        })
+      );
   }
+
 
   logout(): void {
     localStorage.removeItem('iBudget_authToken');
@@ -69,14 +84,23 @@ export class AuthService {
   }
 
   validateResetToken(token: string): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${this.apiUrl}/validate-reset-token?token=${token}`);
+    return this.http.get<ApiResponse>(`
+      ${this.apiUrl}/validate-reset-token?token=${token}
+    `);
   }
 
-  resetPassword(data: { token: string; newPassword: string; confirmPassword: string }): Observable<ApiResponse> {
+  resetPassword(
+    data: { token: string; newPassword: string; confirmPassword: string }
+  ): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${this.apiUrl}/reset-password`, data);
   }
 
-  changePassword(data: { currentPassword: string; newPassword: string; confirmPassword: string }): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${this.apiUrl}/change-password`, data);
-  }
+  changePassword(
+    data: { 
+      currentPassword: string; 
+      newPassword: string; 
+      confirmPassword: string 
+    }): Observable<ApiResponse> {
+      return this.http.post<ApiResponse>(`${this.apiUrl}/change-password`, data);
+    }
 }
