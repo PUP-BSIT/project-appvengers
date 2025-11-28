@@ -39,4 +39,10 @@ export class TransactionsService {
       map((res: ApiResponse) => res.data as { labels: string[]; values: number[] })
     );
   }
+
+  getIncomeSummary(): Observable<{ labels: string[]; values: number[] }> {
+    return this.http.get<ApiResponse>(`${this.base}/summary/income`).pipe(
+      map((res: ApiResponse) => res.data as { labels: string[]; values: number[] })
+    );
+  }
 }
