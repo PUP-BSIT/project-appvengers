@@ -36,8 +36,7 @@ export class AuthService {
   login(
     credentials: { email: string; password: string }
   ): Observable<ApiResponse<AuthData>> {
-    return this.http
-      .post<ApiResponse<AuthData>>(
+    return this.http.post<ApiResponse<AuthData>>(
         `${this.apiUrl}/login`,
         credentials
       )
