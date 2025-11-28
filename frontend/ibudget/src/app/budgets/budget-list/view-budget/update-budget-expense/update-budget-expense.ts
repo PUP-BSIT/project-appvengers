@@ -47,8 +47,11 @@ export class UpdateBudgetExpense implements OnInit {
       updated_at: this.date()
     });
 
-    // Patch Form with Transaction Data
-    this.getTransactionData();
+    // Only fetch if transactionId is truthy
+    const id = this.transactionId();
+    if (id && id > 0) {
+      this.getTransactionData();
+    }
   }
 
   openModal() {
@@ -68,7 +71,10 @@ export class UpdateBudgetExpense implements OnInit {
 
   // Get Mock Transaction Data by ID
   getTransactionData() {
-    this.mockupService.getMockBudgetTransactionById(this.transactionId())
+    const id = this.transactionId();
+    if (!id || id <= 0) return;
+
+    this.mockupService.getMockBudgetTransactionById(id)
       .subscribe((transaction: BudgetTransaction) => {
         this.updateBudgetExpenseForm.patchValue({
           transaction_id: transaction.transaction_id,
