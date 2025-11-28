@@ -1,4 +1,4 @@
-<div class="card income-chart-container">
+<div class="card chart-container">
   <div class="card-body">
     <div class="card-title">
       <h4>Main Income</h4>
@@ -6,18 +6,18 @@
 
     <div class="chart-wrapper">
       <div class="description">
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-        </p>
+        <p>A look into your income summary.</p>
       </div>
 
-      <div>
-        <canvas 
-          baseChart 
-          width="250" 
-          height="250" 
-          type="doughnut" 
-          [data]="incomeChartData"></canvas>
+      <div class="chart-canvas">
+        <canvas
+          baseChart
+          height="250"
+          width="250"
+          [data]="pieChartData"
+          [options]="pieChartOptions"
+          [type]="'doughnut'">
+        </canvas>
       </div>
     </div>
   </div>
