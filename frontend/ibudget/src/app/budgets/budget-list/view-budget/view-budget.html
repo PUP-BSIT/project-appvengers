@@ -1,0 +1,52 @@
+<app-sidebar/>
+<app-header/>
+
+<main>
+  <!-- Key Performance Indicator Panel -->
+  <app-kpi-panel/>
+
+  <!-- Budgets Transactions Goes Here -->
+  <div class="expenses-history-container">
+    <div class="title-actions-container">      
+      <div>
+        <h4>Expenses History</h4>
+      </div>
+
+      <div>
+        <app-add-budget-expense
+        (addBudgetExpenseResponse)="onBudgetExpenseAdded($event)"/>
+      </div>
+    </div>
+
+    <div class="expenses-table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Description</th>
+            <th scope="col">Category</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for(transaction of budgetExpenses(); track $index) {
+            <tr>
+              <td>{{ transaction.transaction_date }}</td>
+              <td>{{ transaction.description }}</td>
+              <td>{{ transaction.category_id }}</td>
+              <td>&#8369; 5000.00</td>
+              <td>
+                <button class="btn btn-sm btn-warning me-2">
+                  Edit
+                </button>
+                <button class="btn btn-sm btn-danger">
+                  Delete
+                </button>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
