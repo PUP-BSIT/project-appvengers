@@ -2,6 +2,7 @@ package com.backend.appvengers.controller;
 
 import com.backend.appvengers.dto.ApiResponse;
 import com.backend.appvengers.dto.ExpenseSummary;
+import com.backend.appvengers.dto.IncomeSummary;
 import com.backend.appvengers.dto.TransactionRequest;
 import com.backend.appvengers.dto.TransactionResponse;
 import com.backend.appvengers.service.TransactionService;
@@ -70,5 +71,21 @@ public class TransactionController {
         String email = auth.getName();
         transactionService.delete(email, id);
         return ResponseEntity.ok(new ApiResponse(true, "Transaction deleted"));
+    }
+
+    // Expense summary endpoint
+    @GetMapping("/summary/expense")
+    public ResponseEntity<ApiResponse> getExpenseSummary(Authentication auth) {
+        String email = auth.getName();
+        ExpenseSummary summary = transactionService.getExpenseSummary(email);
+        return ResponseEntity.ok(new ApiResponse(true, "Expense summary fetched", summary));
+    }
+
+    // Income summary endpoint
+    @GetMapping("/summary/income")
+    public ResponseEntity<ApiResponse> getIncomeSummary(Authentication auth) {
+        String email = auth.getName();
+        IncomeSummary summary = transactionService.getIncomeSummary(email);
+        return ResponseEntity.ok(new ApiResponse(true, "Income summary fetched", summary));
     }
 }
