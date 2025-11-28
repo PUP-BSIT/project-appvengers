@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Chart, registerables } from 'chart.js';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { IncomeChart } from './income-chart';
 
@@ -11,7 +12,7 @@ describe('IncomeChart', () => {
     Chart.register(...registerables);
     
     await TestBed.configureTestingModule({
-      imports: [IncomeChart]
+      imports: [IncomeChart, HttpClientTestingModule]
     })
     .compileComponents();
 
