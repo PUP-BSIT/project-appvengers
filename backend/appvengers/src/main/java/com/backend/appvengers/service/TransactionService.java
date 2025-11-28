@@ -86,6 +86,7 @@ public class TransactionService {
         transactionRepository.delete(t);
     }
 
+    // 🔹 Expense summary
     public ExpenseSummary getExpenseSummary(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -102,11 +103,12 @@ public class TransactionService {
         return new ExpenseSummary(labels, values);
     }
 
+    // 🔹 Income summary (added)
     public IncomeSummary getIncomeSummary(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<Object[]> rows = transactionRepository.findSummaryByUserAndType(user, "INCOME");
+        List<Object[]> rows = transactionRepository.findIncomeSummaryByUserAndType(user, "INCOME");
         List<String> labels = new ArrayList<>();
         List<Double> values = new ArrayList<>();
 
