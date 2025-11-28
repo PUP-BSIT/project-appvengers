@@ -30,20 +30,31 @@
           </tr>
         </thead>
         <tbody>
-          @for(transaction of budgetExpenses(); track $index) {
+          @if(budgetExpenses().length === 0) {
             <tr>
-              <td>{{ transaction.transaction_date }}</td>
-              <td>{{ transaction.description }}</td>
-              <td>{{ transaction.category_id }}</td>
-              <td>&#8369; 5000.00</td>
-              <td>
-                <button class="btn btn-sm btn-warning me-2">
-                  Edit
-                </button>
-                <button class="btn btn-sm btn-danger">
-                  Delete
-                </button>
+              <td colspan="5" class="text-center">
+                No budget expenses found.
+              </td>
             </tr>
+          } @else {
+              @for(transaction of budgetExpenses(); track $index) {
+              <tr>
+                <td>{{ transaction.transaction_date }}</td>
+                <td>{{ transaction.description }}</td>
+                <td>{{ transaction.category_id }}</td>
+                <td>&#8369; {{ transaction.amount }}</td>
+                <td>
+                  <app-update-budget-expense
+                  [transactionId]="transaction.transaction_id"
+                  (updateBudgetExpenseResponse)="onBudgetExpenseUpdated($event)"/>
+
+                  <button 
+                    class="btn btn-sm btn-danger" 
+                    (click)="deleteBudgetExpense(transaction.transaction_id)">
+                    Delete
+                  </button>
+              </tr>
+            }
           }
         </tbody>
       </table>
