@@ -11,7 +11,7 @@ export const authGuard: CanActivateFn = () => {
   // check if a token exists locally
   const token = authService.getToken();
   if (!token) {
-    router.navigate(['/login-page']);
+    router.navigate(['/auth-page']);
     return false;
   }
 
@@ -22,14 +22,14 @@ export const authGuard: CanActivateFn = () => {
         return true; // token is valid, allow navigation
       } else {
         authService.logout();
-        router.navigate(['/login-page']);
+        router.navigate(['/auth-page']);
         return false;
       }
     }),
     catchError(() => {
       // backend unreachable or token invalid
       authService.logout();
-      router.navigate(['/login-page']);
+      router.navigate(['/auth-page']);
       return of(false);
     })
   );
