@@ -19,51 +19,23 @@
 
         <div class="card-body">
           <form [formGroup]="accountSettingsForm" class="account-form-container">
-            <div class="first-row">
-              <div class="first-row-input">
-                <label for="first_name">First Name</label>
-                <input 
-                  formControlName="first_name" 
-                  id="first_name"
-                  class="form-control"
-                  placeholder="First Name"
-                  type="text"/>
-
-                @if(firstName?.errors?.['required'] && firstName?.touched) {
-                  <span class="text-danger small mt-1">
-                    First Name is required.
-                  </span>
-                }
-              </div>
-
-              <div class="first-row-input ">
-                <label for="last_name">Last Name</label>
-                <input 
-                  formControlName="last_name" 
-                  id="last_name"
-                  class="form-control"
-                  placeholder="Last Name"
-                  type="text"/>
-
-                @if(lastName?.errors?.['required'] && lastName?.touched) {
-                  <span class="text-danger small mt-1">
-                    Last Name is required.
-                  </span>
-                }
-              </div>
-            </div>
-              
-            <div class="second-row">
-              <label for="middle_name">Middle Name</label>
+            <div class="fourth-row">
+              <label for="username">Username</label>
               <input 
-                formControlName="middle_name" 
-                id="middle_name"
+                formControlName="username" 
+                id="username"
                 class="form-control"
-                placeholder="Middle Name (Optional)"
+                placeholder="Username"
                 type="text"/>
-            </div>
 
-            <div class="third-row">
+              @if(username?.errors?.['required'] && username?.touched) {
+                <span class="text-danger small mt-1">
+                  Username is required.
+                </span>
+              }
+          </div>
+
+          <div class="third-row">
               <label for="email">Email</label>
               <input 
                 formControlName="email" 
@@ -85,55 +57,6 @@
               }
             </div>
             
-            <div class="fourth-row">
-              <label for="username">Username</label>
-              <input 
-                formControlName="username" 
-                id="username"
-                class="form-control"
-                placeholder="Username"
-                type="text"/>
-
-              @if(username?.errors?.['required'] && username?.touched) {
-                <span class="text-danger small mt-1">
-                  Username is required.
-                </span>
-              }
-          </div>
-            
-            <div class="fifth-row">
-              <div class="fifth-row-input">
-                <label for="birthdate">Birthdate</label>
-                <input 
-                  formControlName="birthdate" 
-                  id="birthdate"
-                  class="form-control"
-                  type="date" />
-
-                @if(birthdate?.errors?.['required'] && birthdate?.touched) {
-                  <span class="text-danger small mt-1">
-                    Birthdate is required.
-                  </span>
-                } 
-              </div> 
-          
-              <div class="fifth-row-input">
-                <label for="gender">Gender</label>
-                <select id="gender" formControlName="gender" class="form-select">
-                  <option value="" selected disabled>Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="N/A">Rather not say</option>
-                </select>
-
-                @if(gender?.errors?.['required'] && gender?.touched) {
-                  <span class="text-danger small mt-1">
-                    Gender is required.
-                  </span>
-                } 
-              </div>
-            </div>
-        
             <button class="btn btn-primary">Save</button>
           </form>
         </div>
