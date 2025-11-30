@@ -76,6 +76,11 @@ main {
 }
 
 .table {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+
   .actions {
     button {
       font-size: 0.9rem;
