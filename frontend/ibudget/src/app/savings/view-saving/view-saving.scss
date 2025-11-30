@@ -75,6 +75,35 @@ main {
   }
 }
 
+.table {
+  .actions {
+    button {
+      font-size: 0.9rem;
+      padding: 5px 10px;
+    }
+  }
+
+  th {
+    font-weight: 600;
+  }
+
+  tr {
+    td {
+      vertical-align: middle;
+    }
+  }
+
+  // base cells transition
+  tbody tr > * {
+    transition: background-color .3s ease-in-out;
+  }
+
+  tbody tr:hover > * {
+    background-color: #e1e1e1 !important;
+    cursor: pointer;
+  }
+}
+
 @media (max-width: 320px) {
   main {
     margin-left: 0;
