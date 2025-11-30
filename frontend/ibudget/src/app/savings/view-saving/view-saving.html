@@ -73,22 +73,22 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="card-footer d-flex gap-2">
-      <button 
-        type="button"
-        class="btn btn-sm btn-warning"
-        [routerLink]="['/savings/update-saving', savingId()]">
-          Edit Saving
-      </button>
+  <div class="card d-flex flex-row gap-2 justify-content-start p-3 mt-3">
+    <button 
+      type="button"
+      class="btn btn-sm btn-warning"
+      [routerLink]="['/savings/update-saving', savingId()]">
+        Edit Saving
+    </button>
 
-      <button
-        type="button"
-        class="btn btn-sm btn-danger"
-        (click)="deleteSaving()">
-          Delete Saving
-      </button>
-    </div>
+    <button
+      type="button"
+      class="btn btn-sm btn-danger"
+      (click)="deleteSaving()">
+        Delete Saving
+    </button>
   </div>
 
   <div class="mt-5">
