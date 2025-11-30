@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, output, signal } from '@angular/core';
 import { Sidebar } from "../../sidebar/sidebar";
 import { Header } from "../../header/header";
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -30,6 +30,7 @@ export class AddSaving implements OnInit {
       frequency: [''],
       target_amount: [''],
       current_amount: [0],
+      description: [''],
       created_at: [''],
       updated_at: [''],
       deleted_at: ['']
@@ -49,12 +50,11 @@ export class AddSaving implements OnInit {
       frequency: [''],
       target_amount: [''],
       current_amount: [0],
+      description: [''],
       created_at: [''],
       updated_at: [''],
       deleted_at: ['']
     });
-
-    console.log('New Saving ID:', newSavingId);
   }
 
   getSavingsLength() {
@@ -65,8 +65,7 @@ export class AddSaving implements OnInit {
 
   addSaving() {
     this.savingService.addSaving(this.addSavingForm.value)
-      .subscribe((newSaving) => {
-        console.log('New saving added:', newSaving);
+      .subscribe(() => {
         this.router.navigate(['/savings']);
       });
   }
