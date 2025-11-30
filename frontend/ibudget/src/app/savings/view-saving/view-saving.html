@@ -64,7 +64,7 @@
 
         <div class="mh-3 alert alert-info info-card">
           <i class="bi bi-calendar-week m-1"></i>
-          <label class="text-info-emphasis mb-1">Daily Saving</label>
+          <label class="text-info-emphasis mb-1">Daily Saving Needed</label>
           @if(getDailySavingsNeeded() === 0) {
             <p>Goal date has passed or no remaining amount.</p>
           } @else {
@@ -107,7 +107,7 @@
       </div>
       
       <div class="table-container">
-        <table class="table table-striped">
+        <table class="table">
           <thead>
             <tr class="table-dark">
               <th>Date</th>
@@ -132,10 +132,12 @@
                   <td>{{ transaction.transaction_date }}</td>
                   @if(transaction.savings_action === 'Deposit') {
                     <td class="text-success">
+                      <i class="bi bi-arrow-up-circle-fill"></i>
                       {{ transaction.savings_action }}
                     </td>
                   } @else if(transaction.savings_action === 'Withdrawal') {
                     <td class="text-danger">
+                      <i class="bi bi-arrow-down-circle-fill"></i>
                       {{ transaction.savings_action }}
                     </td>
                   } @else {
