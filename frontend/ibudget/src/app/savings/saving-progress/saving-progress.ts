@@ -8,6 +8,7 @@ import { Component, input, OnInit } from '@angular/core';
 })
 export class SavingProgress implements OnInit {
   progressPercentage = input(0);
+  showType = input <'show-text' | 'hide-text'>('hide-text');
 
   ngOnInit(): void {
     console.log('Progress Percentage:', this.progressPercentage());
