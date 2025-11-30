@@ -20,13 +20,14 @@ export class AddSaving implements OnInit {
   formBuilder = inject(FormBuilder);
   currentSaving = signal(<Saving>{});
   savingsLength = signal(1);
+  dateNow = new Date().toISOString().split('T')[0];
 
   constructor() {
     this.addSavingForm = this.formBuilder.group({
       savings_id: [''],
       user_id: [1],
       name: [''],
-      goal_date: [''],
+      goal_date: [this.dateNow],
       frequency: [''],
       target_amount: [''],
       current_amount: [0],
@@ -46,13 +47,13 @@ export class AddSaving implements OnInit {
       savings_id: [newSavingId],
       user_id: [1],
       name: [''],
-      goal_date: [''],
+      goal_date: [this.dateNow],
       frequency: [''],
       target_amount: [''],
       current_amount: [0],
       description: [''],
-      created_at: [''],
-      updated_at: [''],
+      created_at: [this.dateNow],
+      updated_at: [this.dateNow],
       deleted_at: ['']
     });
   }
