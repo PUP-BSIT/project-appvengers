@@ -113,13 +113,14 @@
               <th>Date</th>
               <th>Type</th>
               <th>Amount</th>
+              <th>Description</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             @if(filteredTransactions().length === 0) {
               <tr>
-                <td colspan="4" class="text-center">
+                <td colspan="5" class="text-center">
                   No transaction history available.
                 </td>
               </tr>
@@ -129,8 +130,25 @@
               @for(transaction of filteredTransactions(); track transaction.transaction_id) {
                 <tr>
                   <td>{{ transaction.transaction_date }}</td>
-                  <td>{{ transaction.savings_action }}</td>
-                  <td>${{ transaction.amount.toFixed(2) }}</td>
+                  @if(transaction.savings_action === 'Deposit') {
+                    <td class="text-success">
+                      {{ transaction.savings_action }}
+                    </td>
+                  } @else if(transaction.savings_action === 'Withdrawal') {
+                    <td class="text-danger">
+                      {{ transaction.savings_action }}
+                    </td>
+                  } @else {
+                    <td>
+                      {{ transaction.savings_action }}
+                    </td>
+                  }
+                  <td class="text-secondary-emphasis">
+                    &#8369; {{ transaction.amount.toFixed(2) }}
+                  </td>
+                  <td class="text-secondary-emphasis">
+                    {{ transaction.description }}
+                  </td>
                   <td class="d-flex gap-1 justify-content-center actions">
                     <app-update-saving-transaction 
                       [transactionId]="transaction.transaction_id"
