@@ -98,6 +98,7 @@ export type Saving = {
   frequency: string;
   target_amount: number;
   current_amount: number;
+  description?: string;
   created_at: string;
   updated_at: string;
   deleted_at?: string;
