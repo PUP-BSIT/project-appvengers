@@ -30,7 +30,7 @@
       <div class="mb-3">
         <label for="frequency" class="form-label">Frequency</label>
         <select class="form-select" id="frequency" formControlName="frequency">
-          <option selected>Select frequency</option>
+          <option value="" disabled selected>Select frequency</option>
           <option value="daily">Daily</option>
           <option value="weekly">Weekly</option>
           <option value="monthly">Monthly</option>
@@ -57,8 +57,18 @@
           title="This is readonly and cannot be changed manually."
           readonly>
       </div>
+
+      <div>
+        <label for="description" class="form-label">Description</label>
+        <textarea 
+          class="form-control" 
+          id="description" 
+          rows="3"
+          formControlName="description"
+          placeholder="Enter description (optional)"></textarea>
+      </div>
   
-      <div class="actions-container d-flex gap-2 align-items-center">
+      <div class="actions-container d-flex gap-2 align-items-center mt-2">
         <button 
           class="btn btn-secondary"
           routerLink="/savings">

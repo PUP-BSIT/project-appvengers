@@ -30,6 +30,7 @@ export class UpdateSaving implements OnInit{
       frequency: [''],
       target_amount: [''],
       current_amount: [0],
+      description: [''],
       created_at: [''],
       updated_at: [''],
       deleted_at: ['']
@@ -49,6 +50,7 @@ export class UpdateSaving implements OnInit{
       frequency: [this.currentSaving().frequency],
       target_amount: [this.currentSaving().target_amount],
       current_amount: [this.currentSaving().current_amount],
+      description: [this.currentSaving().description],
       created_at: [this.currentSaving().created_at],
       updated_at: [this.currentSaving().updated_at],
       deleted_at: [this.currentSaving().deleted_at]
@@ -56,8 +58,9 @@ export class UpdateSaving implements OnInit{
   }
 
   getSavingsData() {
-    this.savingService.getSavingById(this.savingId()).subscribe((savingData) => {
-      this.currentSaving.set(savingData);
+    this.savingService.getSavingById(this.savingId())
+      .subscribe((savingData) => {
+        this.currentSaving.set(savingData);
     });
   }
 
