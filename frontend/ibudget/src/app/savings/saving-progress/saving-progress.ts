@@ -1,4 +1,4 @@
-import { Component, input, OnInit } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-saving-progress',
@@ -6,11 +6,7 @@ import { Component, input, OnInit } from '@angular/core';
   templateUrl: './saving-progress.html',
   styleUrl: './saving-progress.scss',
 })
-export class SavingProgress implements OnInit {
+export class SavingProgress {
   progressPercentage = input(0);
   showType = input <'show-text' | 'hide-text'>('hide-text');
-
-  ngOnInit(): void {
-    console.log('Progress Percentage:', this.progressPercentage());
-  }
 }
