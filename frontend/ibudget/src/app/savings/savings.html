@@ -11,7 +11,7 @@
 
       <div>
         <button 
-          class="btn btn-sm btn-success"
+          class="btn btn-success"
           routerLink="/savings/add-saving">
             Add New Saving
         </button>
@@ -19,20 +19,45 @@
     </div>
     
     <div class="savings-container">
+      @if(savings().length === 0) {
+        <p class="no-savings-message">
+          No savings goals found. Click "Add New Saving" to create one.
+        </p>
+      }
+      
       @for(saving of savings(); track saving.savings_id) {
-        <div class="card">
-          <div class="card-header bg-dark text-white p-3">
+        <div class="card m-2">
+          <div class="card-header bg-dark text-white">
             <h5 class="card-title">{{ saving.name }}</h5>
           </div>
 
           <div class="card-body">
-            <p class="card-text">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            </p>
+            <p class="card-text">{{ saving.description }}</p>
+
+            <div class="progress-information">
+              <label>Progress</label>
+              <h6>{{ getProgressPercentage(saving) }}%</h6>
+            </div>
+
+            <div class="saving-progress-container">
+              <app-saving-progress 
+                [progressPercentage]="getProgressPercentage(saving)"/>
+            </div>
+
+            <div class="progress-information  mt-2">
+              <p>&#8369; {{ saving.current_amount }}</p>
+              <p>&#8369; {{ saving.target_amount }}</p>
+            </div>
+
+            <div class="progress-information">
+              <label>Goal Date</label>
+              <h6>{{ saving.goal_date }}</h6>
+            </div>
           </div>
-          <div class="card-footer">
+
+          <div class="card-footer d-flex bg-white p-3">
             <button 
-              class="btn btn-sm btn-primary"
+              class="btn btn-primary w-100"
               [routerLink]="'/savings/view-saving/' + saving.savings_id">
                 View Details
             </button>

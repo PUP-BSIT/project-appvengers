@@ -11,11 +11,11 @@ main {
 .inner-wrapper  {
   display: flex;
   flex-direction: column;
-  background-color: $card-color;
-  padding: 40px;
+  // background-color: $card-color;
+  padding: 20px;
   border-radius: 8px;
-  border: 1px solid $border-color;
-  box-shadow: $box-shadow-definition;
+  // border: 1px solid $border-color;
+  // box-shadow: $box-shadow-definition;
 }
 
 .actions-container {
@@ -31,14 +31,64 @@ main {
 
 .savings-container {
   display: flex;
-  justify-content: center;
+  justify-content:  flex-start;
   align-items: flex-start;
-  gap: 1em;
+  gap: .5em;
   flex-wrap: wrap;
 }
 
+.no-savings-message {
+  font-size: 1rem;
+  color: #666;
+  margin: auto;
+}
+
 .card {
-  width: 16rem;
+  width: 20.5rem;
+
+  &:hover {
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease-in-out;
+  }
+}
+
+.card-header {
+  padding: 20px;
+}
+
+.card-title {
+  margin-bottom: 0;
+}
+
+.card-text {
+  color: #666;
+}
+
+.card-body {
+  height: 200px;
+  // max-height: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.progress-information {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #666;
+  font-size: 14px;
+
+  h6 {
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+
+  p:nth-child(2) {
+    color: #333;
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 320px) {
