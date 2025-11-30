@@ -16,6 +16,14 @@ main {
     gap: 2em;
     align-items: center;
     padding: 20px;
+    height: 290px;
+    max-height: 300px;
+
+    span {
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -29,6 +37,42 @@ main {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-cards {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+}
+
+.info-card {
+  width: 13.8rem;
+  max-width: 13.8rem;
+}
+
+.app-saving-progress-container {
+  width: 100%;
+}
+
+.information-container {
+  display: flex;
+  flex-direction: row;
+  gap: 5em;
+}
+
+.bi-arrow-return-left {
+  font-size: 1.5rem;
+  cursor: pointer;
+
+  &:hover {
+    color: #ccc;
+    transition: color 0.3s ease-in-out;
+  }
 }
 
 @media (max-width: 320px) {
