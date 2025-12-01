@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 import { SidebarService } from '../../services/sidebar.service';
 import { SidebarOverlay } from '../sidebar-overlay/sidebar-overlay';
 import { AuthService } from '../../services/auth.service';
-import { Bootstrap, Tooltip } from '../../models/user.model';
+import { Tooltip } from 'bootstrap';
 
-declare const bootstrap: Bootstrap;
+declare const bootstrap: typeof import('bootstrap');
 
 @Component({
   selector: 'app-sidebar',
@@ -34,7 +34,7 @@ export class Sidebar implements AfterViewInit, OnDestroy {
 
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     this.tooltips = [...tooltipTriggerList].map(tooltipTriggerEl => 
-      new bootstrap.Tooltip(tooltipTriggerEl, {
+      new Tooltip(tooltipTriggerEl as Element, {
         trigger: 'hover',
         delay: { show: 300, hide: 100 }
       })
