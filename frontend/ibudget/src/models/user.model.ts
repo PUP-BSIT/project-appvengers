@@ -130,11 +130,3 @@ export type BudgetTransaction = {
   description: string;
   amount: number;
 }
-
-export type Tooltip = {
-  dispose(): void;
-}
-
-export type Bootstrap = {
-  Tooltip: new (element: Element, options?: Record<string, unknown>) => Tooltip;
-}
