@@ -8,6 +8,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px 100px;
+
+  div:nth-child(1), div:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .progress-container {
@@ -25,7 +31,7 @@
 }
 
 .card-footer {
-  gap: 50px;
+  height: 40px;
 }
 
 @media (min-width: 320px) and (max-width: 424px) {

@@ -7,10 +7,28 @@
     <div class="card-body">
       <div class="budget-info-wrapper">
         <div>
-          <h2 class="text-primary fw-bold mb-0">
-            {{ remainingBudget | number:'1.2-2' }}
-          </h2>
-          <span class="text-secondary">Remaining Budget</span>
+          <div>
+            <h2 class="text-primary fw-bold mb-0">
+              &#8369; {{ remainingBudget | number:'1.2-2' }}
+            </h2>
+            <span class="text-secondary  mb-2">Remaining Budget</span>
+          </div>
+
+          <div>
+            <div>
+              <h6 class="mb-0">Total Budget: </h6>
+              <span class="text-success fw-semibold mb-2">
+                &#8369; {{ totalBudget | number:'1.2-2' }}
+              </span>
+            </div>
+        
+            <div>
+              <h6 class="mb-0">Total Expenses: </h6>
+              <span class="fw-semibold text-danger">
+                &#8369; {{ totalExpenses | number:'1.2-2' }}
+              </span>
+            </div>
+          </div>
         </div>
 
         <div class="progress-container">
@@ -30,20 +48,6 @@
       </div>
     </div>
 
-    <div class="card-footer d-flex justify-content-center">
-      <div>
-        <span class="h6">Total Budget: &#8369; </span>
-        <span class="text-success fw-semibold">
-          {{ totalBudget | number:'1.2-2' }}
-        </span>
-      </div>
-      
-      <div>
-        <span class="h6">Total Expenses: &#8369; </span>
-        <span class="fw-semibold" style="color: #e74c3c;">
-          {{ totalExpenses | number:'1.2-2' }}
-        </span>
-      </div>
-    </div>
+    <div class="card-footer d-flex justify-content-center"></div>
   </div>
 </div>
