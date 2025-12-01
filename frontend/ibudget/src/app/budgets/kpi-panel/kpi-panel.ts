@@ -1,9 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, signal, inject } from '@angular/core';
 import { RoundProgressComponent } from 'angular-svg-round-progressbar';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { AuthService } from '../../../services/auth.service';
-import { Budget, Transaction } from '../../../models/user.model';
+import { Budget } from '../../../models/user.model';
 import { DecimalPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MockupsService } from '../../../services/mockups.service';
