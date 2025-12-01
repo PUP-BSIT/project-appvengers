@@ -1,9 +1,12 @@
-import { Component, computed, inject, signal, HostListener } from '@angular/core';
+import { Component, computed, inject, signal, HostListener, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SidebarService } from '../../services/sidebar.service';
 import { SidebarOverlay } from '../sidebar-overlay/sidebar-overlay';
 import { AuthService } from '../../services/auth.service';
+import { Bootstrap, Tooltip } from '../../models/user.model';
+
+declare const bootstrap: Bootstrap;
 
 @Component({
   selector: 'app-sidebar',
@@ -12,12 +15,31 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './sidebar.scss'
 })
 
-export class Sidebar {
+export class Sidebar implements AfterViewInit, OnDestroy {
   private sidebarService = inject(SidebarService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private tooltips: Tooltip[] = [];
 
   isOpen = computed(() => this.sidebarService.isOpen());
+
+  ngAfterViewInit(): void {
+    this.initializeTooltips();
+  }
+
+  private initializeTooltips(): void {
+    // Dispose existing tooltips first
+    this.tooltips.forEach(tooltip => tooltip.dispose());
+    this.tooltips = [];
+
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    this.tooltips = [...tooltipTriggerList].map(tooltipTriggerEl => 
+      new bootstrap.Tooltip(tooltipTriggerEl, {
+        trigger: 'hover',
+        delay: { show: 300, hide: 100 }
+      })
+    );
+  }
 
   showLogoutModal = signal(false);
 
@@ -42,6 +64,10 @@ export class Sidebar {
       this.cancelLogout();
       event.preventDefault();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.tooltips.forEach(tooltip => tooltip.dispose());
   }
 
 }
