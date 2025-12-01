@@ -1,16 +1,132 @@
+@mixin category-info-container-styles($font-size: 30px) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+  width: 313px;
+
+  label {
+    font-size: 14px;
+    color: gray;
+  }
+
+  span {
+    font-size: $font-size;
+    font-weight: light;
+  }
+}
+
 .budget-container {
-  margin: 30px 50px;
+  margin: 10px 20px;
 }
 
 .budget-list-container {
   margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  flex-wrap: wrap;
 }
 
 .budget-info-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 50px;
+  margin-top: 20px;
+}
+
+.budget-cards-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+
+  span {
+    font-size: 15px;
+    color: black;
+  }
+
+  .extra-info {
+    font-size: 20px !important;
+    color: gray;
+  }
+}
+
+.budget-card {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.budget-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 315px;
+}
+
+.budget-card-body {
+  display: flex;
+  flex-direction: column;
+  // justify-content: space-between;
+  align-items: center;
+  width: 345px;
+}
+
+.b-card-height {
+  height: 250px;
+}
+
+.category-info-container {
+  @include category-info-container-styles;
+}
+
+.category-info-container-budget-list {
+  @include category-info-container-styles(13px);
+}
+
+.budget-progress-bar-container {
+  width: 90%;
+  margin-top: 10px;
+}
+
+.amount-container {
+  display: flex;
+  flex-direction: row;
+  flex-direction: flex-start;
+  justify-content: space-between;
+  gap: 4px;
+  width: 86%;
+}
+
+.progress {
+  height: 20px
+}
+
+.remaining-amount {
+  color: green;
+  font-weight: 400;
+  margin-top: 10px;
+  text-align: start;
+  width: 86%;
+}
+
+.budget-card-action {
+  margin-top: 15px;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+
+  button {
+    width: 100%;
+  }
+}
+
+.spent-amount {
+  span {
+    color: red;
+    font-weight: 400;
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 768px) {
