@@ -17,7 +17,10 @@
       <a 
         class="nav-link" 
         routerLink="/dashboard"
-        routerLinkActive="active">
+        routerLinkActive="active"
+        title="Dashboard"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right">
         <i class="bi bi-house-door"></i>
         <!-- <span>Dashboard</span> -->
       </a>
@@ -28,7 +31,10 @@
       <a 
         class="nav-link" 
         routerLink="/transactions"
-        routerLinkActive="active">
+        routerLinkActive="active"
+        title="Transactions"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right">
         <i class="bi bi-arrow-left-right"></i>
         <!-- <span>Transactions</span> -->
       </a>
@@ -39,7 +45,10 @@
       <a 
         class="nav-link" 
         routerLink="/budgets"
-        routerLinkActive="active">
+        routerLinkActive="active"
+        title="Budgets"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right">
         <i class="bi bi-wallet2"></i>
         <!-- <span>Budgets</span> -->
       </a>
@@ -50,7 +59,10 @@
       <a 
         class="nav-link" 
         routerLink="/savings"
-        routerLinkActive="active">
+        routerLinkActive="active"
+        title="Savings"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right">
         <i class="bi bi-piggy-bank"></i>
         <!-- <span>Savings</span> -->
       </a>
@@ -61,7 +73,10 @@
       <a 
         class="nav-link" 
         routerLink="/categories"
-        routerLinkActive="active">
+        routerLinkActive="active"
+        title="Categories"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right">
         <i class="bi bi-tags"></i>
         <!-- <span>Categories</span> -->
       </a>
@@ -72,7 +87,10 @@
       <a 
         class="nav-link" 
         routerLink="/reports"
-        routerLinkActive="active">
+        routerLinkActive="active"
+        title="Reports"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right">
         <i class="bi bi-bar-chart"></i>
         <!-- <span>Reports</span> -->
       </a>
@@ -83,7 +101,10 @@
       <a 
         class="nav-link" 
         routerLink="/settings/account/1"
-        routerLinkActive="active">
+        routerLinkActive="active"
+        title="Settings"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right">
         <i class="bi bi-gear"></i>
         <!-- <span>Settings</span> -->
       </a>
@@ -91,7 +112,11 @@
 
     <!-- Logout -->
     <div class="nav-item">
-      <a class="nav-link" (click)="openLogoutModal()">
+      <a class="nav-link" 
+         (click)="openLogoutModal()"
+         title="Logout"
+         data-bs-toggle="tooltip"
+         data-bs-placement="right">
         <i class="bi bi-box-arrow-right"></i>
         <!-- <span>Logout</span> -->
       </a>
