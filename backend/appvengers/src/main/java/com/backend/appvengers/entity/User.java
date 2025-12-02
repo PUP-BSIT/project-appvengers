@@ -33,25 +33,10 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "middle_name")
-    private String middleName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
     @Column(unique = true, nullable = false)
     private String email;
-
-    @Column(name = "gender")
-    private String gender;
-
-    @Column(name = "birthdate")
-    private String birthdate;
 
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters")
