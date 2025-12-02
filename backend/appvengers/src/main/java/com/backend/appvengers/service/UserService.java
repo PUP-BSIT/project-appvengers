@@ -144,11 +144,6 @@ public class UserService {
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         // Update user fields after account setup    
-        user.setFirstName(userData.getFirstName());
-        user.setMiddleName(userData.getMiddleName());
-        user.setLastName(userData.getLastName());
-        user.setGender(userData.getGender());
-        user.setBirthdate(userData.getBirthdate());
         userRepository.save(user);
 
         return new ApiResponse(true, "User information updated successfully", user.getUsername());
