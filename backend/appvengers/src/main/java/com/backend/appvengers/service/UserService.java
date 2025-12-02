@@ -98,7 +98,7 @@ public class UserService {
         return new ApiResponse(true, "Signup successful, Please check your email.", response);
     }
 
-    // This will only verify the email using the token sent to user's email (verification email).
+    /* This checks and verifies the email token of the user */
     public ApiResponse verifyEmailToken(String token) {
         return userRepository.findByEmailVerificationToken(token)
             .map(user -> {
@@ -110,43 +110,15 @@ public class UserService {
                     userRepository.save(user);
                     return new ApiResponse(false, "Verification token has expired");
                 }
-                // keep token until account setup completes (frontend will call verify-account-setup)
-                return new ApiResponse(true, "Verification token is valid", user.getUsername());
-            })
-            .orElseGet(() -> new ApiResponse(false, "Invalid verification token"));
-    }
-
-    // This will set the token to null and emailVerified to true if the user 
-    // submit info in the frontend (setup-account page).
-    public ApiResponse verifyAccountSetupToken(String token) {
-        return userRepository.findByEmailVerificationToken(token)
-            .map(user -> {
-                LocalDateTime expiry = user.getEmailVerificationExpiration();
-                if (expiry == null || LocalDateTime.now().isAfter(expiry)) {
-                    user.setEmailVerificationToken(null);
-                    user.setEmailVerificationExpiration(null);
-                    userRepository.save(user);
-                    return new ApiResponse(false, "Account setup token has expired");
-                }
-
+                
+                // Sets email verified to true if token is valid or not expired
                 user.setEmailVerified(true);
                 user.setEmailVerificationToken(null);
                 user.setEmailVerificationExpiration(null);
                 userRepository.save(user);
-                return new ApiResponse(true, "Account setup verified successfully", user.getUsername());
+                return new ApiResponse(true, "Verification token is valid", user.getUsername());
             })
-            .orElseGet(() -> new ApiResponse(false, "Invalid account setup token"));
-    }
-
-    // Update user information such as first name, last name, etc. after account setup
-    public ApiResponse updateUserInformation(String username, User userData) {
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        // Update user fields after account setup    
-        userRepository.save(user);
-
-        return new ApiResponse(true, "User information updated successfully", user.getUsername());
+            .orElseGet(() -> new ApiResponse(false, "Invalid verification token"));
     }
 
     @Transactional
