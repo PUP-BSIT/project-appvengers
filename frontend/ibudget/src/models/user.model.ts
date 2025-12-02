@@ -5,7 +5,6 @@ export type User = {
   password: string;
   emailVerificationToken: string;
   emailVerified: boolean;
-  verificationToken: string;
   failedAttempts: number;
   lockedUntil: Date;
   createdAt: Date;
