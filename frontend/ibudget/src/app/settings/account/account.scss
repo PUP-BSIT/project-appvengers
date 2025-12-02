@@ -23,7 +23,7 @@ main {
 }
 
 .card {
-  width: 100%;
+  width: 500px;
   margin: 0 0;
   
   .card-body {
@@ -73,6 +73,42 @@ main {
   .fifth-row-input {
     flex: 1 1 0;
     min-width: 0;
+  }
+}
+
+.profile-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+
+  .image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+.account-settings-panel  {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h5 {
+    margin: 0 0 5px 0;
+  }
+
+  p {
+    margin: 0;
+    color: gray;
   }
 }
 
