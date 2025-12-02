@@ -3,7 +3,6 @@ package com.backend.appvengers.controller;
 import com.backend.appvengers.dto.ApiResponse;
 import com.backend.appvengers.dto.LoginRequest;
 import com.backend.appvengers.dto.SignupRequest;
-import com.backend.appvengers.entity.User;
 import com.backend.appvengers.dto.ForgotPasswordRequest;
 import com.backend.appvengers.dto.ResetPasswordRequest;
 import com.backend.appvengers.dto.ChangePasswordRequest;
@@ -93,33 +92,12 @@ public class AuthController {
 
         if (response.isSuccess()) {
             URI redirectUri = URI
-                .create("http://localhost:4200/setup-account?token=" + token 
-                    + "&username=" + response.getData());
+                .create("http://localhost:4200/email-verified?token=" + token);
             return ResponseEntity.status(HttpStatus.FOUND)
                 .location(redirectUri)
                 .build();
         } else {
             // redirect the browser to a frontend page that shows a friendly error
-            URI failRedirectUri = URI.create("http://localhost:4200/verify-failed");
-            return ResponseEntity.status(HttpStatus.FOUND).location(failRedirectUri).build();
-        }
-    }
-
-    // Changes user's email_verified status to true after account setup
-    @PutMapping("/verify-account-setup")
-    public ResponseEntity<ApiResponse> verifyAccountSetup(
-            @RequestParam("token") String token, 
-            @RequestParam("username") String username, 
-            @RequestBody User user
-        ) 
-    {
-        ApiResponse response = userService.verifyAccountSetupToken(token);
-
-        if (response.isSuccess()) {
-            userService.updateUserInformation(username, user);
-            return ResponseEntity.ok(response); // Return 200 OK with response
-        } else {
-              // redirect the browser to a frontend page that shows a friendly error
             URI failRedirectUri = URI.create("http://localhost:4200/verify-failed");
             return ResponseEntity.status(HttpStatus.FOUND).location(failRedirectUri).build();
         }
