@@ -79,13 +79,16 @@ main {
 .profile-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 15px;
 
   .image {
     width: 120px;
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
+    border: 2px solid #ccc;
   }
 }
 
