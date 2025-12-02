@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { Budget } from '../../../models/user.model';
-import { MockupsService } from '../../../services/mockups.service';
+import { BudgetService } from '../../../services/budget.service';
 import { AddBudgetButton } from "./add-budget-button/add-budget-button";
 import { UpdateBudgetButton } from "./update-budget-button/update-budget-button";
 import { BudgetProgressBar } from "./budget-progress-bar/budget-progress-bar";
@@ -22,29 +22,35 @@ import { Router } from '@angular/router';
 })
 export class BudgetList implements OnInit {
   budgets = signal<Budget[]>([]);
-  mockupService = inject(MockupsService);
+  budgetService = inject(BudgetService);
   router = inject(Router);
 
   ngOnInit(): void {
     this.getBudgets();
+    console.log(this.budgets());
   }
 
   getBudgets() {
-    this.mockupService.getMockBudgets().subscribe(budgets => {
+    this.budgetService.getBudgets().subscribe(budgets => {
       this.budgets.set(budgets);
     });
   }
 
   // Get newly added budget
   onBudgetAdded(newBudget: Budget) {
-    this.budgets.set([...this.budgets(), newBudget]);
+    // this.budgets.set([...this.budgets(), newBudget]);
+    // DONE: This fetches real data from backend after adding a new budget
+    this.getBudgets();
   }
 
   // Get updated budget after editing
   onBudgetUpdated(updatedBudget: Budget) {
-    this.budgets.update(list =>
-      list.map(b => b.id === updatedBudget.id ? updatedBudget : b)
-    );
+    // this.budgets.update(list =>
+    //   list.map(b => b.id === updatedBudget.id ? updatedBudget : b)
+    // );
+    
+    // DONE: This fetches real data from backend after adding a new budget
+    this.getBudgets();
   }
 
   // Get updated budgets after deletion
