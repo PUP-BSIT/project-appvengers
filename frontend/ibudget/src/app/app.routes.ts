@@ -74,7 +74,8 @@ export const routes: Routes = [
   {
     path: 'budgets', 
     loadComponent: () => import('./budgets/budgets')
-      .then(m => m.Budgets)
+      .then(m => m.Budgets),
+    canActivate: [authGuard]
   },
   {
     path: 'budgets/view-budget/:id',
@@ -119,12 +120,14 @@ export const routes: Routes = [
   {
     path: 'settings', 
     loadComponent: () => import('./settings/settings')
-      .then(m => m.Settings)
+      .then(m => m.Settings),
+    canActivate: [authGuard]
   },
   {
     path: 'settings/account/:id',
     loadComponent: () => import('./settings/account/account')
-      .then(m => m.Account)
+      .then(m => m.Account),
+    canActivate: [authGuard]
   },
   {
     path: 'settings/security/:id',
