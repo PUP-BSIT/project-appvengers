@@ -27,7 +27,7 @@ export class KpiPanel implements OnInit {
     this.getBudgetData();
   }
 
-  // Fetch budget data based on budgetId (mockup service)
+  // Fetch budget data based on budgetId (budget service)
   getBudgetData() {
     const id = this.budgetId();
     this.budgetService.getBudgetById(id)
@@ -36,12 +36,15 @@ export class KpiPanel implements OnInit {
           this.currentBudget.set(budget);
           this.totalBudget = budget.limit_amount ?? 0;
           this.totalExpenses = budget.current_amount ?? 0;
-          this.remainingBudget = Math.max(this.totalBudget - this.totalExpenses, 0);
+          this.remainingBudget = Math.max(
+            this.totalBudget - this.totalExpenses, 0
+          );
           this.budgetPercent = this.totalBudget > 0
             ? Math.round((this.totalExpenses / this.totalBudget) * 100)
             : 0;
         },
-        error: (err) => console.error('Failed to load budget for KPI panel', err)
+        error: (err) => console.error(
+          'Failed to load budget for KPI panel', err)
       });
   }
 }
