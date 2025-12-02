@@ -1,5 +1,6 @@
-$auth-background-color: #c9cefa;
-$dark-box-shadow: 2px 2px 3px #434548;
+$auth-background-color: #f5f7fa;
+$dark-box-shadow: 1px 2px 6px #888888;
+$box-shadow-hover: 2px 4px 12px #717171;
 $message-bg-color: white;
 
 .main-container {
@@ -7,6 +8,7 @@ $message-bg-color: white;
   width: 100%;
   background-color: $auth-background-color;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -16,8 +18,49 @@ $message-bg-color: white;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  p:nth-child(3) {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #555555;
+    text-align: center;
+  }
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 50px;
   border-radius: 10px;
   background-color: $message-bg-color;
   box-shadow: $dark-box-shadow;
+  width: 400px;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: $box-shadow-hover;
+  }
+}
+
+.icon-container {
+  text-align: center;
+  font-size: 80px;
+  color: #4BB543; // Green color for success
+}
+
+.button-container {
+  margin-top: 20px;
+  text-align: center;
+
+  .btn-primary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .card-container {
+    width: 90%;
+    padding: 30px;
+  }
 }
