@@ -4,6 +4,7 @@ import { Budget } from '../../../models/user.model';
 import { DecimalPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MockupsService } from '../../../services/mockups.service';
+import { BudgetService } from '../../../services/budget.service';
 
 @Component({
   selector: 'app-kpi-panel',
@@ -15,43 +16,30 @@ import { MockupsService } from '../../../services/mockups.service';
 export class KpiPanel implements OnInit {
   remainingBudget: number = 0;
   totalBudget: number = 0;
-  totalExpenses: number = 0;
+  totalExpenses: number = 700;
   budgetPercent: number = 0;
   activatedRoute = inject(ActivatedRoute);
-  mockupService = inject(MockupsService);
+  budgetService = inject(BudgetService);
   currentBudget = signal<Budget>({} as Budget);
-  budgetId = signal<number>(Number(this.activatedRoute.snapshot.paramMap.get('id') ?? 1));
-
-  // constructor(
-  //   private http: HttpClient,
-  //   private auth: AuthService,
-  //   private cd: ChangeDetectorRef
-  // ) {}
+  budgetId = signal(Number(this.activatedRoute.snapshot.paramMap.get('id') ?? 1));
 
   ngOnInit(): void {
-    // TODO: Change this to real fetch to database.
-    // React to id changes with a safe fallback (1)
-    this.activatedRoute.paramMap.subscribe((params) => {
-      const id = Number(params.get('id') ?? 1);
-      this.budgetId.set(id);
-      this.getBudgetData();
-    });
+    this.getBudgetData();
   }
 
   // Fetch budget data based on budgetId (mockup service)
   getBudgetData() {
     const id = this.budgetId();
-    this.mockupService.getMockBudgetsById(id)
+    this.budgetService.getBudgetById(id)
       .subscribe({
         next: (budget) => {
-          this.currentBudget.set(budget)
-          this.totalBudget = budget.limit_amount;
-
-          // For mockup purposes, let's assume totalExpenses is 60% of limit_amount
-          // TODO: Change this to real fetch to database.
-          this.totalExpenses = budget.limit_amount * 0.6;
-          this.remainingBudget = this.totalBudget - this.totalExpenses;
-          this.budgetPercent = (this.totalExpenses / this.totalBudget) * 100;
+          this.currentBudget.set(budget);
+          this.totalBudget = budget.limit_amount ?? 0;
+          this.totalExpenses = budget.current_amount ?? 0;
+          this.remainingBudget = Math.max(this.totalBudget - this.totalExpenses, 0);
+          this.budgetPercent = this.totalBudget > 0
+            ? Math.round((this.totalExpenses / this.totalBudget) * 100)
+            : 0;
         },
         error: (err) => console.error('Failed to load budget for KPI panel', err)
       });
