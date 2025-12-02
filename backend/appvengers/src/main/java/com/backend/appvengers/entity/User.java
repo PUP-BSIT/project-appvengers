@@ -58,9 +58,6 @@ public class User {
     @Column(name = "is_active")
     private boolean isActive = false;
 
-    @Column(name = "verification_token")
-    private String verificationToken;
-
     @Column(name = "failed_attempts", nullable = false)
     private int failedAttempts = 0;
 
