@@ -9,6 +9,7 @@ import { Budgets } from './budgets/budgets';
 import { Categories } from './categories/categories';
 import { authGuard } from './guards/auth.guard';
 import { emailVerificationGuard } from './guards/email-verification.guard';
+import { resendVerificationGuard } from './guards/resend-verification.guard';
 
 export const routes: Routes = [
   {
@@ -55,7 +56,8 @@ export const routes: Routes = [
   {
     path: 'resend-verification', 
     loadComponent: () => import('./resend-verification/resend-verification')
-      .then(m => m.ResendVerification)
+      .then(m => m.ResendVerification),
+    canActivate: [resendVerificationGuard]
   },
   {
     path: 'dashboard', 
