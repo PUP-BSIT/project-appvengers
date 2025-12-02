@@ -66,9 +66,9 @@ export class AuthService {
     return !!this.getToken();
   }
 
-  getProfile(): Observable<ApiResponse<{ username: string; email: string }>> {
+  getProfile(): Observable<ApiResponse<{ id: number, username: string; email: string }>> {
     const token = this.getToken();
-    return this.http.get<ApiResponse<{ username: string; email: string }>>(
+    return this.http.get<ApiResponse<{ id: number, username: string; email: string }>>(
       `${environment.apiUrl}/user/profile`,
       {
         headers: {
