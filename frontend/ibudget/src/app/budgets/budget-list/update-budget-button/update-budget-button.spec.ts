@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { UpdateBudgetButton } from './update-budget-button';
 
@@ -17,7 +19,9 @@ describe('UpdateBudgetButton', () => {
     await TestBed.configureTestingModule({
       imports: [UpdateBudgetButton],
       providers: [
-        { provide: ActivatedRoute, useValue: activatedRouteStub }
+        { provide: ActivatedRoute, useValue: activatedRouteStub },
+        provideHttpClient(),
+        provideHttpClientTesting()
       ]
     })
     .compileComponents();
