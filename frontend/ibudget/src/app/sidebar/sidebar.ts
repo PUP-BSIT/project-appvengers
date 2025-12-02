@@ -20,11 +20,13 @@ export class Sidebar implements AfterViewInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
   private tooltips: Tooltip[] = [];
+  userId = signal(0);
 
   isOpen = computed(() => this.sidebarService.isOpen());
 
   ngAfterViewInit(): void {
     this.initializeTooltips();
+    this.getUserId();
   }
 
   private initializeTooltips(): void {
@@ -64,6 +66,14 @@ export class Sidebar implements AfterViewInit, OnDestroy {
       this.cancelLogout();
       event.preventDefault();
     }
+  }
+
+  getUserId() {
+    this.authService.getProfile().subscribe((res) => {
+      if (res.success && res.data) {
+        this.userId.set(res.data.id);
+      }
+    });
   }
 
   ngOnDestroy(): void {

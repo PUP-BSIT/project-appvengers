@@ -100,7 +100,7 @@
     <div class="nav-item">
       <a 
         class="nav-link" 
-        routerLink="/settings/account/1"
+        [routerLink]="['/settings/account/' + userId()]"
         routerLinkActive="active"
         title="Settings"
         data-bs-toggle="tooltip"
