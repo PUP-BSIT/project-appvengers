@@ -12,11 +12,21 @@
 .card {
   background: #ffffff;
   max-width: 520px;
-  width: 100%;
+  width: 400px;
+  height: 300px;
   padding: 28px 32px;
   border-radius: 10px;
   box-shadow: 0 8px 24px rgba(20, 20, 30, 0.08);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    box-shadow: 0 12px 32px rgba(20, 20, 30, 0.12);
+    transition: box-shadow 0.3s ease-in-out;
+  }
 }
 
 .card-title {
@@ -31,6 +41,12 @@
   font-size: 15px;
   color: #475569;
   line-height: 1.4;
+}
+
+.icon-container {
+  font-size: 48px;
+  color: #10b981;
+  margin-bottom: 10px;
 }
 
 /* small screens */
