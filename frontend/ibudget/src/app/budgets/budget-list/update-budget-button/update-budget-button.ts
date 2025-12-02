@@ -1,8 +1,9 @@
 import { Modal } from 'bootstrap';
+import { Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { Budget } from '../../../../models/user.model';
 import { Categories } from '../../../../models/user.model';
-import { MockupsService } from '../../../../services/mockups.service';
+import { BudgetService } from '../../../../services/budget.service';
 import { bootstrapThreeDotsVertical } from '@ng-icons/bootstrap-icons'
 import { CategoriesService } from '../../../../services/categories.service';
 import { 
@@ -21,12 +22,10 @@ import {
           FormGroup,
           Validators
         } from '@angular/forms';
-import { KpiPanel } from "../../kpi-panel/kpi-panel";
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-update-budget-button',
-  imports: [ReactiveFormsModule, NgIcon, KpiPanel],
+  imports: [ReactiveFormsModule, NgIcon],
   templateUrl: './update-budget-button.html',
   styleUrl: './update-budget-button.scss',
   viewProviders: [
@@ -40,7 +39,7 @@ export class UpdateBudgetButton implements OnInit {
   budgetForm: FormGroup;
   router = inject(Router);
   formBuilder = inject(FormBuilder);  
-  mockupService = inject(MockupsService);
+  budgetService = inject(BudgetService);
   categoriesService = inject(CategoriesService);
   budgetId = input(<number>(0));
   updatedBudgetResponse = output<Budget>();
@@ -50,9 +49,6 @@ export class UpdateBudgetButton implements OnInit {
   constructor() {
     this.budgetForm = this.formBuilder.group({
       category_id: [],
-      category_name: [{value: '', disabled: true}, {
-        validators: [Validators.required]
-      }],
       limit_amount: [0, {
         validators: [Validators.required]
       }],
@@ -87,11 +83,10 @@ export class UpdateBudgetButton implements OnInit {
     if(!this.budgetId()) return;
 
     this.openModal();
-    this.mockupService.getMockBudgetsById(this.budgetId())
+    this.budgetService.getBudgetById(this.budgetId())
       .subscribe((fetchedBudget: Budget) => {
-        this.budgetForm.setValue({
+        this.budgetForm.patchValue({
           category_id: fetchedBudget.category_id,
-          category_name: fetchedBudget.category_id,
           limit_amount: fetchedBudget.limit_amount,
           current_amount: fetchedBudget.current_amount,
           start_date: fetchedBudget.start_date,
@@ -101,7 +96,7 @@ export class UpdateBudgetButton implements OnInit {
   }
 
   updateBudget() {
-    this.mockupService.updateMockBudget(this.budgetId(), this.budgetForm.value)
+    this.budgetService.updateBudget(this.budgetId(), this.budgetForm.value)
       .subscribe((updatedBudget: Budget) => {
         this.updatedBudgetResponse.emit(updatedBudget);
         this.budgetForm.reset();
@@ -110,7 +105,7 @@ export class UpdateBudgetButton implements OnInit {
   }
 
   deleteBudget() {
-    this.mockupService.deleteMockBudget(this.budgetId())
+    this.budgetService.deleteBudget(this.budgetId())
       .subscribe((updatedBudgets: Budget[]) => {
         this.deletedBudgetResponse.emit(updatedBudgets);
         this.budgetForm.reset();
@@ -133,8 +128,6 @@ export class UpdateBudgetButton implements OnInit {
     if (!this.budgetId()) return;
     this.openUpdateBudgetModal();
     this.budgetForm.enable();
-
-    this.budgetForm.get('category_name')?.disable();
   }
 
   // Delete: delete budget based on budgetId
