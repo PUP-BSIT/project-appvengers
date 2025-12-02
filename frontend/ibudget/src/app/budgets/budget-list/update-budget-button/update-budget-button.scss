@@ -10,6 +10,20 @@
   min-width: 160px;
 }
 
+.form-select {
+  cursor: not-allowed;
+}
+
+.form-select:disabled {
+  cursor: not-allowed !important;
+}
+
+.form-select.pointer-events-none {
+  background-color: #e9ecef;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
 // Custom styles for the update budget modal
 // .update-budget-modal {
 //   --bs-modal-width: min(95vw, 900px); 
