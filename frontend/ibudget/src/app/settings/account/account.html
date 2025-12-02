@@ -18,6 +18,12 @@
         </div>
 
         <div class="card-body">
+          <div class="profile-container">
+            <img 
+              [src]="'https://placehold.co/600x400/orange/white?text=' + usernameFirstLetter()" 
+              class="image"
+              alt="Profile Picture"/>
+          </div>
           <form [formGroup]="accountSettingsForm" class="account-form-container">
             <div class="fourth-row">
               <label for="username">Username</label>

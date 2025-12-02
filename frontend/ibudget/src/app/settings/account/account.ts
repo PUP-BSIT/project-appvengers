@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Sidebar } from "../../sidebar/sidebar";
 import { Header } from "../../header/header";
 import { 
@@ -9,6 +9,7 @@ import {
     Validators
   } from '@angular/forms';
 import { SubHeader } from "../sub-header/sub-header";
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-account',
@@ -16,59 +17,54 @@ import { SubHeader } from "../sub-header/sub-header";
   templateUrl: './account.html',
   styleUrl: './account.scss',
 })
-export class Account {
+export class Account implements OnInit {
   accountSettingsForm: FormGroup;
   formBuilder = inject(FormBuilder);
+  authService = inject(AuthService);
+  usernameFirstLetter = signal("");
+  userName = signal("");
 
   constructor() {
     this.accountSettingsForm = this.formBuilder.group({
-      birthdate: ['', {
-        validators: [Validators.required]
-      }],
       email: ['', {
         validators: [Validators.required, Validators.email]
       }],
-      first_name: ['', {
-        validators: [Validators.required]
-      }],
-      gender: ['', {
-        validators: [Validators.required]
-      }],
-      last_name: ['', {
-        validators: [Validators.required]
-      }],
-      middle_name: [''],
       username: ['', {
         validators: [Validators.required]
       }],
     });
   }
 
-  get birthdate() {
-    return this.accountSettingsForm.get('birthdate');
+  ngOnInit(): void {
+    this.getUserInformation();
+    this.getFirstLetter();
   }
 
   get email() {
     return this.accountSettingsForm.get('email');
   }
 
-  get gender() {
-    return this.accountSettingsForm.get('gender');
-  }
-
-  get firstName() {
-    return this.accountSettingsForm.get('first_name');
-  }
-
-  get middleName() {
-    return this.accountSettingsForm.get('middle_name');
-  }
-
-  get lastName() {
-    return this.accountSettingsForm.get('last_name');
-  }
-
   get username() {
     return this.accountSettingsForm.get('username');
+  }
+
+  getFirstLetter() {
+    const firstLetter = this.userName().charAt(0).toUpperCase();
+    this.usernameFirstLetter.set(firstLetter);
+  }
+
+  getUserInformation() {
+    this.authService.getProfile().subscribe((res) => {
+      if (res.success && res.data) {
+        this.accountSettingsForm.patchValue({
+          email: res.data.email,
+          username: res.data.username
+        });
+
+        // Set username first letter signal
+        this.userName.set(res.data.username);
+        this.getFirstLetter();
+      }
+    })
   }
 }
