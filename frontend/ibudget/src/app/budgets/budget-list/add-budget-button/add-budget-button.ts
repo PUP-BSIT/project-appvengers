@@ -1,5 +1,5 @@
 import { Budget, Categories } from '../../../../models/user.model';
-import { MockupsService } from '../../../../services/mockups.service';
+import { BudgetService } from '../../../../services/budget.service';
 import { CategoriesService } from '../../../../services/categories.service';
 import { Modal } from 'bootstrap';
 import { 
@@ -34,7 +34,7 @@ export class AddBudgetButton implements OnInit, OnChanges {
   budgetForm: FormGroup;
   addedBudget = output<Budget>();
   formBuilder = inject(FormBuilder);  
-  mockupService = inject(MockupsService);
+  budgetService = inject(BudgetService);
   mockBudgetId = input(<number>(0));
   categoriesService = inject(CategoriesService);
   categories = signal(<Categories[]>[]);
@@ -45,7 +45,7 @@ export class AddBudgetButton implements OnInit, OnChanges {
     this.budgetForm = this.formBuilder.group({
       id: [],
       category_id: ['', { validators: [Validators.required] }],
-      category_name: [''],
+      // category_name: [''],
       limit_amount: [0, { validators: [Validators.required] }],
       current_amount: [0],
       start_date: ['', { validators: [Validators.required] }],
@@ -60,7 +60,7 @@ export class AddBudgetButton implements OnInit, OnChanges {
     this.budgetForm = this.formBuilder.group({
       id: [budgetId],
       category_id: ['', { validators: [Validators.required] }],
-      category_name: [''],
+      // category_name: [''],
       limit_amount: [0, { validators: [Validators.required] }],
       current_amount: [0],
       start_date: ['', { validators: [Validators.required] }],
@@ -76,7 +76,6 @@ export class AddBudgetButton implements OnInit, OnChanges {
       this.budgetForm = this.formBuilder.group({
         id: [budgetId],
         category_id: ['', { validators: [Validators.required] }],
-        category_name: [''],
         limit_amount: [0, { validators: [Validators.required] }],
         current_amount: [0],
         start_date: ['', { validators: [Validators.required] }],
@@ -103,10 +102,9 @@ export class AddBudgetButton implements OnInit, OnChanges {
   addBudget() {
     if (this.budgetForm.invalid) return;
 
-    this.mockupService.addMockBudget(this.budgetForm.value)
+    this.budgetService.addBudget(this.budgetForm.value)
       .subscribe((newBudget: Budget) => {
         this.addedBudget.emit(newBudget);
-        console.log('Added Budget:', newBudget);
         this.closeModal();
     });
   }

@@ -18,11 +18,11 @@
           <form [formGroup]="budgetForm">
             <input type="hidden" formControlName="id" [value]="mockBudgetId()"/>
 
-            <label for="category_name">Category</label>
+            <label for="category_id">Category</label>
             <select 
               formControlName="category_id" 
               class="form-select mb-3"
-              id="category_name"
+              id="category_id"
               (change)="afterCategorySelection()">
               <option value="" selected disabled>-- Select Category --</option>
               @for(category of categories(); track $index) {
