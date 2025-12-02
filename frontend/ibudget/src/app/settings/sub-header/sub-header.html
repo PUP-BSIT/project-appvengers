@@ -13,7 +13,7 @@
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }">
       <a 
-        [routerLink]="['/settings/account/1']" 
+        [routerLink]="['/settings/account/' + userId()]" 
         class="fw-semibold text-decoration-none">
         Account Settings
       </a>
