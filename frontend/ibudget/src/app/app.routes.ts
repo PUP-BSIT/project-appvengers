@@ -8,6 +8,7 @@ import { Dashboard } from './dashboard/dashboard';
 import { Budgets } from './budgets/budgets';
 import { Categories } from './categories/categories';
 import { authGuard } from './guards/auth.guard';
+import { emailVerificationGuard } from './guards/email-verification.guard';
 
 export const routes: Routes = [
   {
@@ -31,9 +32,10 @@ export const routes: Routes = [
   //     .then(m => m.SignUp)
   // },
   {
-    path: 'email-verification', 
+    path: 'email-verified', 
     loadComponent: () => import('./email-verification/email-verification')
-      .then(m => m.EmailVerification)
+      .then(m => m.EmailVerification),
+    canActivate: [emailVerificationGuard]
   },
   {
     path: 'forgot-password',
