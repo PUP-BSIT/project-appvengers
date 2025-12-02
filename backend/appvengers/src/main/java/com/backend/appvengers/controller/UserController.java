@@ -29,6 +29,7 @@ public class UserController {
             .orElseThrow(() -> new RuntimeException("User not found"));
 
         Map<String, Object> data = Map.of(
+            "id", user.getId(),
             "username", user.getUsername(),
             "email", user.getEmail(),
             "remainingBudget", 0
