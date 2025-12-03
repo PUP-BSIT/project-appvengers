@@ -1,4 +1,4 @@
-import { Budget, Categories } from '../../../../models/user.model';
+import { Budget, Category } from '../../../../models/user.model';
 import { BudgetService } from '../../../../services/budget.service';
 import { CategoriesService } from '../../../../services/categories.service';
 import { Modal } from 'bootstrap';
@@ -39,7 +39,7 @@ export class AddBudgetButton implements OnInit, OnChanges {
   budgetService = inject(BudgetService);
   mockBudgetId = input(<number>(0));
   categoriesService = inject(CategoriesService);
-  categories = signal<Categories[]>([]);
+  categories = signal<Category[]>([]);
   currentCategoryName = signal('');
   currentCategoryId = signal<number>(0);
 
