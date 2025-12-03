@@ -2,6 +2,12 @@
 <app-header/>
 
 <main>
+  @if(isLoading()) {
+    <div class="loading-spinner-container">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+  }
+
   <div class="card">
     <div class="card-header bg-dark text-white d-flex align-items-center gap-3">
       <i 
@@ -11,31 +17,37 @@
     </div>
 
     <div class="card-body d-flex flex-column">
-      <div class="information-container first">
-        <div class="mh-3 info">
-          <label class="text-secondary">Current Amount</label>
-          <span>&#8369;{{ currentSaving().current_amount | number:'1.0-0' }}</span>
+      @if(isLoading()) {
+        <div class="alert alert-info" role="alert">
+          Loading saving details...
         </div>
+      } @else {
+        <div class="information-container first">
+          <div class="mh-3 info">
+            <label class="text-secondary">Current Amount</label>
+            <span>&#8369;{{ currentSaving().current_amount | number:'1.0-0' }}</span>
+          </div>
 
-        <div class="mh-3 info second">
-          <label class="text-secondary">Target Amount</label>
-          <span>&#8369;{{ currentSaving().target_amount | number:'1.0-0' }}</span>
-        </div>
+          <div class="mh-3 info second">
+            <label class="text-secondary">Target Amount</label>
+            <span>&#8369;{{ currentSaving().target_amount | number:'1.0-0' }}</span>
+          </div>
 
-        <div class="mh-3 info third">
-          <label class="text-secondary">Remaining</label>
-          <span>
-            &#8369;{{ remainingAmount() | number:'1.0-0' }}
-          </span>
-        </div>
+          <div class="mh-3 info third">
+            <label class="text-secondary">Remaining</label>
+            <span>
+              &#8369;{{ remainingAmount() | number:'1.0-0' }}
+            </span>
+          </div>
 
-        <div class="mh-3 info fourth">
-          <label class="text-secondary">Progress</label>
-          <span class="text-danger">
-            {{ getProgressPercentage(currentSaving()) }}%
-          </span>
+          <div class="mh-3 info fourth">
+            <label class="text-secondary">Progress</label>
+            <span class="text-danger">
+              {{ getProgressPercentage(currentSaving()) }}%
+            </span>
+          </div>
         </div>
-      </div>
+      }
       
       <div class="app-saving-progress-container">
         <app-saving-progress 
