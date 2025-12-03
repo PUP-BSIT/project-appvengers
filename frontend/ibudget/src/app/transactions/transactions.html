@@ -72,51 +72,159 @@
 
     <!-- Transactions Cards -->
     <div class="transactions-cards-container">
-      @for (transaction of filteredTransactions; track transaction.id) {
-        <div class="transaction-card">
-          <div class="card-header">
-            <div class="card-date">
-              <i class="fas fa-calendar-alt"></i>
-              {{ transaction.date | date:'MMM d, y' }}
-            </div>
-            <div class="card-actions">
-              <button
-                class="btn-dots"
-                (click)="toggleActions($event, transaction.id)"
-                aria-label="Open actions menu"
-                [attr.aria-expanded]="showPopup() &&
-                  selectedTransactionId() === transaction.id"
-                aria-haspopup="true">
-                <i class="fas fa-ellipsis-v"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="card-body">
-            <div class="card-description">
-              <h4>{{ transaction.description }}</h4>
-            </div>
-
-            <div class="card-details">
-              <div class="category-section">
-                <span
-                  class="category-tag"
-                  [ngClass]="[transaction.category.toLowerCase()]">
-                  {{ transaction.category }}
-                </span>
-              </div>
-
-              <div class="amount-section">
-                <span
-                  class="amount-text"
-                  [ngClass]="{'income': transaction.type === 'income',
-                              'expense': transaction.type === 'expense'}">
-                  {{ transaction.amount | currency : 'PHP' }}
-                </span>
+      <!-- Today's Transactions -->
+      @if (getTodayTransactions().length > 0) {
+        <div class="date-group-label">Today</div>
+        @for (transaction of getTodayTransactions(); track transaction.id) {
+          <div class="transaction-card">
+            <div class="card-header">
+              <div class="card-actions">
+                <button
+                  class="btn-dots"
+                  (click)="toggleActions($event, transaction.id)"
+                  aria-label="Open actions menu"
+                  [attr.aria-expanded]="showPopup() &&
+                    selectedTransactionId() === transaction.id"
+                  aria-haspopup="true">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
               </div>
             </div>
+
+            <div class="card-body">
+              <div class="card-left">
+                <div class="card-description">
+                  <h4>{{ transaction.description }}</h4>
+                </div>
+
+                <div class="card-bottom">
+                  <div class="category-section">
+                    <span
+                      class="category-tag"
+                      [ngClass]="[transaction.category.toLowerCase()]">
+                      {{ transaction.category }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-right">
+                <div class="amount-section">
+                  <span
+                    class="amount-text"
+                    [ngClass]="{'income': transaction.type === 'income',
+                                'expense': transaction.type === 'expense'}">
+                    {{ transaction.type === 'income' ? '+' : '-' }}{{ transaction.amount | currency : 'PHP' }}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
+        }
+      }
+
+      <!-- Yesterday's Transactions -->
+      @if (getYesterdayTransactions().length > 0) {
+        <div class="date-group-label">Yesterday</div>
+        @for (transaction of getYesterdayTransactions(); track transaction.id) {
+          <div class="transaction-card">
+            <div class="card-header">
+              <div class="card-actions">
+                <button
+                  class="btn-dots"
+                  (click)="toggleActions($event, transaction.id)"
+                  aria-label="Open actions menu"
+                  [attr.aria-expanded]="showPopup() &&
+                    selectedTransactionId() === transaction.id"
+                  aria-haspopup="true">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="card-left">
+                <div class="card-description">
+                  <h4>{{ transaction.description }}</h4>
+                </div>
+
+                <div class="card-bottom">
+                  <div class="category-section">
+                    <span
+                      class="category-tag"
+                      [ngClass]="[transaction.category.toLowerCase()]">
+                      {{ transaction.category }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-right">
+                <div class="amount-section">
+                  <span
+                    class="amount-text"
+                    [ngClass]="{'income': transaction.type === 'income',
+                                'expense': transaction.type === 'expense'}">
+                    {{ transaction.type === 'income' ? '+' : '-' }}{{ transaction.amount | currency : 'PHP' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      }
+
+      <!-- Older Transactions Grouped by Date -->
+      @for (dateGroup of getOlderTransactionsByDate() | keyvalue; track dateGroup.key) {
+        <div class="date-group-label">
+          {{ dateGroup.value[0].date | date:'EEEE, MMM d, y' }}
         </div>
+        @for (transaction of dateGroup.value; track transaction.id) {
+          <div class="transaction-card">
+            <div class="card-header">
+              <div class="card-actions">
+                <button
+                  class="btn-dots"
+                  (click)="toggleActions($event, transaction.id)"
+                  aria-label="Open actions menu"
+                  [attr.aria-expanded]="showPopup() &&
+                    selectedTransactionId() === transaction.id"
+                  aria-haspopup="true">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="card-left">
+                <div class="card-description">
+                  <h4>{{ transaction.description }}</h4>
+                </div>
+
+                <div class="card-bottom">
+                  <div class="category-section">
+                    <span
+                      class="category-tag"
+                      [ngClass]="[transaction.category.toLowerCase()]">
+                      {{ transaction.category }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-right">
+                <div class="amount-section">
+                  <span
+                    class="amount-text"
+                    [ngClass]="{'income': transaction.type === 'income',
+                                'expense': transaction.type === 'expense'}">
+                    {{ transaction.type === 'income' ? '+' : '-' }}{{ transaction.amount | currency : 'PHP' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
       }
 
       @if (filteredTransactions.length === 0) {
@@ -128,15 +236,11 @@
     </div>
   </div>
 
-  <!-- Success Notification Modal -->
+  <!-- Snackbar Notification -->
   @if (showNotification()) {
-    <div class="modal-overlay">
-      <div class="notification-modal">
-        <div class="notification-content">
-          <i class="fas fa-check-circle success-icon"></i>
-          <p>{{ notificationMessage() }}</p>
-        </div>
-      </div>
+    <div class="snackbar">
+      <i class="fas fa-check-circle"></i>
+      <span>{{ notificationMessage() }}</span>
     </div>
   }
 
@@ -179,19 +283,40 @@
                   [(ngModel)]="newTransaction.category"
                   name="category"
                   #category="ngModel"
+                  (change)="onCategorySelectChange()"
                   required>
                   <option value="" disabled selected>Select category</option>
                   <option value="Income">Income</option>
                   <option value="Entertainment">Entertainment</option>
                   <option value="Bills">Bills</option>
                   <option value="Shopping">Shopping</option>
+                  <option value="custom">Other</option>
                 </select>
+                
                 @if (category.touched && category.invalid &&
                      category.errors?.['required']) {
                   <div class="error-message">Category is required</div>
                 }
               </div>
             </div>
+
+            @if (showCustomCategoryInput) {
+              <div class="form-group">
+                <label for="customCategory">Custom Category Name</label>
+                <input
+                  type="text"
+                  id="customCategory"
+                  [(ngModel)]="customCategoryName"
+                  name="customCategory"
+                  #customCategory="ngModel"
+                  placeholder="Enter custom category name"
+                  required>
+                @if (customCategory.touched && customCategory.invalid &&
+                     customCategory.errors?.['required']) {
+                  <div class="error-message">Custom category name is required</div>
+                }
+              </div>
+            }
 
             <div class="form-group">
               <label for="description">Description</label>
