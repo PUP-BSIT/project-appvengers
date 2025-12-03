@@ -85,22 +85,26 @@ export const routes: Routes = [
   {
     path: 'savings', 
     loadComponent: () => import('./savings/savings')
-      .then(m => m.Savings)
+      .then(m => m.Savings),
+    canActivate: [authGuard]
   },
   {
     path: 'savings/add-saving',
     loadComponent: () => import('./savings/add-saving/add-saving')
-      .then(m => m.AddSaving)
+      .then(m => m.AddSaving),
+    canActivate: [authGuard]
   },
   {
     path: 'savings/update-saving/:id',
     loadComponent: () => import('./savings/update-saving/update-saving')
-      .then(m => m.UpdateSaving)
+      .then(m => m.UpdateSaving),
+    canActivate: [authGuard]
   },
   {
     path: 'savings/view-saving/:id',
     loadComponent: () => import('./savings/view-saving/view-saving')
-      .then(m => m.ViewSaving)
+      .then(m => m.ViewSaving),
+    canActivate: [authGuard]
   },
   {
     path: 'categories', 
