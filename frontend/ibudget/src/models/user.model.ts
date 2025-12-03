@@ -73,7 +73,7 @@ export type ReportRecord = {
 }
 
 export type Category = {
-  category_id: number;
+  id: number;
   userId: number;
   name: string;
   type: string; // "income" or "expense"
