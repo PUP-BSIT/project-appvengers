@@ -397,6 +397,83 @@ $sidebar-width: 100px;
   color: #ff9800;
 }
 
+// Category colors
+.food {
+  color: #ff6b6b;
+}
+
+.dining {
+  color: #ff6b6b;
+}
+
+.food.dining {
+  color: #ff6b6b;
+}
+
+.transportation {
+  color: #4ecdc4;
+}
+
+.healthcare {
+  color: #ff5252;
+}
+
+.education {
+  color: #9c27b0;
+}
+
+.personal {
+  color: #e91e63;
+}
+
+.care {
+  color: #e91e63;
+}
+
+.personal.care {
+  color: #e91e63;
+}
+
+.utilities {
+  color: #ffa726;
+}
+
+.groceries {
+  color: #66bb6a;
+}
+
+.rent {
+  color: #42a5f5;
+}
+
+.insurance {
+  color: #5c6bc0;
+}
+
+.savings {
+  color: #26a69a;
+}
+
+.investment {
+  color: #7e57c2;
+}
+
+.travel {
+  color: #29b6f6;
+}
+
+.gifts {
+  color: #ec407a;
+}
+
+.charity {
+  color: #ab47bc;
+}
+
+.other {
+  color: #78909c;
+}
+
 .transactions-table td .income {
   color: #27ae60;
   font-weight: 600;
