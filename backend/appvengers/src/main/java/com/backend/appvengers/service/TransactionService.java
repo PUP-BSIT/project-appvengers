@@ -27,7 +27,7 @@ public class TransactionService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return transactionRepository.findByUser(user).stream()
+        return transactionRepository.findByUserAndDeletedFalse(user).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
@@ -83,7 +83,9 @@ public class TransactionService {
             throw new RuntimeException("Not authorized");
         }
 
-        transactionRepository.delete(t);
+        // Soft delete: set deleted flag to true instead of removing from database
+        t.setDeleted(true);
+        transactionRepository.save(t);
     }
 
     // Expense summary
