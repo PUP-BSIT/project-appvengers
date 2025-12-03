@@ -72,7 +72,7 @@ export type ReportRecord = {
   report: string;
 }
 
-export interface Category {
+export type Category = {
   category_id: number;
   userId: number;
   name: string;
