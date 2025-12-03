@@ -77,163 +77,67 @@
 
     <!-- Transactions Cards -->
     <div class="transactions-cards-container">
-      <!-- Today's Transactions -->
-      @if (getTodayTransactions().length > 0) {
-        <div class="date-group-label">Today</div>
-        @for (transaction of getTodayTransactions(); track transaction.id) {
-          <div class="transaction-card">
-            <div class="card-header">
-              <div class="card-actions">
-                <button
-                  class="btn-dots"
-                  (click)="toggleActions($event, transaction.id)"
-                  aria-label="Open actions menu"
-                  [attr.aria-expanded]="showPopup() &&
-                    selectedTransactionId() === transaction.id"
-                  aria-haspopup="true">
-                  <i class="fas fa-ellipsis-v"></i>
-                </button>
-              </div>
+      <!-- Paginated Transactions with Date Labels -->
+      @for (transaction of getPaginatedTransactions(); track transaction.id) {
+        <!-- Show date label if it's different from previous transaction -->
+        @if ($first || getRelativeDate(transaction.date)
+            !== getRelativeDate(getPaginatedTransactions()[$index - 1]?.date)) {
+          <div class="date-group-label">
+            @if (getRelativeDate(transaction.date) === 'Today') {
+              Today
+            } @else if (getRelativeDate(transaction.date) === 'Yesterday') {
+              Yesterday
+            } @else {
+              {{ transaction.date | date:'EEEE, MMM d, y' }}
+            }
+          </div>
+        }
+
+        <div class="transaction-card">
+          <div class="card-header">
+            <div class="card-actions">
+              <button
+                class="btn-dots"
+                (click)="toggleActions($event, transaction.id)"
+                aria-label="Open actions menu"
+                [attr.aria-expanded]="showPopup() &&
+                  selectedTransactionId() === transaction.id"
+                aria-haspopup="true">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
             </div>
+          </div>
 
-            <div class="card-body">
-              <div class="card-left">
-                <div class="card-description">
-                  <h4>{{ transaction.description }}</h4>
-                </div>
-
-                <div class="card-bottom">
-                  <div class="category-section">
-                    <span
-                      class="category-tag"
-                      [ngClass]="[transaction.category.toLowerCase()]">
-                      {{ transaction.category }}
-                    </span>
-                  </div>
-                </div>
+          <div class="card-body">
+            <div class="card-left">
+              <div class="card-description">
+                <h4>{{ transaction.description }}</h4>
               </div>
 
-              <div class="card-right">
-                <div class="amount-section">
+              <div class="card-bottom">
+                <div class="category-section">
                   <span
-                    class="amount-text"
-                    [ngClass]="{'income': transaction.type === 'income',
-                                'expense': transaction.type === 'expense'}">
-                    {{ transaction.type === 'income' ? '+' : '-' }}
-                    {{ transaction.amount | currency : 'PHP' }}
+                    class="category-tag"
+                    [ngClass]="[transaction.category.toLowerCase()]">
+                    {{ transaction.category }}
                   </span>
                 </div>
               </div>
             </div>
-          </div>
-        }
-      }
 
-      <!-- Yesterday's Transactions -->
-      @if (getYesterdayTransactions().length > 0) {
-        <div class="date-group-label">Yesterday</div>
-        @for (transaction of getYesterdayTransactions(); track transaction.id) {
-          <div class="transaction-card">
-            <div class="card-header">
-              <div class="card-actions">
-                <button
-                  class="btn-dots"
-                  (click)="toggleActions($event, transaction.id)"
-                  aria-label="Open actions menu"
-                  [attr.aria-expanded]="showPopup() &&
-                    selectedTransactionId() === transaction.id"
-                  aria-haspopup="true">
-                  <i class="fas fa-ellipsis-v"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="card-body">
-              <div class="card-left">
-                <div class="card-description">
-                  <h4>{{ transaction.description }}</h4>
-                </div>
-
-                <div class="card-bottom">
-                  <div class="category-section">
-                    <span
-                      class="category-tag"
-                      [ngClass]="[transaction.category.toLowerCase()]">
-                      {{ transaction.category }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="card-right">
-                <div class="amount-section">
-                  <span
-                    class="amount-text"
-                    [ngClass]="{'income': transaction.type === 'income',
-                                'expense': transaction.type === 'expense'}">
-                    {{ transaction.type === 'income' ? '+' : '-' }}
-                    {{ transaction.amount | currency : 'PHP' }}
-                  </span>
-                </div>
+            <div class="card-right">
+              <div class="amount-section">
+                <span
+                  class="amount-text"
+                  [ngClass]="{'income': transaction.type === 'income',
+                              'expense': transaction.type === 'expense'}">
+                  {{ transaction.type === 'income' ? '+' : '-' }}
+                  {{ transaction.amount | currency : 'PHP' }}
+                </span>
               </div>
             </div>
           </div>
-        }
-      }
-
-      <!-- Older Transactions Grouped by Date -->
-      @for (dateGroup of getOlderTransactionsByDate()
-            | keyvalue; track dateGroup.key) {
-        <div class="date-group-label">
-          {{ dateGroup.value[0].date | date:'EEEE, MMM d, y' }}
         </div>
-        @for (transaction of dateGroup.value; track transaction.id) {
-          <div class="transaction-card">
-            <div class="card-header">
-              <div class="card-actions">
-                <button
-                  class="btn-dots"
-                  (click)="toggleActions($event, transaction.id)"
-                  aria-label="Open actions menu"
-                  [attr.aria-expanded]="showPopup() &&
-                    selectedTransactionId() === transaction.id"
-                  aria-haspopup="true">
-                  <i class="fas fa-ellipsis-v"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="card-body">
-              <div class="card-left">
-                <div class="card-description">
-                  <h4>{{ transaction.description }}</h4>
-                </div>
-
-                <div class="card-bottom">
-                  <div class="category-section">
-                    <span
-                      class="category-tag"
-                      [ngClass]="[transaction.category.toLowerCase()]">
-                      {{ transaction.category }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="card-right">
-                <div class="amount-section">
-                  <span
-                    class="amount-text"
-                    [ngClass]="{'income': transaction.type === 'income',
-                                'expense': transaction.type === 'expense'}">
-                    {{ transaction.type === 'income' ? '+' : '-' }}
-                    {{ transaction.amount | currency : 'PHP' }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        }
       }
 
       @if (filteredTransactions.length === 0) {
@@ -243,6 +147,38 @@
         </div>
       }
     </div>
+
+    <!-- Pagination Controls -->
+    @if (totalPages > 1) {
+      <div class="pagination-container">
+        <button 
+          class="pagination-btn" 
+          (click)="previousPage()" 
+          [disabled]="currentPage === 1">
+          <i class="fas fa-chevron-left"></i>
+          Previous
+        </button>
+
+        <div class="pagination-numbers">
+          @for (pageNum of getPageNumbers(); track pageNum) {
+            <button 
+              class="pagination-number" 
+              [class.active]="currentPage === pageNum"
+              (click)="goToPage(pageNum)">
+              {{ pageNum }}
+            </button>
+          }
+        </div>
+
+        <button 
+          class="pagination-btn" 
+          (click)="nextPage()" 
+          [disabled]="currentPage === totalPages">
+          Next
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    }
   </div>
 
   <!-- Snackbar Notification -->

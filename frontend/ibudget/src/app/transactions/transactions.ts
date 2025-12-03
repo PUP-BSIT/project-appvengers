@@ -37,7 +37,11 @@ export class Transactions implements OnInit, OnDestroy {
 
   filteredTransactions: Transaction[] = [...this.transactions];
 
-    newTransaction = {
+  currentPage = 1;
+  itemsPerPage = 5;
+  totalPages = 1;
+
+  newTransaction = {
     date: new Date(),
     description: '',
     category: '',
@@ -69,7 +73,7 @@ export class Transactions implements OnInit, OnDestroy {
     'Other'
   ];
 
-  selectedPeriod = 'daily';
+  selectedPeriod = 'today';
 
   showCustomCategoryInput = false;
   customCategoryName = '';
@@ -78,17 +82,66 @@ export class Transactions implements OnInit, OnDestroy {
   editingTransactionId: number | null = null;
 
     filterTransactions() {
+      let filtered = [...this.transactions];
+      
+      // Filter by category
       const sel = (this.selectedCategory || 'All Categories')
                   .toString().toLowerCase();
 
-      if (sel === 'all categories') {
-        this.filteredTransactions = [...this.transactions];
-      } else {
-        this.filteredTransactions = this.transactions.filter(
+      if (sel !== 'all categories') {
+        filtered = filtered.filter(
           transaction => (transaction.category || '')
             .toString().toLowerCase() === sel
         );
       }
+      
+      // Filter by period
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      switch(this.selectedPeriod) {
+        case 'today':
+          filtered = filtered.filter(t => {
+            const transactionDate = new Date(t.date);
+            transactionDate.setHours(0, 0, 0, 0);
+            return transactionDate.getTime() === today.getTime();
+          });
+          break;
+          
+        case 'daily':
+          // Show today's transactions (same as 'today')
+          filtered = filtered.filter(t => {
+            const transactionDate = new Date(t.date);
+            transactionDate.setHours(0, 0, 0, 0);
+            return transactionDate.getTime() === today.getTime();
+          });
+          break;
+          
+        case 'weekly':
+          // Show last 7 days
+          const weekAgo = new Date(today);
+          weekAgo.setDate(weekAgo.getDate() - 7);
+          filtered = filtered.filter(t => {
+            const transactionDate = new Date(t.date);
+            transactionDate.setHours(0, 0, 0, 0);
+            return transactionDate >= weekAgo && transactionDate <= today;
+          });
+          break;
+          
+        case 'monthly':
+          // Show current month
+          const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+          const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+          filtered = filtered.filter(t => {
+            const transactionDate = new Date(t.date);
+            transactionDate.setHours(0, 0, 0, 0);
+            return transactionDate >= startOfMonth && transactionDate <= endOfMonth;
+          });
+          break;
+      }
+      
+      this.filteredTransactions = filtered;
+      this.currentPage = 1;
     }
 
   onCategoryChange() {
@@ -96,9 +149,7 @@ export class Transactions implements OnInit, OnDestroy {
   }
 
   onPeriodChange() {
-    // Add filtering logic based on selected period
-    console.log('Period changed to:', this.selectedPeriod);
-    // You can implement date filtering logic here based on daily/weekly/monthly
+    this.filterTransactions();
   }
 
   onCategorySelectChange() {
@@ -347,28 +398,6 @@ export class Transactions implements OnInit, OnDestroy {
     return this.transactions.find(t => t.id === this.selectedTransactionId());
   }
 
-  getRelativeDate(date: Date): string {
-    const today = new Date();
-    const transactionDate = new Date(date);
-    
-    // Reset time to compare only dates
-    today.setHours(0, 0, 0, 0);
-    transactionDate.setHours(0, 0, 0, 0);
-    
-    const diffTime = today.getTime() - transactionDate.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 0) {
-      return 'Today';
-    } else if (diffDays === 1) {
-      return 'Yesterday';
-    } else if (diffDays === -1) {
-      return 'Tomorrow';
-    } else {
-      return '';
-    }
-  }
-
   getTodayTransactions(): Transaction[] {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -415,6 +444,66 @@ export class Transactions implements OnInit, OnDestroy {
     
     // Sort by ID descending (newest first)
     return olderTransactions.sort((a, b) => (b.id || 0) - (a.id || 0));
+  }
+
+  getPaginatedTransactions(): Transaction[] {
+    // Get all transactions sorted by date and ID
+    const sorted = [...this.filteredTransactions].sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      if (dateB !== dateA) return dateB - dateA; // Newest date first
+      return (b.id || 0) - (a.id || 0); // Newest ID first within same date
+    });
+    
+    // Calculate pagination
+    this.totalPages = Math.ceil(sorted.length / this.itemsPerPage);
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return sorted.slice(startIndex, endIndex);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  getPageNumbers(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  getRelativeDate(date: Date | string | undefined): string {
+    if (!date) return 'Older';
+    
+    const transactionDate = new Date(date);
+    transactionDate.setHours(0, 0, 0, 0);
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0);
+    
+    if (transactionDate.getTime() === today.getTime()) {
+      return 'Today';
+    } else if (transactionDate.getTime() === yesterday.getTime()) {
+      return 'Yesterday';
+    } else {
+      return 'Older';
+    }
   }
 
   getOlderTransactionsByDate(): Map<string, Transaction[]> {
