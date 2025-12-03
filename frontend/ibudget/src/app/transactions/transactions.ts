@@ -80,6 +80,9 @@ export class Transactions implements OnInit, OnDestroy {
 
   isEditing = false;
   editingTransactionId: number | null = null;
+  
+  // Toggle property for Expense/Income
+  isIncomeToggle = false;
 
     filterTransactions() {
       let filtered = [...this.transactions];
@@ -176,10 +179,22 @@ export class Transactions implements OnInit, OnDestroy {
       amount: null as any,
       type: 'expense'
     };
+    // Reset toggle to Expense (left position)
+    this.isIncomeToggle = false;
   }
 
   closeAddModal() {
     this.showAddModal.set(false);
+  }
+  
+  // Set transaction type to Expense
+  setExpenseType() {
+    this.newTransaction.type = 'expense';
+  }
+  
+  // Set transaction type to Income
+  setIncomeType() {
+    this.newTransaction.type = 'income';
   }
 
   addTransaction() {
