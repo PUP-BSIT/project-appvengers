@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/budgets/**").authenticated()
                 .requestMatchers("/api/transactions/**").authenticated()
                 .requestMatchers("/api/expenses/**").authenticated()
+                .requestMatchers("/api/savings/**").authenticated()
                 .anyRequest().authenticated())
             .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
