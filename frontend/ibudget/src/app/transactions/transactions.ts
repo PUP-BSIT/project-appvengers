@@ -50,7 +50,10 @@ export class Transactions implements OnInit, OnDestroy {
     'Shopping'
   ];
 
-  selectedPeriod = 'today';
+  selectedPeriod = 'daily';
+
+  showCustomCategoryInput = false;
+  customCategoryName = '';
 
   isEditing = false;
   editingTransactionId: number | null = null;
@@ -79,10 +82,22 @@ export class Transactions implements OnInit, OnDestroy {
     // You can implement date filtering logic here based on daily/weekly/monthly
   }
 
+  onCategorySelectChange() {
+    if (this.newTransaction.category === 'custom') {
+      this.showCustomCategoryInput = true;
+      this.customCategoryName = '';
+    } else {
+      this.showCustomCategoryInput = false;
+      this.customCategoryName = '';
+    }
+  }
+
   openAddModal() {
     this.showAddModal.set(true);
     this.isEditing = false;
     this.editingTransactionId = null;
+    this.showCustomCategoryInput = false;
+    this.customCategoryName = '';
     // Reset form
     this.newTransaction = {
       date: '' as any,
@@ -100,10 +115,22 @@ export class Transactions implements OnInit, OnDestroy {
   addTransaction() {
     if (this.newTransaction.description &&
         this.newTransaction.category && this.newTransaction.amount > 0) {
+      
+      // Use custom category if provided
+      const finalCategory = this.showCustomCategoryInput && this.customCategoryName 
+        ? this.customCategoryName 
+        : this.newTransaction.category;
+      
+      // Add custom category to categories list if not already there
+      if (this.showCustomCategoryInput && this.customCategoryName && 
+          !this.categories.includes(this.customCategoryName)) {
+        this.categories.push(this.customCategoryName);
+      }
+      
       const payload = {
         amount: this.newTransaction.amount,
         type: this.newTransaction.type,
-        category: this.newTransaction.category,
+        category: finalCategory,
         description: this.newTransaction.description,
         transactionDate: this.newTransaction.date
       };
@@ -159,6 +186,8 @@ export class Transactions implements OnInit, OnDestroy {
     this.showAddModal.set(true);
     this.isEditing = true;
     this.editingTransactionId = transaction.id;
+    this.showCustomCategoryInput = false;
+    this.customCategoryName = '';
     this.newTransaction = {
       date: transaction.date,
       description: transaction.description,
@@ -172,10 +201,22 @@ export class Transactions implements OnInit, OnDestroy {
     if (this.editingTransactionId !== null &&
         this.newTransaction.description &&
         this.newTransaction.category && this.newTransaction.amount > 0) {
+      
+      // Use custom category if provided
+      const finalCategory = this.showCustomCategoryInput && this.customCategoryName 
+        ? this.customCategoryName 
+        : this.newTransaction.category;
+      
+      // Add custom category to categories list if not already there
+      if (this.showCustomCategoryInput && this.customCategoryName && 
+          !this.categories.includes(this.customCategoryName)) {
+        this.categories.push(this.customCategoryName);
+      }
+      
       const payload = {
         amount: this.newTransaction.amount,
         type: this.newTransaction.type,
-        category: this.newTransaction.category,
+        category: finalCategory,
         description: this.newTransaction.description,
         transactionDate: this.newTransaction.date
       };
@@ -274,5 +315,80 @@ export class Transactions implements OnInit, OnDestroy {
 
   getSelectedTransaction(): Transaction | undefined {
     return this.transactions.find(t => t.id === this.selectedTransactionId());
+  }
+
+  getRelativeDate(date: Date): string {
+    const today = new Date();
+    const transactionDate = new Date(date);
+    
+    // Reset time to compare only dates
+    today.setHours(0, 0, 0, 0);
+    transactionDate.setHours(0, 0, 0, 0);
+    
+    const diffTime = today.getTime() - transactionDate.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+      return 'Today';
+    } else if (diffDays === 1) {
+      return 'Yesterday';
+    } else if (diffDays === -1) {
+      return 'Tomorrow';
+    } else {
+      return '';
+    }
+  }
+
+  getTodayTransactions(): Transaction[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return this.filteredTransactions.filter(t => {
+      const transactionDate = new Date(t.date);
+      transactionDate.setHours(0, 0, 0, 0);
+      return transactionDate.getTime() === today.getTime();
+    });
+  }
+
+  getYesterdayTransactions(): Transaction[] {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0);
+    
+    return this.filteredTransactions.filter(t => {
+      const transactionDate = new Date(t.date);
+      transactionDate.setHours(0, 0, 0, 0);
+      return transactionDate.getTime() === yesterday.getTime();
+    });
+  }
+
+  getOlderTransactions(): Transaction[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0);
+    
+    return this.filteredTransactions.filter(t => {
+      const transactionDate = new Date(t.date);
+      transactionDate.setHours(0, 0, 0, 0);
+      return transactionDate.getTime() !== today.getTime() && 
+             transactionDate.getTime() !== yesterday.getTime();
+    });
+  }
+
+  getOlderTransactionsByDate(): Map<string, Transaction[]> {
+    const grouped = new Map<string, Transaction[]>();
+    
+    this.getOlderTransactions().forEach(transaction => {
+      const dateKey = new Date(transaction.date).toDateString();
+      if (!grouped.has(dateKey)) {
+        grouped.set(dateKey, []);
+      }
+      grouped.get(dateKey)!.push(transaction);
+    });
+    
+    return grouped;
   }
 }
