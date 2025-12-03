@@ -32,13 +32,14 @@
     <div class="filter-add-row">
       <!-- Filter by Category -->
       <div class="category-section">
-        <h3>Filter by Category</h3>
         <select
           class="category-select"
           [(ngModel)]="selectedCategory"
           (change)="onCategoryChange()">
           @for (category of categories; track category) {
-            <option [value]="category">{{ category }}</option>
+            <option [value]="category">
+              {{ category }}
+            </option>
           }
         </select>
       </div>
