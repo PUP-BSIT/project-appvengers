@@ -273,7 +273,8 @@ export class Transactions implements OnInit, OnDestroy {
         this.newTransaction.category && this.newTransaction.amount > 0) {
       
       // Use custom category if provided
-      const finalCategory = this.showCustomCategoryInput && this.customCategoryName 
+      const finalCategory = this.showCustomCategoryInput
+        && this.customCategoryName 
         ? this.customCategoryName 
         : this.newTransaction.category;
       
@@ -291,26 +292,28 @@ export class Transactions implements OnInit, OnDestroy {
         transactionDate: this.newTransaction.date
       };
 
-      this.txService.update(this.editingTransactionId, payload).subscribe(updated => {
-        const index = this.transactions.findIndex(
-          t => t.id === this.editingTransactionId);
-        if (index !== -1) {
-          this.transactions[index] = {
-            ...this.transactions[index],
-            date: updated.date ? new Date(updated.date as any) : new Date(this.newTransaction.date),
-            description: updated.description,
-            category: updated.category,
-            amount: updated.amount,
-            type: updated.type
-          };
-        }
-        this.filterTransactions();
-        this.closeAddModal();
-        this.showNotificationMessage('Transaction updated successfully!');
-      }, () => {
-        this.showNotificationMessage('Failed to update transaction');
-      });
-    }
+      this.txService.update(this.editingTransactionId, payload)
+        .subscribe(updated => {
+          const index = this.transactions.findIndex(
+            t => t.id === this.editingTransactionId);
+          if (index !== -1) {
+            this.transactions[index] = {
+              ...this.transactions[index],
+              date: updated.date ? new Date(updated.date as any)
+                : new Date(this.newTransaction.date),
+              description: updated.description,
+              category: updated.category,
+              amount: updated.amount,
+              type: updated.type
+            };
+          }
+          this.filterTransactions();
+          this.closeAddModal();
+          this.showNotificationMessage('Transaction updated successfully!');
+        }, () => {
+          this.showNotificationMessage('Failed to update transaction');
+        });
+      }
   }
 
   getBalance(): number {
@@ -334,30 +337,27 @@ export class Transactions implements OnInit, OnDestroy {
 
   ngOnInit() {
     // load transactions from backend
-    console.log('Transactions: auth token present?', !!this.authService.getToken());
-    console.log('Transactions: auth token (first 24 chars):', this.authService.getToken()?.slice(0, 24));
+    console.log('Transactions: auth token present?',
+                !!this.authService.getToken());
+    console.log('Transactions: auth token (first 24 chars):',
+                this.authService.getToken()?.slice(0, 24));
     this.txService.getAll().subscribe((txs) => {
       // convert potential date strings to Date
       const backendTransactions = txs.map(t => ({
         ...t,
         date: t.date ? new Date(t.date as any) : new Date()
       }));
-      // Merge backend transactions with static transactions
       this.transactions = [...this.transactions, ...backendTransactions];
       this.filterTransactions();
-      // ensure change detection runs so template updates on first navigation
       try {
         this.cd.detectChanges();
       } catch (e) {
-        // fallback: schedule a microtask
         setTimeout(() => {}, 0);
       }
     }, (err) => {
       console.error('Failed to load transactions on init', err);
-      // Static transactions will still be shown even if backend fails
       this.filterTransactions();
-      // show a notification so devs notice this on the UI too
-      this.showNotificationMessage('Unable to load transactions (check console)');
+      this.showNotificationMessage('Unable to load transactions');
     });
 
     this.unlisten = this.renderer.listen('document', 'click', (event: Event) =>
@@ -386,7 +386,6 @@ export class Transactions implements OnInit, OnDestroy {
     this.showPopup.set(true);
   }
 
-  // Open the edit modal for the currently selected transaction (used by popup menu)
   editSelected() {
     const tx = this.getSelectedTransaction();
     if (!tx) return;
@@ -441,21 +440,18 @@ export class Transactions implements OnInit, OnDestroy {
       return transactionDate.getTime() !== today.getTime() && 
              transactionDate.getTime() !== yesterday.getTime();
     });
-    
-    // Sort by ID descending (newest first)
+
     return olderTransactions.sort((a, b) => (b.id || 0) - (a.id || 0));
   }
 
   getPaginatedTransactions(): Transaction[] {
-    // Get all transactions sorted by date and ID
     const sorted = [...this.filteredTransactions].sort((a, b) => {
       const dateA = new Date(a.date).getTime();
       const dateB = new Date(b.date).getTime();
-      if (dateB !== dateA) return dateB - dateA; // Newest date first
-      return (b.id || 0) - (a.id || 0); // Newest ID first within same date
+      if (dateB !== dateA) return dateB - dateA;
+      return (b.id || 0) - (a.id || 0);
     });
-    
-    // Calculate pagination
+
     this.totalPages = Math.ceil(sorted.length / this.itemsPerPage);
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
