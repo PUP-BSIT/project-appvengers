@@ -32,6 +32,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CategoryService categoryService;
     private final JwtService jwtService;
     private final EmailService emailService;
 
@@ -78,6 +79,7 @@ public class UserService {
         user.setEmailVerificationExpiration(LocalDateTime.now().plusHours(24));
 
         userRepository.save(user);
+        categoryService.seedDefaultsIfMissing(user.getId());
 
         // Send Verification Email Template
         String verificationLink = verificationBaseUrl + emailToken;
