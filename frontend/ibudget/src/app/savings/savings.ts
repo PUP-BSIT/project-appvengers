@@ -5,10 +5,11 @@ import { Saving } from '../../models/user.model';
 import { SavingsService } from '../../services/savings.service';
 import { RouterLink } from '@angular/router';
 import { SavingProgress } from "./saving-progress/saving-progress";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-savings',
-  imports: [Sidebar, Header, RouterLink, SavingProgress],
+  imports: [CommonModule, Sidebar, Header, RouterLink, SavingProgress],
   templateUrl: './savings.html',
   styleUrl: './savings.scss',
 })
@@ -31,7 +32,8 @@ export class Savings implements OnInit {
 
   getSavings() {
     this.savingsService.getSavings().subscribe((savingsData) => {
-      this.savings.set(savingsData);
+      this.savings.set(savingsData as Saving[]);
+      console.log('Fetched Savings:', savingsData);
     });
   }
 }

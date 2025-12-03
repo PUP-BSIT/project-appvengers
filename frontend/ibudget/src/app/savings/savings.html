@@ -27,7 +27,7 @@
         </p>
       }
       
-      @for(saving of savings(); track saving.savings_id) {
+      @for(saving of savings(); track saving.saving_id) {
         <div class="card m-2">
           <div class="card-header bg-dark text-white">
             <h5 class="card-title">{{ saving.name }}</h5>
@@ -47,8 +47,8 @@
             </div>
 
             <div class="progress-information  mt-2">
-              <p>&#8369; {{ saving.current_amount }}</p>
-              <p>&#8369; {{ saving.target_amount }}</p>
+              <p>&#8369; {{ saving.current_amount | number:'1.0-0' }}</p>
+              <p>&#8369; {{ saving.target_amount | number:'1.0-0' }}</p>
             </div>
 
             <div class="progress-information">
@@ -60,7 +60,7 @@
           <div class="card-footer d-flex bg-white p-3">
             <button 
               class="btn btn-primary w-100"
-              [routerLink]="'/savings/view-saving/' + saving.savings_id">
+              [routerLink]="'/savings/view-saving/' + saving.saving_id">
                 View Details
             </button>
           </div>
