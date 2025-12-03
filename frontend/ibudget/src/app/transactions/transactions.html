@@ -211,6 +211,21 @@
         <div class="modal-body">
           <form #form="ngForm"
                 (ngSubmit)="isEditing ? updateTransaction() : addTransaction()">
+            
+            <!-- Expense/Income Toggle (like auth page) -->
+            <div class="type-toggle-wrapper">
+              <div class="header-toggles">
+                <a (click)="setExpenseType()"
+                   [class.active]="newTransaction.type === 'expense'">
+                  Expense
+                </a>
+                <a (click)="setIncomeType()"
+                   [class.active]="newTransaction.type === 'income'">
+                  Income
+                </a>
+              </div>
+            </div>
+
             <div class="form-row">
               <div class="form-group">
                 <label for="date">Date</label>
@@ -303,39 +318,20 @@
 
             <div class="form-row">
               <div class="form-group">
-                <label for="type">Type</label>
-                <div class="radio-group">
-                  <label>
-                    <input
-                      type="radio"
-                      name="type"
-                      value="income"
-                      [(ngModel)]="newTransaction.type">
-                        Income
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="type"
-                      value="expense"
-                      [(ngModel)]="newTransaction.type"
-                      checked> Expense
-                  </label>
-                </div>
-              </div>
-
-              <div class="form-group">
                 <label for="amount">Amount</label>
-                <input
-                  type="number"
-                  id="amount"
-                  [(ngModel)]="newTransaction.amount"
-                  name="amount"
-                  #amount="ngModel"
-                  placeholder="0.00"
-                  min="0.01"
-                  step="0.01"
-                  required>
+                <div class="input-with-icon">
+                  <span class="peso-sign">₱</span>
+                  <input
+                    type="number"
+                    id="amount"
+                    [(ngModel)]="newTransaction.amount"
+                    name="amount"
+                    #amount="ngModel"
+                    placeholder="0.00"
+                    min="0.01"
+                    step="0.01"
+                    required>
+                </div>
                 @if (amount.touched && amount.invalid &&
                      amount.errors?.['required']) {
                   <div class="error-message">Amount is required</div>
