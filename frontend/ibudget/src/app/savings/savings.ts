@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 export class Savings implements OnInit {
   savings = signal(<Saving[]>[]);
   savingsService = inject(SavingsService);
+  isLoading = signal(true);
 
   ngOnInit() {
     // Fetch Savings Data
@@ -31,9 +32,15 @@ export class Savings implements OnInit {
   }
 
   getSavings() {
-    this.savingsService.getSavings().subscribe((savingsData) => {
-      this.savings.set(savingsData as Saving[]);
-      console.log('Fetched Savings:', savingsData);
+    this.savingsService.getSavings().subscribe({
+      next: (savingsData) => {
+        this.savings.set(savingsData as Saving[]);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        this.isLoading.set(false);
+        console.error('Error fetching savings:', error);
+      }
     });
   }
 }

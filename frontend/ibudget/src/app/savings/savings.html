@@ -21,7 +21,11 @@
     </div>
     
     <div class="savings-container">
-      @if(savings().length === 0) {
+      @if(isLoading()) {
+        <div class="loading-spinner-container">
+          <div class="spinner-border text-primary" role="status"></div>
+        </div>
+      } @else if(savings().length === 0) {
         <p class="no-savings-message">
           No savings goals found. Click "Add New Saving" to create one.
         </p>
