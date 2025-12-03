@@ -624,7 +624,7 @@ $sidebar-width: 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.75rem 2rem;
+  padding: 0.75rem 2rem;
   border-bottom: 2px solid #f5f5f5;
 }
 
@@ -782,6 +782,78 @@ $sidebar-width: 100px;
 
 .radio-text {
   transition: all 0.2s;
+}
+
+// Transaction Type Toggle (Auth-page style)
+.type-toggle-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  padding-top: 0.5rem;
+}
+
+.header-toggles {
+  display: flex;
+  gap: 0;
+  background: #ebebeb;
+  padding: 8px;
+  border-radius: 10px;
+  align-items: center;
+  width: fit-content;
+  min-width: 483px;
+}
+
+.header-toggles a {
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  min-width: unset;
+  flex: 1 1 50%;
+  border-radius: 8px;
+  background: transparent;
+  font-weight: 500;
+}
+
+.header-toggles a:hover {
+  background: #ddd;
+  color: #111;
+}
+
+.header-toggles a.active {
+  background: #1a6be6;
+  color: #fff;
+  font-weight: 600;
+}
+
+.header-toggles a + a {
+  border-left: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+// Amount input with peso sign
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.peso-sign {
+  position: absolute;
+  left: 12px;
+  color: #666;
+  font-size: 1rem;
+  font-weight: 500;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.input-with-icon input {
+  padding-left: 32px !important;
 }
 
 .form-actions {
