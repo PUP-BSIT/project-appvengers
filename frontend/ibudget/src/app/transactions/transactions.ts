@@ -73,7 +73,7 @@ export class Transactions implements OnInit, OnDestroy {
     'Other'
   ];
 
-  selectedPeriod = 'today';
+  selectedPeriod = 'daily';
 
   showCustomCategoryInput = false;
   customCategoryName = '';
