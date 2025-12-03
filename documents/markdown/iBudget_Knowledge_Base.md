@@ -2,502 +2,365 @@
 
 ## Overview
 
-iBudget is a modern web application designed to help people, especially students, manage their finances with ease. It simplifies money management and reduces the time and effort typically associated with budgeting. The application provides an intuitive platform for tracking income and expenses, visualizing spending patterns, setting financial goals, and receiving smart notifications and insights.
+iBudget is a modern web application designed to help people, especially students, manage their finances with ease. It simplifies money management by providing an intuitive platform for tracking income and expenses, visualizing spending patterns, setting budgets and savings goals, and receiving notifications about your financial activity.
 
-## Purpose and Objectives
+**Live Application:** https://i-budget.site/
 
-### Problem Statement
-Many people, especially students, struggle with tracking their daily, weekly, or monthly expenses. They often lose track of where their money goes, leading to overspending and financial stress. Traditional budgeting methods (notebooks, spreadsheets) are time-consuming, inconvenient, and difficult to update regularly.
+## Getting Started
 
-### Objectives
-The objectives of iBudget are to:
-- Reduce the time and effort needed for budgeting
-- Help users visualize their spending habits through charts and summaries
-- Provide an easy and efficient way to record expenses and income
-- Give insights and analysis about the user's spending
-
-### Proposed Solution
-iBudget is a budgeting web application designed for students to simplify money management. It enables users to record income and expenses, categorize them for better organization, and track savings. The app also provides interactive charts and summaries that visualize spending patterns, helping users gain insights into their financial habits and make smarter budgeting decisions, while also giving personalized insights and analysis to help users better understand their financial habits and make smarter budgeting decisions.
-
-iBudget basic tracking by allowing users to:
-- Add, edit, and delete transactions easily, including recurring expenses or income (like rent or allowance)
-- Set budget limits and goals per category, track progress visually, and receive alerts when nearing or exceeding limits
-- View interactive charts (pie, bar, and line graphs) for spending trends, monthly comparisons, and cash flow analysis
-
-## Key Features
-
-### Transaction Management
-- Easily add, edit, and delete income and expense transactions with a clean, intuitive interface
-- Support for recurring transactions
-- Real-time tracking of all financial activities
-
-### Smart Categorization
-- Automatically categorize transactions to understand where money goes
-- Customizable categories for better organization
-- Detailed breakdown of spending by category
-
-### Budget & Goal Setting
-- Set financial goals and create budgets with progress tracking
-- Visual progress indicators
-- Alerts when nearing or exceeding budget limits
-
-### Smart Notifications
-- Stay informed about bills, budget limits, and financial milestones
-- Personalized alerts based on spending behavior
-- Timely reminders for important financial events
-
-### Visual Analytics
-- Interactive charts and graphs powered by Chart.js for deep insights
-- Pie charts, bar graphs, and line graphs
-- Spending trends, monthly comparisons, and cash flow analysis
-
-### Personalized Insights
-- AI-driven recommendations based on spending behavior
-- Analysis of financial habits
-- Suggestions for better money management
-
-### Secure Account Management
-- Bank-level security with JWT authentication
-- Role-based access control
-- Rate limiting for protection against brute-force attacks
-
-## Technical Stack
-
-### Frontend
-- **Framework:** Angular 20 with Signals & Standalone Components
-- **Language:** TypeScript
-- **UI Library:** Bootstrap 5 + Bootstrap Icons
-- **Charts:** Chart.js + ng2-charts
-- **State Management:** RxJS + Angular Signals
-- **HTTP Client:** Angular HttpClient with interceptors
-- **Styling:** SCSS
-- **Testing:** Jasmine + Karma
-
-### Backend
-- **Framework:** Spring Boot 3.5.7
-- **Language:** Java 21
-- **Database:** MySQL 8.2
-- **Security:** Spring Security + JWT Authentication
-- **ORM:** Spring Data JPA + Hibernate
-- **Validation:** Jakarta Bean Validation
-- **Rate Limiting:** Bucket4j
-- **Testing:** JUnit 5 + H2 Database
-- **Code Coverage:** JaCoCo
-
-### DevOps & Tools
-- **CI/CD:** GitHub Actions (automated testing & security scans)
-- **Secret Scanning:** Gitleaks
-- **Build Tools:** Maven Wrapper, Angular CLI
-- **Hosting:** Hostinger
-- **Version Control:** Git & GitHub
-
-## Target Audience
-
-iBudget is primarily designed for:
-- Students managing allowances and expenses
-- Young professionals starting their financial journey
-- Anyone looking for a simple, effective budgeting solution
-- Users who prefer digital tools over traditional methods
-
-## How It Works
-
-1. **User Registration & Authentication:** Users create secure accounts with JWT-based authentication
-2. **Transaction Entry:** Users input income and expenses with categorization
-3. **Budget Setting:** Users set financial goals and budget limits
-4. **Visualization:** Interactive charts display spending patterns and trends
-5. **Insights & Alerts:** The app provides personalized insights and notifications
-6. **Progress Tracking:** Users monitor their financial progress towards goals
-
-## Beginner Tutorial: Getting Started with iBudget
-
-This step-by-step guide will help new users navigate and start using iBudget effectively.
-
-### Step 1: Accessing iBudget
+### How to Access iBudget
 1. Open your web browser and go to https://i-budget.site/
-2. You'll land on the landing page with an overview of iBudget's features
-3. Click the "Get Started" or "Sign Up" button to begin
+2. You'll see the landing page with an overview of iBudget's features
+3. Click the "Get Started" button to begin
 
-### Step 2: Creating Your Account
-1. On the sign-up page, enter your:
-   - Full name
-   - Email address
-   - Username
-   - Password (must be strong and secure)
-2. Click "Sign Up" to create your account
-3. Check your email for a verification link
-4. Click the verification link to activate your account
+### Creating Your Account
+1. On the auth page, click the "Signup" tab
+2. Fill in the registration form:
+   - **Username** - Choose a unique username (3-50 characters)
+   - **Email** - Enter a valid email address
+   - **Password** - Create a secure password (minimum 6 characters)
+   - **Confirm Password** - Re-enter your password
+3. The form will check if your username and email are available in real-time
+4. Click "Sign Up" to create your account
+5. Check your email for a verification link and click it to activate your account
 
-### Step 3: Setting Up Your Profile
-1. After verification, you'll be prompted to set up your account
-2. Provide basic information:
-   - Monthly income
-   - Primary financial goals
-   - Preferred currency (if applicable)
-3. This helps iBudget personalize your experience
+### Logging In
+1. Go to the auth page and ensure the "Login" tab is selected
+2. Enter your email and password
+3. Click "Login"
+4. If you forget your password, click "Forgot Password?" to reset it
 
-### Step 4: Logging In
-1. Return to the login page
-2. Enter your username/email and password
-3. Click "Sign In"
-4. If you forget your password, use the "Forgot Password" link
+### Resetting Your Password
+1. Click "Forgot Password?" on the login page
+2. Enter your registered email address
+3. Check your email for a password reset link
+4. Click the link and enter your new password (minimum 8 characters)
+5. Confirm your new password and submit
 
-### Step 5: Exploring the Dashboard
-1. After login, you'll see the main dashboard
-2. The dashboard shows:
-   - Your current balance
-   - Recent transactions
-   - Budget progress indicators
-   - Quick action buttons
-3. Use the sidebar navigation to access different sections
+## Main Features
 
-### Step 6: Adding Your First Transaction
-1. Click "Transactions" in the sidebar or "Add Transaction" on the dashboard
-2. Choose transaction type: Income or Expense
-3. Fill in details:
-   - Amount
-   - Category (e.g., Food, Transportation, Entertainment)
+### Dashboard
+
+The dashboard is your financial command center. After logging in, you'll see:
+
+**Welcome Section**
+- A personalized greeting with your username
+- Your remaining budget displayed prominently (calculated as Total Income minus Total Expenses)
+
+**Financial Charts**
+- **Expense Chart** - A doughnut chart showing your expense breakdown by category
+- **Income Chart** - A doughnut chart showing your income sources
+- **Spending Overview** - A bar chart showing your spending patterns over time
+
+### Transactions
+
+The transactions page helps you track all your financial activities.
+
+**Summary Cards at the Top:**
+- **Total Income** - Sum of all your income transactions
+- **Total Expenses** - Sum of all your expense transactions
+- **Balance** - Your current balance (Income minus Expenses)
+
+**Transaction List:**
+Each transaction shows:
+- Date
+- Description
+- Category (color-coded tag)
+- Amount (green for income, red for expenses)
+
+**How to Add a Transaction:**
+1. Click the "+ Add Transaction" button
+2. Fill in the transaction details:
+   - **Date** - Select the transaction date
+   - **Category** - Choose from: Income, Entertainment, Bills, Shopping
+   - **Description** - Enter a description of the transaction
+   - **Type** - Select Income or Expense
+   - **Amount** - Enter the amount
+3. Click "Add Transaction" to save
+
+**How to Edit a Transaction:**
+1. Click the three-dot menu on any transaction card
+2. Select "Edit"
+3. Modify the details in the form
+4. Click "Save" to update
+
+**How to Delete a Transaction:**
+1. Click the three-dot menu on any transaction card
+2. Select "Delete"
+3. Confirm the deletion
+
+**Filtering Transactions:**
+- Use the category dropdown to filter transactions by category
+- Options: All Categories, Income, Entertainment, Bills, Shopping
+
+### Budgets
+
+The budgets page helps you set spending limits and track your progress.
+
+**Budget Overview Cards:**
+- **Total Budgets** - Sum of all your budget limits
+- **Total Spent** - How much you've spent across all budgets
+- **Remaining** - How much budget you have left
+
+**Budget List:**
+Each budget card displays:
+- Category name
+- Date range (start to end date)
+- Current spending vs. budget limit
+- Visual progress bar with percentage
+- Remaining amount
+- "View Budget" button for details
+
+**How to Create a Budget:**
+1. Click the "Add Budget" button
+2. Fill in the budget details:
+   - Category
+   - Budget limit amount
+   - Start date
+   - End date
+3. Click "Save" to create the budget
+
+**How to View Budget Details:**
+1. Click "View Budget" on any budget card
+2. You'll see:
+   - KPI panel with remaining budget, total budget, and total expenses
+   - Circular progress indicator
+   - Expenses history table with all transactions in that budget
+
+**How to Add an Expense to a Budget:**
+1. Open the budget details page
+2. Click "Add Budget Expense"
+3. Enter the expense details
+4. Click "Save"
+
+### Savings
+
+The savings page helps you set and track savings goals.
+
+**Savings List:**
+Each saving goal card shows:
+- Goal name
+- Description
+- Progress percentage with visual bar
+- Current amount and target amount
+- Goal date
+- "View Details" button
+
+**How to Create a Savings Goal:**
+1. Click "Add New Saving" button
+2. Fill in the form:
+   - **Saving Name** - Name your goal (e.g., "Emergency Fund", "New Phone")
+   - **Target Amount** - How much you want to save
+   - **Frequency** - How often you plan to save (Daily, Weekly, Monthly)
+   - **Goal Date** - When you want to reach your goal
+   - **Description** - Optional notes about your goal
+3. Click "Save" to create
+
+**How to View Savings Details:**
+1. Click "View Details" on any savings card
+2. You'll see:
+   - Current amount and target amount
+   - Remaining amount needed
+   - Progress percentage with visual bar
    - Description
-   - Date
-4. Click "Save" to record the transaction
-5. Repeat for all your recent transactions to build your financial history
+   - Start date and goal date
+   - Daily saving needed (calculated automatically)
+   - Transaction history (deposits and withdrawals)
 
-### Step 7: Setting Up Budgets
-1. Navigate to "Budgets" in the sidebar
-2. Click "Create New Budget"
-3. Choose a category (e.g., Food, Entertainment)
-4. Set a monthly limit (e.g., $300 for Food)
-5. Add a description if needed
-6. Click "Save"
-7. Create budgets for all major spending categories
+**How to Add Money to Your Savings:**
+1. Open the savings details page
+2. Click "Add Saving Transaction"
+3. Choose transaction type: Deposit or Withdrawal
+4. Enter the amount and description
+5. Click "Save"
 
-### Step 8: Managing Categories
-1. Go to "Categories" in the sidebar
-2. View existing categories or create custom ones
-3. Click "Add Category" to create new categories
-4. Assign colors and icons for better organization
-5. Edit or delete categories as needed
+### Categories
 
-### Step 9: Viewing Reports and Analytics
-1. Click "Reports" in the sidebar
-2. Explore different chart types:
-   - Pie charts for spending by category
-   - Bar graphs for monthly comparisons
-   - Line graphs for spending trends
-3. Use filters to view data by date range or category
-4. Export reports if needed
+The categories page shows a visual breakdown of your spending and income by category.
 
-### Step 10: Setting Savings Goals
-1. Navigate to "Savings" in the sidebar
-2. Click "Add Saving Goal"
-3. Define your goal:
-   - Name (e.g., "Emergency Fund")
-   - Target amount
-   - Target date
-   - Monthly contribution
-4. Track progress with visual indicators
-5. Adjust goals as your financial situation changes
+**Available Expense Categories:**
+- Bills
+- Food
+- Shopping
+- Entertainment
+- Health
+- Transport
+- Education
+- Utilities
+- Others
 
-### Step 11: Customizing Settings
-1. Go to "Settings" in the sidebar
-2. Update your profile information
-3. Change password if needed
-4. Configure notification preferences
-5. Set up account preferences (currency, date format, etc.)
+**Available Income Categories:**
+- Salary
+- Business
+- Investments
+- Gifts
+- Others
 
-### Step 12: Managing Notifications
-1. Click "Notifications" in the sidebar
-2. View all notifications
-3. Mark as read or delete old notifications
-4. Configure notification settings in Settings
+**Using the Categories Page:**
+1. Use the dropdown to switch between "Expenses" and "Income" view
+2. View the bar chart showing amounts per category
+3. Hover over bars to see exact amounts
 
-### Tips for Effective Use
-- **Regular Updates:** Add transactions daily or weekly for accurate tracking
-- **Review Budgets:** Check budget progress weekly and adjust as needed
-- **Analyze Patterns:** Use reports to identify spending patterns and areas for improvement
-- **Set Realistic Goals:** Start with achievable savings goals and budgets
-- **Stay Consistent:** Make iBudget part of your daily routine for best results
+### Reports
 
-### Troubleshooting Common Issues
-- **Can't log in?** Check your email for verification or reset your password
-- **Transactions not saving?** Ensure all required fields are filled and try again
-- **Charts not loading?** Refresh the page or check your internet connection
-- **Need help?** Contact support through the app or check the documentation
+The reports page provides summaries of your financial activity over different periods.
 
-## Setup and Usage
+**What Reports Show:**
+- Date range (period start to end)
+- Summary of your financial activity during that period
+- Insights about budget adherence and spending patterns
 
-### Prerequisites
-- Node.js 18+ and npm (for frontend)
-- Java 21+ and Maven (for backend)
-- MySQL 8.0+ (for database)
+### Notifications
 
-### Quick Start
-1. Clone the repository
-2. Set up backend environment variables (.env file)
-3. Run backend server (port 8081)
-4. Install frontend dependencies
-5. Run frontend development server (port 4200)
+The notifications page keeps you informed about important financial events.
 
-### Environment Configuration
-- Backend uses .env files for sensitive configuration
-- Frontend uses Angular environment files for API URLs
-- Separate configurations for development and production
+**Types of Notifications:**
+- **Warning** (Orange) - Budget exceeded alerts
+- **Alert** - Bill reminders and payment due dates
+- **Info** (Blue) - Budget warnings when approaching limits
 
-## Security Features
+**Managing Notifications:**
+- Click "Mark all as read" to clear all unread notifications
+- Click the checkmark on individual notifications to mark as read
+- Click the trash icon to delete a notification
 
-- JWT authentication for secure access
-- Spring Security with role-based access control
-- Rate limiting to prevent brute-force attacks
-- Input validation using Jakarta Bean Validation
-- CORS protection for production
-- Automated secret scanning with Gitleaks
+**When You Have No Notifications:**
+- You'll see "No notifications" with a message "You're all caught up!"
 
-## CI/CD Pipeline
+### Settings
 
-The project uses GitHub Actions for:
-- Continuous Integration: Automated builds and tests on every PR
-- Continuous Deployment: Automated deployment to production on merge to main
-- Security Scanning: Gitleaks secret detection
-- Code Coverage: JaCoCo (Backend) + Karma (Frontend)
+The settings page allows you to manage your account.
 
-## Team Information
+**Account Settings:**
+- View and update your username
+- View and update your email address
+- See your profile picture (displays first letter of username)
 
-iBudget was developed by Team Appvengers from Polytechnic University of the Philippines:
-- Justine Delima: Project Manager / Developer
-- John Matthew Arroyo: Tech Lead / Developer
-- James Michael Mejares: DevOps Engineer / Tester / Developer
-- Ma. Bea Mae Ynion: UI/UX Designer / Developer
+**Security Settings:**
+- **Change Password:**
+  1. Enter your current password
+  2. Enter your new password (minimum 8 characters)
+  3. Confirm your new password
+  4. Click "Save"
 
-## Live Demo
+- **Privacy Options:**
+  - Deactivate Account - Temporarily disable your account
+  - Delete Account - Permanently remove your account and all data
 
-The application is live at: https://i-budget.site/
+## Navigation
 
-## Documentation
+### Sidebar Menu
+The sidebar provides quick access to all main sections:
+- **Dashboard** (house icon) - Financial overview
+- **Transactions** (arrows icon) - Income and expense tracking
+- **Budgets** (wallet icon) - Budget management
+- **Savings** (piggy bank icon) - Savings goals
+- **Categories** (tags icon) - Category breakdown
+- **Reports** (chart icon) - Financial reports
+- **Settings** (gear icon) - Account settings
+- **Logout** (arrow icon) - Sign out of your account
 
-- API Documentation: backend/appvengers/API_DOCUMENTATION.md
-- Integration Guide: backend/appvengers/INTEGRATION_GUIDE.md
-- Quick Start Guide: backend/appvengers/QUICK_START.md
-- Environment Setup: ENVIRONMENT_SETUP.md
-- Code Coverage Guide: CODE_COVERAGE_GUIDE.md
-- Test Cases: documents/testcases/
+### Header
+- **Menu button** - Opens sidebar on mobile devices
+- **Notifications** - Shows notification count badge
+- **Profile** - Quick access to account settings
 
-## Project Management
+### Bonzi Budget Buddy
+The friendly mascot in the corner is your iBudget assistant! Click on it for help and tips.
 
-The team uses Notion for sprint planning, user stories, requirements, and technical documentation.
+## Currency
 
-## FAQ Section
+All amounts in iBudget are displayed in Philippine Peso (PHP / ₱).
 
-### Common User Questions
+## Tips for Effective Use
 
-**Q: How do I reset my password?**
-A: Click "Forgot Password" on the login page, enter your email, and follow the reset instructions sent to your email.
+1. **Log transactions regularly** - Add transactions daily or as they happen for accurate tracking
+2. **Set realistic budgets** - Start with budgets based on your actual spending patterns
+3. **Review your dashboard** - Check your charts weekly to understand spending patterns
+4. **Use categories consistently** - Proper categorization helps with analysis
+5. **Set savings goals** - Having clear goals motivates you to save more
+6. **Check notifications** - Stay on top of budget warnings and alerts
+
+## Troubleshooting
+
+### Can't Log In?
+- Check that your email is verified (check your inbox for verification email)
+- Ensure you're using the correct email and password
+- Try resetting your password using "Forgot Password?"
+- If you see a rate limit message, wait a few minutes before trying again
+
+### Transactions Not Saving?
+- Ensure all required fields are filled (date, category, description, type, amount)
+- Check your internet connection
+- Refresh the page and try again
+
+### Charts Not Loading?
+- Refresh the page
+- Check your internet connection
+- Try using a different browser
+- Clear your browser cache
+
+### Forgot Your Password?
+1. Go to the login page
+2. Click "Forgot Password?"
+3. Enter your email address
+4. Check your email for the reset link
+5. Click the link and create a new password
+
+### Email Verification Issues?
+- Check your spam/junk folder for the verification email
+- Request a new verification email from the login page
+- Ensure you're using the correct email address
+
+## Frequently Asked Questions
+
+**Q: Is iBudget free to use?**
+A: Yes, iBudget is completely free to use.
+
+**Q: Is my financial data secure?**
+A: Yes, iBudget uses JWT authentication, encrypted data transmission, and follows security best practices to protect your data.
+
+**Q: Can I use iBudget on my phone?**
+A: Yes, iBudget is fully responsive and works on mobile browsers. Just visit https://i-budget.site/ on your phone.
 
 **Q: Can I import transactions from my bank?**
-A: Currently, iBudget requires manual entry of transactions. Bank integration is planned for future updates.
-
-**Q: Is my data secure?**
-A: Yes, iBudget uses JWT authentication, encrypted data storage, and follows security best practices. See Privacy and Security section for details.
+A: Currently, iBudget requires manual entry of transactions. Bank integration may be added in future updates.
 
 **Q: How do I delete my account?**
-A: Go to Settings > Account and select "Delete Account". This will permanently remove all your data.
+A: Go to Settings > Security Settings and click "Delete Account". This will permanently remove all your data.
 
-**Q: Can I use iBudget offline?**
-A: No, iBudget requires an internet connection as it's a web-based application.
+**Q: Can I change my email address?**
+A: Yes, go to Settings > Account Settings, update your email, and click Save.
 
-### Troubleshooting
+**Q: What happens if I exceed my budget?**
+A: You'll receive a notification warning you that you've exceeded your budget limit. The budget progress bar will show 100%+ spending.
 
-**Login Issues:**
-- Ensure email is verified
-- Check username/password combination
-- Clear browser cache and cookies
+**Q: How is the "Daily Saving Needed" calculated?**
+A: It's calculated by dividing your remaining savings goal by the number of days until your goal date.
 
-**Transaction Errors:**
-- Verify all required fields are filled
-- Check date format (MM/DD/YYYY)
-- Ensure amount is a valid number
+**Q: Can I edit or delete transactions after adding them?**
+A: Yes, click the three-dot menu on any transaction to edit or delete it.
 
-**Chart Display Problems:**
-- Refresh the page
-- Check internet connection
-- Try a different browser
+**Q: What categories are available for transactions?**
+A: For expenses: Entertainment, Bills, Shopping. For income: Income category. Custom categories may be added in future updates.
 
-## Advanced Features Guide
+## Contact and Support
 
-### Recurring Transactions
-- Set up automatic recurring income (salary, allowance) or expenses (rent, subscriptions)
-- Choose frequency: daily, weekly, monthly, yearly
-- Edit or pause recurring transactions anytime
+**Website:** https://i-budget.site/
 
-### Advanced Filtering and Search
-- Filter transactions by date range, category, amount, or description
-- Use search bar for specific keywords
-- Export filtered results to CSV/PDF
+**GitHub Repository:** https://github.com/PUP-BSIT/project-appvengers
 
-### Custom Categories and Subcategories
-- Create unlimited custom categories
-- Organize with subcategories for detailed tracking
-- Assign colors and icons for visual organization
+**Bug Reports:** Submit issues on GitHub with screenshots and steps to reproduce
 
-### Budget Alerts and Notifications
-- Set custom alert thresholds (e.g., notify at 80% of budget)
-- Receive email/SMS notifications for budget overruns
-- Configure notification preferences in Settings
+## About the Team
 
-### Data Export and Backup
-- Export transactions, budgets, and reports
-- Choose formats: CSV, PDF, Excel
-- Schedule automatic backups (premium feature)
+iBudget was developed by Team Appvengers from Polytechnic University of the Philippines:
 
-## User Scenarios and Use Cases
+- **Justine Delima** - Project Manager / Developer
+- **John Matthew Arroyo** - Tech Lead / Developer
+- **Ma. Bea Mae Ynion** - UI/UX Designer / Developer
+- **James Michael Mejares** - DevOps Engineer / Tester / Developer
 
-### Student Budgeting Scenario
-Maria, a college student, uses iBudget to manage her monthly allowance:
-- Tracks daily expenses for food, transportation, and entertainment
-- Sets budgets for each category to avoid overspending
-- Views monthly reports to identify spending patterns
-- Saves for textbooks and emergencies
+---
 
-### Young Professional Use Case
-John, a recent graduate, uses iBudget for career transition:
-- Monitors job search expenses
-- Tracks freelance income and expenses
-- Sets savings goals for certifications
-- Analyzes spending to optimize living costs
-
-### Family Budget Management
-The Garcia family uses iBudget for household finances:
-- Tracks shared expenses and individual allowances
-- Sets family budget goals
-- Monitors children's spending habits
-- Plans for vacations and major purchases
-
-## API Integration Guide
-
-### Authentication
-- Use JWT tokens for API access
-- Obtain tokens via login endpoint
-- Include Bearer token in Authorization header
-
-### Available Endpoints
-- `/api/transactions` - CRUD operations for transactions
-- `/api/budgets` - Budget management
-- `/api/categories` - Category operations
-- `/api/reports` - Generate financial reports
-
-### Rate Limiting
-- 100 requests per minute for authenticated users
-- 10 requests per minute for unauthenticated endpoints
-- Headers include rate limit information
-
-### Webhooks
-- Configure webhooks for real-time updates
-- Supported events: transaction created, budget exceeded
-- Secure webhook signatures for validation
-
-## Privacy and Security Information
-
-### Data Protection
-- All data encrypted at rest and in transit
-- User data never shared with third parties
-- Compliant with data protection regulations
-
-### Security Measures
-- JWT authentication with expiration
-- Password hashing with bcrypt
-- Rate limiting to prevent abuse
-- Regular security audits and updates
-
-### User Rights
-- Right to access your data
-- Right to data portability
-- Right to data deletion
-- Contact support for data requests
-
-## Future Roadmap
-
-### Q4 2024
-- Mobile app launch (iOS/Android)
-- Bank account integration
-- Advanced AI insights
-
-### Q1 2025
-- Multi-currency support
-- Collaborative budgeting for families
-- Investment tracking features
-
-### Q2 2025
-- Premium subscription features
-- Advanced reporting and analytics
-- Third-party app integrations
-
-## Support and Contact Information
-
-### Getting Help
-- **Email Support:** support@i-budget.site
-- **Response Time:** Within 24 hours for premium users, 48 hours for free users
-- **Live Chat:** Available during business hours (9 AM - 6 PM PST)
-
-### Community Resources
-- **User Forum:** community.i-budget.site
-- **Documentation:** docs.i-budget.site
-- **Video Tutorials:** YouTube channel @iBudgetOfficial
-
-### Bug Reporting
-- Use GitHub Issues: github.com/PUP-BSIT/project-appvengers/issues
-- Include screenshots, browser info, and steps to reproduce
-- Feature requests welcome in the same repository
-
-## Performance Metrics and Benchmarks
-
-### Uptime
-- 99.9% uptime in the last 12 months
-- Monitored 24/7 with automatic alerts
-
-### Response Times
-- Average API response: <200ms
-- Page load time: <2 seconds
-- Chart rendering: <1 second
-
-### Security
-- Passed latest security audit (2024)
-- Zero data breaches in 3 years of operation
-- Regular penetration testing
-
-## Comparison with Competitors
-
-### vs. Traditional Methods
-- **Spreadsheets:** iBudget provides real-time insights vs. manual calculations
-- **Notebooks:** Digital tracking with automatic categorization
-- **Bank Apps:** Specialized budgeting features vs. basic transaction viewing
-
-### vs. Other Budgeting Apps
-- **Mint:** iBudget offers more customization and control
-- **YNAB:** More affordable with similar core features
-- **PocketGuard:** Better visualization and student-focused design
-
-### Unique Selling Points
-- Student-focused design and pricing
-- Open-source transparency
-- Strong security and privacy focus
-- Active community development
-
-## Educational Content
-
-### Budgeting Basics
-- 50/30/20 rule: 50% needs, 30% wants, 20% savings
-- Track expenses for at least one month before setting budgets
-- Review and adjust budgets monthly
-
-### Financial Literacy Tips
-- Emergency fund: Aim for 3-6 months of expenses
-- Pay yourself first: Automate savings transfers
-- Use credit cards wisely: Pay off balances monthly
-
-### Advanced Strategies
-- Zero-based budgeting: Assign every dollar a job
-- Envelope system: Allocate cash to spending categories
-- Debt snowball method: Pay smallest debts first
-
-## License and Acknowledgments
-
-This project is part of an academic program at Polytechnic University of the Philippines. It acknowledges contributions from the Spring Boot community, Angular team, and various open-source contributors.</content>
-<parameter name="filePath">iBudget_Knowledge_Base.md
+*Last Updated: November 2025*
