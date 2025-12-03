@@ -16,7 +16,10 @@ import { AuthService } from '../../services/auth.service';
 export class Transactions implements OnInit, OnDestroy {
   private unlisten: (() => void) | null = null;
 
-  constructor(private renderer: Renderer2, private txService: TransactionsService, private authService: AuthService, private cd: ChangeDetectorRef) {}
+  constructor(private renderer: Renderer2,
+              private txService: TransactionsService,
+              private authService: AuthService,
+              private cd: ChangeDetectorRef) {}
 
   showAddModal = signal(false);
   showNotification = signal(false);
@@ -47,24 +50,33 @@ export class Transactions implements OnInit, OnDestroy {
     'Shopping'
   ];
 
+  selectedPeriod = 'today';
+
   isEditing = false;
   editingTransactionId: number | null = null;
 
     filterTransactions() {
-      const sel = (this.selectedCategory ||
-                    'All Categories').toString().toLowerCase();
+      const sel = (this.selectedCategory || 'All Categories')
+                  .toString().toLowerCase();
+
       if (sel === 'all categories') {
         this.filteredTransactions = [...this.transactions];
       } else {
         this.filteredTransactions = this.transactions.filter(
-          transaction => (transaction.category ||
-                          '').toString().toLowerCase() === sel
+          transaction => (transaction.category || '')
+            .toString().toLowerCase() === sel
         );
       }
     }
 
   onCategoryChange() {
     this.filterTransactions();
+  }
+
+  onPeriodChange() {
+    // Add filtering logic based on selected period
+    console.log('Period changed to:', this.selectedPeriod);
+    // You can implement date filtering logic here based on daily/weekly/monthly
   }
 
   openAddModal() {
