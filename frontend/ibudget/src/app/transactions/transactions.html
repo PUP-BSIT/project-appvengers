@@ -238,7 +238,7 @@
 
   <!-- Snackbar Notification -->
   @if (showNotification()) {
-    <div class="snackbar">
+    <div class="snackbar" [class.hide]="isHidingNotification()">
       <i class="fas fa-check-circle"></i>
       <span>{{ notificationMessage() }}</span>
     </div>
@@ -305,7 +305,6 @@
                   <option value="Gifts">Gifts</option>
                   <option value="Charity">Charity</option>
                   <option value="Other">Other</option>
-                  <option value="custom">+ Add Custom Category</option>
                 </select>
                 
                 @if (category.touched && category.invalid &&
