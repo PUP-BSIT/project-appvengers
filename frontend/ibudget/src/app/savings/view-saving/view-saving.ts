@@ -8,17 +8,21 @@ import { SavingsService } from '../../../services/savings.service';
 import { AddSavingTransaction } from "./add-saving-transaction/add-saving-transaction";
 import { UpdateSavingTransaction } from "./update-saving-transaction/update-saving-transaction";
 import { SavingProgress } from "../saving-progress/saving-progress";
+import { CommonModule } from '@angular/common';
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: 'app-view-saving',
   imports: [
-          Sidebar, 
-          Header, 
-          RouterLink, 
-          AddSavingTransaction, 
-          UpdateSavingTransaction, 
-          SavingProgress
-        ],
+    Sidebar,
+    Header,
+    RouterLink,
+    AddSavingTransaction,
+    UpdateSavingTransaction,
+    SavingProgress,
+    CommonModule,
+    FormsModule
+],
   templateUrl: './view-saving.html',
   styleUrls: ['./view-saving.scss'],
 })
@@ -32,6 +36,7 @@ export class ViewSaving implements OnInit{
   activatedRoute = inject(ActivatedRoute);
   savingId = signal(1);
   remainingAmount = signal(0);
+  dateStarted = signal(new Date());
   router = inject(Router);
 
   // Initialize component and fetch data
@@ -112,6 +117,7 @@ export class ViewSaving implements OnInit{
 
     this.savingService.getSavingById(savingsId).subscribe((savingData) => {
       this.currentSaving.set(savingData);
+      this.dateStarted.set(new Date(savingData.created_at));
       
       // Now that data is present, do dependent computations
       this.updateRemainingAmount();
