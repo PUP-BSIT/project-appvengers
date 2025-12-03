@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Category {
-  categoryId: number;
+  category_id: number;
   userId: number;
   name: string;
   type: string; // "income" or "expense"

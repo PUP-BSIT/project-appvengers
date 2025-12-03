@@ -14,6 +14,7 @@ import {
     SimpleChanges, 
     ViewChild 
   } from '@angular/core';
+  
 import { 
     ReactiveFormsModule ,
     FormBuilder,
@@ -27,6 +28,7 @@ import {
   templateUrl: './add-budget-button.html',
   styleUrl: './add-budget-button.scss',
 })
+
 export class AddBudgetButton implements OnInit, OnChanges {
   @ViewChild('addBudgetModal') addBudgetModal!: ElementRef;
   @ViewChild('openAddBudgetModalBtn') 
@@ -37,7 +39,7 @@ export class AddBudgetButton implements OnInit, OnChanges {
   budgetService = inject(BudgetService);
   mockBudgetId = input(<number>(0));
   categoriesService = inject(CategoriesService);
-  categories = signal(<Categories[]>[]);
+  categories = signal<Categories[]>([]);
   currentCategoryName = signal('');
   currentCategoryId = signal<number>(0);
 
@@ -55,7 +57,9 @@ export class AddBudgetButton implements OnInit, OnChanges {
 
   ngOnInit() {
     const budgetId = this.mockBudgetId();
-    this.categories.set(this.categoriesService.getExpenseCategories());
+    this.categoriesService.getCategories().subscribe(data => {
+      this.categories.set(data);
+    });
 
     this.budgetForm = this.formBuilder.group({
       id: [budgetId],
