@@ -24,13 +24,12 @@ export class AddSaving implements OnInit {
 
   constructor() {
     this.addSavingForm = this.formBuilder.group({
-      savings_id: [''],
-      user_id: [1],
+      // savings_id: [''],
       name: [''],
       goal_date: [this.dateNow],
       frequency: [''],
-      target_amount: [''],
-      current_amount: [0],
+      target_amount: [Number(0)],
+      current_amount: [Number(0)],
       description: [''],
       created_at: [''],
       updated_at: [''],
@@ -41,16 +40,15 @@ export class AddSaving implements OnInit {
   ngOnInit(): void {
     this.getSavingsLength();
 
-    const newSavingId = this.savingsLength() + 1;
+    // const newSavingId = this.savingsLength() + 1;
 
     this.addSavingForm = this.formBuilder.group({
-      savings_id: [newSavingId],
-      user_id: [1],
+      // savings_id: [newSavingId],
       name: [''],
       goal_date: [this.dateNow],
       frequency: [''],
-      target_amount: [''],
-      current_amount: [0],
+      target_amount: [Number(0)],
+      current_amount: [Number(0)],
       description: [''],
       created_at: [this.dateNow],
       updated_at: [this.dateNow],
@@ -65,8 +63,11 @@ export class AddSaving implements OnInit {
   }
 
   addSaving() {
-    this.savingService.addSaving(this.addSavingForm.value)
+    const newSaving: Saving = this.addSavingForm.value;
+    
+    this.savingService.addSaving(newSaving)
       .subscribe(() => {
+        console.log('New saving added successfully', newSaving);
         this.router.navigate(['/savings']);
       });
   }
