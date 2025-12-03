@@ -12,22 +12,22 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-    List<Transaction> findByUser(User user);
+    List<Transaction> findByUserAndDeletedFalse(User user);
 
-    // Expense summary
+    // Expense summary - only non-deleted transactions
     @Query("""
         SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
         FROM Transaction t
-        WHERE t.user = :user AND t.type = :type
+        WHERE t.user = :user AND t.type = :type AND t.deleted = false
         GROUP BY COALESCE(t.category, 'Uncategorized')
     """)
     List<Object[]> findExpenseSummaryByUserAndType(@Param("user") User user, @Param("type") String type);
 
-    // Income summary (uniform with expense)
+    // Income summary - only non-deleted transactions
     @Query("""
         SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
         FROM Transaction t
-        WHERE t.user = :user AND t.type = :type
+        WHERE t.user = :user AND t.type = :type AND t.deleted = false
         GROUP BY COALESCE(t.category, 'Uncategorized')
     """)
     List<Object[]> findIncomeSummaryByUserAndType(@Param("user") User user, @Param("type") String type);
