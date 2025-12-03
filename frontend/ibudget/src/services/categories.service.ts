@@ -1,25 +1,32 @@
 import { Injectable } from '@angular/core';
-import { Categories } from '../models/user.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export interface Category {
+  categoryId: number;
+  userId: number;
+  name: string;
+  type: string; // "income" or "expense"
+}
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class CategoriesService {
-  // TODO: Endpoint for Categories
-  // TODO: Inject HttpClient
+  private apiUrl = 'http://localhost:8081/api/categories';
 
-  // Mock Expense Categories
-  EXPENSE_CATEGORIES: Categories[] = [
-    { category_id: 1, name: 'Housing', type: 'expense' },
-    { category_id: 2, name: 'Transport', type: 'expense' },
-    { category_id: 3, name: 'Utilities', type: 'expense' },
-    { category_id: 4, name: 'Entertainment', type: 'expense' },
-    { category_id: 5, name: 'Healthcare', type: 'expense' },
-    { category_id: 6, name: 'Food', type: 'expense' },
-    { category_id: 7, name: 'Other', type: 'expense' }
-  ];
+  constructor(private http: HttpClient) {}
 
-  getExpenseCategories(): Categories[] {
-    return [...this.EXPENSE_CATEGORIES];
+  getCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>(this.apiUrl);
+  }
+
+  addCategory(category: Category): Observable<Category> {
+    return this.http.post<Category>(this.apiUrl, category);
+  }
+
+  deleteCategory(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
