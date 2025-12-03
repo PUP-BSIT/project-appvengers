@@ -6,16 +6,25 @@
     <!-- Summary Cards -->
     <div class="summary-cards">
       <div class="card income-card">
-        <h3>Total Income</h3>
-        <p class="amount">{{ getTotalIncome() | currency : 'PHP' }}</p>
+        <i class="bi bi-graph-up-arrow" style="color: #28a745; font-size: 2rem;"></i>
+        <div class="card-content">
+          <h3>Total Income</h3>
+          <p class="amount">{{ getTotalIncome() | currency : 'PHP' }}</p>
+        </div>
       </div>
       <div class="card expense-card">
-        <h3>Total Expenses</h3>
-        <p class="amount">{{ getTotalExpenses() | currency : 'PHP' }}</p>
+        <i class="bi bi-graph-down-arrow" style="color: #dc3545; font-size: 2rem;"></i>
+        <div class="card-content">
+          <h3>Total Expenses</h3>
+          <p class="amount">{{ getTotalExpenses() | currency : 'PHP' }}</p>
+        </div>
       </div>
       <div class="card balance-card">
-        <h3>Balance</h3>
-        <p class="amount">{{ getBalance() | currency : 'PHP' }}</p>
+        <i class="bi bi-wallet2" style="color: #007bff; font-size: 2rem;"></i>
+        <div class="card-content">
+          <h3>Current Balance</h3>
+          <p class="amount">{{ getBalance() | currency : 'PHP' }}</p>
+        </div>
       </div>
     </div>
 
