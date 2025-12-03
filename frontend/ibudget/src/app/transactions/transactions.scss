@@ -143,6 +143,23 @@ $sidebar-width: 100px;
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    flex: 1;
+  }
+  
+  i {
+    flex-shrink: 0;
+    align-self: center;
+    margin-right: 0.5rem;
+  }
 }
 
 .card h3 {
@@ -151,12 +168,14 @@ $sidebar-width: 100px;
   color: #7f8c8d;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  text-align: left;
 }
 
 .card .amount {
   margin: 0;
   font-size: 1.8rem;
   font-weight: 600;
+  text-align: left;
 }
 
 .income-card .amount {
