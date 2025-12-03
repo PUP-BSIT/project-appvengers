@@ -30,18 +30,35 @@
 
     <!-- Filter and Add Row -->
     <div class="filter-add-row">
-      <!-- Filter by Category -->
-      <div class="category-section">
-        <select
-          class="category-select"
-          [(ngModel)]="selectedCategory"
-          (change)="onCategoryChange()">
-          @for (category of categories; track category) {
-            <option [value]="category">
-              {{ category }}
-            </option>
-          }
-        </select>
+      <div class="filters-group">
+        <!-- Filter by Category -->
+        <div class="category-section">
+          <i class="bi bi-menu-button-wide filter-icon"></i>
+          <select
+            class="category-select"
+            [(ngModel)]="selectedCategory"
+            (change)="onCategoryChange()">
+            @for (category of categories; track category) {
+              <option [value]="category">
+                {{ category }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <!-- Filter by Time Period -->
+        <div class="period-section">
+          <i class="bi bi-calendar-week filter-icon"></i>
+          <select
+            class="period-select"
+            [(ngModel)]="selectedPeriod"
+            (change)="onPeriodChange()">
+            <option value="today">Today</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
       </div>
 
       <!-- Add Transaction Button -->
