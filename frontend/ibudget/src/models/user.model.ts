@@ -89,9 +89,9 @@ export type Budget = {
   current_amount?: number;
 }
 
+// Frontend entity shape
 export type Saving = {
-  savings_id?: number;
-  user_id: number;
+  saving_id?: number;
   name: string;
   goal_date: string;
   frequency: string;
@@ -101,6 +101,20 @@ export type Saving = {
   created_at: string;
   updated_at: string;
   deleted_at?: string;
+}
+
+// Backend Entity Shape
+export type BackendSaving = {
+  savingId?: number;
+  name: string;
+  goalDate: string;
+  frequency: string;
+  targetAmount: number;
+  currentAmount: number;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
 }
 
 export type SavingTransaction = {
