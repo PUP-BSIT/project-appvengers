@@ -72,10 +72,11 @@ export type ReportRecord = {
   report: string;
 }
 
-export type Categories = {
+export interface Category {
   category_id: number;
+  userId: number;
   name: string;
-  type: string;
+  type: string; // "income" or "expense"
 }
 
 export type Budget = {
