@@ -38,6 +38,7 @@ export class ViewSaving implements OnInit{
   remainingAmount = signal(0);
   dateStarted = signal(new Date());
   router = inject(Router);
+  isLoading = signal(true);
 
   // Initialize component and fetch data
   ngOnInit(): void {
@@ -115,12 +116,19 @@ export class ViewSaving implements OnInit{
     const savingsId = this.savingId();
     if(!savingsId) return;
 
-    this.savingService.getSavingById(savingsId).subscribe((savingData) => {
-      this.currentSaving.set(savingData);
-      this.dateStarted.set(new Date(savingData.created_at));
-      
-      // Now that data is present, do dependent computations
-      this.updateRemainingAmount();
+    this.savingService.getSavingById(savingsId).subscribe({
+      next: (savingData) => {
+        this.currentSaving.set(savingData);
+        this.dateStarted.set(new Date(savingData.created_at));
+        
+        // Now that data is present, do dependent computations
+        this.updateRemainingAmount();
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        this.isLoading.set(false);
+        console.error('Error fetching saving data:', error);
+      }
     });
   }
 
