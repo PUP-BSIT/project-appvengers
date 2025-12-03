@@ -1,4 +1,4 @@
-$background-color: #E8E9EB;
+$background-color: #F9FAFB;
 $sidebar-width: 100px;
 
 .transactions-container {
@@ -237,7 +237,7 @@ $sidebar-width: 100px;
 
 .transactions-cards-container {
   display: grid;
-  grid-template-columns: 1fr; /* single-column stacked list */
+  grid-template-columns: 1fr;
   gap: 0.75rem;
   width: 100%;
 }
@@ -245,7 +245,7 @@ $sidebar-width: 100px;
 .transaction-card {
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   overflow: hidden;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
   border: 1px solid rgba(15,23,42,0.04);
