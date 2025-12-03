@@ -2,7 +2,7 @@ import { Modal } from 'bootstrap';
 import { Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { Budget } from '../../../../models/user.model';
-import { Categories } from '../../../../models/user.model';
+import { Category } from '../../../../models/user.model';
 import { BudgetService } from '../../../../services/budget.service';
 import { bootstrapThreeDotsVertical } from '@ng-icons/bootstrap-icons'
 import { CategoriesService } from '../../../../services/categories.service';
@@ -44,7 +44,7 @@ export class UpdateBudgetButton implements OnInit {
   budgetId = input(<number>(0));
   updatedBudgetResponse = output<Budget>();
   deletedBudgetResponse = output<Budget[]>();
-  categories = signal(<Categories[]>[]);
+  categories = signal(<Category[]>[]);
 
   constructor() {
     this.budgetForm = this.formBuilder.group({
@@ -114,7 +114,9 @@ export class UpdateBudgetButton implements OnInit {
   }
 
   getCategories() {
-    this.categories.set(this.categoriesService.getExpenseCategories());
+    this.categoriesService.getCategories().subscribe(data => {
+      this.categories.set(data);
+    });
   }
 
   // View: open the modal in read-only mode or navigate to a details page
