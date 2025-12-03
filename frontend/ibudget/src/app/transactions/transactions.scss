@@ -31,7 +31,7 @@ $sidebar-width: 100px;
 .transactions-content {
   display: flex;
   flex-direction: column;
-  padding: 2rem 2rem 2rem 2rem;
+  padding: 1rem 2rem 2rem 2rem;
 }
 
 .filter-add-row {
@@ -362,7 +362,7 @@ $sidebar-width: 100px;
 }
 
 .amount-text {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   font-weight: 600;
 }
 
@@ -378,10 +378,11 @@ $sidebar-width: 100px;
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 500;
+  color: #d264f3;
 }
 
 .income {
-  color: #8d8787;
+  color: #1fc72d;
 }
 
 .entertainment {

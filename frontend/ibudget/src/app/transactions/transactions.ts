@@ -149,7 +149,7 @@ export class Transactions implements OnInit, OnDestroy {
           amount: created.amount,
           type: created.type
         };
-        this.transactions.push(createdTx);
+        this.transactions.unshift(createdTx); // Add to top instead of bottom
         this.filterTransactions();
         this.closeAddModal();
         this.showNotificationMessage('Transaction added successfully!');
@@ -343,11 +343,14 @@ export class Transactions implements OnInit, OnDestroy {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    return this.filteredTransactions.filter(t => {
+    const todayTransactions = this.filteredTransactions.filter(t => {
       const transactionDate = new Date(t.date);
       transactionDate.setHours(0, 0, 0, 0);
       return transactionDate.getTime() === today.getTime();
     });
+    
+    // Sort by ID descending (newest first)
+    return todayTransactions.sort((a, b) => (b.id || 0) - (a.id || 0));
   }
 
   getYesterdayTransactions(): Transaction[] {
@@ -355,11 +358,14 @@ export class Transactions implements OnInit, OnDestroy {
     yesterday.setDate(yesterday.getDate() - 1);
     yesterday.setHours(0, 0, 0, 0);
     
-    return this.filteredTransactions.filter(t => {
+    const yesterdayTransactions = this.filteredTransactions.filter(t => {
       const transactionDate = new Date(t.date);
       transactionDate.setHours(0, 0, 0, 0);
       return transactionDate.getTime() === yesterday.getTime();
     });
+    
+    // Sort by ID descending (newest first)
+    return yesterdayTransactions.sort((a, b) => (b.id || 0) - (a.id || 0));
   }
 
   getOlderTransactions(): Transaction[] {
@@ -370,12 +376,15 @@ export class Transactions implements OnInit, OnDestroy {
     yesterday.setDate(yesterday.getDate() - 1);
     yesterday.setHours(0, 0, 0, 0);
     
-    return this.filteredTransactions.filter(t => {
+    const olderTransactions = this.filteredTransactions.filter(t => {
       const transactionDate = new Date(t.date);
       transactionDate.setHours(0, 0, 0, 0);
       return transactionDate.getTime() !== today.getTime() && 
              transactionDate.getTime() !== yesterday.getTime();
     });
+    
+    // Sort by ID descending (newest first)
+    return olderTransactions.sort((a, b) => (b.id || 0) - (a.id || 0));
   }
 
   getOlderTransactionsByDate(): Map<string, Transaction[]> {
