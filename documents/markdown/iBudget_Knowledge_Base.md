@@ -348,6 +348,8 @@ A: For expenses: Entertainment, Bills, Shopping. For income: Income category. Cu
 
 **Website:** https://i-budget.site/
 
+**Email Support:** team.appvengers12@gmail.com
+
 **GitHub Repository:** https://github.com/PUP-BSIT/project-appvengers
 
 **Bug Reports:** Submit issues on GitHub with screenshots and steps to reproduce
@@ -363,4 +365,4 @@ iBudget was developed by Team Appvengers from Polytechnic University of the Phil
 
 ---
 
-*Last Updated: November 2025*
+*Last Updated: December 2025*
