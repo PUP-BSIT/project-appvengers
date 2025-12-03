@@ -116,7 +116,7 @@ export class AddBudgetButton implements OnInit, OnChanges {
   // Derive category_name from selected category_id
   afterCategorySelection() {
     const selectedId = Number(this.budgetForm.get('category_id')?.value);
-    const cat = this.categories().find(c => c.category_id === selectedId);
+    const cat = this.categories().find(c => c.id === selectedId);
 
     this.budgetForm.get('category_name')?.setValue(cat?.name ?? '');
     this.currentCategoryId.set(selectedId);
