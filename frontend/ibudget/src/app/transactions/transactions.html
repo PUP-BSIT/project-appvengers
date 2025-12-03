@@ -10,21 +10,26 @@
           <h3>Total Income</h3>
           <p class="amount">{{ getTotalIncome() | currency : 'PHP' }}</p>
         </div>
-        <i class="bi bi-graph-up-arrow" style="color: #28a745; font-size: 2rem;"></i>
+        <i
+          class="bi bi-graph-up-arrow"
+          style="color: #28a745; font-size: 2rem;"></i>
       </div>
       <div class="card expense-card">
         <div class="card-content">
           <h3>Total Expenses</h3>
           <p class="amount">{{ getTotalExpenses() | currency : 'PHP' }}</p>
         </div>
-        <i class="bi bi-graph-down-arrow" style="color: #dc3545; font-size: 2rem;"></i>
+        <i
+          class="bi bi-graph-down-arrow"
+          style="color: #dc3545; font-size: 2rem;"></i>
       </div>
       <div class="card balance-card">
         <div class="card-content">
           <h3>Current Balance</h3>
           <p class="amount">{{ getBalance() | currency : 'PHP' }}</p>
         </div>
-        <i class="bi bi-wallet2" style="color: #007bff; font-size: 2rem;"></i>
+        <i
+          class="bi bi-wallet2" style="color: #007bff; font-size: 2rem;"></i>
       </div>
     </div>
 
@@ -114,7 +119,8 @@
                     class="amount-text"
                     [ngClass]="{'income': transaction.type === 'income',
                                 'expense': transaction.type === 'expense'}">
-                    {{ transaction.type === 'income' ? '+' : '-' }}{{ transaction.amount | currency : 'PHP' }}
+                    {{ transaction.type === 'income' ? '+' : '-' }}
+                    {{ transaction.amount | currency : 'PHP' }}
                   </span>
                 </div>
               </div>
@@ -165,7 +171,8 @@
                     class="amount-text"
                     [ngClass]="{'income': transaction.type === 'income',
                                 'expense': transaction.type === 'expense'}">
-                    {{ transaction.type === 'income' ? '+' : '-' }}{{ transaction.amount | currency : 'PHP' }}
+                    {{ transaction.type === 'income' ? '+' : '-' }}
+                    {{ transaction.amount | currency : 'PHP' }}
                   </span>
                 </div>
               </div>
@@ -175,7 +182,8 @@
       }
 
       <!-- Older Transactions Grouped by Date -->
-      @for (dateGroup of getOlderTransactionsByDate() | keyvalue; track dateGroup.key) {
+      @for (dateGroup of getOlderTransactionsByDate()
+            | keyvalue; track dateGroup.key) {
         <div class="date-group-label">
           {{ dateGroup.value[0].date | date:'EEEE, MMM d, y' }}
         </div>
@@ -218,7 +226,8 @@
                     class="amount-text"
                     [ngClass]="{'income': transaction.type === 'income',
                                 'expense': transaction.type === 'expense'}">
-                    {{ transaction.type === 'income' ? '+' : '-' }}{{ transaction.amount | currency : 'PHP' }}
+                    {{ transaction.type === 'income' ? '+' : '-' }}
+                    {{ transaction.amount | currency : 'PHP' }}
                   </span>
                 </div>
               </div>
@@ -247,10 +256,15 @@
   <!-- Add/Edit Transaction Modal -->
   @if (showAddModal()) {
     <div class="modal-overlay" (click)="closeAddModal()">
-      <div class="modal-content" [ngClass]="{'edit-modal': isEditing}" (click)="$event.stopPropagation()">
+      <div
+        class="modal-content"
+        [ngClass]="{'edit-modal': isEditing}"
+        (click)="$event.stopPropagation()">
         <div class="modal-header">
           <h2>
-            <i class="fas" [ngClass]="{'fa-plus': !isEditing, 'fa-edit': isEditing}"></i>
+            <i
+              class="fas"
+              [ngClass]="{'fa-plus': !isEditing, 'fa-edit': isEditing}"></i>
             {{ isEditing ? 'Edit Transaction' : 'Add New Transaction' }}
           </h2>
           <button class="btn-close" (click)="closeAddModal()">
@@ -271,7 +285,8 @@
                   name="date"
                   #date="ngModel"
                   required>
-                @if (date.touched && date.invalid && date.errors?.['required']) {
+                @if (date.touched && date.invalid
+                      && date.errors?.['required']) {
                   <div class="error-message">Date is required</div>
                 }
               </div>
@@ -327,7 +342,9 @@
                   required>
                 @if (customCategory.touched && customCategory.invalid &&
                      customCategory.errors?.['required']) {
-                  <div class="error-message">Custom category name is required</div>
+                  <div class="error-message">
+                    Custom category name is required
+                  </div>
                 }
               </div>
             }
