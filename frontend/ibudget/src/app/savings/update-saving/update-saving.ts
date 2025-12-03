@@ -23,13 +23,11 @@ export class UpdateSaving implements OnInit{
 
   constructor() {
     this.updateSavingForm = this.formBuilder.group({
-      saving_id: [''],
-      user_id: [''],
       name: [''],
       goal_date: [''],
       frequency: [''],
       target_amount: [''],
-      current_amount: [0],
+      current_amount: [''],
       description: [''],
       created_at: [''],
       updated_at: [''],
@@ -41,26 +39,22 @@ export class UpdateSaving implements OnInit{
     const savingsId = this.activatedRoute.snapshot.paramMap.get('id') ?? '';
     this.savingId.set(+savingsId);
     this.getSavingsData();
-
-    this.updateSavingForm = this.formBuilder.group({
-      saving_id: [this.savingId()],
-      user_id: [this.currentSaving().user_id],
-      name: [this.currentSaving().name],
-      goal_date: [this.currentSaving().goal_date],
-      frequency: [this.currentSaving().frequency],
-      target_amount: [this.currentSaving().target_amount],
-      current_amount: [this.currentSaving().current_amount],
-      description: [this.currentSaving().description],
-      created_at: [this.currentSaving().created_at],
-      updated_at: [this.currentSaving().updated_at],
-      deleted_at: [this.currentSaving().deleted_at]
-    });
   }
 
   getSavingsData() {
-    this.savingService.getSavingById(this.savingId())
+    this.savingService.getSavingById(+this.savingId())
       .subscribe((savingData) => {
-        this.currentSaving.set(savingData);
+        this.updateSavingForm.setValue({
+          name: savingData.name,
+          goal_date: savingData.goal_date,
+          frequency: savingData.frequency,
+          target_amount: Number(savingData.target_amount),
+          current_amount: Number(savingData.current_amount),
+          description: savingData.description,
+          created_at: savingData.created_at,
+          updated_at: savingData.updated_at,
+          deleted_at: savingData.deleted_at
+      });
     });
   }
 
