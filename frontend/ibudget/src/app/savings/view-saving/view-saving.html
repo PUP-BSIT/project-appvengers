@@ -11,25 +11,25 @@
     </div>
 
     <div class="card-body d-flex flex-column">
-      <div class="information-container">
+      <div class="information-container first">
         <div class="mh-3 info">
           <label class="text-secondary">Current Amount</label>
-          <span>&#8369;{{ currentSaving().current_amount.toFixed(2) }}</span>
+          <span>&#8369;{{ currentSaving().current_amount | number:'1.0-0' }}</span>
         </div>
 
-        <div class="mh-3 info">
+        <div class="mh-3 info second">
           <label class="text-secondary">Target Amount</label>
-          <span>&#8369;{{ currentSaving().target_amount.toFixed(2) }}</span>
+          <span>&#8369;{{ currentSaving().target_amount | number:'1.0-0' }}</span>
         </div>
 
-        <div class="mh-3 info">
+        <div class="mh-3 info third">
           <label class="text-secondary">Remaining</label>
           <span>
-            &#8369;{{ remainingAmount().toFixed(2) }}
+            &#8369;{{ remainingAmount() | number:'1.0-0' }}
           </span>
         </div>
 
-        <div class="mh-3 info">
+        <div class="mh-3 info fourth">
           <label class="text-secondary">Progress</label>
           <span class="text-danger">
             {{ getProgressPercentage(currentSaving()) }}%
@@ -44,31 +44,31 @@
       </div>
 
       <div class="info-cards">
-        <div class="mh-3 alert alert-primary info-card">
+        <div class="mb-0 alert alert-dark info-card">
           <i class="bi bi-file-earmark-text m-1"></i>
-          <label class="text-primary-emphasis mb-1">Description</label>
+          <label class="text-dark-emphasis mb-1">Description</label>
           <p>{{ currentSaving().description }}</p>
         </div>
 
-        <div class="mh-3 alert alert-info info-card">
+        <div class="mb-0 alert alert-primary info-card">
           <i class="bi bi-calendar-week m-1"></i>
-          <label class="text-info-emphasis mb-1">Started on</label>
-          <p>{{ currentSaving().created_at }}</p>
+          <label class="text-primary-emphasis mb-1">Started on</label>
+          <p>{{ dateStarted() | date:'mediumDate' }}</p>
         </div>
 
-        <div class="mh-3 alert alert-info info-card">
+        <div class="mb-0 alert alert-info info-card">
           <i class="bi bi-calendar-week m-1"></i>
           <label class="text-info-emphasis mb-1">Goal Date</label>
-          <p>{{ currentSaving().goal_date }}</p>
+          <p>{{ currentSaving().goal_date | date:'mediumDate' }}</p>
         </div>
 
-        <div class="mh-3 alert alert-info info-card">
+        <div class="mb-0 alert alert-warning info-card">
           <i class="bi bi-cash-coin m-1"></i>
-          <label class="text-info-emphasis mb-1">Daily Saving Needed</label>
+          <label class="text-warning-emphasis mb-1">Daily Saving Needed</label>
           @if(getDailySavingsNeeded() === 0) {
             <p>Goal date has passed or no remaining amount.</p>
           } @else {
-            <p>&#8369; {{ getDailySavingsNeeded() }}</p>
+            <p>&#8369; {{ getDailySavingsNeeded() | number:'1.0-0' }}</p>
           }
         </div>
       </div>
@@ -127,9 +127,11 @@
             }
             
             @if(filteredTransactions().length > 0) {
-              @for(transaction of filteredTransactions(); track transaction.transaction_id) {
+              @for(transaction of filteredTransactions(); 
+                track transaction.transaction_id) 
+              {
                 <tr>
-                  <td>{{ transaction.transaction_date }}</td>
+                  <td>{{ transaction.transaction_date | date:'mediumDate' }}</td>
                   @if(transaction.savings_action === 'Deposit') {
                     <td class="text-success">
                       <i class="bi bi-arrow-up-circle-fill"></i>
@@ -169,6 +171,81 @@
             }
           </tbody>
         </table>
+      </div>
+
+      <!-- This will only show for mobile phones S, M, & L -->
+      <div class="list-container">
+        @if(filteredTransactions().length === 0) {
+          <ol>
+            <p class="text-center text-secondary-emphasis mt-3">
+              No transaction history available.
+            </p>
+          </ol>
+        }
+
+        <ol>
+          @if(filteredTransactions().length > 0) {
+            @for(transaction of filteredTransactions(); 
+              track $index) 
+            {
+              <li class="card">
+                <div class="card-header bg-dark text-white">
+                  <h6 class="card-title mb-0">
+                    {{ $index + 1 }}.
+                    {{ transaction.transaction_date | date:'mediumDate' }}
+                  </h6>
+                </div>
+
+                <div class="card-body">
+                  <div>
+                    <h6 class="mb-0">Type</h6>
+                    @if(transaction.savings_action === 'Deposit') {
+                      <div class="text-success">
+                        <i class="bi bi-arrow-up-circle-fill"></i>
+                        {{ transaction.savings_action }}
+                      </div>
+                    } @else if(transaction.savings_action === 'Withdrawal') {
+                      <div class="text-danger">
+                        <i class="bi bi-arrow-down-circle-fill"></i>
+                        {{ transaction.savings_action }}
+                      </div>
+                    } @else {
+                      <div>
+                        {{ transaction.savings_action }}
+                      </div>
+                    }
+                  </div>
+                    
+
+                  <h6 class="mb-0">Amount</h6>
+                  <p class="text-secondary-emphasis mb-0">
+                    &#8369; 1,000.00
+                  </p>
+
+                  <h6 class="mb-0">Description</h6>
+                  <p class="text-secondary-emphasis mb-0">
+                    Monthly saving deposit
+                  </p>
+
+                  <div class="actions">
+                    <app-update-saving-transaction 
+                      [transactionId]="transaction.transaction_id"
+                      (updatedTransaction)="onSavingsTransactionUpdated($event)"
+                    />
+
+                    <button 
+                      type="button"
+                      class="btn btn-sm btn-danger"
+                      (click)="deleteSavingsTransaction(
+                          transaction.transaction_id)">
+                        Delete
+                    </button>
+                  </div>
+                </div>
+              </li>
+            }
+          }
+        </ol>
       </div>
     </div>
   </div>

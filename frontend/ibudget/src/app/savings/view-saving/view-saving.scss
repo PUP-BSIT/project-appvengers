@@ -16,8 +16,8 @@ main {
     gap: 2em;
     align-items: center;
     padding: 20px;
-    height: 290px;
-    max-height: 300px;
+    height: auto;
+    max-height: 330px;
 
     span {
       font-size: 1.2rem;
@@ -109,7 +109,7 @@ main {
   }
 }
 
-@media (max-width: 320px) {
+@media (min-width: 320px) and (max-width: 480px) {
   main {
     margin-left: 0;
     padding: 10px;
@@ -119,47 +119,100 @@ main {
     .card-body {
       flex-direction: column;
       gap: 1em;
+      height: auto;
+      max-height: none;
     }
   }
 
-  .header-container {
+  .info-cards {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+    gap: 1em;
   }
 
-  .actions {
+  .information-container {
     flex-direction: column;
-    gap: 10px;
-  }
-}
-
-@media (min-width: 321px) and (max-width: 426px) {
-  main {
-    margin-left: 0;
-    padding: 10px;
+    gap: 2em;
   }
 
-  .card {
-    .card-body {
-      flex-direction: column;
-      gap: 1em;
+  .first {
+    grid-area: first;
+  }
+
+  .second {
+    grid-area: second;
+  }
+
+  .third {
+    grid-area: third;
+  }
+
+  .fourth {
+    grid-area: fourth;
+  }
+
+  .information-container {
+    display: grid;
+    grid-template-areas:
+      "first second"
+      "third fourth";
+  }
+
+  .list-container {
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px !important;
+    padding: 0 !important;
+    height: auto !important;
+  }
+
+  .list-container .card-body {
+    justify-content: start;
+    align-items: start;
+    flex-direction: column !important;
+    // gap: 5px !important;
+
+    div:nth-child(1) {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
     }
   }
 
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+  li.card {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .table-container {
+    display: none !important;
+  }
+
+  ol {
+    padding: 0;
+    margin: 0;
+    list-style: none;
   }
 
   .actions {
-    flex-direction: column;
-    gap: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
+
+  .header-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center !important;
+    align-items: center;
+    margin: 0;
+  }
+
+  .header-container h2 {
+    font-size: 1.5rem;
   }
 }
 
-@media (min-width: 427px) and (max-width: 768px) {
+@media (max-width: 768px) {
   main {
     margin-left: 0;
     padding: 10px;
@@ -181,5 +234,52 @@ main {
   .actions {
     flex-direction: row;
     gap: 10px;
+  }
+
+  .info-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .list-container {
+    display: none;
+  }
+
+  .table-container {
+    display: block;
+  }
+}
+
+@media (max-width: 1024px) {
+  .information-container {
+    gap: 3em;
+  }
+
+  .info-cards {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .card-body {
+    height: auto;
+    max-height: none !important;
+  }
+
+  .list-container {
+    display: none;
+  }
+
+  .table-container {
+    display: block;
+  }
+}
+
+@media (min-width: 1025px) {
+  .list-container {
+    display: none;
+  }
+
+  .table-container {
+    display: block;
   }
 }
