@@ -686,15 +686,15 @@ $sidebar-width: 100px;
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  background: #323232;
-  color: white;
+  background: white;
+  color: #333333;
   padding: 1rem 1.5rem;
   border-radius: 4px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.3);
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  z-index: 1000;
+  z-index: 999999 !important;
   animation: slideIn 0.3s ease-out;
   
   i {
@@ -708,6 +708,10 @@ $sidebar-width: 100px;
   }
 }
 
+.snackbar.hide {
+  animation: slideOut 0.3s ease-in forwards;
+}
+
 @keyframes slideIn {
   from {
     transform: translateX(100%);
@@ -716,6 +720,17 @@ $sidebar-width: 100px;
   to {
     transform: translateX(0);
     opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
   }
 }
 

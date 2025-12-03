@@ -19,10 +19,14 @@ export class Transactions implements OnInit, OnDestroy {
   constructor(private renderer: Renderer2,
               private txService: TransactionsService,
               private authService: AuthService,
-              private cd: ChangeDetectorRef) {}
+              private cd: ChangeDetectorRef) {
+    // Initialize filtered transactions with static data
+    this.filterTransactions();
+  }
 
   showAddModal = signal(false);
   showNotification = signal(false);
+  isHidingNotification = signal(false);
   notificationMessage = signal('');
   selectedTransactionId = signal<number | null>(null);
   popupTop = signal(0);
@@ -47,7 +51,22 @@ export class Transactions implements OnInit, OnDestroy {
     'Income',
     'Entertainment',
     'Bills',
-    'Shopping'
+    'Shopping',
+    'Food & Dining',
+    'Transportation',
+    'Healthcare',
+    'Education',
+    'Personal Care',
+    'Utilities',
+    'Groceries',
+    'Rent',
+    'Insurance',
+    'Savings',
+    'Investment',
+    'Travel',
+    'Gifts',
+    'Charity',
+    'Other'
   ];
 
   selectedPeriod = 'daily';
@@ -250,8 +269,15 @@ export class Transactions implements OnInit, OnDestroy {
   showNotificationMessage(message: string) {
     this.notificationMessage.set(message);
     this.showNotification.set(true);
+    this.isHidingNotification.set(false);
     setTimeout(() => {
-      this.showNotification.set(false);
+      // Start hide animation
+      this.isHidingNotification.set(true);
+      // Wait for animation to complete before removing from DOM
+      setTimeout(() => {
+        this.showNotification.set(false);
+        this.isHidingNotification.set(false);
+      }, 300); // Match animation duration
     }, 3000);
   }
 
@@ -261,10 +287,12 @@ export class Transactions implements OnInit, OnDestroy {
     console.log('Transactions: auth token (first 24 chars):', this.authService.getToken()?.slice(0, 24));
     this.txService.getAll().subscribe((txs) => {
       // convert potential date strings to Date
-      this.transactions = txs.map(t => ({
+      const backendTransactions = txs.map(t => ({
         ...t,
         date: t.date ? new Date(t.date as any) : new Date()
       }));
+      // Merge backend transactions with static transactions
+      this.transactions = [...this.transactions, ...backendTransactions];
       this.filterTransactions();
       // ensure change detection runs so template updates on first navigation
       try {
@@ -275,6 +303,8 @@ export class Transactions implements OnInit, OnDestroy {
       }
     }, (err) => {
       console.error('Failed to load transactions on init', err);
+      // Static transactions will still be shown even if backend fails
+      this.filterTransactions();
       // show a notification so devs notice this on the UI too
       this.showNotificationMessage('Unable to load transactions (check console)');
     });
