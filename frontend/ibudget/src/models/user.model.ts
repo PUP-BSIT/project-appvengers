@@ -53,6 +53,15 @@ export type Transaction = {
   type: 'income' | 'expense';
 }
 
+export type TransactionResponse = {
+  id: number;
+  transactionDate: string | Date;
+  description: string;
+  category: string;
+  amount: number;
+  type: 'income' | 'expense';
+}
+
 export type Notification = {
   id: number;
   title: string;
