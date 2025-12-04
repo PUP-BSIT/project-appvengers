@@ -133,12 +133,15 @@ export class Transactions implements OnInit, OnDestroy {
           break;
           
         case 'monthly':
-          const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-          const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+          const startOfMonth = new Date(today.getFullYear(),
+                                        today.getMonth(), 1);
+          const endOfMonth = new Date(today.getFullYear(),
+                                        today.getMonth() + 1, 0);
           filtered = filtered.filter(t => {
             const transactionDate = new Date(t.date);
             transactionDate.setHours(0, 0, 0, 0);
-            return transactionDate >= startOfMonth && transactionDate <= endOfMonth;
+            return transactionDate >= startOfMonth &&
+                   transactionDate <= endOfMonth;
           });
           break;
       }
@@ -171,7 +174,7 @@ export class Transactions implements OnInit, OnDestroy {
     this.editingTransactionId = null;
     this.showCustomCategoryInput = false;
     this.customCategoryName = '';
-    // Reset form
+
     this.newTransaction = {
       date: new Date(),
       description: '',
@@ -179,20 +182,17 @@ export class Transactions implements OnInit, OnDestroy {
       amount: 0,
       type: 'expense'
     };
-    // Reset toggle to Expense (left position)
     this.isIncomeToggle.set(false);
   }
 
   closeAddModal() {
     this.showAddModal.set(false);
   }
-  
-  // Set transaction type to Expense
+
   setExpenseType() {
     this.newTransaction.type = 'expense';
   }
-  
-  // Set transaction type to Income
+
   setIncomeType() {
     this.newTransaction.type = 'income';
   }
@@ -200,18 +200,17 @@ export class Transactions implements OnInit, OnDestroy {
   addTransaction() {
     if (this.newTransaction.description &&
         this.newTransaction.category && this.newTransaction.amount > 0) {
-      
-      // Use custom category if provided
-      const finalCategory = this.showCustomCategoryInput && this.customCategoryName 
+
+      const finalCategory = this.showCustomCategoryInput &&
+                            this.customCategoryName 
         ? this.customCategoryName 
         : this.newTransaction.category;
-      
-      // Add custom category to categories list if not already there
+
       if (this.showCustomCategoryInput && this.customCategoryName && 
           !this.categories.includes(this.customCategoryName)) {
         this.categories.push(this.customCategoryName);
       }
-      
+
       const payload = {
         amount: this.newTransaction.amount,
         type: this.newTransaction.type,
@@ -220,21 +219,22 @@ export class Transactions implements OnInit, OnDestroy {
         transactionDate: this.newTransaction.date
       };
 
-      this.txService.create(payload).subscribe((created: TransactionResponse) => {
+      this.txService.create(payload)
+        .subscribe((created: TransactionResponse) => {
         console.log('create response:', created);
-        // re-fetch all transactions from backend to verify persistence
         this.txService.getAll().subscribe(all => {
           console.log('transactions after create (from backend):', all);
         }, err => console.error('getAll after create failed', err));
         const createdTx: Transaction = {
           id: created.id,
-          date: created.transactionDate ? new Date(created.transactionDate) : new Date(),
+          date: created.transactionDate ?
+                new Date(created.transactionDate) : new Date(),
           description: created.description,
           category: created.category,
           amount: created.amount,
           type: created.type
         };
-        this.transactions.unshift(createdTx); // Add to top instead of bottom
+        this.transactions.unshift(createdTx);
         this.filterTransactions();
         this.closeAddModal();
         this.showNotificationMessage('Transaction added successfully!');
@@ -286,14 +286,12 @@ export class Transactions implements OnInit, OnDestroy {
     if (this.editingTransactionId !== null &&
         this.newTransaction.description &&
         this.newTransaction.category && this.newTransaction.amount > 0) {
-      
-      // Use custom category if provided
+
       const finalCategory = this.showCustomCategoryInput
         && this.customCategoryName 
         ? this.customCategoryName 
         : this.newTransaction.category;
-      
-      // Add custom category to categories list if not already there
+
       if (this.showCustomCategoryInput && this.customCategoryName && 
           !this.categories.includes(this.customCategoryName)) {
         this.categories.push(this.customCategoryName);
@@ -340,31 +338,28 @@ export class Transactions implements OnInit, OnDestroy {
     this.showNotification.set(true);
     this.isHidingNotification.set(false);
     setTimeout(() => {
-      // Start hide animation
       this.isHidingNotification.set(true);
-      // Wait for animation to complete before removing from DOM
       setTimeout(() => {
         this.showNotification.set(false);
         this.isHidingNotification.set(false);
-      }, 300); // Match animation duration
+      }, 300);
     }, 3000);
   }
 
   ngOnInit() {
-    // load transactions from backend
     console.log('Transactions: auth token present?',
                 !!this.authService.getToken());
     console.log('Transactions: auth token (first 24 chars):',
                 this.authService.getToken()?.slice(0, 24));
     this.txService.getAll().subscribe((txs) => {
-      // convert potential date strings to Date
-      const backendTransactions = txs.map((t: TransactionResponse): Transaction => ({
-        id: t.id,
-        date: t.transactionDate ? new Date(t.transactionDate) : new Date(),
-        description: t.description,
-        category: t.category,
-        amount: t.amount,
-        type: t.type
+      const backendTransactions = txs.map(
+        (t: TransactionResponse): Transaction => ({
+          id: t.id,
+          date: t.transactionDate ? new Date(t.transactionDate) : new Date(),
+          description: t.description,
+          category: t.category,
+          amount: t.amount,
+          type: t.type
       }));
       this.transactions = [...this.transactions, ...backendTransactions];
       this.filterTransactions();
@@ -425,8 +420,7 @@ export class Transactions implements OnInit, OnDestroy {
       transactionDate.setHours(0, 0, 0, 0);
       return transactionDate.getTime() === today.getTime();
     });
-    
-    // Sort by ID descending (newest first)
+
     return todayTransactions.sort((a, b) => (b.id || 0) - (a.id || 0));
   }
 
@@ -440,8 +434,7 @@ export class Transactions implements OnInit, OnDestroy {
       transactionDate.setHours(0, 0, 0, 0);
       return transactionDate.getTime() === yesterday.getTime();
     });
-    
-    // Sort by ID descending (newest first)
+
     return yesterdayTransactions.sort((a, b) => (b.id || 0) - (a.id || 0));
   }
 
