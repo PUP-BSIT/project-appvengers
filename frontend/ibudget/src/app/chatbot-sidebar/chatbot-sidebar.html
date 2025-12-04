@@ -24,9 +24,7 @@
 
         @for (msg of messages(); track msg.timestamp) {
         <div class="message" [class.user]="msg.isUser" [class.bot]="!msg.isUser">
-            <div class="message-content">
-                {{ msg.text }}
-            </div>
+            <div class="message-content" [innerHTML]="parseMarkdown(msg.text)"></div>
             <div class="message-time">
                 {{ msg.timestamp | date:'shortTime' }}
             </div>
