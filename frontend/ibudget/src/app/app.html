@@ -1,3 +1,5 @@
-<ngx-loading-bar color="#4689cb" height="5px" ref="http" />
-<router-outlet></router-outlet>
+<div class="main-content" [class.sidebar-open]="isOpen()">
+    <ngx-loading-bar color="#4689cb" height="5px" ref="http" />
+    <router-outlet></router-outlet>
+</div>
 <app-chatbot-sidebar></app-chatbot-sidebar>

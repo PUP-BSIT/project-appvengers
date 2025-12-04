@@ -1,0 +1,20 @@
+.main-content {
+    transition: margin-right 0.3s ease-in-out;
+    margin-right: 0;
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+
+    &.sidebar-open {
+        margin-right: 400px; // Match sidebar width
+        width: calc(100% - 400px);
+    }
+
+    @media (max-width: 480px) {
+        &.sidebar-open {
+            margin-right: 0;
+            width: 100%;
+            display: none; // Hide main content on mobile when chat is open
+        }
+    }
+}

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatbotService } from './chatbot.service';
 import { finalize } from 'rxjs/operators';
+import { marked } from 'marked';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 interface ChatMessage {
     text: string;
@@ -19,8 +21,10 @@ interface ChatMessage {
 })
 export class ChatbotSidebar implements AfterViewChecked {
     private chatbotService = inject(ChatbotService);
+    private sanitizer = inject(DomSanitizer);
 
-    isOpen = signal(false);
+    // isOpen = signal(false); // Removed local state
+    isOpen = this.chatbotService.isOpen;
     isLoading = signal(false);
     messages = signal<ChatMessage[]>([]);
     userInput = signal('');
@@ -58,7 +62,7 @@ export class ChatbotSidebar implements AfterViewChecked {
     }
 
     toggleSidebar() {
-        this.isOpen.update(v => !v);
+        this.chatbotService.toggle();
     }
 
     sendMessage() {
@@ -92,5 +96,10 @@ export class ChatbotSidebar implements AfterViewChecked {
             event.preventDefault();
             this.sendMessage();
         }
+    }
+
+    parseMarkdown(text: string): SafeHtml {
+        const html = marked.parse(text) as string;
+        return this.sanitizer.bypassSecurityTrustHtml(html);
     }
 }
