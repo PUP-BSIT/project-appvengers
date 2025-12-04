@@ -193,14 +193,14 @@
     <div class="modal-overlay" (click)="closeAddModal()">
       <div
         class="modal-content"
-        [ngClass]="{'edit-modal': isEditing}"
+        [ngClass]="{'edit-modal': isEditing()}"
         (click)="$event.stopPropagation()">
         <div class="modal-header">
           <h2>
             <i
               class="fas"
-              [ngClass]="{'fa-plus': !isEditing, 'fa-edit': isEditing}"></i>
-            {{ isEditing ? 'Edit Transaction' : 'Add New Transaction' }}
+              [ngClass]="{'fa-plus': !isEditing(), 'fa-edit': isEditing()}"></i>
+            {{ isEditing() ? 'Edit Transaction' : 'Add New Transaction' }}
           </h2>
           <button class="btn-close" (click)="closeAddModal()">
             <i class="fas fa-times"></i>
@@ -209,7 +209,7 @@
         
         <div class="modal-body">
           <form #form="ngForm"
-                (ngSubmit)="isEditing ? updateTransaction() : addTransaction()">
+                (ngSubmit)="isEditing() ? updateTransaction() : addTransaction()">
             
             <!-- Expense/Income Toggle (like auth page) -->
             <div class="type-toggle-wrapper">
@@ -346,7 +346,7 @@
                   Cancel
               </button>
               <button type="submit" class="btn-submit">
-                {{ isEditing ? 'Update Transaction' : 'Add Transaction' }}
+                {{ isEditing() ? 'Update Transaction' : 'Add Transaction' }}
               </button>
             </div>
           </form>
