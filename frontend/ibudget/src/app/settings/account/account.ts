@@ -1,19 +1,21 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Sidebar } from "../../sidebar/sidebar";
 import { Header } from "../../header/header";
-import { 
-    FormGroup, 
-    FormControl,
-    ReactiveFormsModule, 
-    FormBuilder,
-    Validators
-  } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  ReactiveFormsModule,
+  FormBuilder,
+  Validators
+} from '@angular/forms';
 import { SubHeader } from "../sub-header/sub-header";
 import { AuthService } from '../../../services/auth.service';
+import { UserService } from '../../../services/user.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-account',
-  imports: [Sidebar, Header, ReactiveFormsModule, SubHeader],
+  imports: [Sidebar, Header, ReactiveFormsModule, SubHeader, CommonModule],
   templateUrl: './account.html',
   styleUrl: './account.scss',
 })
@@ -21,8 +23,13 @@ export class Account implements OnInit {
   accountSettingsForm: FormGroup;
   formBuilder = inject(FormBuilder);
   authService = inject(AuthService);
+  userService = inject(UserService);
   usernameFirstLetter = signal("");
   userName = signal("");
+  hidePassword = signal(true);
+  isSubmitting = signal(false);
+  successMessage = signal<string | null>(null);
+  errorMessage = signal<string | null>(null);
 
   constructor() {
     this.accountSettingsForm = this.formBuilder.group({
@@ -32,6 +39,9 @@ export class Account implements OnInit {
       username: ['', {
         validators: [Validators.required]
       }],
+      password: ['', {
+        validators: [Validators.required]
+      }]
     });
   }
 
@@ -46,6 +56,10 @@ export class Account implements OnInit {
 
   get username() {
     return this.accountSettingsForm.get('username');
+  }
+
+  get password() {
+    return this.accountSettingsForm.get('password');
   }
 
   getFirstLetter() {
@@ -66,5 +80,45 @@ export class Account implements OnInit {
         this.getFirstLetter();
       }
     })
+  }
+
+  onSubmit(): void {
+    this.successMessage.set(null);
+    this.errorMessage.set(null);
+
+    if (this.accountSettingsForm.invalid) {
+      Object.keys(this.accountSettingsForm.controls).forEach(key => {
+        this.accountSettingsForm.get(key)?.markAsTouched();
+      });
+      return;
+    }
+
+    this.isSubmitting.set(true);
+
+    const formValue = this.accountSettingsForm.value;
+    const updateData = {
+      username: formValue.username,
+      email: formValue.email,
+      password: formValue.password
+    };
+
+    this.userService.updateAccount(updateData).subscribe({
+      next: (response) => {
+        this.isSubmitting.set(false);
+        if (response.success) {
+          this.successMessage.set(response.message);
+          // Clear password field
+          this.accountSettingsForm.patchValue({ password: '' });
+        } else {
+          this.errorMessage.set(response.message);
+        }
+      },
+      error: (error) => {
+        this.isSubmitting.set(false);
+        this.errorMessage.set(
+          error.error?.message || 'Failed to update account. Please try again.'
+        );
+      }
+    });
   }
 }
