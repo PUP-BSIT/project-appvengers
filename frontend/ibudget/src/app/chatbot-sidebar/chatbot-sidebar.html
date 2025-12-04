@@ -1,0 +1,51 @@
+<div class="chatbot-toggle" (click)="toggleSidebar()" [class.hidden]="isOpen()">
+    <i class="bi bi-chat-dots-fill"></i>
+    <span>Ask Bonzi</span>
+</div>
+
+<div class="chatbot-sidebar" [class.open]="isOpen()">
+    <div class="chatbot-header">
+        <div class="header-content">
+            <i class="bi bi-robot"></i>
+            <h3>AI Assistant</h3>
+        </div>
+        <button class="close-btn" (click)="toggleSidebar()">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+
+    <div class="messages-container" #scrollContainer>
+        @if (messages().length === 0) {
+        <div class="empty-state">
+            <i class="bi bi-stars"></i>
+            <p>How can I help you today?</p>
+        </div>
+        }
+
+        @for (msg of messages(); track msg.timestamp) {
+        <div class="message" [class.user]="msg.isUser" [class.bot]="!msg.isUser">
+            <div class="message-content">
+                {{ msg.text }}
+            </div>
+            <div class="message-time">
+                {{ msg.timestamp | date:'shortTime' }}
+            </div>
+        </div>
+        }
+
+        @if (isLoading()) {
+        <div class="loading-indicator">
+            <div class="spinner"></div>
+            <span>{{ loadingWord() }}</span>
+        </div>
+        }
+    </div>
+
+    <div class="input-area">
+        <textarea [ngModel]="userInput()" (ngModelChange)="userInput.set($event)" (keydown)="handleKeydown($event)"
+            placeholder="Type a message..." rows="1"></textarea>
+        <button class="send-btn" (click)="sendMessage()" [disabled]="!userInput().trim() || isLoading()">
+            <i class="bi bi-send-fill"></i>
+        </button>
+    </div>
+</div>
