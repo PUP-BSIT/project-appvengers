@@ -84,16 +84,17 @@ public class UserService {
         // Send Verification Email Template
         String verificationLink = verificationBaseUrl + emailToken;
         try {
-            emailService.sendHtmlEmail(emailFrom, user.getEmail(), "Verify your iBudget account", verificationLink, user.getUsername());
+            emailService.sendHtmlEmail(emailFrom, user.getEmail(), "Verify your iBudget account", verificationLink,
+                    user.getUsername());
         } catch (MessagingException | IOException e) {
             throw new RuntimeException("Failed to send verification email");
         }
 
         UserDetails userDetails = org.springframework.security.core.userdetails.User
-            .withUsername(user.getEmail())
-            .password(user.getPassword())
-            .authorities("ROLE_USER")
-            .build();
+                .withUsername(user.getEmail())
+                .password(user.getPassword())
+                .authorities("ROLE_USER")
+                .build();
 
         String token = jwtService.generateToken(userDetails);
         AuthResponse response = new AuthResponse(user.getUsername(), user.getEmail(), token);
@@ -103,24 +104,24 @@ public class UserService {
     /* This checks and verifies the email token of the user */
     public ApiResponse verifyEmailToken(String token) {
         return userRepository.findByEmailVerificationToken(token)
-            .map(user -> {
-                LocalDateTime expiry = user.getEmailVerificationExpiration();
-                if (expiry == null || LocalDateTime.now().isAfter(expiry)) {
-                    // token expired: clear token and expiry to force re-send flow if needed
+                .map(user -> {
+                    LocalDateTime expiry = user.getEmailVerificationExpiration();
+                    if (expiry == null || LocalDateTime.now().isAfter(expiry)) {
+                        // token expired: clear token and expiry to force re-send flow if needed
+                        user.setEmailVerificationToken(null);
+                        user.setEmailVerificationExpiration(null);
+                        userRepository.save(user);
+                        return new ApiResponse(false, "Verification token has expired");
+                    }
+
+                    // Sets email verified to true if token is valid or not expired
+                    user.setEmailVerified(true);
                     user.setEmailVerificationToken(null);
                     user.setEmailVerificationExpiration(null);
                     userRepository.save(user);
-                    return new ApiResponse(false, "Verification token has expired");
-                }
-                
-                // Sets email verified to true if token is valid or not expired
-                user.setEmailVerified(true);
-                user.setEmailVerificationToken(null);
-                user.setEmailVerificationExpiration(null);
-                userRepository.save(user);
-                return new ApiResponse(true, "Verification token is valid", user.getUsername());
-            })
-            .orElseGet(() -> new ApiResponse(false, "Invalid verification token"));
+                    return new ApiResponse(true, "Verification token is valid", user.getUsername());
+                })
+                .orElseGet(() -> new ApiResponse(false, "Invalid verification token"));
     }
 
     @Transactional
@@ -128,7 +129,8 @@ public class UserService {
         // First check if this is a deleted account (bypassing @SQLRestriction)
         Optional<User> deletedUser = userRepository.findByEmailIncludingDeleted(request.getEmail());
         if (deletedUser.isPresent() && deletedUser.get().isDeleted()) {
-            return new ApiResponse(false, "This account has been deleted. Please contact support if you believe this is an error.");
+            return new ApiResponse(false,
+                    "This account has been deleted. Please contact support if you believe this is an error.");
         }
 
         Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
@@ -137,9 +139,8 @@ public class UserService {
         // Dummy hash to mitigate timing attacks
         String dummyHash = "$2a$10$CwTycUXWue0Thq9StjUM0uJ8fQx5QyQbYyQ5QyQ5QyQ5QyQ5QyQ5Qy";
         boolean passwordMatches = passwordEncoder.matches(
-            request.getPassword(),
-            user != null ? user.getPassword() : dummyHash
-        );
+                request.getPassword(),
+                user != null ? user.getPassword() : dummyHash);
 
         if (user == null || !passwordMatches) {
             if (user != null) {
@@ -159,10 +160,10 @@ public class UserService {
         resetLockout(user);
 
         UserDetails userDetails = org.springframework.security.core.userdetails.User
-            .withUsername(user.getEmail())
-            .password(user.getPassword())
-            .authorities("ROLE_USER")
-            .build();
+                .withUsername(user.getEmail())
+                .password(user.getPassword())
+                .authorities("ROLE_USER")
+                .build();
 
         String token = jwtService.generateToken(userDetails);
         AuthResponse response = new AuthResponse(user.getUsername(), user.getEmail(), token);
@@ -212,7 +213,7 @@ public class UserService {
     @Transactional
     public ApiResponse requestPasswordReset(String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
-        
+
         // Return success even if user doesn't exist (prevent user enumeration)
         if (optionalUser.isEmpty()) {
             return new ApiResponse(true, "If an account with that email exists, a password reset link has been sent.");
@@ -227,15 +228,15 @@ public class UserService {
 
         // Generate secure token
         String resetToken = UUID.randomUUID().toString();
-        
+
         // Set token expiry (15 minutes)
         user.setPasswordResetToken(resetToken);
         user.setPasswordResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
-        
+
         // Update rate limiting fields
         user.setLastPasswordResetRequest(LocalDateTime.now());
         user.setPasswordResetAttempts(user.getPasswordResetAttempts() + 1);
-        
+
         userRepository.save(user);
 
         // Send password reset email
@@ -251,16 +252,16 @@ public class UserService {
 
     public ApiResponse validateResetToken(String token) {
         Optional<User> optionalUser = userRepository.findByPasswordResetToken(token);
-        
+
         if (optionalUser.isEmpty()) {
             return new ApiResponse(false, "Invalid or expired reset token");
         }
 
         User user = optionalUser.get();
-        
+
         // Check if token is expired
-        if (user.getPasswordResetTokenExpiry() == null || 
-            LocalDateTime.now().isAfter(user.getPasswordResetTokenExpiry())) {
+        if (user.getPasswordResetTokenExpiry() == null ||
+                LocalDateTime.now().isAfter(user.getPasswordResetTokenExpiry())) {
             return new ApiResponse(false, "Reset token has expired");
         }
 
@@ -276,7 +277,7 @@ public class UserService {
 
         // Find user by token
         Optional<User> optionalUser = userRepository.findByPasswordResetToken(request.getToken());
-        
+
         if (optionalUser.isEmpty()) {
             throw new IllegalArgumentException("Invalid or expired reset token");
         }
@@ -284,34 +285,33 @@ public class UserService {
         User user = optionalUser.get();
 
         // Check token expiry
-        if (user.getPasswordResetTokenExpiry() == null || 
-            LocalDateTime.now().isAfter(user.getPasswordResetTokenExpiry())) {
+        if (user.getPasswordResetTokenExpiry() == null ||
+                LocalDateTime.now().isAfter(user.getPasswordResetTokenExpiry())) {
             throw new IllegalArgumentException("Reset token has expired");
         }
 
         // Update password
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        
+
         // Clear reset token
         user.setPasswordResetToken(null);
         user.setPasswordResetTokenExpiry(null);
-        
+
         // Reset failed login attempts and unlock account
         user.setFailedAttempts(0);
         user.setLockedUntil(null);
-        
+
         // Update password changed timestamp
         user.setPasswordChangedAt(LocalDateTime.now());
-        
+
         userRepository.save(user);
 
         // Send confirmation email
         try {
             emailService.sendSimpleEmail(
-                user.getEmail(),
-                "iBudget Password Changed",
-                "Your password has been successfully changed. If you didn't make this change, please contact support immediately."
-            );
+                    user.getEmail(),
+                    "iBudget Password Changed",
+                    "Your password has been successfully changed. If you didn't make this change, please contact support immediately.");
         } catch (Exception e) {
             // Log but don't fail the operation
             System.err.println("Failed to send password change confirmation email: " + e.getMessage());
@@ -326,44 +326,43 @@ public class UserService {
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
             throw new IllegalArgumentException("New password and confirm password do not match");
         }
-        
+
         // Find user by username
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        
+
         // Verify current password
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Current password is incorrect");
         }
-        
+
         // Check if new password is same as current
         if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
             throw new IllegalArgumentException("New password must be different from current password");
         }
-        
+
         // Update password
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        
+
         // Reset failed login attempts
         user.setFailedAttempts(0);
         user.setLockedUntil(null);
-        
+
         // Update password changed timestamp
         user.setPasswordChangedAt(LocalDateTime.now());
-        
+
         userRepository.save(user);
-        
+
         // Send confirmation email
         try {
             emailService.sendSimpleEmail(
-                user.getEmail(),
-                "iBudget Password Changed",
-                "Your password has been successfully changed. If you didn't make this change, please contact support immediately."
-            );
+                    user.getEmail(),
+                    "iBudget Password Changed",
+                    "Your password has been successfully changed. If you didn't make this change, please contact support immediately.");
         } catch (Exception e) {
             System.err.println("Failed to send password change confirmation email: " + e.getMessage());
         }
-        
+
         return new ApiResponse(true, "Password has been changed successfully");
     }
 
@@ -394,10 +393,9 @@ public class UserService {
         // Send confirmation email
         try {
             emailService.sendSimpleEmail(
-                user.getEmail(),
-                "iBudget Account Deactivated",
-                "Your iBudget account has been deactivated. You can reactivate it by logging in again or contacting support."
-            );
+                    user.getEmail(),
+                    "iBudget Account Deactivated",
+                    "Your iBudget account has been deactivated. You can reactivate it by logging in again or contacting support.");
         } catch (Exception e) {
             System.err.println("Failed to send account deactivation email: " + e.getMessage());
         }
@@ -441,16 +439,16 @@ public class UserService {
         // Save the reason first
         userRepository.save(user);
 
-        // Now delete (triggers @SQLDelete which sets is_deleted=true and deleted_at=NOW())
+        // Now delete (triggers @SQLDelete which sets is_deleted=true and
+        // deleted_at=NOW())
         userRepository.delete(user);
 
         // Send confirmation email
         try {
             emailService.sendSimpleEmail(
-                email,
-                "iBudget Account Deleted",
-                "Your iBudget account has been permanently deleted. All your data will be removed within 30 days. If you didn't request this, please contact support immediately."
-            );
+                    email,
+                    "iBudget Account Deleted",
+                    "Your iBudget account has been permanently deleted. All your data will be removed within 30 days. If you didn't request this, please contact support immediately.");
         } catch (Exception e) {
             System.err.println("Failed to send account deletion email: " + e.getMessage());
         }
@@ -476,7 +474,8 @@ public class UserService {
 
         if (lastSent != null && now.isBefore(lastSent.plusMinutes(verificationResendCooldownMinutes))) {
             long waitMin = Duration.between(now, lastSent.plusMinutes(verificationResendCooldownMinutes)).toMinutes();
-            return new ApiResponse(false, "Too many requests. Please wait " + waitMin + " minutes before trying again.");
+            return new ApiResponse(false,
+                    "Too many requests. Please wait " + waitMin + " minutes before trying again.");
         }
 
         // generate new token (or reuse existing if you prefer)
@@ -488,7 +487,8 @@ public class UserService {
 
         String verificationLink = verificationBaseUrl + newToken;
         try {
-            emailService.sendHtmlEmail(emailFrom, user.getEmail(), "Verify your iBudget account", verificationLink, user.getUsername());
+            emailService.sendHtmlEmail(emailFrom, user.getEmail(), "Verify your iBudget account", verificationLink,
+                    user.getUsername());
         } catch (Exception e) {
             // TODO: Enhance Logging
             return new ApiResponse(false, "Failed to send verification email. Please try again later.");
@@ -502,16 +502,16 @@ public class UserService {
         if (user.getLastPasswordResetRequest() == null) {
             return false;
         }
-        
+
         LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
         boolean withinHour = user.getLastPasswordResetRequest().isAfter(oneHourAgo);
-        
+
         // Reset counter if more than an hour has passed
         if (!withinHour) {
             user.setPasswordResetAttempts(0);
             return false;
         }
-        
+
         return user.getPasswordResetAttempts() >= 3;
     }
 }
