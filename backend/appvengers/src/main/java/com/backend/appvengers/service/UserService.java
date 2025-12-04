@@ -8,6 +8,7 @@ import com.backend.appvengers.dto.ResetPasswordRequest;
 import com.backend.appvengers.dto.ChangePasswordRequest;
 import com.backend.appvengers.dto.DeactivateAccountRequest;
 import com.backend.appvengers.dto.DeleteAccountRequest;
+import com.backend.appvengers.dto.UpdateAccountRequest;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.UserRepository;
 import com.backend.appvengers.security.JwtService;
@@ -514,4 +515,68 @@ public class UserService {
 
         return user.getPasswordResetAttempts() >= 3;
     }
+
+    // --- Update Account ---
+
+    @Transactional
+    public ApiResponse updateAccount(String currentEmail, UpdateAccountRequest request) {
+        // Find user by current email
+        User user = userRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Verify password
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
+
+        boolean emailChanged = !user.getEmail().equals(request.getEmail());
+        boolean usernameChanged = !user.getUsername().equals(request.getUsername());
+
+        // Check if username is being changed and if it's already taken
+        if (usernameChanged && userRepository.existsByUsername(request.getUsername())) {
+            throw new IllegalArgumentException("Username is already taken");
+        }
+
+        // Check if email is being changed and if it's already taken
+        if (emailChanged && userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("Email is already registered");
+        }
+
+        // Update username if changed
+        if (usernameChanged) {
+            user.setUsername(request.getUsername());
+        }
+
+        // Update email if changed
+        if (emailChanged) {
+            user.setEmail(request.getEmail());
+            user.setEmailVerified(false);
+
+            // Generate new verification token
+            String emailToken = UUID.randomUUID().toString();
+            user.setEmailVerificationToken(emailToken);
+            user.setEmailVerificationExpiration(LocalDateTime.now().plusHours(verificationExpirationHours));
+
+            userRepository.save(user);
+
+            // Send verification email
+            String verificationLink = verificationBaseUrl + emailToken;
+            try {
+                emailService.sendHtmlEmail(emailFrom, user.getEmail(), "Verify your iBudget account",
+                        verificationLink,
+                        user.getUsername());
+            } catch (MessagingException | IOException e) {
+                throw new RuntimeException("Failed to send verification email");
+            }
+
+            return new ApiResponse(true,
+                    "Account updated successfully. Please verify your new email address.");
+        }
+
+        userRepository.save(user);
+        return new ApiResponse(true, "Account updated successfully");
+    }
+
 }
+
+    

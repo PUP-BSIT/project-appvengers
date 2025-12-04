@@ -3,6 +3,7 @@ package com.backend.appvengers.controller;
 import com.backend.appvengers.dto.ApiResponse;
 import com.backend.appvengers.dto.DeactivateAccountRequest;
 import com.backend.appvengers.dto.DeleteAccountRequest;
+import com.backend.appvengers.dto.UpdateAccountRequest;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.service.UserService;
 import jakarta.validation.Valid;
@@ -26,14 +27,13 @@ public class UserController {
     public ResponseEntity<ApiResponse> getProfile(Authentication auth) {
         String email = auth.getName(); // Extracted from JWT
         User user = userService.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         Map<String, Object> data = Map.of(
-            "id", user.getId(),
-            "username", user.getUsername(),
-            "email", user.getEmail(),
-            "remainingBudget", 0
-        );
+                "id", user.getId(),
+                "username", user.getUsername(),
+                "email", user.getEmail(),
+                "remainingBudget", 0);
 
         return ResponseEntity.ok(new ApiResponse(true, "Profile fetched", data));
     }
@@ -43,7 +43,7 @@ public class UserController {
             Authentication auth,
             @Valid @RequestBody DeactivateAccountRequest request,
             BindingResult bindingResult) {
-        
+
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getFieldErrors().stream()
                     .map(error -> error.getField() + ": " + error.getDefaultMessage())
@@ -66,7 +66,7 @@ public class UserController {
             Authentication auth,
             @Valid @RequestBody DeleteAccountRequest request,
             BindingResult bindingResult) {
-        
+
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getFieldErrors().stream()
                     .map(error -> error.getField() + ": " + error.getDefaultMessage())
@@ -83,4 +83,28 @@ public class UserController {
             return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
         }
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<ApiResponse> updateAccount(
+            Authentication auth,
+            @Valid @RequestBody UpdateAccountRequest request,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                    .reduce((a, b) -> a + ", " + b)
+                    .orElse("Validation failed");
+            return ResponseEntity.badRequest().body(new ApiResponse(false, errorMessage));
+        }
+
+        try {
+            String email = auth.getName();
+            ApiResponse response = userService.updateAccount(email, request);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+
 }
