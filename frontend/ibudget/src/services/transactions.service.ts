@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../environments/environment';
-import { ApiResponse, Transaction } from '../models/user.model';
+import { ApiResponse, Transaction, TransactionResponse } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionsService {
@@ -10,21 +10,21 @@ export class TransactionsService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Transaction[]> {
+  getAll(): Observable<TransactionResponse[]> {
     return this.http.get<ApiResponse>(this.base).pipe(
-      map((res: ApiResponse) => (res.data || []) as Transaction[])
+      map((res: ApiResponse) => (res.data || []) as TransactionResponse[])
     );
   }
 
-  create(payload: Partial<Transaction>): Observable<Transaction> {
+  create(payload: Partial<Transaction>): Observable<TransactionResponse> {
     return this.http.post<ApiResponse>(this.base, payload).pipe(
-      map((res: ApiResponse) => res.data as Transaction)
+      map((res: ApiResponse) => res.data as TransactionResponse)
     );
   }
 
-  update(id: number, payload: Partial<Transaction>): Observable<Transaction> {
+  update(id: number, payload: Partial<Transaction>): Observable<TransactionResponse> {
     return this.http.put<ApiResponse>(`${this.base}/${id}`, payload).pipe(
-      map((res: ApiResponse) => res.data as Transaction)
+      map((res: ApiResponse) => res.data as TransactionResponse)
     );
   }
 
