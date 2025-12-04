@@ -50,7 +50,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "^20.3.4",
     "@angular/build": "^20.3.4",
-    "@angular/cli": "^20.3.4",
+    "@angular/cli": "^20.3.13",
     "@angular/compiler-cli": "^20.3.0",
     "@playwright/test": "^1.56.1",
     "@types/bootstrap": "^5.2.10",
