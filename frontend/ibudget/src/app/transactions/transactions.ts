@@ -256,13 +256,13 @@ export class Transactions implements OnInit, OnDestroy {
   }
 
   getTotalIncome(): number {
-    return this.transactions
+    return this.filteredTransactions
       .filter(t => t.type === 'income')
       .reduce((sum, t) => sum + t.amount, 0);
   }
 
   getTotalExpenses(): number {
-    return this.transactions
+    return this.filteredTransactions
       .filter(t => t.type === 'expense')
       .reduce((sum, t) => sum + t.amount, 0);
   }
