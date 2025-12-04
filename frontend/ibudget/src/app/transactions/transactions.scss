@@ -229,12 +229,16 @@ $sidebar-width: 100px;
 
 .card {
   background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 1.75rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: row;
-  gap: 1rem;
+  gap: 1.25rem;
+  border: 2px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
   
   .card-content {
     display: flex;
@@ -248,35 +252,63 @@ $sidebar-width: 100px;
     flex-shrink: 0;
     align-self: center;
     margin-left: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 12px;
   }
 }
 
 .card h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.9rem;
-  color: #7f8c8d;
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
+  color: #6b7280;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
   text-align: left;
+  font-weight: 600;
 }
 
 .card .amount {
   margin: 0;
-  font-size: 1.8rem;
-  font-weight: 600;
+  font-size: 2rem;
+  font-weight: 700;
   text-align: left;
+  line-height: 1;
 }
 
-.income-card .amount {
-  color: #27ae60;
+.income-card {
+  color: #10b981;
+
+  .amount {
+    color: #10b981;
+  }
+
+  i {
+    color: #10b981;
+  }
 }
 
-.expense-card .amount {
-  color: #e74c3c;
+.expense-card {
+  color: #ef4444;
+
+  .amount {
+    color: #ef4444;
+  }
+
+  i {
+    color: #ef4444;
+  }
 }
 
-.balance-card .amount {
-  color: #3498db;
+.balance-card {
+  color: #3b82f6;
+
+  .amount {
+    color: #3b82f6;
+  }
+
+  i {
+    color: #3b82f6;
+  }
 }
 
 .transactions-cards-container {
