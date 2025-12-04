@@ -23,6 +23,7 @@
 ### 🎯 Problem Statement
 
 Students and young professionals often struggle with:
+
 - ❌ Overspending and financial stress
 - ❌ Lack of visibility into spending habits
 - ❌ Difficulty tracking daily, weekly, and monthly expenses
@@ -31,6 +32,7 @@ Students and young professionals often struggle with:
 ### ✨ Our Solution
 
 iBudget provides an intuitive, efficient platform to:
+
 - ✅ Track all income and expenses in real-time
 - ✅ Visualize spending patterns with interactive charts
 - ✅ Set and achieve financial goals
@@ -46,27 +48,34 @@ iBudget provides an intuitive, efficient platform to:
 <td width="50%">
 
 ### 💳 Transaction Management
+
 Easily add, edit, and delete income and expense transactions with a clean, intuitive interface.
 
 ### 📊 Smart Categorization
+
 Automatically categorize transactions to understand where your money goes.
 
 ### 🎯 Budget & Goal Setting
+
 Set financial goals and create budgets with progress tracking.
 
 </td>
 <td width="50%">
 
 ### 🔔 Smart Notifications
+
 Stay informed about bills, budget limits, and financial milestones.
 
 ### 📈 Visual Analytics
+
 Interactive charts and graphs powered by Chart.js for deep insights.
 
 ### 🤖 Personalized Insights
+
 AI-driven recommendations based on your spending behavior.
 
 ### 🔒 Secure Account Management
+
 Bank-level security with JWT authentication and rate limiting.
 
 </td>
@@ -78,6 +87,7 @@ Bank-level security with JWT authentication and rate limiting.
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 ![Angular](https://img.shields.io/badge/Angular_20-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap_5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
@@ -92,6 +102,7 @@ Bank-level security with JWT authentication and rate limiting.
 - **Testing:** Jasmine + Karma
 
 ### Backend
+
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot_3-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
 ![Java](https://img.shields.io/badge/Java_21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
@@ -108,6 +119,7 @@ Bank-level security with JWT authentication and rate limiting.
 - **Code Coverage:** JaCoCo
 
 ### DevOps & Tools
+
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
 ![Hostinger](https://img.shields.io/badge/Hostinger-673DE6?style=for-the-badge&logo=hostinger&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
@@ -126,6 +138,11 @@ Bank-level security with JWT authentication and rate limiting.
 🔗 **Production:** [https://i-budget.site/](https://i-budget.site/)
 
 **Hosting:** Hostinger with MySQL database backend
+
+### Test Account
+
+- Email: <test@example.com>
+- Password: password123
 
 ---
 
@@ -166,12 +183,14 @@ project-appvengers/
 ### Quick Start
 
 #### 1️⃣ Clone the Repository
+
 ```bash
 git clone git@github.com:PUP-BSIT/project-appvengers.git
 cd project-appvengers
 ```
 
 #### 2️⃣ Backend Setup
+
 ```bash
 cd backend/appvengers
 
@@ -188,10 +207,13 @@ cp .env.example .env    # Mac/Linux
 
 ./mvnw spring-boot:run  # Mac/Linux
 .\mvnw spring-boot:run  # Windows
+./start-dev.ps1 # Runs backend and SSH tunnel at the same time
 ```
+
 **Backend runs on:** `http://localhost:8081`
 
 #### 3️⃣ Frontend Setup
+
 ```bash
 cd frontend/ibudget
 
@@ -201,11 +223,13 @@ npm install
 # Start development server
 npm start
 ```
+
 **Frontend runs on:** `http://localhost:4200`
 
 ### 🧪 Running Tests
 
 **Frontend:**
+
 ```bash
 cd frontend/ibudget
 npm test              # Run tests with coverage (headless)
@@ -213,6 +237,7 @@ npm run test:watch    # Run tests with Chrome UI
 ```
 
 **Backend:**
+
 ```bash
 cd backend/appvengers
 ./mvnw test           # Mac/Linux
@@ -220,6 +245,7 @@ cd backend/appvengers
 ```
 
 **View Coverage Reports:**
+
 - Frontend: `coverage/frontend/index.html`
 - Backend: `coverage/backend/index.html`
 
@@ -269,6 +295,7 @@ Our GitHub Actions workflows ensure code quality and automated deployment:
 **Workspace:** [Notion Project Timeline](https://www.notion.so/2687c41b891680988424fc18255e652a?v=2687c41b8916806db623000c9428995b&source=copy_link)
 
 We use Notion for:
+
 - Sprint planning and tracking
 - User stories and requirements
 - Technical documentation
