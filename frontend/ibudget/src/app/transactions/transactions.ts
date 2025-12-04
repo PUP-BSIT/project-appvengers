@@ -1,8 +1,10 @@
-import { Component, signal, Renderer2, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { 
+  Component,signal, Renderer2, OnInit, OnDestroy, ChangeDetectorRef
+} from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe, DatePipe, CommonModule } from '@angular/common';
-import {Transaction} from "../../models/user.model";
+import {Transaction, TransactionResponse} from "../../models/user.model";
 import { Header } from '../header/header';
 import { TransactionsService } from '../../services/transactions.service';
 import { AuthService } from '../../services/auth.service';
@@ -20,7 +22,6 @@ export class Transactions implements OnInit, OnDestroy {
               private txService: TransactionsService,
               private authService: AuthService,
               private cd: ChangeDetectorRef) {
-    // Initialize filtered transactions with static data
     this.filterTransactions();
   }
 
@@ -78,16 +79,14 @@ export class Transactions implements OnInit, OnDestroy {
   showCustomCategoryInput = false;
   customCategoryName = '';
 
-  isEditing = false;
+  isEditing = signal(false);
   editingTransactionId: number | null = null;
-  
-  // Toggle property for Expense/Income
-  isIncomeToggle = false;
+
+  isIncomeToggle = signal(false);
 
     filterTransactions() {
       let filtered = [...this.transactions];
-      
-      // Filter by category
+
       const sel = (this.selectedCategory || 'All Categories')
                   .toString().toLowerCase();
 
@@ -97,8 +96,7 @@ export class Transactions implements OnInit, OnDestroy {
             .toString().toLowerCase() === sel
         );
       }
-      
-      // Filter by period
+
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       
@@ -112,16 +110,19 @@ export class Transactions implements OnInit, OnDestroy {
           break;
           
         case 'daily':
-          // Show today's transactions (same as 'today')
+          const yesterday = new Date(today);
+          yesterday.setDate(yesterday.getDate() - 1);
+          yesterday.setHours(0, 0, 0, 0);
+          
           filtered = filtered.filter(t => {
             const transactionDate = new Date(t.date);
             transactionDate.setHours(0, 0, 0, 0);
-            return transactionDate.getTime() === today.getTime();
+            return transactionDate.getTime() === today.getTime() ||
+                   transactionDate.getTime() === yesterday.getTime();
           });
           break;
           
         case 'weekly':
-          // Show last 7 days
           const weekAgo = new Date(today);
           weekAgo.setDate(weekAgo.getDate() - 7);
           filtered = filtered.filter(t => {
@@ -132,7 +133,6 @@ export class Transactions implements OnInit, OnDestroy {
           break;
           
         case 'monthly':
-          // Show current month
           const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
           const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
           filtered = filtered.filter(t => {
@@ -167,20 +167,20 @@ export class Transactions implements OnInit, OnDestroy {
 
   openAddModal() {
     this.showAddModal.set(true);
-    this.isEditing = false;
+    this.isEditing.set(false);
     this.editingTransactionId = null;
     this.showCustomCategoryInput = false;
     this.customCategoryName = '';
     // Reset form
     this.newTransaction = {
-      date: '' as any,
+      date: new Date(),
       description: '',
       category: '',
-      amount: null as any,
+      amount: 0,
       type: 'expense'
     };
     // Reset toggle to Expense (left position)
-    this.isIncomeToggle = false;
+    this.isIncomeToggle.set(false);
   }
 
   closeAddModal() {
@@ -220,7 +220,7 @@ export class Transactions implements OnInit, OnDestroy {
         transactionDate: this.newTransaction.date
       };
 
-      this.txService.create(payload).subscribe(created => {
+      this.txService.create(payload).subscribe((created: TransactionResponse) => {
         console.log('create response:', created);
         // re-fetch all transactions from backend to verify persistence
         this.txService.getAll().subscribe(all => {
@@ -228,7 +228,7 @@ export class Transactions implements OnInit, OnDestroy {
         }, err => console.error('getAll after create failed', err));
         const createdTx: Transaction = {
           id: created.id,
-          date: created.date ? new Date(created.date as any) : new Date(),
+          date: created.transactionDate ? new Date(created.transactionDate) : new Date(),
           description: created.description,
           category: created.category,
           amount: created.amount,
@@ -269,7 +269,7 @@ export class Transactions implements OnInit, OnDestroy {
 
   editTransaction(transaction: Transaction) {
     this.showAddModal.set(true);
-    this.isEditing = true;
+    this.isEditing.set(true);
     this.editingTransactionId = transaction.id;
     this.showCustomCategoryInput = false;
     this.customCategoryName = '';
@@ -308,13 +308,13 @@ export class Transactions implements OnInit, OnDestroy {
       };
 
       this.txService.update(this.editingTransactionId, payload)
-        .subscribe(updated => {
+        .subscribe((updated: TransactionResponse) => {
           const index = this.transactions.findIndex(
             t => t.id === this.editingTransactionId);
           if (index !== -1) {
             this.transactions[index] = {
               ...this.transactions[index],
-              date: updated.date ? new Date(updated.date as any)
+              date: updated.transactionDate ? new Date(updated.transactionDate)
                 : new Date(this.newTransaction.date),
               description: updated.description,
               category: updated.category,
@@ -358,9 +358,13 @@ export class Transactions implements OnInit, OnDestroy {
                 this.authService.getToken()?.slice(0, 24));
     this.txService.getAll().subscribe((txs) => {
       // convert potential date strings to Date
-      const backendTransactions = txs.map(t => ({
-        ...t,
-        date: t.date ? new Date(t.date as any) : new Date()
+      const backendTransactions = txs.map((t: TransactionResponse): Transaction => ({
+        id: t.id,
+        date: t.transactionDate ? new Date(t.transactionDate) : new Date(),
+        description: t.description,
+        category: t.category,
+        amount: t.amount,
+        type: t.type
       }));
       this.transactions = [...this.transactions, ...backendTransactions];
       this.filterTransactions();
