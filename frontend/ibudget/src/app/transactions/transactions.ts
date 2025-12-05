@@ -53,7 +53,6 @@ export class Transactions implements OnInit, OnDestroy {
   selectedCategory = 'All Categories';
   categories = [
     'All Categories',
-    'Income',
     'Entertainment',
     'Bills',
     'Shopping',
