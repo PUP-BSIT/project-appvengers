@@ -7,12 +7,13 @@ import { Observable } from 'rxjs';
 })
 export class ChatbotService {
     private http = inject(HttpClient);
-    private readonly webhookUrl = 'https://n8n-j3he.onrender.com/webhook-test/3359fb07-339e-465f-9a4b-afc19a8e8f0b';
+    // Proxy through backend to hide n8n URL and handle CORS
+    private readonly apiUrl = 'http://localhost:8081/api/chatbot/message';
 
     isOpen = signal(false);
 
     sendMessage(message: string): Observable<any> {
-        return this.http.post(this.webhookUrl, { message });
+        return this.http.post(this.apiUrl, { message });
     }
 
     toggle() {
