@@ -65,8 +65,8 @@
             <div class="category-info-container-budget-list">
               <label class="mb-0 text-black"> {{ budget.category_name }} </label>
               <span class="text-secondary">
-                From {{ budget.start_date }} to
-                {{ budget.end_date }}
+                From {{ budget.start_date | date: 'MMM d, y' }} to
+                {{ budget.end_date | date: 'MMM d, y' }}
               </span>
             </div>
 
