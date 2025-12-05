@@ -3,14 +3,15 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MockupsService } from '../../../../../services/mockups.service';
 import { BudgetTransaction } from '../../../../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
-import { Component, 
-        ElementRef, 
-        inject, 
-        OnInit, 
-        output, 
-        signal, 
-        ViewChild 
-      } from '@angular/core';
+import { 
+  Component, 
+  ElementRef, 
+  inject, 
+  OnInit, 
+  output, 
+  signal, 
+  ViewChild 
+} from '@angular/core';
 
 @Component({
   selector: 'app-add-budget-expense',
@@ -18,6 +19,7 @@ import { Component,
   templateUrl: './add-budget-expense.html',
   styleUrl: './add-budget-expense.scss',
 })
+
 export class AddBudgetExpense implements OnInit {
   @ViewChild('addBudgetExpenseModal') addBudgetExpenseModal!: ElementRef;
   @ViewChild('openAddBudgetExpenseModalBtn') 
