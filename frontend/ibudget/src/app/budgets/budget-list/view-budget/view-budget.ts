@@ -15,6 +15,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './view-budget.html',
   styleUrl: './view-budget.scss',
 })
+
 export class ViewBudget implements OnInit {
   // Services
   budgetTxService = inject(BudgetTransactionsService);
