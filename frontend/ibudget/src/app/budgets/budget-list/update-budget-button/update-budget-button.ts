@@ -7,21 +7,22 @@ import { BudgetService } from '../../../../services/budget.service';
 import { bootstrapThreeDotsVertical } from '@ng-icons/bootstrap-icons'
 import { CategoriesService } from '../../../../services/categories.service';
 import { 
-          Component, 
-          ElementRef, 
-          inject, 
-          input, 
-          OnInit, 
-          output, 
-          signal, 
-          ViewChild 
-        } from '@angular/core';
-  import { 
-          ReactiveFormsModule ,
-          FormBuilder,
-          FormGroup,
-          Validators
-        } from '@angular/forms';
+  Component, 
+  ElementRef, 
+  inject, 
+  input, 
+  OnInit, 
+  output, 
+  signal, 
+  ViewChild 
+} from '@angular/core';
+
+import { 
+  ReactiveFormsModule ,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 
 @Component({
   selector: 'app-update-budget-button',
@@ -32,6 +33,7 @@ import {
     provideIcons({bootstrapThreeDotsVertical})
   ]
 })
+
 export class UpdateBudgetButton implements OnInit {
   @ViewChild('updateBudgetModal') updateBudgetModal!: ElementRef;
   @ViewChild('openUpdateBudgetModalBtn') 
