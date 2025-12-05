@@ -2,4 +2,6 @@
     <ngx-loading-bar color="#4689cb" height="5px" ref="http" />
     <router-outlet></router-outlet>
 </div>
-<app-chatbot-sidebar></app-chatbot-sidebar>
+@if (showChatbot) {
+    <app-chatbot-sidebar></app-chatbot-sidebar>
+}
