@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -8,7 +9,7 @@ import { Observable } from 'rxjs';
 export class ChatbotService {
     private http = inject(HttpClient);
     // Proxy through backend to hide n8n URL and handle CORS
-    private readonly apiUrl = 'http://localhost:8081/api/chatbot/message';
+    private readonly apiUrl = `${environment.apiUrl}/chatbot/message`;
 
     isOpen = signal(false);
 
