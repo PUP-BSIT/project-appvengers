@@ -113,17 +113,20 @@ export const routes: Routes = [
   {
     path: 'categories',
     loadComponent: () => import('./categories/categories')
-      .then(m => m.Categories)
+      .then(m => m.Categories),
+    canActivate: [authGuard]
   },
   {
     path: 'reports',
     loadComponent: () => import('./reports/reports')
-      .then(m => m.Reports)
+      .then(m => m.Reports),
+    canActivate: [authGuard]
   },
   {
     path: 'notifications',
     loadComponent: () => import('./notifications/notifications')
-      .then(m => m.Notifications)
+      .then(m => m.Notifications),
+    canActivate: [authGuard]
   },
   {
     path: 'settings',
