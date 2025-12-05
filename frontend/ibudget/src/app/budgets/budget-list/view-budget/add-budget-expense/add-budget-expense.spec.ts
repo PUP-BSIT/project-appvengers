@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AddBudgetExpense } from './add-budget-expense';
 
 describe('AddBudgetExpense', () => {
@@ -15,12 +15,14 @@ describe('AddBudgetExpense', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddBudgetExpense],
+      imports: [
+        HttpClientTestingModule,  
+        AddBudgetExpense           
+      ],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteStub }
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AddBudgetExpense);
     component = fixture.componentInstance;
