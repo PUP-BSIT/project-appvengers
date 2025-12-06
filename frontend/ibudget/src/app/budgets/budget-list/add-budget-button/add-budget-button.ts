@@ -3,24 +3,24 @@ import { BudgetService } from '../../../../services/budget.service';
 import { CategoriesService } from '../../../../services/categories.service';
 import { Modal } from 'bootstrap';
 import { 
-    Component, 
-    ElementRef, 
-    inject, 
-    input, 
-    OnChanges, 
-    OnInit, 
-    output, 
-    signal, 
-    SimpleChanges, 
-    ViewChild 
-  } from '@angular/core';
+  Component, 
+  ElementRef, 
+  inject, 
+  input, 
+  OnChanges, 
+  OnInit, 
+  output, 
+  signal, 
+  SimpleChanges, 
+  ViewChild 
+} from '@angular/core';
   
 import { 
-    ReactiveFormsModule ,
-    FormBuilder,
-    FormGroup,
-    Validators
-  } from '@angular/forms';
+  ReactiveFormsModule ,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 
 @Component({
   selector: 'app-add-budget-button',
