@@ -507,6 +507,7 @@ The backend sends the following JSON structure to the n8n webhook:
 ```json
 {
   "message": "User's question or message",
+  "sessionId": "chat-m5x7k2a1-b3c4d5e6",
   "userContext": {
     "username": "string",
     "totalIncome": 0.00,
@@ -553,22 +554,27 @@ The backend sends the following JSON structure to the n8n webhook:
 
 ### Required n8n Workflow Updates
 
-To enable context-aware responses, update your n8n workflow:
+To enable context-aware responses with session memory, update your n8n workflow:
 
 1. **In the Webhook node**, ensure you're receiving POST requests with JSON body
 
-2. **In the AI Agent/Chat node**, update the System Prompt to include the user context:
+2. **In the AI Agent/Chat node**, configure the Session ID:
+   - Set the Session ID field to: `{{ $json.body.sessionId }}`
+   - This enables conversation memory within the same session
+
+3. **In the AI Agent/Chat node**, update the System Prompt to include the user context:
    - Add this at the top of your system prompt (after "Current Context"):
    ```
    ## User's Financial Context (Real-Time Data)
    {{ $json.body.userContext ? JSON.stringify($json.body.userContext, null, 2) : 'No user context available' }}
    ```
 
-3. **Pass the user message correctly**:
+4. **Pass the user message correctly**:
    - The user's message is in: `{{ $json.body.message }}`
+   - The session ID is in: `{{ $json.body.sessionId }}`
    - The user context is in: `{{ $json.body.userContext }}`
 
-4. **Error Handling**:
+5. **Error Handling**:
    - Check for `userContextError` field - if present, the backend couldn't fetch user data
    - Fall back to asking user for information when context is unavailable
 
@@ -581,6 +587,7 @@ curl -X POST https://n8n-j3he.onrender.com/webhook/YOUR-WEBHOOK-ID \
   -H "X-N8N-Secret: YOUR-SECRET" \
   -d '{
     "message": "What is my financial summary?",
+    "sessionId": "chat-test123-abc456",
     "userContext": {
       "username": "TestUser",
       "totalIncome": 10000,
@@ -592,4 +599,4 @@ curl -X POST https://n8n-j3he.onrender.com/webhook/YOUR-WEBHOOK-ID \
   }'
 ```
 
-Expected: The AI should respond with personalized financial insights based on the provided context.
+Expected: The AI should respond with personalized financial insights based on the provided context, and subsequent messages with the same sessionId should maintain conversation history.
