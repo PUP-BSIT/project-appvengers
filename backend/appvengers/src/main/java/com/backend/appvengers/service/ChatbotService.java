@@ -65,11 +65,22 @@ public class ChatbotService {
 
         try {
             ResponseEntity<Object> response = restTemplate.postForEntity(n8nWebhookUrl, request, Object.class);
-            return response.getBody();
+            Object responseBody = response.getBody();
+            
+            // Handle null response from n8n
+            if (responseBody == null) {
+                System.err.println("Warning: n8n returned null response body");
+                Map<String, String> fallbackResponse = new HashMap<>();
+                fallbackResponse.put("output", "I'm having trouble processing your request. Please try again.");
+                return fallbackResponse;
+            }
+            
+            return responseBody;
         } catch (Exception e) {
             e.printStackTrace();
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Failed to communicate with chatbot service.");
+            errorResponse.put("output", "Sorry, I couldn't reach the AI service. Please try again later.");
             return errorResponse;
         }
     }
