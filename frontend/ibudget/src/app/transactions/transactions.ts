@@ -43,7 +43,7 @@ export class Transactions implements OnInit, OnDestroy {
   totalPages = 1;
 
   newTransaction = {
-    date: new Date(),
+    date: new Date().toISOString().split('T')[0],
     description: '',
     category: '',
     amount: 0,
@@ -175,7 +175,7 @@ export class Transactions implements OnInit, OnDestroy {
     this.customCategoryName = '';
 
     this.newTransaction = {
-      date: new Date(),
+      date: new Date().toISOString().split('T')[0],
       description: '',
       category: '',
       amount: 0,
@@ -273,7 +273,9 @@ export class Transactions implements OnInit, OnDestroy {
     this.showCustomCategoryInput = false;
     this.customCategoryName = '';
     this.newTransaction = {
-      date: transaction.date,
+      date: transaction.date instanceof Date 
+        ? transaction.date.toISOString().split('T')[0]
+        : transaction.date,
       description: transaction.description,
       category: transaction.category,
       amount: transaction.amount,
@@ -346,10 +348,10 @@ export class Transactions implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('Transactions: auth token present?',
-                !!this.authService.getToken());
-    console.log('Transactions: auth token (first 24 chars):',
-                this.authService.getToken()?.slice(0, 24));
+    // console.log('Transactions: auth token present?',
+    //             !!this.authService.getToken());
+    // console.log('Transactions: auth token (first 24 chars):',
+    //             this.authService.getToken()?.slice(0, 24));
     this.txService.getAll().subscribe((txs) => {
       const backendTransactions = txs.map(
         (t: TransactionResponse): Transaction => ({
