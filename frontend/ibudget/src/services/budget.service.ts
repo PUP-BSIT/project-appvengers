@@ -3,17 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map, switchMap } from 'rxjs';
 import { environment } from '../environments/environment';
 import { Budget } from '../models/user.model';
-
-// Backend entity shape
-type BackendBudget = {
-  budgetId: number;
-  userId: number;
-  categoryId: number;
-  categoryName: string;
-  limitAmount: number;
-  startDate: string; // ISO yyyy-MM-dd
-  endDate: string;   // ISO yyyy-MM-dd
-};
+import { BackendBudget } from '../models/user.model'
 
 @Injectable({ providedIn: 'root' })
 export class BudgetService {

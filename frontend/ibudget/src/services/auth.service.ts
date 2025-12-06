@@ -53,7 +53,6 @@ export class AuthService {
       );
   }
 
-
   logout(): void {
     localStorage.removeItem('iBudget_authToken');
   }
