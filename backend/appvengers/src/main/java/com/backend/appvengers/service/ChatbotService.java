@@ -27,21 +27,28 @@ public class ChatbotService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     /**
-     * Sends a message to the AI chatbot with user's financial context.
+     * Sends a message to the AI chatbot with user's financial context and session ID.
      * The context allows the AI to provide personalized insights and recommendations.
+     * The session ID enables conversation continuity in the n8n AI agent.
      *
      * @param message User's message/question
      * @param userEmail Authenticated user's email for fetching their data
+     * @param sessionId Unique session identifier for conversation continuity
      * @return AI chatbot response
      */
-    public Object sendMessage(String message, String userEmail) {
+    public Object sendMessage(String message, String userEmail, String sessionId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-N8N-Secret", n8nWebhookSecret);
 
-        // Build the request body with user context
+        // Build the request body with user context and session ID
         Map<String, Object> body = new HashMap<>();
         body.put("message", message);
+        
+        // Include session ID for conversation continuity
+        if (sessionId != null && !sessionId.isEmpty()) {
+            body.put("sessionId", sessionId);
+        }
 
         // Fetch and include user's financial context
         try {
@@ -68,7 +75,16 @@ public class ChatbotService {
     }
 
     /**
-     * @deprecated Use {@link #sendMessage(String, String)} instead for context-aware responses.
+     * @deprecated Use {@link #sendMessage(String, String, String)} instead for context-aware responses.
+     * This method is kept for backward compatibility.
+     */
+    @Deprecated
+    public Object sendMessage(String message, String userEmail) {
+        return sendMessage(message, userEmail, null);
+    }
+
+    /**
+     * @deprecated Use {@link #sendMessage(String, String, String)} instead for context-aware responses.
      * This method is kept for backward compatibility.
      */
     @Deprecated

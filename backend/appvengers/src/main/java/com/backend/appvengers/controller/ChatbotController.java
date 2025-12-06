@@ -17,9 +17,9 @@ public class ChatbotController {
 
     /**
      * Send a message to the AI chatbot.
-     * The chatbot receives the user's financial context for personalized responses.
+     * The chatbot receives the user's financial context and session ID for personalized responses.
      *
-     * @param payload Request body containing the message
+     * @param payload Request body containing the message and sessionId
      * @param auth Authentication object containing the user's email
      * @return AI chatbot response with personalized insights
      */
@@ -35,9 +35,12 @@ public class ChatbotController {
 
         // Get the authenticated user's email
         String userEmail = auth.getName();
+        
+        // Get the session ID for conversation continuity
+        String sessionId = payload.get("sessionId");
 
-        // Send message with user context for personalized AI responses
-        Object response = chatbotService.sendMessage(message, userEmail);
+        // Send message with user context and session ID for personalized AI responses
+        Object response = chatbotService.sendMessage(message, userEmail, sessionId);
         return ResponseEntity.ok(response);
     }
 }
