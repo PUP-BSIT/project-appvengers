@@ -12,7 +12,7 @@
     </div>
   </div>
 
-  <div class="right-panel">
+  <div [ngClass]="['right-panel', isLoginMode() ? 'padding-50' : 'padding-100']">
     <div class="header-toggles">
       <a (click)="setLoginMode()" [class.active]="isLoginMode()">Login</a>
       <a (click)="setSignupMode()" [class.active]="!isLoginMode()">Signup</a>
