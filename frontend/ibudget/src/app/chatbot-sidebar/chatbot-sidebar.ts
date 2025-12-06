@@ -80,8 +80,14 @@ export class ChatbotSidebar implements AfterViewChecked {
             )
             .subscribe({
                 next: (response: any) => {
-                    // Assuming response has a 'output' or 'text' field, adjust based on actual webhook response
-                    const botResponse = response.output || response.text || response.message || JSON.stringify(response);
+                    // Handle null/undefined response
+                    if (!response) {
+                        this.messages.update(msgs => [...msgs, { text: "Sorry, I received an empty response. Please try again.", isUser: false, timestamp: new Date() }]);
+                        return;
+                    }
+                    // Extract bot response from various possible response structures
+                    const botResponse = response.output || response.text || response.message || response.response || 
+                                       (typeof response === 'string' ? response : JSON.stringify(response));
                     this.messages.update(msgs => [...msgs, { text: botResponse, isUser: false, timestamp: new Date() }]);
                 },
                 error: (error) => {
