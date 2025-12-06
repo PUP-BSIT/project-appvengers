@@ -32,12 +32,13 @@ import {
 export class AddBudgetButton implements OnInit, OnChanges {
   @ViewChild('addBudgetModal') addBudgetModal!: ElementRef;
   @ViewChild('openAddBudgetModalBtn') 
-    openAddBudgetModalBtn!: ElementRef<HTMLButtonElement>;
+
+  openAddBudgetModalBtn!: ElementRef<HTMLButtonElement>;
   budgetForm: FormGroup;
   addedBudget = output<Budget>();
   formBuilder = inject(FormBuilder);  
   budgetService = inject(BudgetService);
-  mockBudgetId = input(<number>(0));
+  budgetId = input(<number>(0));
   categoriesService = inject(CategoriesService);
   categories = signal<Category[]>([]);
   currentCategoryName = signal('');
@@ -56,7 +57,7 @@ export class AddBudgetButton implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    const budgetId = this.mockBudgetId();
+    const budgetId = this.budgetId();
     this.categoriesService.getCategories().subscribe(data => {
       this.categories.set(data);
     });
@@ -74,8 +75,8 @@ export class AddBudgetButton implements OnInit, OnChanges {
 
   // If the parent changes, the added budget id should update accordingly
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['mockBudgetId']) {
-      const budgetId = changes['mockBudgetId'].currentValue;
+    if (changes['budgetId']) {
+      const budgetId = changes['budgetId'].currentValue;
 
       this.budgetForm = this.formBuilder.group({
         id: [budgetId],
@@ -99,7 +100,7 @@ export class AddBudgetButton implements OnInit, OnChanges {
 
     this.budgetForm.reset();
     // Restore the id field after reset to prevent it being null
-    this.budgetForm.patchValue({ id: this.mockBudgetId() });
+    this.budgetForm.patchValue({ id: this.budgetId() });
     this.openAddBudgetModalBtn.nativeElement.focus();
   }
 

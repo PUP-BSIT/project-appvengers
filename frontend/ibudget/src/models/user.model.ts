@@ -99,6 +99,17 @@ export type Budget = {
   current_amount?: number;
 }
 
+// Backend entity shape
+export type BackendBudget = {
+  budgetId: number;
+  userId: number;
+  categoryId: number;
+  categoryName: string;
+  limitAmount: number;
+  startDate: string; // ISO yyyy-MM-dd
+  endDate: string;   // ISO yyyy-MM-dd
+};
+
 // Frontend entity shape
 export type Saving = {
   saving_id?: number;
