@@ -13,11 +13,6 @@ import com.backend.appvengers.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin(origins = {
-    "http://localhost:4200",
-    "https://i-budget.site",
-    "https://www.i-budget.site"
-}, allowCredentials = "true")
 
 public class CategoryController {
 
