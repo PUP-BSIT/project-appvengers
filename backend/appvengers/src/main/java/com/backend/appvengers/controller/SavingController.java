@@ -2,10 +2,8 @@ package com.backend.appvengers.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,16 +18,15 @@ import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.SavingRepository;
 import com.backend.appvengers.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class SavingController {
 
-  @Autowired
-  private SavingRepository savingRepository;
-
-  @Autowired
-  private UserRepository userRepository;
+  private final SavingRepository savingRepository;
+  private final UserRepository userRepository;
 
   private int currentUserId(Authentication auth) {
     String email = auth.getName();
