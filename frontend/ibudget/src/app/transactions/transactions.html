@@ -190,11 +190,10 @@
 
   <!-- Add/Edit Transaction Modal -->
   @if (showAddModal()) {
-    <div class="modal-overlay" (click)="closeAddModal()">
+    <div class="modal-overlay">
       <div
         class="modal-content"
-        [ngClass]="{'edit-modal': isEditing()}"
-        (click)="$event.stopPropagation()">
+        [ngClass]="{'edit-modal': isEditing()}">
         <div class="modal-header">
           <h2>
             <i
