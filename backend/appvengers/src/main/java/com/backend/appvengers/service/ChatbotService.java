@@ -15,11 +15,15 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.security.SecureRandom;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatbotService {
+
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    private static final String SESSION_ID_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789";
 
     @Value("${n8n.webhook.url}")
     private String n8nWebhookUrl;
@@ -167,14 +171,12 @@ public class ChatbotService {
     }
 
     /**
-     * Generates a random session ID (8 alphanumeric characters).
+     * Generates a cryptographically secure random session ID (8 alphanumeric characters).
      */
     private String generateRandomSessionId() {
-        String chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder sb = new StringBuilder();
-        java.util.Random random = new java.util.Random();
+        StringBuilder sb = new StringBuilder(8);
         for (int i = 0; i < 8; i++) {
-            sb.append(chars.charAt(random.nextInt(chars.length())));
+            sb.append(SESSION_ID_CHARS.charAt(SECURE_RANDOM.nextInt(SESSION_ID_CHARS.length())));
         }
         return sb.toString();
     }
