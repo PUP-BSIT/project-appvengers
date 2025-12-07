@@ -20,29 +20,26 @@ public class ChatbotService {
     @Value("${n8n.webhook.url}")
     private String n8nWebhookUrl;
 
+    @Value("${n8n.webhook.secret}")
+    private String n8nWebhookSecret;
+
     private final UserContextService userContextService;
     private final RestTemplate restTemplate = new RestTemplate();
 
     /**
-     * Sends a message to the AI chatbot with user's financial context, session ID, and JWT authentication.
+     * Sends a message to the AI chatbot with user's financial context and session ID.
      * The context allows the AI to provide personalized insights and recommendations.
      * The session ID enables conversation continuity in the n8n AI agent.
-     * The JWT token is forwarded to n8n for authentication validation.
      *
      * @param message User's message/question
      * @param userEmail Authenticated user's email for fetching their data
      * @param sessionId Unique session identifier for conversation continuity
-     * @param jwtToken JWT token for n8n webhook authentication
      * @return AI chatbot response
      */
-    public Object sendMessage(String message, String userEmail, String sessionId, String jwtToken) {
+    public Object sendMessage(String message, String userEmail, String sessionId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        
-        // Use JWT for authentication instead of static secret
-        if (jwtToken != null && !jwtToken.isEmpty()) {
-            headers.set("Authorization", "Bearer " + jwtToken);
-        }
+        headers.set("X-N8N-Secret", n8nWebhookSecret);
 
         // Build the request body with user context and session ID
         Map<String, Object> body = new HashMap<>();
@@ -89,29 +86,37 @@ public class ChatbotService {
     }
 
     /**
-     * @deprecated Use {@link #sendMessage(String, String, String, String)} instead for JWT-authenticated responses.
-     * This method is kept for backward compatibility.
-     */
-    @Deprecated
-    public Object sendMessage(String message, String userEmail, String sessionId) {
-        return sendMessage(message, userEmail, sessionId, null);
-    }
-
-    /**
-     * @deprecated Use {@link #sendMessage(String, String, String, String)} instead for JWT-authenticated responses.
+     * @deprecated Use {@link #sendMessage(String, String, String)} instead for context-aware responses.
      * This method is kept for backward compatibility.
      */
     @Deprecated
     public Object sendMessage(String message, String userEmail) {
-        return sendMessage(message, userEmail, null, null);
+        return sendMessage(message, userEmail, null);
     }
 
     /**
-     * @deprecated Use {@link #sendMessage(String, String, String, String)} instead for JWT-authenticated responses.
+     * @deprecated Use {@link #sendMessage(String, String, String)} instead for context-aware responses.
      * This method is kept for backward compatibility.
      */
     @Deprecated
     public Object sendMessage(String message) {
-        return sendMessage(message, null, null, null);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("X-N8N-Secret", n8nWebhookSecret);
+
+        Map<String, String> body = new HashMap<>();
+        body.put("message", message);
+
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
+
+        try {
+            ResponseEntity<Object> response = restTemplate.postForEntity(n8nWebhookUrl, request, Object.class);
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to communicate with chatbot service.");
+            return errorResponse;
+        }
     }
 }
