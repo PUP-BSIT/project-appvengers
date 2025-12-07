@@ -5,10 +5,13 @@ import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.CategoryRepository;
 import com.backend.appvengers.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
+@Slf4j
 @Component
 public class CategorySeeder {
 
@@ -23,12 +26,20 @@ public class CategorySeeder {
     @PostConstruct
     public void backfillMissingCategories() {
         List<User> users = userRepository.findAll();
-
+        
+        // Batch query: get all user IDs that already have categories (single query)
+        Set<Integer> usersWithCategories = categoryRepository.findAllUserIdsWithCategories();
+        
+        int seededCount = 0;
         for (User user : users) {
-            boolean hasCategories = categoryRepository.existsByUserId(user.getId());
-            if (!hasCategories) {
+            if (!usersWithCategories.contains(user.getId())) {
                 seedDefaultsForUser(user.getId());
+                seededCount++;
             }
+        }
+        
+        if (seededCount > 0) {
+            log.info("Seeded default categories for {} users", seededCount);
         }
     }
 
@@ -43,6 +54,6 @@ public class CategorySeeder {
         );
 
         categoryRepository.saveAll(defaults);
-        System.out.println("Seeded default categories for user " + userId);
+        log.debug("Seeded default categories for user {}", userId);
     }
 }
