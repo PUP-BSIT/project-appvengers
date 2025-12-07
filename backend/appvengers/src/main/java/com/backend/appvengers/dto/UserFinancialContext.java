@@ -20,6 +20,7 @@ public class UserFinancialContext {
 
     // User info
     private String username;
+    private String userEmail;  // For tracing chatbot sessions to users
     
     // Financial summary
     private BigDecimal totalIncome;

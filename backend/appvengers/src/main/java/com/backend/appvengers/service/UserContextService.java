@@ -103,6 +103,7 @@ public class UserContextService {
 
         return UserFinancialContext.builder()
                 .username(user.getUsername())
+                .userEmail(user.getEmail())
                 .totalIncome(totalIncome)
                 .totalExpenses(totalExpenses)
                 .remainingBudget(remainingBudget)
