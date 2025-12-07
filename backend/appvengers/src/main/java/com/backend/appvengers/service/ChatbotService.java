@@ -55,10 +55,10 @@ public class ChatbotService {
         Map<String, Object> body = new HashMap<>();
         body.put("message", message);
         
-        // Include session ID for conversation continuity
-        if (sessionId != null && !sessionId.isEmpty()) {
-            body.put("sessionId", sessionId);
-        }
+        // Build traceable session ID with user email prefix
+        String traceableSessionId = buildTraceableSessionId(sessionId, userEmail);
+        body.put("sessionId", traceableSessionId);
+        log.debug("Using traceable session ID: {}", traceableSessionId);
 
         // Fetch and include user's financial context
         try {
@@ -133,5 +133,44 @@ public class ChatbotService {
     @Deprecated
     public Object sendMessage(String message) {
         return sendMessage(message, null, null, null);
+    }
+
+    /**
+     * Builds a traceable session ID by prefixing with user email.
+     * Format: chat-{email}-{sessionId}
+     * Example: chat-user@example.com-m5x7k2a1
+     * 
+     * This allows easy tracing of sessions in the database by user.
+     *
+     * @param sessionId Original session ID
+     * @param userEmail User's email address
+     * @return Traceable session ID with email prefix
+     */
+    private String buildTraceableSessionId(String sessionId, String userEmail) {
+        if (sessionId == null || sessionId.isEmpty()) {
+            sessionId = generateRandomSessionId();
+        }
+        
+        if (userEmail == null || userEmail.isEmpty()) {
+            return "chat-anonymous-" + sessionId;
+        }
+        
+        // Sanitize email for use in session ID (remove special chars except @ and .)
+        String sanitizedEmail = userEmail.toLowerCase().trim();
+        
+        return "chat-" + sanitizedEmail + "-" + sessionId;
+    }
+
+    /**
+     * Generates a random session ID (8 alphanumeric characters).
+     */
+    private String generateRandomSessionId() {
+        String chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder sb = new StringBuilder();
+        java.util.Random random = new java.util.Random();
+        for (int i = 0; i < 8; i++) {
+            sb.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        return sb.toString();
     }
 }
