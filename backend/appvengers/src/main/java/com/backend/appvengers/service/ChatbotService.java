@@ -151,11 +151,16 @@ public class ChatbotService {
             sessionId = generateRandomSessionId();
         }
         
+        // Strip existing "chat-" prefix if present to avoid duplication
+        if (sessionId.startsWith("chat-")) {
+            sessionId = sessionId.substring(5);
+        }
+        
         if (userEmail == null || userEmail.isEmpty()) {
             return "chat-anonymous-" + sessionId;
         }
         
-        // Sanitize email for use in session ID (remove special chars except @ and .)
+        // Sanitize email for use in session ID
         String sanitizedEmail = userEmail.toLowerCase().trim();
         
         return "chat-" + sanitizedEmail + "-" + sessionId;
