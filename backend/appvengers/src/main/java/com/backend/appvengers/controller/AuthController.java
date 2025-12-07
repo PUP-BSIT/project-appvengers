@@ -11,6 +11,7 @@ import com.backend.appvengers.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -26,11 +27,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
     private final UserService userService;
     private final LoginRateLimiter loginRateLimiter;
+    
+    @Value("${app.frontend.url:http://localhost:4200}")
+    private String frontendUrl;
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody SignupRequest signupRequest,
@@ -91,14 +94,13 @@ public class AuthController {
         ApiResponse response = userService.verifyEmailToken(token);
 
         if (response.isSuccess()) {
-            URI redirectUri = URI
-                .create("http://localhost:4200/email-verified?token=" + token);
+            URI redirectUri = URI.create(frontendUrl + "/email-verified?token=" + token);
             return ResponseEntity.status(HttpStatus.FOUND)
                 .location(redirectUri)
                 .build();
         } else {
             // redirect the browser to a frontend page that shows a friendly error
-            URI failRedirectUri = URI.create("http://localhost:4200/verify-failed");
+            URI failRedirectUri = URI.create(frontendUrl + "/verify-failed");
             return ResponseEntity.status(HttpStatus.FOUND).location(failRedirectUri).build();
         }
     }
@@ -185,8 +187,8 @@ public class AuthController {
         if (response.isSuccess()) {
             return ResponseEntity.ok(response);
         } else {
-              // redirect the browser to a frontend page that shows a friendly error
-            URI failRedirectUri = URI.create("http://localhost:4200/resend-verification-failed");
+            // redirect the browser to a frontend page that shows a friendly error
+            URI failRedirectUri = URI.create(frontendUrl + "/resend-verification-failed");
             return ResponseEntity.status(HttpStatus.FOUND).location(failRedirectUri).build();
         }
     }
