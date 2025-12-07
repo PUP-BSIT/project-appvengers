@@ -15,6 +15,7 @@ import com.backend.appvengers.security.JwtService;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -315,7 +317,7 @@ public class UserService {
                     "Your password has been successfully changed. If you didn't make this change, please contact support immediately.");
         } catch (Exception e) {
             // Log but don't fail the operation
-            System.err.println("Failed to send password change confirmation email: " + e.getMessage());
+            log.error("Failed to send password change confirmation email", e);
         }
 
         return new ApiResponse(true, "Password has been reset successfully");
@@ -361,7 +363,7 @@ public class UserService {
                     "iBudget Password Changed",
                     "Your password has been successfully changed. If you didn't make this change, please contact support immediately.");
         } catch (Exception e) {
-            System.err.println("Failed to send password change confirmation email: " + e.getMessage());
+            log.error("Failed to send password change confirmation email", e);
         }
 
         return new ApiResponse(true, "Password has been changed successfully");
@@ -398,7 +400,7 @@ public class UserService {
                     "iBudget Account Deactivated",
                     "Your iBudget account has been deactivated. You can reactivate it by logging in again or contacting support.");
         } catch (Exception e) {
-            System.err.println("Failed to send account deactivation email: " + e.getMessage());
+            log.error("Failed to send account deactivation email", e);
         }
 
         return new ApiResponse(true, "Account has been deactivated successfully");
@@ -451,7 +453,7 @@ public class UserService {
                     "iBudget Account Deleted",
                     "Your iBudget account has been permanently deleted. All your data will be removed within 30 days. If you didn't request this, please contact support immediately.");
         } catch (Exception e) {
-            System.err.println("Failed to send account deletion email: " + e.getMessage());
+            log.error("Failed to send account deletion email", e);
         }
 
         return new ApiResponse(true, "Account has been deleted successfully");
