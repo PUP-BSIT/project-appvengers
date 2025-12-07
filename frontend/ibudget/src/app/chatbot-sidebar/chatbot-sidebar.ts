@@ -5,6 +5,7 @@ import { ChatbotService } from './chatbot.service';
 import { finalize } from 'rxjs/operators';
 import { marked } from 'marked';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import DOMPurify from 'dompurify';
 
 interface ChatMessage {
     text: string;
@@ -105,7 +106,9 @@ export class ChatbotSidebar implements AfterViewChecked {
     }
 
     parseMarkdown(text: string): SafeHtml {
-        const html = marked.parse(text) as string;
-        return this.sanitizer.bypassSecurityTrustHtml(html);
+        const rawHtml = marked.parse(text) as string;
+        // Sanitize HTML to prevent XSS attacks before bypassing Angular's security
+        const cleanHtml = DOMPurify.sanitize(rawHtml);
+        return this.sanitizer.bypassSecurityTrustHtml(cleanHtml);
     }
 }
