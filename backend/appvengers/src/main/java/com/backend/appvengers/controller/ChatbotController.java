@@ -17,18 +17,16 @@ public class ChatbotController {
 
     /**
      * Send a message to the AI chatbot.
-     * The chatbot receives the user's financial context, session ID, and JWT for personalized responses.
+     * The chatbot receives the user's financial context and session ID for personalized responses.
      *
      * @param payload Request body containing the message and sessionId
      * @param auth Authentication object containing the user's email
-     * @param authHeader Authorization header containing the JWT token
      * @return AI chatbot response with personalized insights
      */
     @PostMapping("/message")
     public ResponseEntity<Object> sendMessage(
             @RequestBody Map<String, String> payload,
-            Authentication auth,
-            @RequestHeader("Authorization") String authHeader) {
+            Authentication auth) {
         
         String message = payload.get("message");
         if (message == null || message.trim().isEmpty()) {
@@ -40,15 +38,9 @@ public class ChatbotController {
         
         // Get the session ID for conversation continuity
         String sessionId = payload.get("sessionId");
-        
-        // Extract JWT token from Authorization header (remove "Bearer " prefix)
-        String jwtToken = null;
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwtToken = authHeader.substring(7);
-        }
 
-        // Send message with user context, session ID, and JWT for personalized AI responses
-        Object response = chatbotService.sendMessage(message, userEmail, sessionId, jwtToken);
+        // Send message with user context and session ID for personalized AI responses
+        Object response = chatbotService.sendMessage(message, userEmail, sessionId);
         return ResponseEntity.ok(response);
     }
 }
