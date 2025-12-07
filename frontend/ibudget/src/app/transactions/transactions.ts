@@ -73,6 +73,41 @@ export class Transactions implements OnInit, OnDestroy {
     'Other'
   ];
 
+  expenseCategories = [
+    'Entertainment',
+    'Bills',
+    'Shopping',
+    'Food & Dining',
+    'Transportation',
+    'Healthcare',
+    'Education',
+    'Personal Care',
+    'Utilities',
+    'Groceries',
+    'Rent',
+    'Insurance',
+    'Travel',
+    'Gifts',
+    'Charity',
+    'Other'
+  ];
+
+  incomeCategories = [
+    'Salary',
+    'Freelance',
+    'Business',
+    'Investment',
+    'Bonus',
+    'Gift',
+    'Refund',
+    'Pension',
+    'Allowance',
+    'Commission',
+    'Rental Income',
+    'Interest',
+    'Other'
+  ];
+
   selectedPeriod = 'daily';
 
   showCustomCategoryInput = false;
@@ -190,10 +225,18 @@ export class Transactions implements OnInit, OnDestroy {
 
   setExpenseType() {
     this.newTransaction.type = 'expense';
+    this.newTransaction.category = '';
   }
 
   setIncomeType() {
     this.newTransaction.type = 'income';
+    this.newTransaction.category = '';
+  }
+
+  getModalCategories(): string[] {
+    return this.newTransaction.type === 'income' 
+      ? this.incomeCategories 
+      : this.expenseCategories;
   }
 
   addTransaction() {
