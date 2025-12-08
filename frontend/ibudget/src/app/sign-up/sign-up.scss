@@ -115,16 +115,16 @@ $link-color-hover: #283593;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 60vh;
   // background: $text-color-button;
-  padding: 20px;
+  // padding: 20px;
   overflow: hidden;
   box-sizing: border-box;
 }
 
 .login-card {
   width: 100%;
-  max-width: 500px;
+  max-width: 400px;
   // padding: 2rem;
   // box-shadow: 0 8px 32px $background-shadow;
   border-radius: 12px;
