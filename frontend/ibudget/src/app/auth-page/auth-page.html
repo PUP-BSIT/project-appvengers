@@ -1,18 +1,13 @@
-<div class="split-auth-container">
+<div [ngClass]="['split-auth-container', isLoginMode() ? 'login-mode' : 'signup-mode']">
   
   <div class="left-panel">
     <div class="slogan">
-      Simple tracking. Smarter spending.
-    </div>
-
-    <div class="image-placeholder">
-      <img 
-        src="assets/images/female_assistant_holding_a_coin.png" 
-        alt="Assistant Holding a Coin"/>
+      simple <span class="highlight-yellow">tracking</span>, 
+      smarter <span class="highlight-yellow">spending!</span>
     </div>
   </div>
 
-  <div [ngClass]="['right-panel', isLoginMode() ? 'padding-50' : 'padding-100']">
+  <div class="right-panel">
     <div class="header-toggles">
       <a (click)="setLoginMode()" [class.active]="isLoginMode()">Login</a>
       <a (click)="setSignupMode()" [class.active]="!isLoginMode()">Signup</a>
