@@ -1,6 +1,6 @@
 <div [formGroup]="signupForm" (ngSubmit)="onSignup()" class="login-container">
-  <div class="card login-card">
-    <div class="card-body">
+  <div class="login-card">
+    <div>
       <!-- Header -->
       <!-- <div class="login-header text-center mb-4">
         <div class="text-center">
@@ -76,49 +76,52 @@
         </div>
 
         <!-- Password Field -->
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <div class="input-group">
-            <input [type]="hidePassword() ? 'password' : 'text'"
-              class="form-control"
-              id="password"
-              formControlName="password"
-              placeholder="Create a password">
-            <button class="btn btn-outline-secondary" type="button"
-              (click)="hidePassword.set(!hidePassword())">
-              <i class="bi" [class.bi-eye]="!hidePassword()"
-                [class.bi-eye-slash]="hidePassword()">
-              </i>
-            </button>
+        <div class="d-flex flex-row gap-3">
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-group">
+              <input [type]="hidePassword() ? 'password' : 'text'"
+                class="form-control"
+                id="password"
+                formControlName="password"
+                placeholder="Create a password">
+              <button class="btn btn-outline-secondary" type="button"
+                (click)="hidePassword.set(!hidePassword())">
+                <i class="bi" [class.bi-eye]="!hidePassword()"
+                  [class.bi-eye-slash]="hidePassword()">
+                </i>
+              </button>
+            </div>
+
+            @if(password?.hasError('required') && password?.touched) {
+              <div class="text-danger small mt-1">
+                Password is required
+              </div>
+            }
+            @if(password?.hasError('minlength') && password?.touched) {
+              <div class="text-danger small mt-1">
+                Password must be at least 12 characters
+              </div>
+            }
           </div>
 
-          @if(password?.hasError('required') && password?.touched) {
-            <div class="text-danger small mt-1">
-              Password is required
-            </div>
-          }
-          @if(password?.hasError('minlength') && password?.touched) {
-            <div class="text-danger small mt-1">
-              Password must be at least 12 characters
-            </div>
-          }
-        </div>
+          <!-- Confirm Password Field -->
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">
+              Confirm Password
+            </label>
+            <input type="password" class="form-control" id="confirmPassword"
+              formControlName="confirmPassword"
+              placeholder="Confirm your password">
 
-        <!-- Confirm Password Field -->
-        <div class="mb-3">
-          <label for="confirmPassword" class="form-label">
-            Confirm Password
-          </label>
-          <input type="password" class="form-control" id="confirmPassword"
-            formControlName="confirmPassword"
-            placeholder="Confirm your password">
-
-          @if(signupForm.hasError('passwordMismatch') && submitted()) {
-            <div class="text-danger small mt-1">
-              Passwords do not match
-            </div>
-          }
+            @if(signupForm.hasError('passwordMismatch') && submitted()) {
+              <div class="text-danger small mt-1">
+                Passwords do not match
+              </div>
+            }
+          </div>
         </div>
+        
 
         <button type="submit" class="btn login-button w-100"
           [disabled]="signupForm.invalid || loading()">
