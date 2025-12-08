@@ -32,8 +32,8 @@ $auth-animation-easing: cubic-bezier(.22,.9,.3,1);
   background-image: url('../../assets/images/left-panel.png');
   background-size: cover;
   background-position: center;
-  width: 40%;
-  max-width: 40%;
+  width: 50%;
+  max-width: 50%;
   height: 100%;
   max-height: 100%;
 
@@ -121,4 +121,43 @@ $auth-animation-easing: cubic-bezier(.22,.9,.3,1);
 
 .signup-mode {
   height: 100%;
+}
+
+.app-name {
+  font-family: 'Inter', 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  margin: .5rem;
+  opacity: 50%;
+  z-index: 2;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .split-auth-container {
+    flex-direction: column;
+    justify-content: center;
+    margin: 10px 0;
+  }
+
+  .left-panel {
+    background-image: none;
+    background-color: $left-panel;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 900px !important;
+    max-height: 100% !important;
+    // margin: 10px 0 !important;
+    position: relative;
+
+    .slogan {
+      top: 10px;
+    }
+  }
+
+  .right-panel {
+    margin-left: 0;
+    padding: 1.5rem;
+  }
 }
