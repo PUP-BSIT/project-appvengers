@@ -13,24 +13,24 @@
     </div>
   </div>
 
-  <div class="notifications-nav">
-    <a
-      class="nav-link"
-      routerLink="/notifications"
-      routerLinkActive="active">
-         <i class="bi bi-bell notification-icon"></i>
-         @if (getUnreadCount() > 0) {
-           <span class="notification-count">{{ getUnreadCount() }}</span>
-         }
-    </a>
-  </div>
+  <div class="right-section">
+    <div class="notifications-nav">
+      <a
+        class="nav-link"
+        routerLink="/notifications"
+        routerLinkActive="active">
+           <i class="bi bi-bell notification-icon"></i>
+           @if (getUnreadCount() > 0) {
+             <span class="notification-count">{{ getUnreadCount() }}</span>
+           }
+      </a>
+    </div>
 
-  <!-- <div class="profile-nav">
-    <a
-      class="nav-link"
-      routerLink="/settings/account/1"
-      routerLinkActive="active">
-        <i class="bi bi-person"></i>
-    </a>
-  </div> -->
+    <div class="profile-section">
+      <div class="profile-display">
+        <i class="bi bi-person-circle profile-icon"></i>
+        <span class="username">{{ username() }}</span>
+      </div>
+    </div>
+  </div>
 </div>
