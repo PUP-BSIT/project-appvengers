@@ -3,6 +3,7 @@ package com.backend.appvengers.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -18,24 +19,39 @@ public interface SavingRepository extends JpaRepository<Saving, Integer> {
 
   // JPQL Query to fetch transactions with saving details
   @Query("SELECT new com.backend.appvengers.dto.SavingTransaction(" +
-       "t.id, t.saving.savingId, t.user.id, t.transactionDate, " +
-       "t.savingsAction, t.description, t.amount, " +
-       "t.createdAt, t.updatedAt, t.deletedAt) " +
-       "FROM Transaction t JOIN t.saving s JOIN t.user u ON t.user.id = u.id " +
-       "WHERE s.deletedAt IS NULL AND u.deletedAt IS NULL AND u.id = :userId")
+		"t.id, t.saving.savingId, t.user.id, t.transactionDate, " +
+		"t.savingsAction, t.description, t.amount, " +
+		"t.createdAt, t.updatedAt, t.deletedAt) " +
+		"FROM Transaction t JOIN t.saving s JOIN t.user u ON t.user.id = u.id " +
+		"WHERE s.deletedAt IS NULL AND u.deletedAt IS NULL AND u.id = :userId")
   List<SavingTransaction> fetchTransactionWithSavingDetails(@Param("userId") int userId);
 
   // JPQL Query to fetch transactions with saving details for a specific savingId
   @Query("SELECT new com.backend.appvengers.dto.SavingTransaction(" +
-       "t.id, s.savingId, u.id, t.transactionDate, " +
-       "t.savingsAction, t.description, t.amount, " +
-       "t.createdAt, t.updatedAt, t.deletedAt) " +
-       "FROM Transaction t " +
-       "JOIN t.saving s " +
-       "JOIN t.user u " +
-       "WHERE s.savingId = :savingId " +
-       "AND u.id = :userId " +
-       "AND t.deletedAt IS NULL")
+		"t.id, s.savingId, u.id, t.transactionDate, " +
+		"t.savingsAction, t.description, t.amount, " +
+		"t.createdAt, t.updatedAt, t.deletedAt) " +
+		"FROM Transaction t " +
+		"JOIN t.saving s " +
+		"JOIN t.user u " +
+		"WHERE s.savingId = :savingId " +
+		"AND u.id = :userId " +
+		"AND t.deletedAt IS NULL")
   List<SavingTransaction> fetchSavingsTransactionById(@Param("savingId") int savingId,
                                                           @Param("userId") int userId);
+
+  // JPQL Query to calculate total deposits for a specific savingId
+  @Query("SELECT SUM(t.amount) " +
+		"FROM Transaction t " +
+		"WHERE t.saving.savingId = :savingId " +
+		"AND t.savingsAction = 'Deposit' " +
+		"AND t.deletedAt IS NULL")
+  Double getTotalDepositsBySavingId(@Param("savingId") int savingId);
+
+  @Modifying
+  @Query("UPDATE Saving s " +
+    "SET s.currentAmount = :totalDeposits " +
+    "WHERE s.savingId = :savingId")
+	void updateCurrentAmount(@Param("savingId") int savingId,
+                        	 @Param("totalDeposits") Double totalDeposits);
 }
