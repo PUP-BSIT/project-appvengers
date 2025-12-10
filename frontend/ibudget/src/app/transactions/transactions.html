@@ -117,7 +117,7 @@
                 <div class="category-section">
                   <span
                     class="category-tag"
-                    [ngClass]="[transaction.category.toLowerCase()]">
+                    [ngClass]="[(transaction.category || '').toLowerCase()]">
                     {{ transaction.category }}
                   </span>
                 </div>
