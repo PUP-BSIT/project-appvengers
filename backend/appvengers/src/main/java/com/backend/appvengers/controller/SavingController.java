@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.appvengers.dto.SavingTransaction;
 import com.backend.appvengers.entity.Saving;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.SavingRepository;
@@ -96,5 +97,19 @@ public class SavingController {
     // Soft delete the saving if found
     savingRepository.delete(saving);
     return ResponseEntity.noContent().build();
+  }
+
+  // Fetch saving transactions
+  @GetMapping("/savings/transactions")
+  public List<SavingTransaction> getSavingTransactions(Authentication auth) {
+    int userId = currentUserId(auth);
+    return savingRepository.fetchTransactionWithSavingDetails(userId);
+  }
+
+  // Fetch saving transactions by savingId
+  @GetMapping("/savings/{savingId}/transactions")
+  public List<SavingTransaction> getSavingTransactionsBySavingId(@PathVariable Integer savingId, Authentication auth) {
+    int userId = currentUserId(auth);
+    return savingRepository.fetchSavingsTransactionById(savingId, userId);
   }
 }
