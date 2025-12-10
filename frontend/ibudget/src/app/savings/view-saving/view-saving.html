@@ -231,12 +231,12 @@
 
                   <h6 class="mb-0">Amount</h6>
                   <p class="text-secondary-emphasis mb-0">
-                    &#8369; 1,000.00
+                    &#8369; {{ transaction.amount.toFixed(2) }}
                   </p>
 
                   <h6 class="mb-0">Description</h6>
                   <p class="text-secondary-emphasis mb-0">
-                    Monthly saving deposit
+                    {{ transaction.description }}
                   </p>
 
                   <div class="actions">
