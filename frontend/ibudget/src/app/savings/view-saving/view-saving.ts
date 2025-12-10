@@ -3,7 +3,7 @@ import { Sidebar } from "../../sidebar/sidebar";
 import { Header } from "../../header/header";
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HistoryService } from '../../../services/history';
-import { Saving, SavingTransaction } from '../../../models/user.model';
+import { BackendSaving, Saving, SavingTransaction } from '../../../models/user.model';
 import { SavingsService } from '../../../services/savings.service';
 import { AddSavingTransaction } from "./add-saving-transaction/add-saving-transaction";
 import { UpdateSavingTransaction } from "./update-saving-transaction/update-saving-transaction";
@@ -36,10 +36,11 @@ export class ViewSaving implements OnInit{
   savingService = inject(SavingsService);
   savingTransactionService = inject(SavingTransactionService);
   activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
   savingId = signal(1);
   remainingAmount = signal(0);
+  currentAmount = signal(0);
   dateStarted = signal(new Date());
-  router = inject(Router);
   isLoading = signal(true);
 
   // Initialize component and fetch data
@@ -52,11 +53,11 @@ export class ViewSaving implements OnInit{
       return;
     }
 
+    // Refresh current amount from backend
+    this.refreshCurrentAmount();
+
+    // Fetch transaction histories
     this.getSavingsTransactionHistories();
-    this.filterTransactions();
-    this.getSavingsData();
-    this.getTransactionBySavingId();
-    console.log('Saving ID:', this.savingId());
   }
 
   // Get Duration between two dates
@@ -90,29 +91,21 @@ export class ViewSaving implements OnInit{
 
   // Calculate progress percentage for a specific saving
   getProgressPercentage(saving: Saving) {
-    const target = Number(saving.target_amount);
-    const current = Number(saving.current_amount);
+    const target = Number(saving.target_amount ?? 0);
+    const current = Number(saving.current_amount ?? 0);
     if (!target || target <= 0) return 0;
     return Math.min(Math.round((current / target) * 100), 100);
   }
 
   // Fetch all transaction histories
   getSavingsTransactionHistories() {
-    this.historyService.getStaticHistory().subscribe((historiesData) => {
-      this.transactionHistories.set(historiesData);
-      
-      // sets the count of filtered transactions
-      this.transactionsCount.set(historiesData.length);
-    });
-  }
-
-  // Filter transactions related to the current saving based on saving ID 
-  filterTransactions() {
-    const filtered = this.transactionHistories()
-      .filter((transaction) => transaction.savings_id === this.savingId());
-
-    // sets the filtered transactions
-    this.filteredTransactions.set(filtered);
+    this.savingTransactionService.getSavingTransactionById(this.savingId())
+    .subscribe({
+      next: (transactionData) => {
+        this.transactionHistories.set(transactionData);
+        this.transactionsCount.set(transactionData.length);
+      }
+    })
   }
 
   // Fetch current saving data
@@ -121,11 +114,12 @@ export class ViewSaving implements OnInit{
     if(!savingsId) return;
 
     this.savingService.getSavingById(savingsId).subscribe({
-      next: (savingData) => {
+      next: (savingData: Saving) => {
         this.currentSaving.set(savingData);
         this.dateStarted.set(new Date(savingData.created_at));
+        this.currentAmount.set(Number(savingData.current_amount ?? 0));
         
-        // Now that data is present, do dependent computations
+        // Computes remaining amount
         this.updateRemainingAmount();
         this.isLoading.set(false);
       },
@@ -134,17 +128,6 @@ export class ViewSaving implements OnInit{
         console.error('Error fetching saving data:', error);
       }
     });
-  }
-
-  // Fetch transactions by saving ID from backend
-  getTransactionBySavingId() {
-    this.savingTransactionService.getSavingTransactionById(this.savingId())
-    .subscribe({
-      next: (transactionData) => {
-        this.transactionHistories.set(transactionData);
-        console.log('Transactions Data:', transactionData);
-      }
-    })
   }
 
   // Delete the current view saving
@@ -163,6 +146,9 @@ export class ViewSaving implements OnInit{
         this.transactionHistories.update(transactions =>
           transactions.filter(transaction => transaction.id !== transactionId)
         );
+
+        // update current amount
+        this.refreshCurrentAmount();
       },
       error: (err) => {
         console.error('Failed to delete transaction', err);
@@ -170,15 +156,16 @@ export class ViewSaving implements OnInit{
     });
   }
 
-
   onSavingsTransactionAdded(newTransaction: SavingTransaction) {
     // append canonical saved record (returned by service)
     const updated = [...this.transactionHistories(), newTransaction];
-    this.transactionHistories.set(updated);
+    this.transactionHistories.set(updated); 
+
+    // update current amount
+    this.refreshCurrentAmount();
 
     // update total and filtered list
     this.transactionsCount.set(updated.length);
-    this.filterTransactions();
   }
 
   onSavingsTransactionUpdated(updatedTransaction: SavingTransaction) {
@@ -187,7 +174,21 @@ export class ViewSaving implements OnInit{
         updatedTransaction : transaction
     );
 
+    // update current amount
+    this.refreshCurrentAmount();
+
     this.transactionHistories.set(updatedTransactions);
-    this.filterTransactions();
+  }
+
+  // Refresh current amount from backend
+  refreshCurrentAmount() {
+    this.savingService.refreshCurrentAmount(this.savingId()).subscribe({
+      next: (response) => {
+        this.getSavingsData();
+      },
+      error: (err) => {
+        console.error('Failed to refresh current amount', err);
+      }
+    });
   }
 }
