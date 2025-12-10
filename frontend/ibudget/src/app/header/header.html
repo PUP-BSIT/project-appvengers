@@ -27,10 +27,25 @@
     </div>
 
     <div class="profile-section">
-      <div class="profile-display">
+      <div class="profile-display" (click)="toggleProfileMenu()">
         <i class="bi bi-person-circle profile-icon"></i>
         <span class="username">{{ username() }}</span>
+        <i class="bi bi-chevron-down dropdown-arrow"></i>
       </div>
+      
+      @if (showProfileMenu()) {
+        <div class="profile-dropdown">
+          <div class="dropdown-item" (click)="goToSettings()">
+            <i class="bi bi-gear"></i>
+            <span>Settings</span>
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item logout" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Logout</span>
+          </div>
+        </div>
+      }
     </div>
   </div>
 </div>
