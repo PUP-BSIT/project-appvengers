@@ -25,7 +25,7 @@
               id="category_id"
               (change)="afterCategorySelection()">
               <option value="" selected disabled>-- Select Category --</option>
-              @for(category of categories(); track $index) {
+              @for(category of categories(); track category.id) {
                 <option [value]="category.id">{{ category.name }}</option>
               }
             </select>
