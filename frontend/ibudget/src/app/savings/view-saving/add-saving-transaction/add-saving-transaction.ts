@@ -18,6 +18,7 @@ import {
     Validators
   } from '@angular/forms';
 import { SavingTransaction } from '../../../../models/user.model';
+import { SavingTransactionService } from '../../../../services/saving-transaction.service';
 
 @Component({
   selector: 'app-add-saving-transaction',
@@ -33,6 +34,7 @@ export class AddSavingTransaction implements OnInit {
   formBuilder = inject(FormBuilder);
   activatedRoute = inject(ActivatedRoute);
   historyService = inject(HistoryService);
+  savingTransactionService = inject(SavingTransactionService);
   transactionsLength = input(<number>(0));
   addedTransaction = output<SavingTransaction>();
   tempUserId = signal(1);
@@ -42,9 +44,7 @@ export class AddSavingTransaction implements OnInit {
 
   constructor() {
     this.transactionForm = this.formBuilder.group({
-      transaction_id: [''],
       saving_id: [''],
-      user_id: [''],
       amount: [0, {
         validators: [Validators.required]
       }],
@@ -55,13 +55,6 @@ export class AddSavingTransaction implements OnInit {
         validators: [Validators.required]
       }],
       description: [''],
-      created_at: ['', {
-        validators: [Validators.required]
-      }],
-      updated_at: ['', {
-        validators: [Validators.required]
-      }],
-      deleted_at: ['']
     });
   }
 
@@ -70,9 +63,7 @@ export class AddSavingTransaction implements OnInit {
     this.savingId.set(+savingId);
 
     this.transactionForm = this.formBuilder.group({
-      transaction_id: [],
       savings_id: [+savingId],
-      user_id: [this.tempUserId()],
       amount: [0, {
         validators: [Validators.required]
       }],
@@ -83,13 +74,6 @@ export class AddSavingTransaction implements OnInit {
         validators: [Validators.required]
       }],
       description: [''],
-      created_at: [this.date(), {
-        validators: [Validators.required]
-      }],
-      updated_at: [this.date(), {
-        validators: [Validators.required]
-      }],
-      deleted_at: ['']
     });
   }
   
@@ -99,7 +83,6 @@ export class AddSavingTransaction implements OnInit {
       this.transactionId.set(newTransactionId);
 
       this.transactionForm.patchValue({
-        transaction_id: newTransactionId,
         savings_id: this.savingId(),
       });
 
@@ -111,16 +94,11 @@ export class AddSavingTransaction implements OnInit {
       modal?.hide();
   
       this.transactionForm.reset({
-        transaction_id: '',
         savings_id: this.savingId(),
-        user_id: this.tempUserId(),
         amount: 0,
         savings_action: '',
         transaction_date: this.date(),
         description: '',
-        created_at: this.date(),
-        updated_at: this.date(),
-        deleted_at: ''
       });
       // Restore the id field after reset to prevent it being null
       this.openSavingTransactionModalBtn.nativeElement.focus();
@@ -129,10 +107,17 @@ export class AddSavingTransaction implements OnInit {
     addSavingTransaction() {
       const newTransaction = this.transactionForm.value;
 
-      this.historyService.addSavingTransaction(newTransaction)
-        .subscribe((saved) => {
-          this.addedTransaction.emit(saved);
+      this.savingTransactionService.addSavingTransaction(this.savingId(), newTransaction)
+      .subscribe({
+        next: (transactionData) => {
+          console.log(newTransaction);
+          console.log('Added Transaction:', transactionData);
+          this.addedTransaction.emit(transactionData);
           this.closeModal();
-        });
+        },
+        error: (error) => {
+          console.error('Error adding transaction:', error);
+        }
+      });
     }
 }
