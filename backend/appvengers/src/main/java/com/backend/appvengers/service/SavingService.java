@@ -16,14 +16,7 @@ public class SavingService {
 
   @Transactional
   public void refreshCurrentAmount(int savingId) {
-    Double totalDeposits = savingRepository.getTotalDepositsBySavingId(savingId);
-
-    // Handle null case
-    if (totalDeposits == null) {
-      totalDeposits = 0.0;
-    }
-
-    // Update the current amount in the Saving entity
-    savingRepository.updateCurrentAmount(savingId, totalDeposits);
+    Double netAmount = savingRepository.getNetAmountBySavingId(savingId);
+    savingRepository.updateCurrentAmount(savingId, netAmount);
   }
 }
