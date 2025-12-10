@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BackendSaving, Saving } from '../models/user.model';
+import { ApiResponse, BackendSaving, Saving } from '../models/user.model';
 import { map, Observable, of, switchMap } from 'rxjs';
 import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -88,5 +88,10 @@ export class SavingsService {
     return this.http.delete<void>(`${this.apiUrl}/${savingId}`).pipe(
       switchMap(() => this.getSavings())
     );
+  }
+
+  // Refresh current amount from backend
+  refreshCurrentAmount(savingId: number): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${this.apiUrl}/${savingId}/refresh-current-amount`);
   }
 }
