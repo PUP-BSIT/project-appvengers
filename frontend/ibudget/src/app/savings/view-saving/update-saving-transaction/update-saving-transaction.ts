@@ -103,7 +103,7 @@ export class UpdateSavingTransaction {
           const transaction = transactions[0];
 
           this.transactionForm.setValue({
-            transaction_id: transaction.transaction_id,
+            transaction_id: transaction.id,
             savings_id: transaction.savings_id,
             user_id: transaction.user_id,
             amount: transaction.amount,
