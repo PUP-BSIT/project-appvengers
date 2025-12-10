@@ -139,17 +139,29 @@ export type BackendSaving = {
 }
 
 export type SavingTransaction = {
-  transaction_id: number;
+  id: number;
   savings_id?: number;
   user_id?: number;
   transaction_date?: string;
   savings_action?: 'Deposit' | 'Withdrawal';
-  date: Date;
   description: string;
   amount: number;
   created_at: string;
   updated_at: string;
   deleted_at?: string;
+}
+
+export type BackendSavingTransaction = {
+  id: number;
+  savingId?: number; // backend DTO uses savingId
+  userId?: number;
+  transactionDate?: string;
+  savingAction?: 'Deposit' | 'Withdrawal';
+  description: string;
+  amount: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
 }
 
 export type BudgetTransaction = {
