@@ -1,5 +1,6 @@
-import { Component, inject, computed, signal, OnInit } from '@angular/core';
+import { Component, inject, computed, signal, OnInit, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../services/notification';
 import { SidebarService } from '../../services/sidebar.service';
 import { AuthService } from '../../services/auth.service';
@@ -8,7 +9,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
@@ -20,6 +21,7 @@ export class Header implements OnInit {
 
   username = signal<string>('');
   userId = signal<number>(0);
+  showProfileMenu = signal<boolean>(false);
 
   currentPageTitle = toSignal(
     this.router.events.pipe(
@@ -65,5 +67,28 @@ export class Header implements OnInit {
 
   toggleSidebar() {
     this.sidebarService.toggle();
+  }
+
+  toggleProfileMenu() {
+    this.showProfileMenu.set(!this.showProfileMenu());
+  }
+
+  goToSettings() {
+    this.router.navigate(['/settings/account', this.userId()]);
+    this.showProfileMenu.set(false);
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
+    this.showProfileMenu.set(false);
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.profile-section')) {
+      this.showProfileMenu.set(false);
+    }
   }
 }
