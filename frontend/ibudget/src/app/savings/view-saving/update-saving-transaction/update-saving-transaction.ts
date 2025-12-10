@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Modal } from 'bootstrap';
 import { SavingTransaction } from '../../../../models/user.model';
 import { HistoryService } from '../../../../services/history';
+import { SavingTransactionService } from '../../../../services/saving-transaction.service';
 
 @Component({
   selector: 'app-update-saving-transaction',
@@ -19,6 +20,7 @@ export class UpdateSavingTransaction {
   formBuilder = inject(FormBuilder);
   activatedRoute = inject(ActivatedRoute);
   historyService = inject(HistoryService);
+  savingTransactionService = inject(SavingTransactionService);
   transactionsLength = input(<number>(0));
   updatedTransaction = output<SavingTransaction>();
   tempUserId = signal(1);
@@ -41,13 +43,6 @@ export class UpdateSavingTransaction {
         validators: [Validators.required]
       }],
       description: [''],
-      created_at: ['', {
-        validators: [Validators.required]
-      }],
-      updated_at: ['', {
-        validators: [Validators.required]
-      }],
-      deleted_at: ['']
     });
   }
 
@@ -59,7 +54,6 @@ export class UpdateSavingTransaction {
     this.transactionForm = this.formBuilder.group({
       transaction_id: [currentTransactionId],
       savings_id: [+savingId],
-      user_id: [this.tempUserId()],
       amount: [0, {
         validators: [Validators.required]
       }],
@@ -70,13 +64,6 @@ export class UpdateSavingTransaction {
         validators: [Validators.required]
       }],
       description: [''],
-      created_at: ['', {
-        validators: [Validators.required]
-      }],
-      updated_at: ['', {
-        validators: [Validators.required]
-      }],
-      deleted_at: ['']
     });
   }
   
@@ -97,32 +84,33 @@ export class UpdateSavingTransaction {
       if(!this.transactionId()) return;
 
       this.openModal();
-      this.historyService.getSavingTransactionsBySavingId(this.savingId(), this.transactionId())
-        .subscribe((transactions: SavingTransaction[]) => {
-          if(transactions.length === 0) return;
-          const transaction = transactions[0];
-
-          this.transactionForm.setValue({
-            transaction_id: transaction.id,
-            savings_id: transaction.savings_id,
-            user_id: transaction.user_id,
-            amount: transaction.amount,
-            savings_action: transaction.savings_action,
-            transaction_date: transaction.transaction_date,
-            description: transaction.description,
-            created_at: transaction.created_at,
-            updated_at: this.date(),
-            deleted_at: transaction.deleted_at
-          });
-        });
+      this.savingTransactionService.getSavingTransactionByTransactionId
+        (this.savingId(), this.transactionId())
+          .subscribe({
+            next: (transactionData) => {
+              this.transactionForm.patchValue({
+                transaction_id: transactionData.id,
+                savings_id: transactionData.savings_id,
+                user_id: transactionData.user_id,
+                amount: transactionData.amount,
+                savings_action: transactionData.savings_action,
+                transaction_date: transactionData.transaction_date?.split('T')[0],
+                description: transactionData.description,
+              });
+            }
+          })
     }
 
     updateTransaction() {
-      this.historyService.updateSavingTransaction
-        (this.savingId(), this.transactionId(), this.transactionForm.value)
-          .subscribe(updatedTransactionData => {
-            this.updatedTransaction.emit(updatedTransactionData);
-            this.closeModal();
-        });
+      this.savingTransactionService.updateSavingTransaction(
+        this.savingId(),
+        this.transactionForm.value.transaction_id,
+        this.transactionForm.value
+      ).subscribe({
+        next: (updatedTransaction) => {
+          this.updatedTransaction.emit(updatedTransaction);
+          this.closeModal();
+        }
+      });
     }
 }
