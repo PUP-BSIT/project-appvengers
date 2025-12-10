@@ -18,6 +18,8 @@ public class SavingTransaction {
   public String savingsAction;
   public String description;
   public BigDecimal amount;
+  public String category; // always "Savings" for saving transactions
+  public String type;     // mapped from savingsAction: Deposit->income, Withdrawal->expense
   public LocalDate createdAt;
   public LocalDate updatedAt;
   public LocalDate deletedAt;
