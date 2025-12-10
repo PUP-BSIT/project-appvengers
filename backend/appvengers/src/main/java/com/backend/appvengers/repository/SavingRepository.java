@@ -34,7 +34,8 @@ public interface SavingRepository extends JpaRepository<Saving, Integer> {
        "JOIN t.saving s " +
        "JOIN t.user u " +
        "WHERE s.savingId = :savingId " +
-       "AND u.id = :userId")
+       "AND u.id = :userId " +
+       "AND t.deletedAt IS NULL")
   List<SavingTransaction> fetchSavingsTransactionById(@Param("savingId") int savingId,
                                                           @Param("userId") int userId);
 }
