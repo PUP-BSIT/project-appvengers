@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BudgetTransactionsService } from '../../../../../services/budget.transactions.service';
 import { BudgetTransaction, Category } from '../../../../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
+import { computed } from '@angular/core';
 import {
   Component,
   ElementRef,
@@ -27,8 +28,10 @@ export class AddBudgetExpense implements OnInit {
   // Categories passed from parent
   categories = input<Category[]>([]);
 
-  // Local signal for expense-only categories
-  expenseCategories = signal<Category[]>([]);
+  // Derived signal: expense-only categories
+  expenseCategories = computed(() => 
+    this.categories().filter(c => c.type?.toLowerCase() === 'expense')
+  );
 
   // Services
   formBuilder = inject(FormBuilder);
@@ -58,14 +61,7 @@ export class AddBudgetExpense implements OnInit {
 
   ngOnInit(): void {
     this.getCurrentBudgetId();
-
-    const allCategories = this.categories();
-    const filteredCategories =allCategories.filter(c =>
-      c.type?.toLowerCase() === 'expense'
-    );
-
-    this.expenseCategories.set(filteredCategories);
-
+    
     this.addBudgetExpenseForm.patchValue({
       transaction_date: this.date(),
       created_at: this.date(),
