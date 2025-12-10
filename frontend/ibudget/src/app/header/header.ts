@@ -22,6 +22,7 @@ export class Header implements OnInit {
   username = signal<string>('');
   userId = signal<number>(0);
   showProfileMenu = signal<boolean>(false);
+  showLogoutModal = signal<boolean>(false);
 
   currentPageTitle = toSignal(
     this.router.events.pipe(
@@ -78,10 +79,19 @@ export class Header implements OnInit {
     this.showProfileMenu.set(false);
   }
 
-  logout() {
+  openLogoutModal() {
+    this.showLogoutModal.set(true);
+    this.showProfileMenu.set(false);
+  }
+
+  cancelLogout() {
+    this.showLogoutModal.set(false);
+  }
+
+  confirmLogout() {
     this.authService.logout();
     this.router.navigate(['/']);
-    this.showProfileMenu.set(false);
+    this.showLogoutModal.set(false);
   }
 
   @HostListener('document:click', ['$event'])
@@ -89,6 +99,14 @@ export class Header implements OnInit {
     const target = event.target as HTMLElement;
     if (!target.closest('.profile-section')) {
       this.showProfileMenu.set(false);
+    }
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscapeKey(event: Event): void {
+    if (this.showLogoutModal()) {
+      this.cancelLogout();
+      event.preventDefault();
     }
   }
 }
