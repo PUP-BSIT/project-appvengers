@@ -60,4 +60,26 @@ export class SavingTransactionService {
         map(this.toFrontend)
     );
   }
+
+  // Get a specific saving transaction by its Transaction ID
+  getSavingTransactionByTransactionId(savingId: number, transactionId: number): Observable<SavingTransaction> {
+    return this.http.get<BackendSavingTransaction>(`${this.apiUrl}/${savingId}/transactions/${transactionId}`)
+      .pipe(
+        map(this.toFrontend)
+    );
+  }
+
+  // Update an existing saving transaction
+  updateSavingTransaction(savingId: number, transactionId: number, transaction: Partial<SavingTransaction>): Observable<SavingTransaction> {
+    const backendTransaction = this.toBackend(transaction);
+    return this.http.put<BackendSavingTransaction>(`${this.apiUrl}/${savingId}/transactions/${transactionId}`, backendTransaction)
+      .pipe(
+        map(this.toFrontend)
+    );
+  }
+
+  // Soft Delete a saving transaction
+  deleteSavingTransaction(savingId: number, transactionId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${savingId}/transactions/${transactionId}`);
+  }
 }
