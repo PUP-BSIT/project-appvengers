@@ -50,7 +50,7 @@ export type Transaction = {
   description: string;
   category: string;
   amount: number;
-  type: 'income' | 'expense';
+  type?: 'income' | 'expense';
 }
 
 export type TransactionResponse = {
@@ -146,6 +146,8 @@ export type SavingTransaction = {
   savings_action?: 'Deposit' | 'Withdrawal';
   description: string;
   amount: number;
+  category?: string;
+  type?: 'income' | 'expense';
   created_at: string;
   updated_at: string;
   deleted_at?: string;
@@ -159,6 +161,8 @@ export type BackendSavingTransaction = {
   savingsAction?: 'Deposit' | 'Withdrawal';
   description: string;
   amount: number;
+  category?: string;
+  type?: 'income' | 'expense';
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
