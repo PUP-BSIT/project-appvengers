@@ -1,9 +1,8 @@
-import { Component, computed, inject, signal, HostListener, AfterViewInit, OnDestroy } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component, computed, inject, AfterViewInit, OnDestroy } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SidebarService } from '../../services/sidebar.service';
 import { SidebarOverlay } from '../sidebar-overlay/sidebar-overlay';
-import { AuthService } from '../../services/auth.service';
 import { Tooltip } from 'bootstrap';
 
 declare const bootstrap: typeof import('bootstrap');
@@ -17,16 +16,12 @@ declare const bootstrap: typeof import('bootstrap');
 
 export class Sidebar implements AfterViewInit, OnDestroy {
   private sidebarService = inject(SidebarService);
-  private authService = inject(AuthService);
-  private router = inject(Router);
   private tooltips: Tooltip[] = [];
-  userId = signal(0);
 
   isOpen = computed(() => this.sidebarService.isOpen());
 
   ngAfterViewInit(): void {
     this.initializeTooltips();
-    this.getUserId();
   }
 
   private initializeTooltips(): void {
@@ -41,39 +36,6 @@ export class Sidebar implements AfterViewInit, OnDestroy {
         delay: { show: 300, hide: 100 }
       })
     );
-  }
-
-  showLogoutModal = signal(false);
-
-  openLogoutModal(): void {
-    this.showLogoutModal.set(true);
-  }
-
-  cancelLogout(): void {
-    this.showLogoutModal.set(false);
-  }
-
-  confirmLogout(): void {
-    // perform logout then navigate
-    this.authService.logout();
-    this.router.navigate(['/']);
-    this.showLogoutModal.set(false);
-  }
-
-  @HostListener('document:keydown.escape', ['$event'])
-  handleEscapeKey(event: Event): void {
-    if (this.showLogoutModal()) {
-      this.cancelLogout();
-      event.preventDefault();
-    }
-  }
-
-  getUserId() {
-    this.authService.getProfile().subscribe((res) => {
-      if (res.success && res.data) {
-        this.userId.set(res.data.id);
-      }
-    });
   }
 
   ngOnDestroy(): void {
