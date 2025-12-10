@@ -54,6 +54,14 @@ public class SavingTransactionController {
     t.setDescription(req.getDescription());
     t.setSavingsAction(req.getSavingsAction());
     t.setTransactionDate(req.getTransactionDate());
+    // Map category and type for general Transaction entity
+    t.setCategory("Savings");
+    String action = req.getSavingsAction();
+    if (action != null) {
+      String normalized = action.trim().toLowerCase();
+      t.setType(normalized.equals("deposit") ? "income"
+                 : normalized.equals("withdrawal") ? "expense" : null);
+    }
     
     Transaction saved = transactionRepository.save(t);
 
@@ -65,6 +73,8 @@ public class SavingTransactionController {
         saved.getSavingsAction(),
         saved.getDescription(),
         saved.getAmount(),
+        saved.getCategory(),
+        saved.getType(),
         saved.getCreatedAt(),
         saved.getUpdatedAt(),
         saved.getDeletedAt()
@@ -100,6 +110,8 @@ public class SavingTransactionController {
         transaction.getSavingsAction(),
         transaction.getDescription(),
         transaction.getAmount(),
+        transaction.getCategory(),
+        transaction.getType(),
         transaction.getCreatedAt(),
         transaction.getUpdatedAt(),
         transaction.getDeletedAt()
@@ -134,6 +146,14 @@ public class SavingTransactionController {
     transaction.setDescription(req.getDescription());
     transaction.setSavingsAction(req.getSavingsAction());
     transaction.setTransactionDate(req.getTransactionDate());
+    // Ensure category stays "Savings" and type maps from action on updates
+    transaction.setCategory("Savings");
+    String action = req.getSavingsAction();
+    if (action != null) {
+      String normalized = action.trim().toLowerCase();
+      transaction.setType(normalized.equals("deposit") ? "income"
+                         : normalized.equals("withdrawal") ? "expense" : transaction.getType());
+    }
     Transaction updated = transactionRepository.save(transaction);
 
     Saving saving = transaction.getSaving();
@@ -145,6 +165,8 @@ public class SavingTransactionController {
         updated.getSavingsAction(),
         updated.getDescription(),
         updated.getAmount(),
+        updated.getCategory(),
+        updated.getType(),
         updated.getCreatedAt(),
         updated.getUpdatedAt(),
         updated.getDeletedAt()
