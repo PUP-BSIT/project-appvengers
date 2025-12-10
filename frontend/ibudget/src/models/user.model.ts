@@ -156,7 +156,7 @@ export type BackendSavingTransaction = {
   savingId?: number; // backend DTO uses savingId
   userId?: number;
   transactionDate?: string;
-  savingAction?: 'Deposit' | 'Withdrawal';
+  savingsAction?: 'Deposit' | 'Withdrawal';
   description: string;
   amount: number;
   createdAt: string;
