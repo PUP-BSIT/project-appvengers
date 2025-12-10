@@ -59,7 +59,8 @@ export class AddBudgetButton implements OnInit, OnChanges {
   ngOnInit() {
     const budgetId = this.budgetId();
     this.categoriesService.getCategories().subscribe(data => {
-      this.categories.set(data);
+      const expenseCategories = data.filter(c => c.type === 'expense');
+      this.categories.set(expenseCategories)
     });
 
     this.budgetForm = this.formBuilder.group({
