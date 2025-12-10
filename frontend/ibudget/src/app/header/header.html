@@ -40,7 +40,7 @@
             <span>Settings</span>
           </div>
           <div class="dropdown-divider"></div>
-          <div class="dropdown-item logout" (click)="logout()">
+          <div class="dropdown-item logout" (click)="openLogoutModal()">
             <i class="bi bi-box-arrow-right"></i>
             <span>Logout</span>
           </div>
@@ -49,3 +49,25 @@
     </div>
   </div>
 </div>
+
+<!-- Logout confirmation modal -->
+@if (showLogoutModal()) {
+  <div class="logout-modal-backdrop" (click)="cancelLogout()">
+    <div class="logout-modal" (click)="$event.stopPropagation()">
+      <div class="logout-modal-header">
+        <h3>Confirm Logout</h3>
+      </div>
+      <div class="logout-modal-body">
+        <p>Are you sure you want to logout?</p>
+      </div>
+      <div class="logout-modal-actions">
+        <button class="btn btn-secondary" (click)="cancelLogout()">
+          No
+        </button>
+        <button class="btn btn-primary" (click)="confirmLogout()">
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+}
