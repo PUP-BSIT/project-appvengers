@@ -10,6 +10,7 @@ import { UpdateSavingTransaction } from "./update-saving-transaction/update-savi
 import { SavingProgress } from "../saving-progress/saving-progress";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
+import { SavingTransactionService } from '../../../services/saving-transaction.service';
 
 @Component({
   selector: 'app-view-saving',
@@ -33,6 +34,7 @@ export class ViewSaving implements OnInit{
   currentSaving = signal(<Saving>{});
   historyService = inject(HistoryService);
   savingService = inject(SavingsService);
+  savingTransactionService = inject(SavingTransactionService);
   activatedRoute = inject(ActivatedRoute);
   savingId = signal(1);
   remainingAmount = signal(0);
@@ -53,6 +55,8 @@ export class ViewSaving implements OnInit{
     this.getSavingsTransactionHistories();
     this.filterTransactions();
     this.getSavingsData();
+    this.getTransactionBySavingId();
+    console.log('Saving ID:', this.savingId());
   }
 
   // Get Duration between two dates
@@ -132,6 +136,17 @@ export class ViewSaving implements OnInit{
     });
   }
 
+  // Fetch transactions by saving ID from backend
+  getTransactionBySavingId() {
+    this.savingTransactionService.getSavingTransactionById(this.savingId())
+    .subscribe({
+      next: (transactionData) => {
+        this.transactionHistories.set(transactionData);
+        console.log('Transactions Data:', transactionData);
+      }
+    })
+  }
+
   // Delete the current view saving
   deleteSaving() {
     this.savingService.deleteSaving(this.savingId()).subscribe(() => {
@@ -143,7 +158,7 @@ export class ViewSaving implements OnInit{
     this.historyService.deleteSavingTransaction(this.savingId(), transactionId)
       .subscribe(() => {
         const updatedTransactions = this.transactionHistories()
-          .filter(transaction => transaction.transaction_id !== transactionId);
+          .filter(transaction => transaction.id !== transactionId);
 
         this.transactionHistories.set(updatedTransactions);
         this.filterTransactions();
@@ -162,7 +177,7 @@ export class ViewSaving implements OnInit{
 
   onSavingsTransactionUpdated(updatedTransaction: SavingTransaction) {
     const updatedTransactions = this.transactionHistories().map(transaction => 
-      transaction.transaction_id === updatedTransaction.transaction_id ? 
+      transaction.id === updatedTransaction.id ? 
         updatedTransaction : transaction
     );
 
