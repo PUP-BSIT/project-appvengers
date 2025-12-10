@@ -80,7 +80,7 @@
           @if(getDailySavingsNeeded() === 0) {
             <p>Goal date has passed or no remaining amount.</p>
           } @else {
-            <p>&#8369; {{ getDailySavingsNeeded() | number:'1.0-0' }}</p>
+            <p>&#8369; {{ getDailySavingsNeeded() | number:'1.0-0' }} per day</p>
           }
         </div>
       </div>
