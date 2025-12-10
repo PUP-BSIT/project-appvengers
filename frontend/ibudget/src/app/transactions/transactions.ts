@@ -322,7 +322,7 @@ export class Transactions implements OnInit, OnDestroy {
       description: transaction.description,
       category: transaction.category,
       amount: transaction.amount,
-      type: transaction.type
+      type: transaction.type!
     };
   }
 
