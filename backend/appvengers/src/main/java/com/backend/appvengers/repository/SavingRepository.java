@@ -50,8 +50,16 @@ public interface SavingRepository extends JpaRepository<Saving, Integer> {
 
   @Modifying
   @Query("UPDATE Saving s " +
-    "SET s.currentAmount = :totalDeposits " +
+    "SET s.currentAmount = :netAmount " +
     "WHERE s.savingId = :savingId")
 	void updateCurrentAmount(@Param("savingId") int savingId,
-                        	 @Param("totalDeposits") Double totalDeposits);
+                        	 @Param("netAmount") Double netAmount);
+
+	// JPQL Query to calculate net amount (deposits - withdrawals) for a specific savingId
+	@Query("SELECT COALESCE(SUM(CASE WHEN t.savingsAction = 'Deposit' THEN t.amount " +
+				"WHEN t.savingsAction = 'Withdrawal' THEN -t.amount ELSE 0 END), 0) " +
+       	"FROM Transaction t " +
+       	"WHERE t.saving.savingId = :savingId " +
+       	"AND t.deletedAt IS NULL")
+	Double getNetAmountBySavingId(@Param("savingId") int savingId);
 }
