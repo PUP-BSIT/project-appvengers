@@ -27,6 +27,9 @@ export class AddBudgetExpense implements OnInit {
   // Categories passed from parent
   categories = input<Category[]>([]);
 
+  // Local signal for expense-only categories
+  expenseCategories = signal<Category[]>([]);
+
   // Services
   formBuilder = inject(FormBuilder);
   budgetTxService = inject(BudgetTransactionsService);
@@ -55,6 +58,13 @@ export class AddBudgetExpense implements OnInit {
 
   ngOnInit(): void {
     this.getCurrentBudgetId();
+
+    const allCategories = this.categories();
+    const filteredCategories =allCategories.filter(c =>
+      c.type?.toLowerCase() === 'expense'
+    );
+
+    this.expenseCategories.set(filteredCategories);
 
     this.addBudgetExpenseForm.patchValue({
       transaction_date: this.date(),
