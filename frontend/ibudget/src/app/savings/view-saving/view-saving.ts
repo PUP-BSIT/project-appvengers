@@ -155,15 +155,21 @@ export class ViewSaving implements OnInit{
   }
 
   deleteSavingsTransaction(transactionId: number) {
-    this.historyService.deleteSavingTransaction(this.savingId(), transactionId)
-      .subscribe(() => {
-        const updatedTransactions = this.transactionHistories()
-          .filter(transaction => transaction.id !== transactionId);
-
-        this.transactionHistories.set(updatedTransactions);
-        this.filterTransactions();
+    this.savingTransactionService.deleteSavingTransaction(
+      this.savingId(),
+      transactionId
+    ).subscribe({
+      next: () => {
+        this.transactionHistories.update(transactions =>
+          transactions.filter(transaction => transaction.id !== transactionId)
+        );
+      },
+      error: (err) => {
+        console.error('Failed to delete transaction', err);
+      }
     });
   }
+
 
   onSavingsTransactionAdded(newTransaction: SavingTransaction) {
     // append canonical saved record (returned by service)
