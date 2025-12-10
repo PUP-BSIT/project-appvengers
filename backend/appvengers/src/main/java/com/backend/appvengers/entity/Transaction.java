@@ -35,8 +35,7 @@ public class Transaction {
     @Column(nullable = false)
     private BigDecimal amount;
 
-    @NotNull
-    @Column(nullable = false)
+    @Column(name = "type")
     private String type; // e.g., "income" or "expense"
 
     private String category;
