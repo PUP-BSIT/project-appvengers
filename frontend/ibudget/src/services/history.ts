@@ -8,12 +8,12 @@ import { Observable, of } from 'rxjs';
 export class HistoryService {
   private STATIC_HISTORY: SavingTransaction[] = [
     {
-      transaction_id: 1,
+      id: 1,
       savings_id: 1,
       user_id: 1,
       transaction_date: '2025-11-20',
       savings_action: 'Deposit',
-      date: new Date('2025-11-20'),
+      // date: new Date('2025-11-20'),
       description: 'Remaining Allowance',
       amount: 300,
       created_at: '2025-11-20',
@@ -21,12 +21,12 @@ export class HistoryService {
       deleted_at: ''
     },
     {
-      transaction_id: 2,
+      id: 2,
       savings_id: 1,
       user_id: 1,
       transaction_date: '2025-11-20',
       savings_action: 'Deposit',
-      date: new Date('2025-11-20'),
+      // date: new Date('2025-11-20'),
       description: 'Remaining Allowance',
       amount: 100,
       created_at: '2025-11-20',
@@ -34,12 +34,12 @@ export class HistoryService {
       deleted_at: ''
     },
     {
-      transaction_id: 3,
+      id: 3,
       savings_id: 2,
       user_id: 1,
       transaction_date: '2025-11-21',
       savings_action: 'Deposit',
-      date: new Date('2025-11-21'),
+      // date: new Date('2025-11-21'),
       description: 'Remaining Allowance',
       amount: 100,
       created_at: '2025-11-21',
@@ -47,12 +47,12 @@ export class HistoryService {
       deleted_at: ''
     },
     {
-      transaction_id: 4,
+      id: 4,
       savings_id: 2,
       user_id: 1,
       transaction_date: '2025-11-22',
       savings_action: 'Withdrawal',
-      date: new Date('2025-11-22'),
+      // date: new Date('2025-11-22'),
       description: 'Remaining Allowance',
       amount: 100,
       created_at: '2025-11-22',
@@ -60,12 +60,12 @@ export class HistoryService {
       deleted_at: ''
     },
     {
-      transaction_id: 5,
+      id: 5,
       savings_id: 4,
       user_id: 1,
       transaction_date: '2025-11-25',
       savings_action: 'Deposit',
-      date: new Date('2025-11-25'),
+      // date: new Date('2025-11-25'),
       description: 'Income from Work',
       amount: 200,
       created_at: '2025-11-25',
@@ -84,7 +84,7 @@ export class HistoryService {
   ): Observable<SavingTransaction[]> {
     const filteredTransactions = this.STATIC_HISTORY.filter(transaction => 
       transaction.savings_id === savingId && 
-      transaction.transaction_id === transactionId
+      transaction.id === transactionId
     );
 
     return of(filteredTransactions);
@@ -104,7 +104,7 @@ export class HistoryService {
   ): Observable<SavingTransaction> {
     const index = this.STATIC_HISTORY.findIndex(transaction => 
       transaction.savings_id === savings_id && 
-      transaction.transaction_id === transaction_id
+      transaction.id === transaction_id
     );
 
     if (index !== -1) {
@@ -121,7 +121,7 @@ export class HistoryService {
   ): Observable<SavingTransaction[]> {
     this.STATIC_HISTORY = this.STATIC_HISTORY.filter(transaction => 
       !(transaction.savings_id === savings_id && 
-        transaction.transaction_id === transaction_id
+        transaction.id === transaction_id
       )
     );
     
