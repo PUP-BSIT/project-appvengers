@@ -17,7 +17,7 @@ export class SavingTransactionService {
       savings_id: backendTransaction.savingId, // backend uses savingId (no 's')
       user_id: backendTransaction.userId,
       transaction_date: backendTransaction.transactionDate,
-      savings_action: backendTransaction.savingAction,
+      savings_action: backendTransaction.savingsAction,
       description: backendTransaction.description,
       amount: backendTransaction.amount,
       created_at: backendTransaction.createdAt,
@@ -31,7 +31,7 @@ export class SavingTransactionService {
       savingId: transaction.savings_id, // send savingId to backend
       userId: transaction.user_id,
       transactionDate: transaction.transaction_date,
-      savingAction: transaction.savings_action,
+      savingsAction: transaction.savings_action,
       description: transaction.description,
       amount: transaction.amount,
     };
@@ -44,10 +44,20 @@ export class SavingTransactionService {
     );
   }
 
+  // Get transactions for a specific saving by its ID
   getSavingTransactionById(savingId: number): Observable<SavingTransaction[]> {
     return this.http.get<BackendSavingTransaction[]>(`${this.apiUrl}/${savingId}/transactions`)
       .pipe(
         map(list => list.map(this.toFrontend))
+    );
+  }
+
+  // Add a new saving transaction
+  addSavingTransaction(savingId: number, transaction: Partial<SavingTransaction>): Observable<SavingTransaction> {
+    const backendTransaction = this.toBackend(transaction);
+    return this.http.post<BackendSavingTransaction>(`${this.apiUrl}/${savingId}/transactions`, backendTransaction)
+      .pipe(
+        map(this.toFrontend)
     );
   }
 }
