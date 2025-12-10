@@ -8,7 +8,7 @@ $card-drop-shadow: #00000040;
   height: 70px;
   background-color: $header-bg;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   gap: 3vw;
   padding: 0 20px;
@@ -19,12 +19,48 @@ $card-drop-shadow: #00000040;
   z-index: 999;
 }
 
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
 .menu-toggle {
   display: none;
   cursor: pointer;
   font-size: 24px;
   color: #333;
-  margin-right: auto;
+}
+
+.page-title-section {
+  .page-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .title-text {
+      color: #1a1a1a;
+      min-width: 150px;
+      display: inline-block;
+      transition: color 0.3s ease;
+    }
+
+    .divider {
+      color: #d3d3d3;
+      font-weight: 300;
+      font-size: 22px;
+    }
+
+    .date-text {
+      color: #666;
+      font-weight: 400;
+      font-size: 16px;
+      white-space: nowrap;
+    }
+  }
 }
 
 .about-nav {
@@ -94,6 +130,26 @@ $card-drop-shadow: #00000040;
 
   .menu-toggle {
     display: block;
+  }
+
+  .page-title-section {
+    .page-title {
+      font-size: 20px;
+      gap: 8px;
+
+      .title-text {
+        min-width: 120px;
+        font-size: 18px;
+      }
+
+      .divider {
+        font-size: 18px;
+      }
+
+      .date-text {
+        font-size: 14px;
+      }
+    }
   }
 
   .about-nav {
