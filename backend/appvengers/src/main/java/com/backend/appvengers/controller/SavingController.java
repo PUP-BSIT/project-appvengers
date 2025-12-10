@@ -116,23 +116,7 @@ public class SavingController {
     return savingRepository.fetchSavingsTransactionById(savingId, userId);
   }
 
-  // Update Current Amount 
-  @PutMapping("/savings/{savingId}/current-amount")
-  public ResponseEntity<ApiResponse> updateCurrentAmount(@PathVariable Integer savingId, @RequestBody Saving savingDetails, Authentication auth) {
-    int userId = currentUserId(auth);
-    Saving saving = savingRepository.findById(savingId)
-        .orElseThrow(() -> new RuntimeException("Saving not found with id " + savingId));
-        
-    if (saving.getUserId() != userId) {
-      return ResponseEntity.status(403).body(new ApiResponse(false, "Unauthorized to access this resource"));
-    }
-
-    // Update current amount
-    saving.setCurrentAmount(savingDetails.getCurrentAmount());
-    savingRepository.save(saving);
-    return ResponseEntity.ok(new ApiResponse(true, "Current amount updated successfully"));
-  }
-
+  // Refresh current amount for a saving
   @GetMapping("/savings/{savingId}/refresh-current-amount")
   public ResponseEntity<ApiResponse> refreshCurrentAmount(@PathVariable Integer savingId, Authentication auth) {
     int userId = currentUserId(auth);
