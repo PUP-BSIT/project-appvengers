@@ -10,7 +10,7 @@ $card-drop-shadow: #00000040;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 3vw;
+  gap: 20px;
   padding: 0 20px;
   margin-left: $header-margin-left;
   border-bottom: $border-color 1px solid;
@@ -82,16 +82,39 @@ $card-drop-shadow: #00000040;
 
 .notifications-nav {
   position: relative;
+  display: flex;
+  align-items: center;
 
   a {
     text-decoration: none;
-    color: inherit;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: transparent;
+    border-radius: 8px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+
+    &:hover {
+      color: $icon-hovered-color;
+      border-color: $icon-hovered-color;
+    }
+
+    &.active {
+      color: $icon-hovered-color;
+      border-color: $icon-hovered-color;
+    }
+  }
+
+  .notification-icon {
+    font-size: 25px;
   }
 
   .notification-count {
     position: absolute;
-    top: -5px;
-    right: -5px;
+    top: 8px;
+    right: 3px;
     background-color: red;
     color: white;
     border-radius: 50%;
@@ -100,32 +123,55 @@ $card-drop-shadow: #00000040;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: bold;
   }
 }
 
 .nav-link {
-  padding: 5px;
   text-decoration: none;
-  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transition: color 0.3s ease-in-out;
+}
 
-  &:hover {
-    cursor: pointer;
-    color: $icon-hovered-color;
-    transform: scale(1.1);
-  }
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
 
-  &.active {
-    box-shadow: 0 4px 8px $card-drop-shadow;
-    border-radius: 50%;
-    color: $icon-hovered-color;
+.profile-section {
+  display: flex;
+  align-items: center;
+
+  .profile-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+
+    .profile-icon {
+      font-size: 25px;
+      color: #374151;
+    }
+
+    .username {
+      font-size: 15px;
+      font-weight: 500;
+      color: #374151;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 }
 
 @media (max-width: 768px) {
   .header-container {
     margin-left: 0;
+    gap: 10px;
   }
 
   .menu-toggle {
@@ -148,6 +194,45 @@ $card-drop-shadow: #00000040;
 
       .date-text {
         font-size: 14px;
+      }
+    }
+  }
+
+  .right-section {
+    gap: 10px;
+  }
+
+  .notifications-nav {
+    a {
+      padding: 8px;
+      border-radius: 6px;
+    }
+
+    .notification-icon {
+      font-size: 20px;
+    }
+
+    .notification-count {
+      top: 1px;
+      right: 1px;
+      width: 16px;
+      height: 16px;
+      font-size: 9px;
+    }
+  }
+
+  .profile-section {
+    .profile-display {
+      padding: 8px 12px;
+      gap: 8px;
+
+      .profile-icon {
+        font-size: 22px;
+      }
+
+      .username {
+        font-size: 14px;
+        max-width: 100px;
       }
     }
   }
