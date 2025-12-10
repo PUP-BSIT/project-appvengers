@@ -130,7 +130,7 @@
             </tr>
           </thead>
           <tbody>
-            @if(filteredTransactions().length === 0) {
+            @if(transactionHistories().length === 0) {
               <tr>
                 <td colspan="5" class="text-center text-secondary-emphasis">
                   No transaction history available.
@@ -138,9 +138,9 @@
               </tr>
             }
             
-            @if(filteredTransactions().length > 0) {
-              @for(transaction of filteredTransactions(); 
-                track transaction.transaction_id) 
+            @if(transactionHistories().length > 0) {
+              @for(transaction of transactionHistories(); 
+                track transaction.id) 
               {
                 <tr>
                   <td>{{ transaction.transaction_date | date:'mediumDate' }}</td>
@@ -167,14 +167,14 @@
                   </td>
                   <td class="d-flex gap-1 justify-content-center actions">
                     <app-update-saving-transaction 
-                      [transactionId]="transaction.transaction_id"
+                      [transactionId]="transaction.id"
                       (updatedTransaction)="onSavingsTransactionUpdated($event)"
                     />
                     <button 
                       type="button"
                       class="btn btn-sm btn-danger"
                       (click)="deleteSavingsTransaction(
-                          transaction.transaction_id)">
+                          transaction.id)">
                         Delete
                     </button>
                   </td>
@@ -187,7 +187,7 @@
 
       <!-- This will only show for mobile phones S, M, & L -->
       <div class="list-container">
-        @if(filteredTransactions().length === 0) {
+        @if(transactionHistories().length === 0) {
           <ol>
             <p class="text-center text-secondary-emphasis mt-3">
               No transaction history available.
@@ -196,8 +196,8 @@
         }
 
         <ol>
-          @if(filteredTransactions().length > 0) {
-            @for(transaction of filteredTransactions(); 
+          @if(transactionHistories().length > 0) {
+            @for(transaction of transactionHistories(); 
               track $index) 
             {
               <li class="card">
@@ -241,7 +241,7 @@
 
                   <div class="actions">
                     <app-update-saving-transaction 
-                      [transactionId]="transaction.transaction_id"
+                      [transactionId]="transaction.id"
                       (updatedTransaction)="onSavingsTransactionUpdated($event)"
                     />
 
@@ -249,7 +249,7 @@
                       type="button"
                       class="btn btn-sm btn-danger"
                       (click)="deleteSavingsTransaction(
-                          transaction.transaction_id)">
+                          transaction.id)">
                         Delete
                     </button>
                   </div>
