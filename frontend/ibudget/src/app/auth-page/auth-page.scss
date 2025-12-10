@@ -1,4 +1,6 @@
+@use 'sass:color';
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 $left-panel: #2D5A87;
 
 // Animation settings for auth page entrance
@@ -110,7 +112,7 @@ $auth-animation-easing: cubic-bezier(.22,.9,.3,1);
     }
 
     &:hover {
-      border-color: lighten($left-panel, 20%);
+      border-color: color.adjust($left-panel, $lightness: 20%);
     }
   }
 }
@@ -132,6 +134,15 @@ $auth-animation-easing: cubic-bezier(.22,.9,.3,1);
   opacity: 50%;
   z-index: 2;
   cursor: pointer;
+  transition: all 0.3s ease;
+
+  i {
+    font-size: 1.5rem;
+  }
+
+  &:hover {
+    opacity: 100%;
+  }
 }
 
 @media (max-width: 768px) {
