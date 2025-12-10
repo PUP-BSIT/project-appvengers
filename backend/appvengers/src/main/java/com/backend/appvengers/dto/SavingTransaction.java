@@ -15,7 +15,7 @@ public class SavingTransaction {
   public int savingId;
   public Integer userId; 
   public LocalDate transactionDate;
-  public String savingAction;
+  public String savingsAction;
   public String description;
   public BigDecimal amount;
   public LocalDate createdAt;
