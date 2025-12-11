@@ -38,7 +38,7 @@ public class TransactionService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return transactionRepository.findByUserAndDeletedFalse(user).stream()
+        return transactionRepository.findByUserAndDeletedFalseAndSavingIsNull(user).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
@@ -95,7 +95,7 @@ public class TransactionService {
         }
 
         // Soft delete: set deleted flag to true instead of removing from database
-        t.setDeleted(true);
+        t.setDeletedAt(LocalDate.now());
         transactionRepository.save(t);
     }
 

@@ -61,9 +61,6 @@ public class Transaction {
     @Column(name = "updated_at")
     private LocalDate updatedAt;
 
-    @Column(nullable = false)
-    private Boolean deleted = false;
-
     @Column(name = "deleted_at")
     private LocalDate deletedAt;
 }

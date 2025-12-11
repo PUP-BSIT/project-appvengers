@@ -13,38 +13,46 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
+    List<Transaction> findByUser(User user);
+
+    // Fetch transactions without a linked saving (saving_id is NULL), only non-deleted for a user
+    @Query("""
+        SELECT t
+        FROM Transaction t
+        WHERE t.user = :user AND t.deletedAt IS NULL AND t.saving IS NULL AND t.budget IS NULL
+    """)
     //Finds transactions linked to a budget
     List<Transaction> findByBudget_BudgetIdAndDeletedFalse(Integer budgetId);
-    List<Transaction> findByUserAndDeletedFalse(User user);
+    List<Transaction> findByUserAndDeletedFalseAndSavingIsNull(@Param("user") User user);
 
     // Expense summary - only non-deleted transactions
     @Query("""
-                SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
-                FROM Transaction t
-                WHERE t.user = :user AND t.type = :type AND t.deleted = false
-                GROUP BY COALESCE(t.category, 'Uncategorized')
-            """)
+        SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
+        FROM Transaction t
+        WHERE t.user = :user AND t.type = :type AND t.deletedAt IS NULL
+        GROUP BY COALESCE(t.category, 'Uncategorized')
+    """)
     List<Object[]> findExpenseSummaryByUserAndType(@Param("user") User user, @Param("type") String type);
 
     // Income summary - only non-deleted transactions
     @Query("""
-                SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
-                FROM Transaction t
-                WHERE t.user = :user AND t.type = :type AND t.deleted = false
-                GROUP BY COALESCE(t.category, 'Uncategorized')
-            """)
+        SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
+        FROM Transaction t
+        WHERE t.user = :user AND t.type = :type AND t.deletedAt IS NULL
+        GROUP BY COALESCE(t.category, 'Uncategorized')
+    """)
     List<Object[]> findIncomeSummaryByUserAndType(@Param("user") User user, @Param("type") String type);
 
     // Monthly total spending - only expenses, non-deleted
     @Query("""
-                SELECT SUM(t.amount)
-                FROM Transaction t
-                WHERE t.user = :user
-                AND t.type = 'EXPENSE'
-                AND t.deleted = false
-                AND t.transactionDate >= :startDate
-                AND t.transactionDate < :endDate
-            """)
+        SELECT SUM(t.amount)
+        FROM Transaction t
+        WHERE t.user = :user 
+        AND t.type = 'EXPENSE' 
+        AND t.deletedAt IS NULL
+        AND t.transactionDate >= :startDate 
+        AND t.transactionDate < :endDate
+    """)
     Double findMonthlyTotalByUserAndDateRange(
             @Param("user") User user,
             @Param("startDate") LocalDate startDate,
@@ -52,14 +60,14 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     // Monthly total income - only income, non-deleted
     @Query("""
-                SELECT SUM(t.amount)
-                FROM Transaction t
-                WHERE t.user = :user
-                AND t.type = 'INCOME'
-                AND t.deleted = false
-                AND t.transactionDate >= :startDate
-                AND t.transactionDate < :endDate
-            """)
+        SELECT SUM(t.amount)
+        FROM Transaction t
+        WHERE t.user = :user 
+        AND t.type = 'INCOME' 
+        AND t.deletedAt IS NULL
+        AND t.transactionDate >= :startDate 
+        AND t.transactionDate < :endDate
+    """)
     Double findMonthlyIncomeByUserAndDateRange(
             @Param("user") User user,
             @Param("startDate") LocalDate startDate,
@@ -67,15 +75,15 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     // Monthly expense by category
     @Query("""
-                SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
-                FROM Transaction t
-                WHERE t.user = :user
-                AND t.type = 'EXPENSE'
-                AND t.deleted = false
-                AND t.transactionDate >= :startDate
-                AND t.transactionDate < :endDate
-                GROUP BY COALESCE(t.category, 'Uncategorized')
-            """)
+        SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
+        FROM Transaction t
+        WHERE t.user = :user 
+        AND t.type = 'EXPENSE' 
+        AND t.deletedAt IS NULL
+        AND t.transactionDate >= :startDate 
+        AND t.transactionDate < :endDate
+        GROUP BY COALESCE(t.category, 'Uncategorized')
+    """)
     List<Object[]> findMonthlyExpenseByCategoryAndDateRange(
             @Param("user") User user,
             @Param("startDate") LocalDate startDate,
@@ -83,15 +91,15 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     // Monthly income by category
     @Query("""
-                SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
-                FROM Transaction t
-                WHERE t.user = :user
-                AND t.type = 'INCOME'
-                AND t.deleted = false
-                AND t.transactionDate >= :startDate
-                AND t.transactionDate < :endDate
-                GROUP BY COALESCE(t.category, 'Uncategorized')
-            """)
+        SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
+        FROM Transaction t
+        WHERE t.user = :user 
+        AND t.type = 'INCOME' 
+        AND t.deletedAt IS NULL
+        AND t.transactionDate >= :startDate 
+        AND t.transactionDate < :endDate
+        GROUP BY COALESCE(t.category, 'Uncategorized')
+    """)
     List<Object[]> findMonthlyIncomeByCategoryAndDateRange(
             @Param("user") User user,
             @Param("startDate") LocalDate startDate,
@@ -104,7 +112,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
                 FROM Transaction t
                 WHERE t.user = :user
                 AND t.type = 'EXPENSE'
-                AND t.deleted = false
+                AND t.deletedAt IS NULL
                 AND LOWER(COALESCE(t.category, '')) = LOWER(:categoryName)
                 AND t.transactionDate >= :startDate
                 AND t.transactionDate <= :endDate
