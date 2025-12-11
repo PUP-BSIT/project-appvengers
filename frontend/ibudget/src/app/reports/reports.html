@@ -2,42 +2,225 @@
 <app-header></app-header>
 
 <main class="reports-container container-fluid">
-  @if (reports && reports.length > 0) {
-    <div class="reports-list">
-      <div class="reports-cards-container">
-        @for (r of reports; track r.reports_id) {
-        <div class="report-card">
-          <div class="report-card-header">
-            <div class="report-card-date">
-              <i class="fas fa-calendar-alt"></i>
-              {{ r.period_start | date:'MMM d, y' }} -
-              {{ r.period_end | date:'MMM d, y' }}
-            </div>
-            <div class="report-card-actions">
-              <!-- optional actions for reports (edit/delete) can go here -->
-            </div>
-          </div>
+  <div class="tabs-container">
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button 
+          class="nav-link" 
+          [class.active]="activeTab === 'lastMonth'"
+          (click)="activeTab = 'lastMonth'"
+          type="button" 
+          role="tab">
+          <i class="fas fa-calendar-alt me-2"></i>
+          Last Month
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button 
+          class="nav-link" 
+          [class.active]="activeTab === 'thisMonth'"
+          (click)="activeTab = 'thisMonth'"
+          type="button" 
+          role="tab">
+          <i class="fas fa-calendar-alt me-2"></i>
+          This Month
+        </button>
+      </li>
+    </ul>
 
-          <div class="report-card-body">
-            <div class="report-card-description">
-              <div class="report-card-details">
-                <div class="report-category-section">
-                  <div class="mt-3">
-                    <p class="report-card-text">{{ r.report }}</p>
-                  </div>
+    <div class="tab-content">
+      <!-- Overall Computation Section -->
+      @if (thisMonthReport && lastMonthReport) {
+        <div class="overall-computation">
+          <h2 class="overall-title">
+            <i class="fas fa-chart-line me-2"></i>
+            Overall Financial Summary
+          </h2>
+          
+          <div class="comparison-grid">
+            <div class="comparison-card">
+              <div class="comparison-header">
+                <i class="fas fa-coins"></i>
+                <span>Total Income</span>
+              </div>
+              <div class="comparison-body">
+                <div class="comparison-item">
+                  <span class="month-label">Last Month</span>
+                  <span class="amount income">
+                    ₱{{ lastMonthReport.totalIncome | number:'1.2-2' }}
+                  </span>
+                </div>
+                <div class="comparison-item">
+                  <span class="month-label">This Month</span>
+                  <span class="amount income">
+                    ₱{{ thisMonthReport.totalIncome | number:'1.2-2' }}
+                  </span>
+                </div>
+                <div class="comparison-total">
+                  <span class="total-label">Total</span>
+                  <span class="total-amount">
+                    ₱{{ (lastMonthReport.totalIncome + 
+                          thisMonthReport.totalIncome) | number:'1.2-2' }}
+                    </span>
+                </div>
+              </div>
+            </div>
+            <div class="comparison-card">
+              <div class="comparison-header">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Total Expenses</span>
+              </div>
+              <div class="comparison-body">
+                <div class="comparison-item">
+                  <span class="month-label">Last Month</span>
+                  <span class="amount expense">
+                    ₱{{ lastMonthReport.totalSpent | number:'1.2-2' }}
+                  </span>
+                </div>
+                <div class="comparison-item">
+                  <span class="month-label">This Month</span>
+                  <span class="amount expense">
+                    ₱{{ thisMonthReport.totalSpent | number:'1.2-2' }}
+                  </span>
+                </div>
+                <div class="comparison-total">
+                  <span class="total-label">Total</span>
+                  <span class="total-amount">
+                    ₱{{ (lastMonthReport.totalSpent + 
+                         thisMonthReport.totalSpent) | number:'1.2-2' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="comparison-card highlight">
+              <div class="comparison-header">
+                <i class="fas fa-wallet"></i>
+                <span>Net Balance</span>
+              </div>
+              <div class="comparison-body">
+                <div class="comparison-item">
+                  <span class="month-label">Last Month</span>
+                  <span class="amount" 
+                    [class.positive]="lastMonthReport.totalIncome -
+                                      lastMonthReport.totalSpent > 0"
+                    [class.negative]="lastMonthReport.totalIncome -
+                                        lastMonthReport.totalSpent < 0">
+                    ₱{{ (lastMonthReport.totalIncome -
+                          lastMonthReport.totalSpent) | number:'1.2-2' }}
+                  </span>
+                </div>
+                <div class="comparison-item">
+                  <span class="month-label">This Month</span>
+                  <span class="amount" 
+                    [class.positive]="thisMonthReport.totalIncome -
+                                      thisMonthReport.totalSpent > 0"
+                    [class.negative]="thisMonthReport.totalIncome -
+                                      thisMonthReport.totalSpent < 0">
+                    ₱{{ (thisMonthReport.totalIncome -
+                         thisMonthReport.totalSpent) | number:'1.2-2' }}
+                  </span>
+                </div>
+                <div class="comparison-total">
+                  <span class="total-label">Overall</span>
+                  <span class="total-amount" 
+                    [class.positive]="(lastMonthReport.totalIncome +
+                                       thisMonthReport.totalIncome) -
+                      (lastMonthReport.totalSpent +
+                       thisMonthReport.totalSpent) > 0"
+                    [class.negative]="(lastMonthReport.totalIncome +
+                                       thisMonthReport.totalIncome) -
+                      (lastMonthReport.totalSpent +
+                       thisMonthReport.totalSpent) < 0">
+                    ₱{{ ((lastMonthReport.totalIncome +
+                          thisMonthReport.totalIncome) -
+                            (lastMonthReport.totalSpent +
+                            thisMonthReport.totalSpent)) | number:'1.2-2' }}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        }
-      </div>
-    </div>
-  }
+      }
 
-  @if (!reports || reports.length === 0) {
-    <section class="no-reports">
-      <div class="alert alert-info">No reports available.</div>
-    </section>
-  }
+      @if (activeTab === 'lastMonth' && lastMonthReport) {
+        <div class="tab-pane active">
+          <div class="report-header-title">
+            <i class="fas fa-calendar-alt"></i>
+            Last Month ({{ lastMonthReport.monthName }})
+          </div>
+
+          <div class="charts-section">
+            <div class="chart-card">
+              <h3 class="chart-title">
+                <i class="fas fa-arrow-up me-2"></i>
+                Income by Category
+              </h3>
+              <div class="chart-wrapper">
+                <canvas baseChart
+                  [data]="lastMonthIncomeChartData"
+                  [type]="chartType"
+                  [options]="chartOptions">
+                </canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <h3 class="chart-title">
+                <i class="fas fa-arrow-down me-2"></i>
+                Expenses by Category
+              </h3>
+              <div class="chart-wrapper">
+                <canvas baseChart
+                  [data]="lastMonthExpenseChartData"
+                  [type]="chartType"
+                  [options]="chartOptions">
+                </canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (activeTab === 'thisMonth' && thisMonthReport) {
+        <div class="tab-pane active">
+          <div class="report-header-title">
+            <i class="fas fa-calendar-alt"></i>
+            This Month ({{ thisMonthReport.monthName }})
+          </div>
+
+          <div class="charts-section">
+            <div class="chart-card">
+              <h3 class="chart-title">
+                <i class="fas fa-arrow-up me-2"></i>
+                Income by Category
+              </h3>
+              <div class="chart-wrapper">
+                <canvas baseChart
+                  [data]="thisMonthIncomeChartData"
+                  [type]="chartType"
+                  [options]="chartOptions">
+                </canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <h3 class="chart-title">
+                <i class="fas fa-arrow-down me-2"></i>
+                Expenses by Category
+              </h3>
+              <div class="chart-wrapper">
+                <canvas baseChart
+                  [data]="thisMonthExpenseChartData"
+                  [type]="chartType"
+                  [options]="chartOptions">
+                </canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
 </main>
