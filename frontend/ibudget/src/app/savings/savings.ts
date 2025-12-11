@@ -21,6 +21,7 @@ export class Savings implements OnInit {
   savingsService = inject(SavingsService);
   isLoading = signal(true);
   toastMessage = signal('');
+  toastType = signal<'success' | 'error'>('success');
   router = inject(Router);
 
   ngOnInit() {
@@ -28,6 +29,7 @@ export class Savings implements OnInit {
     const state = history.state as SavingsNavState;
     if (state?.toastMessage) {
       this.toastMessage.set(state.toastMessage);
+      this.toastType.set(state.toastType ?? 'success');
       const toast = Toast.getOrCreateInstance(this.savingsToast.nativeElement);
       toast.show();
 

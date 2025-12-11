@@ -4,7 +4,7 @@ import { Sidebar } from "../../sidebar/sidebar";
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SavingsService } from '../../../services/savings.service';
 import { Saving } from '../../../models/user.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-update-saving',
@@ -23,10 +23,18 @@ export class UpdateSaving implements OnInit{
 
   constructor() {
     this.updateSavingForm = this.formBuilder.group({
-      name: [''],
-      goal_date: [''],
-      frequency: [''],
-      target_amount: [''],
+      name: ['', {
+        validators: [Validators.required]
+      }],
+      goal_date: ['', {
+        validators: [Validators.required]
+      }],
+      frequency: ['', {
+        validators: [Validators.required]
+      }],
+      target_amount: ['', {
+        validators: [Validators.required, Validators.min(1)]
+      }],
       current_amount: [''],
       description: [''],
       created_at: [''],
@@ -59,10 +67,36 @@ export class UpdateSaving implements OnInit{
   }
 
   updateSaving() {
-    this.savingService.updateSaving(this.savingId(), this.updateSavingForm.value)
-      .subscribe(() => {
-        this.getSavingsData();
-        this.router.navigate(['/savings/view-saving', this.savingId()]);
-      });
+    const updatedSaving = this.updateSavingForm.value as Saving;
+
+    if (!this.updateSavingForm.valid) {
+      this.updateSavingForm.markAllAsTouched();
+      console.error('Form is invalid');
+      return;
+    };
+
+    this.savingService.updateSaving(this.savingId(), updatedSaving)
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/savings'], 
+            { 
+              state: { 
+                toastMessage: 'Saving updated successfully!',
+                toastType: 'success' 
+            } 
+          });
+        },
+        error: (err) => {
+        console.error('Error updating saving:', err);
+
+        this.router.navigate(['/savings'], 
+          { 
+            state: { 
+              toastMessage: 'Error updating saving. Please try again.',
+              toastType: 'error' 
+          } 
+        });
+      }
+    });
   }
 }

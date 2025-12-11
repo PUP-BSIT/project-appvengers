@@ -15,6 +15,15 @@
           id="saving_name" 
           formControlName="name"
           placeholder="Enter saving name">
+
+        <!-- Validator Indicator -->
+        @if(updateSavingForm.get('name')?.touched && 
+          updateSavingForm.get('name')?.invalid) 
+        {
+          <div class="text-danger mt-1">
+            Saving Name is required.
+          </div>
+        }
       </div>
   
       <div class="mb-3">
@@ -25,6 +34,21 @@
           id="target_amount" 
           formControlName="target_amount"
           placeholder="Enter target amount">
+
+        <!-- Validator Indicator -->
+        @if(updateSavingForm.get('target_amount')?.touched && 
+          updateSavingForm.get('target_amount')?.invalid)
+        {
+          @if(updateSavingForm.get('target_amount')?.errors?.['required']) {
+            <div class="text-danger mt-1">
+              Target Amount is required.
+            </div>
+          } @else if(updateSavingForm.get('target_amount')?.errors?.['min']) {
+            <div class="text-danger mt-1">
+              Target Amount must be at least 1.
+            </div>
+          }
+        }
       </div>
 
       <div class="mb-3">
@@ -35,6 +59,15 @@
           <option value="Weekly">Weekly</option>
           <option value="Monthly">Monthly</option>
         </select>
+
+        <!-- Validator Indicator -->
+        @if(updateSavingForm.get('frequency')?.touched &&
+          updateSavingForm.get('frequency')?.invalid) 
+        {
+          <div class="text-danger mt-1">
+            Frequency is required.
+          </div>
+        }
       </div>
 
       <div class="mb-3">
@@ -44,6 +77,15 @@
           class="form-control" 
           formControlName="goal_date"
           id="goal_date">
+
+        <!-- Validator Indicator -->
+        @if(updateSavingForm.get('goal_date')?.touched &&
+          updateSavingForm.get('goal_date')?.invalid) 
+        {
+          <div class="text-danger mt-1">
+            Goal Date is required.
+          </div>
+        }
       </div>
   
       <div class="mb-3">

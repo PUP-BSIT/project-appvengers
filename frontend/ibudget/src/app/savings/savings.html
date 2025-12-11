@@ -72,9 +72,13 @@
       }
     </div>
 
-    <!-- Success Toast -->
+    <!-- Toast -->
     <div class="toast-container">
-      <div #savingsToast class="toast align-items-center text-bg-success border-0">
+      <div #savingsToast 
+          class="toast align-items-center border-0"
+          [ngClass]="{ 
+            'text-bg-success': toastType() === 'success', 
+            'text-bg-danger': toastType() === 'error' }">
         <div class="d-flex justify-content-between">
           <div class="toast-body" role="alert">
             <span>{{ toastMessage() }}</span>
