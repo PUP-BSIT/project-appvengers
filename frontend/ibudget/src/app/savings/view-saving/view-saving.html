@@ -189,10 +189,22 @@
 
       <!-- Pagination controls -->
       @if(transactionHistories().length > 0) {
-        <nav aria-label="pagination" class="d-flex justify-content-between align-items-center px-2">
-          <button class="btn btn-outline-secondary btn-sm" (click)="prevPage()" [disabled]="currentPage() === 1">Prev</button>
-          <span class="mx-2">Page {{ currentPage() }} of {{ pageCount() }}</span>
-          <button class="btn btn-outline-secondary btn-sm" (click)="nextPage()" [disabled]="currentPage() === pageCount()">Next</button>
+        <nav 
+          aria-label="pagination" 
+            class="d-flex justify-content-between align-items-center px-2">
+          <button 
+            class="btn btn-outline-secondary btn-sm" 
+            (click)="prevPage()" 
+            [disabled]="currentPage() === 1">Prev</button>
+
+          <span class="mx-2">
+            Page {{ currentPage() }} of {{ pageCount() }}
+          </span>
+
+          <button 
+            class="btn btn-outline-secondary btn-sm" 
+            (click)="nextPage()" 
+            [disabled]="currentPage() === pageCount()">Next</button>
         </nav>
       }
 
