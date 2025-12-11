@@ -1,3 +1,6 @@
+// State passed from add-saving
+export interface SavingsNavState { toastMessage?: string }
+
 export type User = {
   id: number;
   username: string;
