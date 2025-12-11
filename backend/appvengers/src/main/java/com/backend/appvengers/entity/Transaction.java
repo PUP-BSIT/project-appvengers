@@ -31,6 +31,11 @@ public class Transaction {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    //Reference to Budget (using budget_id as foreign key)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "budget_id")
+    private Budget budget;
+
     @NotNull
     @Column(nullable = false)
     private BigDecimal amount;
