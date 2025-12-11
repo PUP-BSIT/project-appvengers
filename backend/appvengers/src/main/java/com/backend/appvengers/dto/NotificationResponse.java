@@ -40,19 +40,33 @@ public class NotificationResponse {
             response.setDate(createdAt.toLocalDate().toString());
         }
 
-        // Map notification type to frontend type
-        switch (notification.getType()) {
-            case BUDGET_WARNING:
-                response.setType("info");
-                break;
-            case BUDGET_EXCEEDED:
-                response.setType("warning");
-                break;
-            case SAVINGS_DEADLINE:
-                response.setType("alert");
-                break;
-            default:
-                response.setType("info");
+        // Map notification urgency to frontend type (color)
+        // LOW = info (blue), MEDIUM = warning (yellow), HIGH = alert (red)
+        if (notification.getUrgency() != null) {
+            switch (notification.getUrgency()) {
+                case LOW:
+                    response.setType("info");
+                    break;
+                case MEDIUM:
+                    response.setType("warning");
+                    break;
+                case HIGH:
+                    response.setType("alert");
+                    break;
+                default:
+                    response.setType("info");
+            }
+        } else {
+            // Fallback based on notification type if urgency not set
+            switch (notification.getType()) {
+                case BUDGET_EXCEEDED:
+                    response.setType("warning");
+                    break;
+                case BUDGET_WARNING:
+                case SAVINGS_DEADLINE:
+                default:
+                    response.setType("info");
+            }
         }
 
         return response;

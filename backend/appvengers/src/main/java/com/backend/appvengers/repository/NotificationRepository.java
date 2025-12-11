@@ -25,9 +25,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Query("UPDATE Notification n SET n.isRead = true, n.readAt = CURRENT_TIMESTAMP WHERE n.userId = :userId AND n.isRead = false")
     void markAllAsReadByUserId(@Param("userId") int userId);
 
-    // Check if a notification already exists to avoid duplicates
-    @Query("SELECT COUNT(n) > 0 FROM Notification n WHERE n.userId = :userId AND n.type = :type AND n.referenceId = :referenceId AND n.isRead = false")
-    boolean existsUnreadNotification(
+    // Check if a notification already exists (read or unread) to avoid duplicates
+    @Query("SELECT COUNT(n) > 0 FROM Notification n WHERE n.userId = :userId AND n.type = :type AND n.referenceId = :referenceId")
+    boolean existsNotification(
             @Param("userId") int userId,
             @Param("type") NotificationType type,
             @Param("referenceId") Integer referenceId);
