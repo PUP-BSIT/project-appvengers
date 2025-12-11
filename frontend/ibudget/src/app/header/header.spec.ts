@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
+import { signal } from '@angular/core';
 
 import { Header } from './header';
 import { ChatbotService } from '../chatbot-sidebar/chatbot.service';
@@ -12,14 +13,18 @@ describe('Header', () => {
   let chatbotService: jasmine.SpyObj<ChatbotService>;
 
   beforeEach(async () => {
-    const chatbotServiceSpy = jasmine.createSpyObj('ChatbotService', ['toggle']);
+    // Create a mock ChatbotService with a signal for isOpen
+    const chatbotServiceMock = {
+      toggle: jasmine.createSpy('toggle'),
+      isOpen: signal(false)
+    };
 
     await TestBed.configureTestingModule({
       imports: [Header],
       providers: [
         provideRouter([]),
         provideHttpClient(),
-        { provide: ChatbotService, useValue: chatbotServiceSpy }
+        { provide: ChatbotService, useValue: chatbotServiceMock }
       ]
     })
     .compileComponents();

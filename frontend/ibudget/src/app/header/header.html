@@ -27,7 +27,7 @@
     </div>
 
     <div class="chatbot-nav">
-      <button class="chatbot-btn" (click)="toggleChatbot()">
+      <button class="chatbot-btn" (click)="toggleChatbot()" [class.active]="isChatbotOpen()">
         <i class="bi bi-chat-dots-fill"></i>
         <span>Ask Bonzi</span>
       </button>
