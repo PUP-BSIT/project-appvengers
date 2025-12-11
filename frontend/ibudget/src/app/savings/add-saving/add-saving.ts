@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, output, signal } from '@angular/core';
+import { Component, inject, OnInit, output, signal, } from '@angular/core';
 import { Sidebar } from "../../sidebar/sidebar";
 import { Header } from "../../header/header";
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -66,9 +66,12 @@ export class AddSaving implements OnInit {
     const newSaving: Saving = this.addSavingForm.value;
     
     this.savingService.addSaving(newSaving)
-      .subscribe(() => {
-        console.log('New saving added successfully', newSaving);
-        this.router.navigate(['/savings']);
+      .subscribe({
+        next: () => {
+          // Navigate to savings with success toast state
+          this.router.navigate(['/savings'], 
+            { state: { toastMessage: 'Saving added successfully!' } });
+        }
       });
   }
 }
