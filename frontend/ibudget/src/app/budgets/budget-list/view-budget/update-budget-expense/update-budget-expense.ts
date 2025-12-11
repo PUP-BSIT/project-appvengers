@@ -44,6 +44,7 @@ export class UpdateBudgetExpense implements OnInit {
       budgetId: [''],
       transaction_date: [''], 
       description: [''],
+      category_id: [''],
       amount: [''],
       type: ['expense']
     });
