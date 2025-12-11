@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
 import { Notification } from '../../models/user.model';
@@ -11,8 +11,12 @@ import { NotificationService } from '../../services/notification';
   templateUrl: './notifications.html',
   styleUrl: './notifications.scss',
 })
-export class Notifications {
-  constructor(private notificationService: NotificationService) {}
+export class Notifications implements OnInit {
+  constructor(private notificationService: NotificationService) { }
+
+  ngOnInit() {
+    this.notificationService.fetchNotifications();
+  }
 
   get notifications(): Notification[] {
     return this.notificationService.notifications;
