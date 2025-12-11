@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { Sidebar } from "../../sidebar/sidebar";
 import { Header } from "../../header/header";
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -11,6 +11,7 @@ import { SavingProgress } from "../saving-progress/saving-progress";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import { SavingTransactionService } from '../../../services/saving-transaction.service';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-view-saving',
@@ -28,6 +29,9 @@ import { SavingTransactionService } from '../../../services/saving-transaction.s
   styleUrls: ['./view-saving.scss'],
 })
 export class ViewSaving implements OnInit{
+  @ViewChild('deleteSavingModal') deleteSavingModal!: ElementRef;
+  @ViewChild('deleteSavingModalBtn') 
+    deleteSavingModalBtn!: ElementRef<HTMLButtonElement>;
   transactionHistories = signal(<SavingTransaction[]>[]);
   filteredTransactions = signal(<SavingTransaction[]>[]);
   transactionsCount = signal(0);
@@ -132,8 +136,27 @@ export class ViewSaving implements OnInit{
 
   // Delete the current view saving
   deleteSaving() {
-    this.savingService.deleteSaving(this.savingId()).subscribe(() => {
-      this.router.navigate(['/savings']);
+    this.savingService.deleteSaving(this.savingId()).subscribe({
+      next: () => {
+        this.closeDeleteModal();
+        this.router.navigate(['/savings'], {
+          state: {
+            toastMessage: 'Saving deleted successfully!',
+            toastType: 'success'
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Error deleting saving:', error);
+
+        this.closeDeleteModal();
+        this.router.navigate(['/savings'], {
+          state: {
+            toastMessage: 'Error deleting saving. Please try again.',
+            toastType: 'error'
+          }
+        });
+      }
     });
   }
 
@@ -190,5 +213,17 @@ export class ViewSaving implements OnInit{
         console.error('Failed to refresh current amount', err);
       }
     });
+  }
+
+  openDeleteModal() {
+    const modal = new Modal(this.deleteSavingModal.nativeElement);
+    modal.show();
+  }
+
+  closeDeleteModal() {
+    const modal = Modal.getInstance(this.deleteSavingModal.nativeElement);
+    modal?.hide();
+
+    this.deleteSavingModalBtn.nativeElement.focus();
   }
 }
