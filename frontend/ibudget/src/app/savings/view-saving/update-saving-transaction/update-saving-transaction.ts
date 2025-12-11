@@ -110,6 +110,10 @@ export class UpdateSavingTransaction {
         next: (updatedTransaction) => {
           this.updatedTransaction.emit(updatedTransaction);
           this.closeModal();
+        },
+        error: (err) => {
+          console.error('Error updating transaction:', err);
+          this.closeModal();
         }
       });
     }

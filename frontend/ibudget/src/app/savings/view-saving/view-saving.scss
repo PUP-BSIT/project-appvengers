@@ -109,6 +109,15 @@ main {
   }
 }
 
+// For toast notification
+.toast-container {
+  position: fixed;
+  top: 500px;
+  right: 15px;
+  z-index: 9999;
+  padding: 10px;
+}
+
 @media (min-width: 320px) and (max-width: 480px) {
   main {
     margin-left: 0;
