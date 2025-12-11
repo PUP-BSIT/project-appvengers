@@ -1,6 +1,7 @@
 package com.backend.appvengers.controller;
 
 import com.backend.appvengers.dto.ApiResponse;
+import com.backend.appvengers.dto.BudgetExpenseRequest;
 import com.backend.appvengers.dto.ExpenseSummary;
 import com.backend.appvengers.dto.IncomeSummary;
 import com.backend.appvengers.dto.MonthlyReportResponse;
@@ -117,5 +118,14 @@ public class TransactionController {
                 new ApiResponse(false, "Error fetching reports: " + e.getMessage(), null)
             );
         }
+    }
+
+    // Budget Transaction endpoint
+    @PostMapping("/budget-transactions")
+    public ResponseEntity<ApiResponse> createBudgetExpense(
+        @RequestBody BudgetExpenseRequest req) {
+
+        Transaction tx = transactionService.createBudgetExpense(req);
+        return ResponseEntity.ok(ApiResponse.success(tx));
     }
 }
