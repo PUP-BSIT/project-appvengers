@@ -40,6 +40,11 @@ export class ViewSaving implements OnInit{
   transactionHistories = signal(<SavingTransaction[]>[]);
   filteredTransactions = signal(<SavingTransaction[]>[]);
   transactionsCount = signal(0);
+  // Pagination state
+  pageSize = 5;
+  currentPage = signal(1);
+  paginatedTransactions = signal(<SavingTransaction[]>[]);
+  pageCount = signal(1);
   currentSaving = signal(<Saving>{});
   historyService = inject(HistoryService);
   savingService = inject(SavingsService);
@@ -133,6 +138,7 @@ export class ViewSaving implements OnInit{
       next: (transactionData) => {
         this.transactionHistories.set(transactionData);
         this.transactionsCount.set(transactionData.length);
+        this.updatePagination();
       }
     })
   }
@@ -195,6 +201,9 @@ export class ViewSaving implements OnInit{
           transactions.filter(transaction => 
               transaction.id !== this.selectedTransactionId())
         );
+        
+        this.transactionsCount.set(this.transactionHistories().length);
+        this.updatePagination();
 
         // Close modal
         this.closeDeleteTransactionModal();
@@ -232,6 +241,7 @@ export class ViewSaving implements OnInit{
 
     // update total and filtered list
     this.transactionsCount.set(updated.length);
+    this.updatePagination();
 
     // show success toast without navigation
     this.toastMessage.set('Transaction added successfully!');
@@ -251,6 +261,7 @@ export class ViewSaving implements OnInit{
     this.refreshCurrentAmount();
 
     this.transactionHistories.set(updatedTransactions);
+    this.updatePagination();
 
     // show success toast without navigation
     this.toastMessage.set('Transaction updated successfully!');
@@ -271,6 +282,26 @@ export class ViewSaving implements OnInit{
       }
     });
   }
+
+  // Pagination helpers
+  updatePagination() {
+    const total = this.transactionHistories().length;
+    const pages = Math.max(1, Math.ceil(total / this.pageSize));
+    this.pageCount.set(pages);
+    const page = Math.min(this.currentPage(), pages);
+    const start = (page - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedTransactions.set(this.transactionHistories().slice(start, end));
+  }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.pageCount()) return;
+    this.currentPage.set(page);
+    this.updatePagination();
+  }
+
+  nextPage() { this.goToPage(this.currentPage() + 1); }
+  prevPage() { this.goToPage(this.currentPage() - 1); }
 
   openDeleteModal() {
     const modal = new Modal(this.deleteSavingModal.nativeElement);
