@@ -39,6 +39,7 @@ export class Header implements OnInit {
 
   ngOnInit(): void {
     this.loadUserProfile();
+    this.notificationService.fetchNotifications();
   }
 
   private loadUserProfile(): void {
