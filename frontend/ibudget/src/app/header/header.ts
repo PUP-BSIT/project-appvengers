@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/ro
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../services/notification';
 import { SidebarService } from '../../services/sidebar.service';
+import { ChatbotService } from '../chatbot-sidebar/chatbot.service';
 import { AuthService } from '../../services/auth.service';
 import { filter, map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -16,6 +17,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class Header implements OnInit {
   private notificationService = inject(NotificationService);
   private sidebarService = inject(SidebarService);
+  private chatbotService = inject(ChatbotService);
   private router = inject(Router);
   private authService = inject(AuthService);
 
@@ -71,6 +73,10 @@ export class Header implements OnInit {
     this.sidebarService.toggle();
   }
 
+  toggleChatbot() {
+    this.chatbotService.toggle();
+  }
+
   toggleProfileMenu() {
     this.showProfileMenu.set(!this.showProfileMenu());
   }
@@ -111,3 +117,4 @@ export class Header implements OnInit {
     }
   }
 }
+
