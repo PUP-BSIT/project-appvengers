@@ -1,9 +1,7 @@
 package com.backend.appvengers.entity;
 
 import java.time.LocalDateTime;
-
 import org.hibernate.annotations.CreationTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,9 +22,15 @@ import lombok.NoArgsConstructor;
 public class Notification {
 
     public enum NotificationType {
-        BUDGET_WARNING, // 10-20% budget remaining
-        BUDGET_EXCEEDED, // Expenses exceeded budget
-        SAVINGS_DEADLINE // Savings goal date approaching
+        BUDGET_WARNING,
+        BUDGET_EXCEEDED,
+        SAVINGS_DEADLINE
+    }
+
+    public enum Urgency {
+        LOW,
+        MEDIUM,
+        HIGH
     }
 
     @Id
@@ -41,6 +45,10 @@ public class Notification {
     @Column(name = "type", nullable = false)
     private NotificationType type;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "urgency")
+    private Urgency urgency;
+
     @Column(name = "title", nullable = false)
     private String title;
 
@@ -48,7 +56,7 @@ public class Notification {
     private String message;
 
     @Column(name = "reference_id")
-    private Integer referenceId; // budget_id or saving_id
+    private Integer referenceId;
 
     @Column(name = "amount")
     private Double amount;

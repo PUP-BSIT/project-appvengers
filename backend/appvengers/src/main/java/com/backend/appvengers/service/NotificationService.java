@@ -14,6 +14,7 @@ import com.backend.appvengers.dto.NotificationResponse;
 import com.backend.appvengers.entity.Budget;
 import com.backend.appvengers.entity.Notification;
 import com.backend.appvengers.entity.Notification.NotificationType;
+import com.backend.appvengers.entity.Notification.Urgency;
 import com.backend.appvengers.entity.Category;
 import com.backend.appvengers.entity.Saving;
 import com.backend.appvengers.entity.User;
@@ -123,7 +124,7 @@ public class NotificationService {
      */
     private void createBudgetExceededNotification(int userId, Budget budget, String categoryName, double totalSpent) {
         // Check if notification already exists
-        if (notificationRepository.existsUnreadNotification(userId, NotificationType.BUDGET_EXCEEDED,
+        if (notificationRepository.existsNotification(userId, NotificationType.BUDGET_EXCEEDED,
                 budget.getBudgetId())) {
             return;
         }
@@ -131,6 +132,7 @@ public class NotificationService {
         Notification notification = new Notification();
         notification.setUserId(userId);
         notification.setType(NotificationType.BUDGET_EXCEEDED);
+        notification.setUrgency(Urgency.HIGH); // Exceeded = high urgency
         notification.setTitle("Budget Exceeded");
         notification.setMessage(String.format(
                 "You've exceeded your %s budget. Spent ₱%.2f of ₱%d limit.",
@@ -149,7 +151,7 @@ public class NotificationService {
     private void createBudgetWarningNotification(int userId, Budget budget, String categoryName, double totalSpent,
             double remainingPercent) {
         // Check if notification already exists
-        if (notificationRepository.existsUnreadNotification(userId, NotificationType.BUDGET_WARNING,
+        if (notificationRepository.existsNotification(userId, NotificationType.BUDGET_WARNING,
                 budget.getBudgetId())) {
             return;
         }
@@ -157,6 +159,7 @@ public class NotificationService {
         Notification notification = new Notification();
         notification.setUserId(userId);
         notification.setType(NotificationType.BUDGET_WARNING);
+        notification.setUrgency(Urgency.MEDIUM); // Warning = medium urgency
         notification.setTitle("Budget Warning");
         notification.setMessage(String.format(
                 "You're close to exceeding your %s budget. Only %.0f%% remaining (₱%.2f of ₱%d).",
@@ -173,13 +176,26 @@ public class NotificationService {
      * Create a notification for approaching savings deadline.
      */
     private void createSavingsDeadlineNotification(int userId, Saving saving, long daysRemaining) {
-        // Check if notification already exists
-        if (notificationRepository.existsUnreadNotification(userId, NotificationType.SAVINGS_DEADLINE,
+        // Determine urgency based on days remaining
+        // 7 days = LOW (blue/info)
+        // 3 days = MEDIUM (yellow/warning)
+        // 1 day = HIGH (red/alert)
+        Urgency urgencyLevel;
+        if (daysRemaining == 7) {
+            urgencyLevel = Urgency.LOW;
+        } else if (daysRemaining == 3) {
+            urgencyLevel = Urgency.MEDIUM;
+        } else {
+            urgencyLevel = Urgency.HIGH;
+        }
+
+        // Check if notification already exists (read or unread)
+        if (notificationRepository.existsNotification(userId, NotificationType.SAVINGS_DEADLINE,
                 saving.getSavingId())) {
             return;
         }
 
-        String urgency = daysRemaining == 1 ? "Tomorrow" : daysRemaining + " days";
+        String timeLabel = daysRemaining == 1 ? "Tomorrow" : daysRemaining + " days";
         double progress = saving.getTargetAmount() > 0
                 ? ((double) saving.getCurrentAmount() / saving.getTargetAmount()) * 100
                 : 0;
@@ -187,10 +203,11 @@ public class NotificationService {
         Notification notification = new Notification();
         notification.setUserId(userId);
         notification.setType(NotificationType.SAVINGS_DEADLINE);
+        notification.setUrgency(urgencyLevel);
         notification.setTitle("Savings Goal Reminder");
         notification.setMessage(String.format(
                 "Your \"%s\" savings goal is due in %s! Currently at %.0f%% (₱%d of ₱%d).",
-                saving.getName(), urgency, progress, saving.getCurrentAmount(), saving.getTargetAmount()));
+                saving.getName(), timeLabel, progress, saving.getCurrentAmount(), saving.getTargetAmount()));
         notification.setReferenceId(saving.getSavingId());
         notification.setAmount((double) saving.getTargetAmount() - saving.getCurrentAmount());
         notification.setCategory(saving.getName());

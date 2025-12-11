@@ -31,19 +31,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/change-password").authenticated()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/budgets/**").authenticated()
-                .requestMatchers("/api/transactions/**").authenticated()
-                .requestMatchers("/api/expenses/**").authenticated()
-                .requestMatchers("/api/savings/**").authenticated()
-                .requestMatchers("/api/categories/**").authenticated()
-                .anyRequest().authenticated())
-            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/change-password").authenticated()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/budgets/**").authenticated()
+                        .requestMatchers("/api/transactions/**").authenticated()
+                        .requestMatchers("/api/expenses/**").authenticated()
+                        .requestMatchers("/api/savings/**").authenticated()
+                        .requestMatchers("/api/categories/**").authenticated()
+                        .requestMatchers("/api/notifications/**").authenticated()
+                        .anyRequest().authenticated())
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -52,9 +53,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:4200",           // Development
-            "https://i-budget.site",           // Production
-            "https://www.i-budget.site"        // Production (www)
+                "http://localhost:4200", // Development
+                "https://i-budget.site", // Production
+                "https://www.i-budget.site" // Production (www)
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
