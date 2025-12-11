@@ -7,7 +7,7 @@ import { BudgetTransaction } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class BudgetTransactionsService {
-  private base = `${environment.apiUrl}/budget-transactions`;
+  private base = `${environment.apiUrl}/transactions/budget-transactions`;
 
   constructor(private http: HttpClient) {}
 
