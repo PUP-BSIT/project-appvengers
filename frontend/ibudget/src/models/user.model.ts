@@ -1,5 +1,8 @@
 // State passed from add-saving
-export interface SavingsNavState { toastMessage?: string }
+export interface SavingsNavState { 
+  toastMessage?: string; 
+  toastType?: 'success' | 'error'; 
+}
 
 export type User = {
   id: number;
