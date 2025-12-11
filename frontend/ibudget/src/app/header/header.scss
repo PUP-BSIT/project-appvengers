@@ -126,7 +126,7 @@ $card-drop-shadow: #00000040;
   }
 }
 
-.chatbot-nav {
+  .chatbot-nav {
   display: flex;
   align-items: center;
 
@@ -135,14 +135,14 @@ $card-drop-shadow: #00000040;
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
-    background-color: #3498db;
-    border: none;
+    background-color: #ffffff;
+    border: 1px solid #3498db;
     border-radius: 20px;
-    color: white;
+    color: #3498db;
     cursor: pointer;
     font-weight: 500;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.1);
 
     i {
       font-size: 16px;
@@ -154,9 +154,19 @@ $card-drop-shadow: #00000040;
     }
 
     &:hover {
-      background-color: #2980b9;
+      background-color: #f0f7fb;
       transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+    }
+
+    &.active {
+      background-color: #3498db;
+      color: white;
       box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3);
+      
+      &:hover {
+        background-color: #2980b9;
+      }
     }
 
     &:active {

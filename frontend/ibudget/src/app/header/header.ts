@@ -21,6 +21,7 @@ export class Header implements OnInit {
   private router = inject(Router);
   private authService = inject(AuthService);
 
+  isChatbotOpen = this.chatbotService.isOpen;
   username = signal<string>('');
   userId = signal<number>(0);
   showProfileMenu = signal<boolean>(false);
