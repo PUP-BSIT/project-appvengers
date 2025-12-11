@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-
+import { provideHttpClient } from '@angular/common/http'; // <--- Import this
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { UpdateBudgetExpense } from './update-budget-expense';
 
 describe('UpdateBudgetExpense', () => {
@@ -17,6 +18,8 @@ describe('UpdateBudgetExpense', () => {
     await TestBed.configureTestingModule({
       imports: [UpdateBudgetExpense],
       providers: [
+        provideHttpClient(),        // <--- Add this
+        provideHttpClientTesting(), // <--- Add this
         { provide: ActivatedRoute, useValue: activatedRouteStub }
       ]
     })
