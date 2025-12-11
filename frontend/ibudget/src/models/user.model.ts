@@ -81,6 +81,16 @@ export type ReportRecord = {
   report: string;
 }
 
+export type MonthlyReport = {
+  monthName: string;
+  month: number;
+  year: number;
+  totalSpent: number;
+  totalIncome: number;
+  expenseByCategory: { [key: string]: number };
+  incomeByCategory: { [key: string]: number };
+}
+
 export type Category = {
   id: number;
   userId: number;
