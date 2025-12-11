@@ -182,7 +182,6 @@ export type BudgetTransaction = {
   transaction_id: number;
   budget_id?: number;
   user_id?: number;
-  category_id?: number;
   transaction_date?: string;
   created_at: string;
   updated_at: string;
