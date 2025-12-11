@@ -3,7 +3,6 @@ import { RoundProgressComponent } from 'angular-svg-round-progressbar';
 import { Budget } from '../../../models/user.model';
 import { DecimalPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { MockupsService } from '../../../services/mockups.service';
 import { BudgetService } from '../../../services/budget.service';
 
 @Component({
