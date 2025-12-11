@@ -37,9 +37,9 @@ export type ApiResponse<T = any> = {
 
 // Model for account setup verification response
 export type AccountSetupResponse = {
-  firstname: string; 
-  middlename: string; 
-  lastname: string; 
+  firstname: string;
+  middlename: string;
+  lastname: string;
   birthdate: string;
   gender: string;
 }
@@ -71,6 +71,7 @@ export type Notification = {
   type: 'warning' | 'info' | 'alert';
   read: boolean;
   category?: string;
+  savingName?: string;
 }
 
 export type ReportRecord = {
@@ -101,7 +102,7 @@ export type Category = {
 export type Budget = {
   id: number;
   category_id?: number;
-  category_name: string;  
+  category_name: string;
   limit_amount: number;
   savings_goal?: number;
   start_date: string;

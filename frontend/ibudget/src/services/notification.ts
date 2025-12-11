@@ -1,59 +1,69 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Notification } from '../models/user.model';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  notifications: Notification[] = [
-    {
-      id: 1,
-      title: "Budget Exceeded",
-      message: "You've exceeded your Food budget for this month",
-      date: "Jan 1, 2018",
-      amount: 15000,
-      type: 'warning',
-      read: false,
-      category: 'Food'
-    },
-    {
-      id: 2,
-      title: "Bill Reminder",
-      message: "Your electricity bill is due in 3 days",
-      date: "Sep 9, 2022",
-      amount: 10000,
-      type: 'alert',
-      read: false,
-      category: 'Bills'
-    },
-    {
-      id: 3,
-      title: "Budget Warning",
-      message: "You're close to exceeding your Entertainment budget",
-      date: "Oct 10, 2022",
-      amount: 5000,
-      type: 'info',
-      read: true,
-      category: 'Entertainment'
-    }
-  ];
+  private apiUrl = `${environment.apiUrl}/notifications`;
+
+  private notificationsSubject = new BehaviorSubject<Notification[]>([]);
+  public notifications$ = this.notificationsSubject.asObservable();
+
+  constructor(private http: HttpClient) { }
+
+  fetchNotifications(): void {
+    this.http.get<Notification[]>(this.apiUrl)
+      .subscribe({
+        next: (data) => this.notificationsSubject.next(data),
+        error: (error) => console.error('Error fetching notifications:', error)
+      });
+  }
+
+  get notifications(): Notification[] {
+    return this.notificationsSubject.value;
+  }
 
   getUnreadCount(): number {
     return this.notifications.filter(notification => !notification.read).length;
   }
 
-  markAsRead(notification: Notification) {
-    notification.read = true;
-  }
-
-  markAllAsRead() {
-    this.notifications.forEach(notification => notification.read = true);
-  }
-
-  deleteNotification(id: number) {
-    this.notifications = this.notifications.filter(
-      notification => notification.id !== id
+  markAsRead(notification: Notification): void {
+    // Optimistic update
+    const updatedNotifications = this.notifications.map(n =>
+      n.id === notification.id ? { ...n, read: true } : n
     );
+    this.notificationsSubject.next(updatedNotifications);
+
+    this.http.put<void>(`${this.apiUrl}/${notification.id}/read`, {}).subscribe({
+      error: (error) => {
+        console.error('Error marking notification as read:', error);
+        // Revert on error if needed, or just let the next fetch fix it
+      }
+    });
+  }
+
+  markAllAsRead(): void {
+    // Optimistic update
+    const updatedNotifications = this.notifications.map(n => ({ ...n, read: true }));
+    this.notificationsSubject.next(updatedNotifications);
+
+    this.http.put<void>(`${this.apiUrl}/mark-all-read`, {}).subscribe({
+      error: (error) => console.error('Error marking all as read:', error)
+    });
+  }
+
+  deleteNotification(id: number): void {
+    // Optimistic update
+    const updatedNotifications = this.notifications.filter(n => n.id !== id);
+    this.notificationsSubject.next(updatedNotifications);
+
+    this.http.delete<void>(`${this.apiUrl}/${id}`).subscribe({
+      error: (error) => console.error('Error deleting notification:', error)
+    });
   }
 
   getWarningCount(): number {
