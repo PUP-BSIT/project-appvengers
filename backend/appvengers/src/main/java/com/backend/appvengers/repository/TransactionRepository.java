@@ -15,15 +15,16 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     List<Transaction> findByUser(User user);
 
+    //Finds transactions linked to a budget (only non-deleted)
+    List<Transaction> findByBudget_BudgetIdAndDeletedAtIsNull(Integer budgetId);
+
     // Fetch transactions without a linked saving (saving_id is NULL), only non-deleted for a user
     @Query("""
         SELECT t
         FROM Transaction t
         WHERE t.user = :user AND t.deletedAt IS NULL AND t.saving IS NULL AND t.budget IS NULL
     """)
-    //Finds transactions linked to a budget
-    List<Transaction> findByBudget_BudgetIdAndDeletedFalse(Integer budgetId);
-    List<Transaction> findByUserAndDeletedFalseAndSavingIsNull(@Param("user") User user);
+    List<Transaction> findByUserAndDeletedAtIsNullAndSavingIsNull(@Param("user") User user);
 
     // Expense summary - only non-deleted transactions
     @Query("""
