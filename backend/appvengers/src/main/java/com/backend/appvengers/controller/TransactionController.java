@@ -5,6 +5,7 @@ import com.backend.appvengers.dto.BudgetExpenseRequest;
 import com.backend.appvengers.dto.ExpenseSummary;
 import com.backend.appvengers.dto.IncomeSummary;
 import com.backend.appvengers.dto.MonthlyReportResponse;
+import com.backend.appvengers.entity.Transaction;
 import com.backend.appvengers.dto.TransactionRequest;
 import com.backend.appvengers.dto.TransactionResponse;
 import com.backend.appvengers.service.TransactionService;
@@ -123,9 +124,27 @@ public class TransactionController {
     // Budget Transaction endpoint
     @PostMapping("/budget-transactions")
     public ResponseEntity<ApiResponse> createBudgetExpense(
-        @RequestBody BudgetExpenseRequest req) {
+            @RequestBody BudgetExpenseRequest req) {
+                
+        try {
+            Transaction tx = transactionService.createBudgetExpense(req);
 
-        Transaction tx = transactionService.createBudgetExpense(req);
-        return ResponseEntity.ok(ApiResponse.success(tx));
-    }
+            return ResponseEntity.ok(
+                new ApiResponse(
+                    true,
+                    "Budget expense created successfully",
+                    tx
+                )
+            );
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(
+                new ApiResponse(
+                    false,
+                    e.getMessage(),
+                    null
+                )
+            );
+        }
+    } 
 }

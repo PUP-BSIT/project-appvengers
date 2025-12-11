@@ -1,12 +1,15 @@
 package com.backend.appvengers.service;
 
+import com.backend.appvengers.dto.BudgetExpenseRequest;
 import com.backend.appvengers.dto.ExpenseSummary;
 import com.backend.appvengers.dto.IncomeSummary;
 import com.backend.appvengers.dto.MonthlyReportResponse;
 import com.backend.appvengers.dto.TransactionRequest;
 import com.backend.appvengers.dto.TransactionResponse;
+import com.backend.appvengers.entity.Budget;
 import com.backend.appvengers.entity.Transaction;
 import com.backend.appvengers.entity.User;
+import com.backend.appvengers.repository.BudgetRepository;
 import com.backend.appvengers.repository.TransactionRepository;
 import com.backend.appvengers.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,7 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
+    private final BudgetRepository budgetRepository;
 
     public List<TransactionResponse> findAllForUser(String email) {
         User user = userRepository.findByEmail(email)
@@ -219,5 +223,25 @@ public class TransactionService {
                 t.getDescription(),
                 t.getTransactionDate()
         );
+    }
+
+    @Transactional
+    public Transaction createBudgetExpense(BudgetExpenseRequest req) {
+
+        Budget budget = budgetRepository.findById(req.budget_id())
+            .orElseThrow(() -> new RuntimeException("Budget not found"));
+
+        User user = userRepository.findById((long)budget.getUserId())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Transaction tx = new Transaction();
+        tx.setBudget(budget);
+        tx.setUser(user);
+        tx.setTransactionDate(req.transaction_date());
+        tx.setDescription(req.description());
+        tx.setAmount(req.amount());
+        tx.setType("expense");
+
+        return transactionRepository.save(tx);
     }
 }
