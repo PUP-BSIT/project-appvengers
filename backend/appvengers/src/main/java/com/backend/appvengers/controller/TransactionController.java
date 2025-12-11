@@ -122,7 +122,7 @@ public class TransactionController {
         }
     }
 
-    // Budget Transaction endpoint
+    // Budget Transaction endpoint [POST]
     @PostMapping("/budget-transactions")
     public ResponseEntity<ApiResponse> createBudgetExpense(
             @RequestBody BudgetExpenseRequest req) {
@@ -149,4 +149,14 @@ public class TransactionController {
             );
         }
     } 
+
+    // Budget Transaction endpoint [GET]
+    @GetMapping("/budget-transactions/budget/{budgetId}")
+    public ResponseEntity<ApiResponse> getBudgetExpenses(@PathVariable Integer budgetId) {
+        List<BudgetExpenseResponse> list = transactionService.findByBudgetId(budgetId);
+
+        return ResponseEntity.ok(
+            new ApiResponse(true, "Budget expenses fetched", list)
+        );
+    }
 }
