@@ -3,7 +3,7 @@ import { Sidebar } from "../../sidebar/sidebar";
 import { Header } from "../../header/header";
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HistoryService } from '../../../services/history';
-import { BackendSaving, Saving, SavingTransaction } from '../../../models/user.model';
+import { BackendSaving, Saving, SavingsNavState, SavingTransaction } from '../../../models/user.model';
 import { SavingsService } from '../../../services/savings.service';
 import { AddSavingTransaction } from "./add-saving-transaction/add-saving-transaction";
 import { UpdateSavingTransaction } from "./update-saving-transaction/update-saving-transaction";
@@ -11,7 +11,7 @@ import { SavingProgress } from "../saving-progress/saving-progress";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import { SavingTransactionService } from '../../../services/saving-transaction.service';
-import { Modal } from 'bootstrap';
+import { Modal, Toast } from 'bootstrap';
 
 @Component({
   selector: 'app-view-saving',
@@ -29,9 +29,14 @@ import { Modal } from 'bootstrap';
   styleUrls: ['./view-saving.scss'],
 })
 export class ViewSaving implements OnInit{
+  @ViewChild('viewSavingToast', { static: true }) viewSavingToast!: ElementRef;
   @ViewChild('deleteSavingModal') deleteSavingModal!: ElementRef;
   @ViewChild('deleteSavingModalBtn') 
     deleteSavingModalBtn!: ElementRef<HTMLButtonElement>;
+  @ViewChild('deleteSavingTransactionModal') 
+    deleteSavingTransactionModal!: ElementRef;
+  @ViewChild('deleteTransactionBtn') 
+    deleteTransactionBtn!: ElementRef<HTMLButtonElement>;
   transactionHistories = signal(<SavingTransaction[]>[]);
   filteredTransactions = signal(<SavingTransaction[]>[]);
   transactionsCount = signal(0);
@@ -46,6 +51,9 @@ export class ViewSaving implements OnInit{
   currentAmount = signal(0);
   dateStarted = signal(new Date());
   isLoading = signal(true);
+  selectedTransactionId = signal(0);
+  toastMessage = signal('');
+  toastType = signal<'success' | 'error'>('success');
 
   // Initialize component and fetch data
   ngOnInit(): void {
@@ -55,6 +63,23 @@ export class ViewSaving implements OnInit{
     if(!savingsId || isNaN(+savingsId)) {
       this.router.navigate(['/savings']);
       return;
+    }
+
+    // Check for toast message in navigation state
+    const state = history.state as SavingsNavState;
+    if (state?.toastMessage) {
+      this.toastMessage.set(state.toastMessage);
+      this.toastType.set(state.toastType ?? 'success');
+      const toast = Toast
+        .getOrCreateInstance(this.viewSavingToast.nativeElement);
+      toast.show();
+
+      setTimeout(() => {
+        toast.hide();
+      }, 3000);
+
+      // Clear the state so it doesn't reappear on reload/back
+      history.replaceState({}, '', this.router.url);
     }
 
     // Refresh current amount from backend
@@ -160,21 +185,39 @@ export class ViewSaving implements OnInit{
     });
   }
 
-  deleteSavingsTransaction(transactionId: number) {
+  deleteSavingsTransaction() {
     this.savingTransactionService.deleteSavingTransaction(
       this.savingId(),
-      transactionId
+      this.selectedTransactionId()
     ).subscribe({
       next: () => {
         this.transactionHistories.update(transactions =>
-          transactions.filter(transaction => transaction.id !== transactionId)
+          transactions.filter(transaction => 
+              transaction.id !== this.selectedTransactionId())
         );
+
+        // Close modal
+        this.closeDeleteTransactionModal();
 
         // update current amount
         this.refreshCurrentAmount();
+
+        // show success toast
+        this.toastMessage.set('Transaction deleted successfully!');
+        this.toastType.set('success');
+        const toast = Toast.getOrCreateInstance(this.viewSavingToast.nativeElement);
+        toast.show();
+        setTimeout(() => toast.hide(), 3000);
       },
       error: (err) => {
         console.error('Failed to delete transaction', err);
+
+        // show error toast
+        this.toastMessage.set('Failed to delete transaction. Please try again.');
+        this.toastType.set('error');
+        const toast = Toast.getOrCreateInstance(this.viewSavingToast.nativeElement);
+        toast.show();
+        setTimeout(() => toast.hide(), 3000);
       }
     });
   }
@@ -189,6 +232,13 @@ export class ViewSaving implements OnInit{
 
     // update total and filtered list
     this.transactionsCount.set(updated.length);
+
+    // show success toast without navigation
+    this.toastMessage.set('Transaction added successfully!');
+    this.toastType.set('success');
+    const toast = Toast.getOrCreateInstance(this.viewSavingToast.nativeElement);
+    toast.show();
+    setTimeout(() => toast.hide(), 3000);
   }
 
   onSavingsTransactionUpdated(updatedTransaction: SavingTransaction) {
@@ -201,6 +251,13 @@ export class ViewSaving implements OnInit{
     this.refreshCurrentAmount();
 
     this.transactionHistories.set(updatedTransactions);
+
+    // show success toast without navigation
+    this.toastMessage.set('Transaction updated successfully!');
+    this.toastType.set('success');
+    const toast = Toast.getOrCreateInstance(this.viewSavingToast.nativeElement);
+    toast.show();
+    setTimeout(() => toast.hide(), 3000);
   }
 
   // Refresh current amount from backend
@@ -225,5 +282,19 @@ export class ViewSaving implements OnInit{
     modal?.hide();
 
     this.deleteSavingModalBtn.nativeElement.focus();
+  }
+
+  openDeleteTransactionModal(transactionId: number) {
+    const modal = new Modal(this.deleteSavingTransactionModal.nativeElement);
+    modal.show();
+    
+    this.selectedTransactionId.set(transactionId);
+  }
+
+  closeDeleteTransactionModal() {
+    const modal = Modal.getInstance(this.deleteSavingTransactionModal.nativeElement);
+    modal?.hide();
+
+    this.deleteTransactionBtn.nativeElement.focus();
   }
 }

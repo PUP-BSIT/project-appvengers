@@ -1,4 +1,4 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Modal } from 'bootstrap';
 import { HistoryService } from '../../../../services/history';
 import { 
@@ -34,6 +34,7 @@ export class AddSavingTransaction implements OnInit {
   formBuilder = inject(FormBuilder);
   activatedRoute = inject(ActivatedRoute);
   historyService = inject(HistoryService);
+  router = inject(Router);
   savingTransactionService = inject(SavingTransactionService);
   transactionsLength = input(<number>(0));
   addedTransaction = output<SavingTransaction>();
@@ -107,16 +108,16 @@ export class AddSavingTransaction implements OnInit {
     addSavingTransaction() {
       const newTransaction = this.transactionForm.value;
 
-      this.savingTransactionService.addSavingTransaction(this.savingId(), newTransaction)
+      this.savingTransactionService
+      .addSavingTransaction(this.savingId(), newTransaction)
       .subscribe({
         next: (transactionData) => {
-          console.log(newTransaction);
-          console.log('Added Transaction:', transactionData);
           this.addedTransaction.emit(transactionData);
           this.closeModal();
         },
         error: (error) => {
           console.error('Error adding transaction:', error);
+          this.closeModal();
         }
       });
     }

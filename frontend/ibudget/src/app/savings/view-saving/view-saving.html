@@ -172,9 +172,10 @@
                       (updatedTransaction)="onSavingsTransactionUpdated($event)"
                     />
                     <button 
+                      #deleteTransactionBtn
                       type="button"
                       class="btn btn-sm btn-danger"
-                      (click)="deleteSavingsTransaction(
+                      (click)="openDeleteTransactionModal(
                           transaction.id)">
                         Delete
                     </button>
@@ -247,9 +248,10 @@
                     />
 
                     <button 
+                      #deleteTransactionBtn
                       type="button"
                       class="btn btn-sm btn-danger"
-                      (click)="deleteSavingsTransaction(
+                      (click)="openDeleteTransactionModal(
                           transaction.id)">
                         Delete
                     </button>
@@ -292,4 +294,56 @@
        </div>
      </div>
    </div>
+
+   <!-- Delete Saving Transaction modal -->
+   <div #deleteSavingTransactionModal class="modal fade">
+     <div class="modal-dialog modal-dialog-centered">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title">Confirm Delete</h5>
+           <button 
+            type="button" 
+            class="btn-close"
+            (click)="closeDeleteTransactionModal()"></button>
+         </div>
+         <div class="modal-body">
+           Are you sure you want to delete this saving transaction?
+         </div>
+         <div class="modal-footer">
+           <button 
+              type="button" 
+              class="btn btn-secondary" 
+              (click)="closeDeleteTransactionModal()">Cancel</button>
+           <button 
+              type="button" 
+              class="btn btn-danger" 
+              (click)="deleteSavingsTransaction()">
+                Delete
+              </button>
+         </div>
+       </div>
+     </div>
+   </div>
+
+    <!-- Toast -->
+    <div class="toast-container">
+      <div #viewSavingToast 
+          class="toast align-items-center border-0"
+          [ngClass]="{ 
+            'text-bg-success': toastType() === 'success', 
+            'text-bg-danger': toastType() === 'error' }">
+        <div class="d-flex justify-content-between">
+          <div class="toast-body" role="alert">
+            <span>{{ toastMessage() }}</span>
+          </div>
+
+          <button 
+            type="button" 
+            class="btn-close btn-close-white me-2 m-auto" 
+            data-bs-dismiss="toast" 
+            aria-label="Close">
+          </button>
+        </div>
+      </div>
+    </div>
 </main>
