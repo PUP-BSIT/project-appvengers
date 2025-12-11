@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -31,4 +32,70 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
         GROUP BY COALESCE(t.category, 'Uncategorized')
     """)
     List<Object[]> findIncomeSummaryByUserAndType(@Param("user") User user, @Param("type") String type);
+
+    // Monthly total spending - only expenses, non-deleted
+    @Query("""
+        SELECT SUM(t.amount)
+        FROM Transaction t
+        WHERE t.user = :user 
+        AND t.type = 'EXPENSE' 
+        AND t.deleted = false
+        AND t.transactionDate >= :startDate 
+        AND t.transactionDate < :endDate
+    """)
+    Double findMonthlyTotalByUserAndDateRange(
+        @Param("user") User user, 
+        @Param("startDate") LocalDate startDate, 
+        @Param("endDate") LocalDate endDate
+    );
+
+    // Monthly total income - only income, non-deleted
+    @Query("""
+        SELECT SUM(t.amount)
+        FROM Transaction t
+        WHERE t.user = :user 
+        AND t.type = 'INCOME' 
+        AND t.deleted = false
+        AND t.transactionDate >= :startDate 
+        AND t.transactionDate < :endDate
+    """)
+    Double findMonthlyIncomeByUserAndDateRange(
+        @Param("user") User user, 
+        @Param("startDate") LocalDate startDate, 
+        @Param("endDate") LocalDate endDate
+    );
+
+    // Monthly expense by category
+    @Query("""
+        SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
+        FROM Transaction t
+        WHERE t.user = :user 
+        AND t.type = 'EXPENSE' 
+        AND t.deleted = false
+        AND t.transactionDate >= :startDate 
+        AND t.transactionDate < :endDate
+        GROUP BY COALESCE(t.category, 'Uncategorized')
+    """)
+    List<Object[]> findMonthlyExpenseByCategoryAndDateRange(
+        @Param("user") User user, 
+        @Param("startDate") LocalDate startDate, 
+        @Param("endDate") LocalDate endDate
+    );
+
+    // Monthly income by category
+    @Query("""
+        SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
+        FROM Transaction t
+        WHERE t.user = :user 
+        AND t.type = 'INCOME' 
+        AND t.deleted = false
+        AND t.transactionDate >= :startDate 
+        AND t.transactionDate < :endDate
+        GROUP BY COALESCE(t.category, 'Uncategorized')
+    """)
+    List<Object[]> findMonthlyIncomeByCategoryAndDateRange(
+        @Param("user") User user, 
+        @Param("startDate") LocalDate startDate, 
+        @Param("endDate") LocalDate endDate
+    );
 }
