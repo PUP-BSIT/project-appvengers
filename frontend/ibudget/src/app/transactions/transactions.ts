@@ -8,6 +8,7 @@ import {Transaction, TransactionResponse} from "../../models/user.model";
 import { Header } from '../header/header';
 import { TransactionsService } from '../../services/transactions.service';
 import { AuthService } from '../../services/auth.service';
+import { CategoriesService } from '../../services/categories.service';
 
 @Component({
   selector: 'app-transactions',
@@ -21,7 +22,8 @@ export class Transactions implements OnInit, OnDestroy {
   constructor(private renderer: Renderer2,
               private txService: TransactionsService,
               private authService: AuthService,
-              private cd: ChangeDetectorRef) {
+              private cd: ChangeDetectorRef,
+              private categoriesService: CategoriesService) {
     this.filterTransactions();
   }
 
@@ -391,11 +393,9 @@ export class Transactions implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // console.log('Transactions: auth token present?',
-    //             !!this.authService.getToken());
-    // console.log('Transactions: auth token (first 24 chars):',
-    //             this.authService.getToken()?.slice(0, 24));
-    this.txService.getAll().subscribe((txs) => {
+    // Load transactions
+    this.txService.getAll().subscribe({
+      next: (txs) => {
       const backendTransactions = txs.map(
         (t: TransactionResponse): Transaction => ({
           id: t.id,
@@ -412,11 +412,24 @@ export class Transactions implements OnInit, OnDestroy {
       } catch (e) {
         setTimeout(() => {}, 0);
       }
-    }, (err) => {
+    }, error: (err) => {
       console.error('Failed to load transactions on init', err);
       this.filterTransactions();
       this.showNotificationMessage('Unable to load transactions');
-    });
+    }});
+
+    // Load categories for filters and modal dropdown
+    this.categoriesService.getCategories().subscribe({
+      next: (cats) => {
+      const allNames = cats.map(c => c.name);
+      this.categories = ['All Categories', ...allNames];
+      this.expenseCategories = cats
+        .filter(c => c.type === 'expense').map(c => c.name);
+      this.incomeCategories = cats
+        .filter(c => c.type === 'income').map(c => c.name);
+    }, error: (err) => {
+      console.error('Failed to load categories', err);
+    }});
 
     this.unlisten = this.renderer.listen('document', 'click', (event: Event) =>
     {
