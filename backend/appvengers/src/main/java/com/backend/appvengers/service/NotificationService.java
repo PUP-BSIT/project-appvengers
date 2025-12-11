@@ -1,13 +1,14 @@
 package com.backend.appvengers.service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.backend.appvengers.dto.NotificationResponse;
 import com.backend.appvengers.entity.Budget;
@@ -43,7 +44,7 @@ public class NotificationService {
     @Transactional
     public void generateNotifications(int userId) {
         User user = userRepository.findById((long) userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         // Generate budget-related notifications
         generateBudgetNotifications(userId, user);
@@ -77,6 +78,12 @@ public class NotificationService {
             }
 
             double limitAmount = budget.getLimitAmount();
+
+            // Guard against division by zero
+            if (limitAmount <= 0) {
+                continue;
+            }
+
             double remainingPercent = ((limitAmount - totalSpent) / limitAmount) * 100;
 
             // Check if budget is exceeded
@@ -174,7 +181,7 @@ public class NotificationService {
 
         String urgency = daysRemaining == 1 ? "Tomorrow" : daysRemaining + " days";
         double progress = saving.getTargetAmount() > 0
-                ? (saving.getCurrentAmount() / (double) saving.getTargetAmount()) * 100
+                ? ((double) saving.getCurrentAmount() / saving.getTargetAmount()) * 100
                 : 0;
 
         Notification notification = new Notification();
@@ -228,10 +235,10 @@ public class NotificationService {
     @Transactional
     public void markAsRead(Long notificationId, int userId) {
         Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new RuntimeException("Notification not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found"));
 
         if (notification.getUserId() != userId) {
-            throw new RuntimeException("Unauthorized to access this notification");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unauthorized to access this notification");
         }
 
         notification.setRead(true);
@@ -253,10 +260,10 @@ public class NotificationService {
     @Transactional
     public void deleteNotification(Long notificationId, int userId) {
         Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new RuntimeException("Notification not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found"));
 
         if (notification.getUserId() != userId) {
-            throw new RuntimeException("Unauthorized to delete this notification");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unauthorized to delete this notification");
         }
 
         notificationRepository.delete(notification);
