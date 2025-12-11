@@ -19,85 +19,99 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     // Expense summary - only non-deleted transactions
     @Query("""
-        SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
-        FROM Transaction t
-        WHERE t.user = :user AND t.type = :type AND t.deleted = false
-        GROUP BY COALESCE(t.category, 'Uncategorized')
-    """)
+                SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
+                FROM Transaction t
+                WHERE t.user = :user AND t.type = :type AND t.deleted = false
+                GROUP BY COALESCE(t.category, 'Uncategorized')
+            """)
     List<Object[]> findExpenseSummaryByUserAndType(@Param("user") User user, @Param("type") String type);
 
     // Income summary - only non-deleted transactions
     @Query("""
-        SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
-        FROM Transaction t
-        WHERE t.user = :user AND t.type = :type AND t.deleted = false
-        GROUP BY COALESCE(t.category, 'Uncategorized')
-    """)
+                SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
+                FROM Transaction t
+                WHERE t.user = :user AND t.type = :type AND t.deleted = false
+                GROUP BY COALESCE(t.category, 'Uncategorized')
+            """)
     List<Object[]> findIncomeSummaryByUserAndType(@Param("user") User user, @Param("type") String type);
 
     // Monthly total spending - only expenses, non-deleted
     @Query("""
-        SELECT SUM(t.amount)
-        FROM Transaction t
-        WHERE t.user = :user 
-        AND t.type = 'EXPENSE' 
-        AND t.deleted = false
-        AND t.transactionDate >= :startDate 
-        AND t.transactionDate < :endDate
-    """)
+                SELECT SUM(t.amount)
+                FROM Transaction t
+                WHERE t.user = :user
+                AND t.type = 'EXPENSE'
+                AND t.deleted = false
+                AND t.transactionDate >= :startDate
+                AND t.transactionDate < :endDate
+            """)
     Double findMonthlyTotalByUserAndDateRange(
-        @Param("user") User user, 
-        @Param("startDate") LocalDate startDate, 
-        @Param("endDate") LocalDate endDate
-    );
+            @Param("user") User user,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 
     // Monthly total income - only income, non-deleted
     @Query("""
-        SELECT SUM(t.amount)
-        FROM Transaction t
-        WHERE t.user = :user 
-        AND t.type = 'INCOME' 
-        AND t.deleted = false
-        AND t.transactionDate >= :startDate 
-        AND t.transactionDate < :endDate
-    """)
+                SELECT SUM(t.amount)
+                FROM Transaction t
+                WHERE t.user = :user
+                AND t.type = 'INCOME'
+                AND t.deleted = false
+                AND t.transactionDate >= :startDate
+                AND t.transactionDate < :endDate
+            """)
     Double findMonthlyIncomeByUserAndDateRange(
-        @Param("user") User user, 
-        @Param("startDate") LocalDate startDate, 
-        @Param("endDate") LocalDate endDate
-    );
+            @Param("user") User user,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 
     // Monthly expense by category
     @Query("""
-        SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
-        FROM Transaction t
-        WHERE t.user = :user 
-        AND t.type = 'EXPENSE' 
-        AND t.deleted = false
-        AND t.transactionDate >= :startDate 
-        AND t.transactionDate < :endDate
-        GROUP BY COALESCE(t.category, 'Uncategorized')
-    """)
+                SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
+                FROM Transaction t
+                WHERE t.user = :user
+                AND t.type = 'EXPENSE'
+                AND t.deleted = false
+                AND t.transactionDate >= :startDate
+                AND t.transactionDate < :endDate
+                GROUP BY COALESCE(t.category, 'Uncategorized')
+            """)
     List<Object[]> findMonthlyExpenseByCategoryAndDateRange(
-        @Param("user") User user, 
-        @Param("startDate") LocalDate startDate, 
-        @Param("endDate") LocalDate endDate
-    );
+            @Param("user") User user,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 
     // Monthly income by category
     @Query("""
-        SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
-        FROM Transaction t
-        WHERE t.user = :user 
-        AND t.type = 'INCOME' 
-        AND t.deleted = false
-        AND t.transactionDate >= :startDate 
-        AND t.transactionDate < :endDate
-        GROUP BY COALESCE(t.category, 'Uncategorized')
-    """)
+                SELECT COALESCE(t.category, 'Uncategorized'), SUM(t.amount)
+                FROM Transaction t
+                WHERE t.user = :user
+                AND t.type = 'INCOME'
+                AND t.deleted = false
+                AND t.transactionDate >= :startDate
+                AND t.transactionDate < :endDate
+                GROUP BY COALESCE(t.category, 'Uncategorized')
+            """)
     List<Object[]> findMonthlyIncomeByCategoryAndDateRange(
-        @Param("user") User user, 
-        @Param("startDate") LocalDate startDate, 
-        @Param("endDate") LocalDate endDate
-    );
+            @Param("user") User user,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
+
+    // Get total expenses for a specific category within date range (for budget
+    // notifications)
+    @Query("""
+                SELECT COALESCE(SUM(t.amount), 0)
+                FROM Transaction t
+                WHERE t.user = :user
+                AND t.type = 'EXPENSE'
+                AND t.deleted = false
+                AND LOWER(COALESCE(t.category, '')) = LOWER(:categoryName)
+                AND t.transactionDate >= :startDate
+                AND t.transactionDate <= :endDate
+            """)
+    Double findMonthlyExpenseByCategoryForBudget(
+            @Param("user") User user,
+            @Param("categoryName") String categoryName,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 }
