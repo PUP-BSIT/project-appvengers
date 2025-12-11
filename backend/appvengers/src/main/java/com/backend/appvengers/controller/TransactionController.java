@@ -3,6 +3,7 @@ package com.backend.appvengers.controller;
 import com.backend.appvengers.dto.ApiResponse;
 import com.backend.appvengers.dto.ExpenseSummary;
 import com.backend.appvengers.dto.IncomeSummary;
+import com.backend.appvengers.dto.MonthlyReportResponse;
 import com.backend.appvengers.dto.TransactionRequest;
 import com.backend.appvengers.dto.TransactionResponse;
 import com.backend.appvengers.service.TransactionService;
@@ -19,6 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/transactions")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class TransactionController {
 
     private final TransactionService transactionService;
@@ -86,5 +88,34 @@ public class TransactionController {
         String email = auth.getName();
         IncomeSummary summary = transactionService.getIncomeSummary(email);
         return ResponseEntity.ok(new ApiResponse(true, "Income summary fetched", summary));
+    }
+
+    // Monthly reports endpoint - returns last month and this month totals
+    @GetMapping("/reports/monthly")
+    public ResponseEntity<ApiResponse> getMonthlyReports(Authentication auth) {
+        System.out.println("=== Monthly Reports Endpoint Called ===");
+        System.out.println("Authentication object: " + (auth != null ? "Present" : "Null"));
+        
+        if (auth == null) {
+            System.out.println("ERROR: Authentication is null!");
+            return ResponseEntity.status(403).body(
+                new ApiResponse(false, "Authentication required", null)
+            );
+        }
+        
+        String email = auth.getName();
+        System.out.println("User email: " + email);
+        
+        try {
+            List<MonthlyReportResponse> reports = transactionService.getMonthlyReports(email);
+            System.out.println("Reports generated successfully: " + reports.size() + " reports");
+            return ResponseEntity.ok(new ApiResponse(true, "Monthly reports fetched", reports));
+        } catch (Exception e) {
+            System.out.println("ERROR in getMonthlyReports: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(
+                new ApiResponse(false, "Error fetching reports: " + e.getMessage(), null)
+            );
+        }
     }
 }
