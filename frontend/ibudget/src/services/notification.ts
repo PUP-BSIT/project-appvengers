@@ -32,6 +32,9 @@ export class NotificationService {
   }
 
   markAsRead(notification: Notification): void {
+    // Store original state for rollback
+    const originalNotifications = [...this.notifications];
+
     // Optimistic update
     const updatedNotifications = this.notifications.map(n =>
       n.id === notification.id ? { ...n, read: true } : n
@@ -41,28 +44,43 @@ export class NotificationService {
     this.http.put<void>(`${this.apiUrl}/${notification.id}/read`, {}).subscribe({
       error: (error) => {
         console.error('Error marking notification as read:', error);
-        // Revert on error if needed, or just let the next fetch fix it
+        // Rollback on error
+        this.notificationsSubject.next(originalNotifications);
       }
     });
   }
 
   markAllAsRead(): void {
+    // Store original state for rollback
+    const originalNotifications = [...this.notifications];
+
     // Optimistic update
     const updatedNotifications = this.notifications.map(n => ({ ...n, read: true }));
     this.notificationsSubject.next(updatedNotifications);
 
     this.http.put<void>(`${this.apiUrl}/mark-all-read`, {}).subscribe({
-      error: (error) => console.error('Error marking all as read:', error)
+      error: (error) => {
+        console.error('Error marking all as read:', error);
+        // Rollback on error
+        this.notificationsSubject.next(originalNotifications);
+      }
     });
   }
 
   deleteNotification(id: number): void {
+    // Store original state for rollback
+    const originalNotifications = [...this.notifications];
+
     // Optimistic update
     const updatedNotifications = this.notifications.filter(n => n.id !== id);
     this.notificationsSubject.next(updatedNotifications);
 
     this.http.delete<void>(`${this.apiUrl}/${id}`).subscribe({
-      error: (error) => console.error('Error deleting notification:', error)
+      error: (error) => {
+        console.error('Error deleting notification:', error);
+        // Rollback on error
+        this.notificationsSubject.next(originalNotifications);
+      }
     });
   }
 
