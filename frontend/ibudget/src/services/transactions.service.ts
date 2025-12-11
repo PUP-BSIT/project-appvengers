@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../environments/environment';
-import { ApiResponse, Transaction, TransactionResponse } from '../models/user.model';
+import { ApiResponse, Transaction, TransactionResponse, MonthlyReport } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionsService {
@@ -51,6 +51,14 @@ export class TransactionsService {
         map((res: ApiResponse) =>
           res.data as { labels: string[]; values: number[] }
         )
+      );
+  }
+
+  getMonthlyReports(): Observable<MonthlyReport[]> {
+    return this.http
+      .get<ApiResponse>(`${this.base}/reports/monthly`)
+      .pipe(
+        map((res: ApiResponse) => (res.data || []) as MonthlyReport[])
       );
   }
 }
