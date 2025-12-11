@@ -33,6 +33,11 @@ export class UpdateBudgetExpense implements OnInit {
   currentBudgetId = signal<number>(0);
   date = signal(new Date().toISOString().split('T')[0]);
 
+  // Snackbar
+  showNotification = signal(false);
+  isHidingNotification = signal(false);
+  notificationMessage = signal('');
+
   constructor() {
     this.updateBudgetExpenseForm = this.formBuilder.group({
       transactionId: [''],
@@ -95,6 +100,7 @@ export class UpdateBudgetExpense implements OnInit {
 
       this.budgetTxService.update(id, payload).subscribe((response) => {
         this.updateBudgetExpenseResponse.emit(response);
+        this.showNotificationMessage("Expense updated successfully!");
         this.closeModal();
       });
     }
@@ -110,5 +116,18 @@ export class UpdateBudgetExpense implements OnInit {
         budgetId: budgetId
       });
     });
+  }
+
+  showNotificationMessage(message: string) {
+    this.notificationMessage.set(message);
+    this.showNotification.set(true);
+    this.isHidingNotification.set(false);
+    setTimeout(() => {
+      this.isHidingNotification.set(true);
+      setTimeout(() => {
+        this.showNotification.set(false);
+        this.isHidingNotification.set(false);
+      }, 300);
+    }, 3000);
   }
 }
