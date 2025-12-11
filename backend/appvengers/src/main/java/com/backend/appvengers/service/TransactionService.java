@@ -2,6 +2,7 @@ package com.backend.appvengers.service;
 
 import com.backend.appvengers.dto.ExpenseSummary;
 import com.backend.appvengers.dto.IncomeSummary;
+import com.backend.appvengers.dto.MonthlyReportResponse;
 import com.backend.appvengers.dto.TransactionRequest;
 import com.backend.appvengers.dto.TransactionResponse;
 import com.backend.appvengers.entity.Transaction;
@@ -12,8 +13,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -120,6 +126,88 @@ public class TransactionService {
         }
 
         return new IncomeSummary(labels, values);
+    }
+
+    // Monthly reports - get last month and this month spending
+    public List<MonthlyReportResponse> getMonthlyReports(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<MonthlyReportResponse> reports = new ArrayList<>();
+        
+        // Current month
+        YearMonth currentMonth = YearMonth.now();
+        LocalDate currentStart = currentMonth.atDay(1);
+        LocalDate currentEnd = currentMonth.atEndOfMonth().plusDays(1);
+        
+        Double currentTotalExpense = transactionRepository.findMonthlyTotalByUserAndDateRange(
+            user, currentStart, currentEnd
+        );
+        
+        Double currentTotalIncome = transactionRepository.findMonthlyIncomeByUserAndDateRange(
+            user, currentStart, currentEnd
+        );
+
+        List<Object[]> currentExpenseByCategory = transactionRepository.findMonthlyExpenseByCategoryAndDateRange(
+            user, currentStart, currentEnd
+        );
+
+        List<Object[]> currentIncomeByCategory = transactionRepository.findMonthlyIncomeByCategoryAndDateRange(
+            user, currentStart, currentEnd
+        );
+        
+        reports.add(new MonthlyReportResponse(
+            currentMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + currentMonth.getYear(),
+            currentMonth.getMonthValue(),
+            currentMonth.getYear(),
+            currentTotalExpense != null ? currentTotalExpense : 0.0,
+            currentTotalIncome != null ? currentTotalIncome : 0.0,
+            convertToMap(currentExpenseByCategory),
+            convertToMap(currentIncomeByCategory)
+        ));
+        
+        // Last month
+        YearMonth lastMonth = currentMonth.minusMonths(1);
+        LocalDate lastStart = lastMonth.atDay(1);
+        LocalDate lastEnd = lastMonth.atEndOfMonth().plusDays(1);
+        
+        Double lastTotalExpense = transactionRepository.findMonthlyTotalByUserAndDateRange(
+            user, lastStart, lastEnd
+        );
+
+        Double lastTotalIncome = transactionRepository.findMonthlyIncomeByUserAndDateRange(
+            user, lastStart, lastEnd
+        );
+
+        List<Object[]> lastExpenseByCategory = transactionRepository.findMonthlyExpenseByCategoryAndDateRange(
+            user, lastStart, lastEnd
+        );
+
+        List<Object[]> lastIncomeByCategory = transactionRepository.findMonthlyIncomeByCategoryAndDateRange(
+            user, lastStart, lastEnd
+        );
+        
+        reports.add(new MonthlyReportResponse(
+            lastMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + lastMonth.getYear(),
+            lastMonth.getMonthValue(),
+            lastMonth.getYear(),
+            lastTotalExpense != null ? lastTotalExpense : 0.0,
+            lastTotalIncome != null ? lastTotalIncome : 0.0,
+            convertToMap(lastExpenseByCategory),
+            convertToMap(lastIncomeByCategory)
+        ));
+        
+        return reports;
+    }
+
+    private Map<String, Double> convertToMap(List<Object[]> rows) {
+        Map<String, Double> result = new java.util.HashMap<>();
+        for (Object[] row : rows) {
+            String category = (String) row[0];
+            Double amount = ((Number) row[1]).doubleValue();
+            result.put(category, amount);
+        }
+        return result;
     }
 
     private TransactionResponse toResponse(Transaction t) {
