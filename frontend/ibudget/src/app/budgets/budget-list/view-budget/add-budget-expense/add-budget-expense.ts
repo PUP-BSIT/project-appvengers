@@ -56,6 +56,7 @@ export class AddBudgetExpense implements OnInit {
       budget_id: [''],
       transaction_date: [''],
       description: [''],
+      category_id: [''],
       amount: [''],
       created_at: [''],
       updated_at: [''],
