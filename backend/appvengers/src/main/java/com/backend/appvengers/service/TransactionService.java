@@ -38,7 +38,7 @@ public class TransactionService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return transactionRepository.findByUserAndDeletedFalseAndSavingIsNull(user).stream()
+        return transactionRepository.findByUserAndDeletedAtIsNullAndSavingIsNull(user).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
@@ -258,7 +258,7 @@ public class TransactionService {
     }
 
     public List<BudgetExpenseResponse> findByBudgetId(Integer budgetId) {
-    return transactionRepository.findByBudget_BudgetIdAndDeletedFalse(budgetId)
+    return transactionRepository.findByBudget_BudgetIdAndDeletedAtIsNull(budgetId)
             .stream()
             .map(this::toBudgetExpenseResponse)
             .toList();
