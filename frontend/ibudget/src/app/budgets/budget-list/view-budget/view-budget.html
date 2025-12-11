@@ -40,17 +40,17 @@
           } @else {
               @for(transaction of budgetExpenses(); track $index) {
               <tr>
-                <td>{{ transaction.transaction_date }}</td>
+                <td>{{ transaction.transactionDate }}</td>
                 <td>{{ transaction.description }}</td>
                 <td>&#8369; {{ transaction.amount }}</td>
                 <td>
                   <app-update-budget-expense
-                  [transactionId]="transaction.transaction_id"
+                  [transactionId]="transaction.transactionId"
                   (updateBudgetExpenseResponse)="onBudgetExpenseUpdated($event)"/>
 
                   <button 
                     class="btn btn-sm btn-danger" 
-                    (click)="deleteBudgetExpense(transaction.transaction_id)">
+                    (click)="deleteBudgetExpense(transaction.transactionId)">
                     Delete
                   </button>
               </tr>

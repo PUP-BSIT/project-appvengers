@@ -179,13 +179,11 @@ export type BackendSavingTransaction = {
 }
 
 export type BudgetTransaction = {
-  transaction_id: number;
-  budget_id?: number;
-  user_id?: number;
-  transaction_date?: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at?: string;
+  transactionId: number;
+  budgetId?: number;
+  userId?: number;
+  transactionDate?: string;
   description: string;
   amount: number;
-}
+  type: string;
+};
