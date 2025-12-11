@@ -46,6 +46,11 @@ export class AddBudgetExpense implements OnInit {
   currentBudgetId = signal('');
   date = signal(new Date().toISOString().split('T')[0]);
 
+  // Snackbar
+  showNotification = signal(false);
+  isHidingNotification = signal(false);
+  notificationMessage = signal('');
+
   constructor() {
     this.addBudgetExpenseForm = this.formBuilder.group({
       budget_id: [''],
@@ -94,8 +99,22 @@ export class AddBudgetExpense implements OnInit {
       this.budgetTxService.create(payload).subscribe((response) => {
         this.addBudgetExpenseResponse.emit(response);
         this.addBudgetExpenseForm.reset();
+        this.showNotificationMessage("Expense added successfully!");
         this.closeModal();
       });
     }
+  }
+
+  showNotificationMessage(message: string) {
+    this.notificationMessage.set(message);
+    this.showNotification.set(true);
+    this.isHidingNotification.set(false);
+    setTimeout(() => {
+      this.isHidingNotification.set(true);
+      setTimeout(() => {
+        this.showNotification.set(false);
+        this.isHidingNotification.set(false);
+      }, 300);
+    }, 3000);
   }
 }
