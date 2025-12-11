@@ -26,6 +26,15 @@
               <option value="Withdrawal">Withdrawal</option>
             </select>
 
+            @if (transactionForm.get('savings_action')?.touched &&
+              transactionForm.get('savings_action')?.invalid) {
+                @if( transactionForm.get('savings_action')?.errors?.['required']) {
+                  <div class="text-danger mb-3">
+                    Transaction Type is required.
+                  </div>
+                }
+              }
+
             <label for="amount">Amount</label>
             <div class="input-group mb-3">
               <span class="input-group-text fw-bold">&#8369;</span>
@@ -37,12 +46,34 @@
                 min="0"/>
             </div>
 
+            @if (transactionForm.get('amount')?.touched &&
+              transactionForm.get('amount')?.invalid) {
+                @if (transactionForm.get('amount')?.errors?.['required']) {
+                  <div class="text-danger mb-3">
+                    Amount is required.
+                  </div>
+                } @else if (transactionForm.get('amount')?.errors?.['min']) {
+                  <div class="text-danger mb-3">
+                    Amount must be at least 0.01.
+                  </div>
+                }
+            }
+
             <label for="transaction_date">Transaction Date</label>
             <input 
               formControlName="transaction_date"
               class="form-control mb-3"
               id="transaction_date"
               type="date"/>
+
+            @if (transactionForm.get('transaction_date')?.touched &&
+              transactionForm.get('transaction_date')?.invalid) {
+                @if (transactionForm.get('transaction_date')?.errors?.['required']) {
+                  <div class="text-danger mb-3">
+                    Transaction Date is required.
+                  </div>
+                } 
+            }
 
             <label for="description">Description</label>
             <textarea 

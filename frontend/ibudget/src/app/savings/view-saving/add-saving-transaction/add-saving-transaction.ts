@@ -66,7 +66,7 @@ export class AddSavingTransaction implements OnInit {
     this.transactionForm = this.formBuilder.group({
       savings_id: [+savingId],
       amount: [0, {
-        validators: [Validators.required]
+        validators: [Validators.required, Validators.min(0.01)]
       }],
       savings_action: ['', {
         validators: [Validators.required]
@@ -107,6 +107,11 @@ export class AddSavingTransaction implements OnInit {
 
     addSavingTransaction() {
       const newTransaction = this.transactionForm.value;
+
+      if (this.transactionForm.invalid) {
+        this.transactionForm.markAllAsTouched();
+        return;
+      }
 
       this.savingTransactionService
       .addSavingTransaction(this.savingId(), newTransaction)

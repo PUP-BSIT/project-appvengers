@@ -102,6 +102,11 @@ export class UpdateSavingTransaction {
     }
 
     updateTransaction() {
+      if (this.transactionForm.invalid) {
+        this.transactionForm.markAllAsTouched();
+        return;
+      }
+
       this.savingTransactionService.updateSavingTransaction(
         this.savingId(),
         this.transactionForm.value.transaction_id,
