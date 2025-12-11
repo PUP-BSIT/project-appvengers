@@ -49,7 +49,6 @@ export class AddBudgetExpense implements OnInit {
   constructor() {
     this.addBudgetExpenseForm = this.formBuilder.group({
       budget_id: [''],
-      category_id: [''],
       transaction_date: [''],
       description: [''],
       amount: [''],
