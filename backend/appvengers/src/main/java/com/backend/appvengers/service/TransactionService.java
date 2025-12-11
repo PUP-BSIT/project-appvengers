@@ -229,7 +229,7 @@ public class TransactionService {
     public BudgetExpenseResponse toBudgetExpenseResponse(Transaction t) {
         return new BudgetExpenseResponse(
             t.getId(),
-            t.getBudget().getBudgetId(),
+            t.getBudget() != null ? t.getBudget().getBudgetId() : null,
             t.getTransactionDate(),
             t.getDescription(),
             t.getAmount(),
