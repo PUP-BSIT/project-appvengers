@@ -258,7 +258,7 @@ public class TransactionService {
     }
 
     public List<BudgetExpenseResponse> findByBudgetId(Integer budgetId) {
-    return transactionRepository.findByBudget_BudgetId(budgetId)
+    return transactionRepository.findByBudget_BudgetIdAndDeletedFalse(budgetId)
             .stream()
             .map(this::toBudgetExpenseResponse)
             .toList();
