@@ -1,6 +1,7 @@
 package com.backend.appvengers.service;
 
 import com.backend.appvengers.dto.BudgetExpenseRequest;
+import com.backend.appvengers.dto.BudgetExpenseResponse;
 import com.backend.appvengers.dto.ExpenseSummary;
 import com.backend.appvengers.dto.IncomeSummary;
 import com.backend.appvengers.dto.MonthlyReportResponse;
@@ -222,6 +223,17 @@ public class TransactionService {
                 t.getCategory(),
                 t.getDescription(),
                 t.getTransactionDate()
+        );
+    }
+
+    public BudgetExpenseResponse toBudgetExpenseResponse(Transaction t) {
+        return new BudgetExpenseResponse(
+            t.getId(),
+            t.getBudget().getBudgetId(),
+            t.getTransactionDate(),
+            t.getDescription(),
+            t.getAmount(),
+            t.getType()
         );
     }
 
