@@ -1,8 +1,8 @@
 import { Component, ElementRef, inject, input, OnInit, output, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Modal } from 'bootstrap';
-import { MockupsService } from '../../../../../services/mockups.service';
 import { ActivatedRoute } from '@angular/router';
+import { BudgetTransactionsService } from '../../../../../services/budget.transactions.service';
 import { BudgetTransaction } from '../../../../../models/user.model';
 
 @Component({
@@ -11,46 +11,51 @@ import { BudgetTransaction } from '../../../../../models/user.model';
   templateUrl: './update-budget-expense.html',
   styleUrl: './update-budget-expense.scss',
 })
+
 export class UpdateBudgetExpense implements OnInit {
+
   @ViewChild('updateBudgetExpenseModal') updateBudgetExpenseModal!: ElementRef;
-  @ViewChild('openUpdateBudgetExpenseModalBtn') 
-    openUpdateBudgetExpenseModalBtn!: ElementRef;
-  date = signal(new Date().toISOString().split('T')[0]);
-  updateBudgetExpenseForm: FormGroup;
-  formBuilder = inject(FormBuilder);
-  mockupService = inject(MockupsService);
-  activatedRoute = inject(ActivatedRoute);
-  transactionId = input(<number>(0));
-  currentBudgetId = signal(0);
+  @ViewChild('openUpdateBudgetExpenseModalBtn') openUpdateBudgetExpenseModalBtn!: ElementRef;
+
+  // Input from parent
+  transactionId = input<number>(0);
+
+  // Output to parent
   updateBudgetExpenseResponse = output<BudgetTransaction>();
-  
+
+  // Services
+  formBuilder = inject(FormBuilder);
+  budgetTxService = inject(BudgetTransactionsService);
+  activatedRoute = inject(ActivatedRoute);
+
+  // Form + state
+  updateBudgetExpenseForm: FormGroup;
+  currentBudgetId = signal<number>(0);
+  date = signal(new Date().toISOString().split('T')[0]);
+
   constructor() {
     this.updateBudgetExpenseForm = this.formBuilder.group({
-      transaction_id: [''],
-      budget_id: [''],
-      category_id: [''],
-      transaction_date: [''],
+      transactionId: [''],
+      budgetId: [''],
+      transactionDate: [''],
       description: [''],
       amount: [''],
-      created_at: [''],
-      updated_at: [''],
-      deleted_at: ['']
+      type: ['expense']
     });
   }
 
   ngOnInit(): void {
-    // Get Current Budget ID
     this.getCurrentBudgetId();
 
-    // Set Default Dates
+    // Set updated_at equivalent
     this.updateBudgetExpenseForm.patchValue({
-      updated_at: this.date()
+      transactionDate: this.date()
     });
 
-    // Only fetch if transactionId is truthy
+    // Load existing transaction data
     const id = this.transactionId();
     if (id && id > 0) {
-      this.getTransactionData();
+      this.loadTransaction();
     }
   }
 
@@ -62,57 +67,47 @@ export class UpdateBudgetExpense implements OnInit {
   closeModal() {
     const modal = Modal.getInstance(this.updateBudgetExpenseModal.nativeElement);
     modal?.hide();
-
     this.openUpdateBudgetExpenseModalBtn.nativeElement.focus();
-
-    // Patch Form with Transaction Data
-    this.getTransactionData();
   }
 
-  // Get Mock Transaction Data by ID
-  getTransactionData() {
+  // Load transaction from backend
+  loadTransaction() {
     const id = this.transactionId();
-    if (!id || id <= 0) return;
+    if (!id) return;
 
-    this.mockupService.getMockBudgetTransactionById(id)
-      .subscribe((transaction: BudgetTransaction) => {
-        this.updateBudgetExpenseForm.patchValue({
-          transaction_id: transaction.transaction_id,
-          budget_id: transaction.budget_id,
-          category_id: transaction.category_id,
-          transaction_date: transaction.transaction_date,
-          description: transaction.description,
-          amount: transaction.amount,
-          created_at: transaction.created_at,
-          updated_at: transaction.updated_at,
-          deleted_at: transaction.deleted_at
-        });
+    this.budgetTxService.getById(id).subscribe((tx: BudgetTransaction) => {
+      this.updateBudgetExpenseForm.patchValue({
+        transactionId: tx.transactionId,
+        budgetId: tx.budgetId,
+        transactionDate: tx.transactionDate,
+        description: tx.description,
+        amount: tx.amount,
+        type: tx.type
       });
+    });
   }
 
-  // Update Expense Method
+  // Update expense via backend
   updateExpense() {
     if (this.updateBudgetExpenseForm.valid) {
-      const updatedExpense = this.updateBudgetExpenseForm.value;
+      const payload = this.updateBudgetExpenseForm.value as Partial<BudgetTransaction>;
+      const id = this.transactionId();
 
-      // Call the mockup service to update the expense
-      this.mockupService.updateMockBudgetTransaction(updatedExpense.transaction_id, updatedExpense)
-        .subscribe((response: BudgetTransaction) => {
-          // Emit updated expense to parent component
-          this.updateBudgetExpenseResponse.emit(response);
-          this.closeModal();
-        });
+      this.budgetTxService.update(id, payload).subscribe((response) => {
+        this.updateBudgetExpenseResponse.emit(response);
+        this.closeModal();
+      });
     }
   }
-  
-  // Get Mock Current Budget ID through Route Param
+
+  // Get budget ID from route
   getCurrentBudgetId() {
     this.activatedRoute.paramMap.subscribe(params => {
-      const budgetId = params.get('id') || 0;
+      const budgetId = Number(params.get('id')) || 0;
+      this.currentBudgetId.set(budgetId);
 
-      this.currentBudgetId.set(+budgetId);
       this.updateBudgetExpenseForm.patchValue({
-        budget_id: +this.currentBudgetId()
+        budgetId: budgetId
       });
     });
   }
