@@ -42,7 +42,7 @@ export class UpdateBudgetExpense implements OnInit {
     this.updateBudgetExpenseForm = this.formBuilder.group({
       transactionId: [''],
       budgetId: [''],
-      transactionDate: [''],
+      transaction_date: [''], 
       description: [''],
       amount: [''],
       type: ['expense']
