@@ -1,11 +1,13 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
 import { Saving } from '../../models/user.model';
 import { SavingsService } from '../../services/savings.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { SavingProgress } from "./saving-progress/saving-progress";
 import { CommonModule } from '@angular/common';
+import { Toast } from 'bootstrap';
+import { SavingsNavState } from '../../models/user.model';
 
 @Component({
   selector: 'app-savings',
@@ -14,11 +16,29 @@ import { CommonModule } from '@angular/common';
   styleUrl: './savings.scss',
 })
 export class Savings implements OnInit {
+  @ViewChild('savingsToast', { static: true }) savingsToast!: ElementRef;
   savings = signal(<Saving[]>[]);
   savingsService = inject(SavingsService);
   isLoading = signal(true);
+  toastMessage = signal('');
+  router = inject(Router);
 
   ngOnInit() {
+    // Check for toast message in navigation state
+    const state = history.state as SavingsNavState;
+    if (state?.toastMessage) {
+      this.toastMessage.set(state.toastMessage);
+      const toast = Toast.getOrCreateInstance(this.savingsToast.nativeElement);
+      toast.show();
+
+      setTimeout(() => {
+        toast.hide();
+      }, 3000);
+
+      // Clear the state so it doesn't reappear on reload/back
+      history.replaceState({}, '', this.router.url);
+    }
+
     // Fetch Savings Data
     this.getSavings();
   }

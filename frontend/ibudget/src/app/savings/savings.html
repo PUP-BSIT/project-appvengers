@@ -71,6 +71,23 @@
         </div>
       }
     </div>
+
+    <!-- Success Toast -->
+    <div class="toast-container">
+      <div #savingsToast class="toast align-items-center text-bg-success border-0">
+        <div class="d-flex justify-content-between">
+          <div class="toast-body" role="alert">
+            <span>{{ toastMessage() }}</span>
+          </div>
+
+          <button 
+            type="button" 
+            class="btn-close btn-close-white me-2 m-auto" 
+            data-bs-dismiss="toast" 
+            aria-label="Close">
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-  
 </main>
