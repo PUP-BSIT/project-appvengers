@@ -14,7 +14,7 @@ import java.util.List;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
     //Finds transactions linked to a budget
-    List<Transaction> findByBudget_BudgetId(Integer budgetId);
+    List<Transaction> findByBudget_BudgetIdAndDeletedFalse(Integer budgetId);
     List<Transaction> findByUserAndDeletedFalse(User user);
 
     // Expense summary - only non-deleted transactions
