@@ -256,4 +256,11 @@ public class TransactionService {
 
         return transactionRepository.save(tx);
     }
+
+    public List<BudgetExpenseResponse> findByBudgetId(Integer budgetId) {
+    return transactionRepository.findByBudget_BudgetId(budgetId)
+            .stream()
+            .map(this::toBudgetExpenseResponse)
+            .toList();
+    }
 }
