@@ -27,6 +27,11 @@ export class ViewBudget implements OnInit {
   categories = signal<Category[]>([]);
   budgetId = signal<number>(0);
 
+  // Snackbar
+  showNotification = signal(false);
+  isHidingNotification = signal(false);
+  notificationMessage = signal('');
+
   ngOnInit(): void {
     this.initBudgetId();
     this.getCategories();
@@ -62,7 +67,10 @@ export class ViewBudget implements OnInit {
 
   deleteBudgetExpense(transactionId: number) {
     this.budgetTxService.delete(transactionId).subscribe({
-      next: () => this.getBudgetExpenses(),
+      next: () => {
+        this.getBudgetExpenses(),
+        this.showNotificationMessage("Expense deleted succesfully!");
+      },
       error: (err) => console.error('Failed to delete expense', err)
     });
   }
@@ -73,5 +81,19 @@ export class ViewBudget implements OnInit {
 
   onBudgetExpenseUpdated(_event: BudgetTransaction) {
     this.getBudgetExpenses();
+  }
+
+  showNotificationMessage(message: string) {
+    this.notificationMessage.set(message);
+    this.showNotification.set(true);
+    this.isHidingNotification.set(false);
+
+    setTimeout(() => {
+      this.isHidingNotification.set(true);
+      setTimeout(() => {
+        this.showNotification.set(false);
+        this.isHidingNotification.set(false);
+      }, 300);
+    }, 3000);
   }
 }
