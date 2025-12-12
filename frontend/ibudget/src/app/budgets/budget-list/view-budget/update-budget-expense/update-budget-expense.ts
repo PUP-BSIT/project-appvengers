@@ -4,6 +4,8 @@ import { Modal } from 'bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { BudgetTransactionsService } from '../../../../../services/budget.transactions.service';
 import { BudgetTransaction } from '../../../../../models/user.model';
+import { computed } from '@angular/core';
+import { Category } from '../../../../../models/user.model';
 
 @Component({
   selector: 'app-update-budget-expense',
@@ -16,6 +18,14 @@ export class UpdateBudgetExpense implements OnInit {
 
   @ViewChild('updateBudgetExpenseModal') updateBudgetExpenseModal!: ElementRef;
   @ViewChild('openUpdateBudgetExpenseModalBtn') openUpdateBudgetExpenseModalBtn!: ElementRef;
+
+  // Categories passed from parent
+  categories = input<Category[]>([]);
+
+  // Derived signal: expense-only categories
+  expenseCategories = computed(() => 
+    this.categories().filter(c => c.type?.toLowerCase() === 'expense')
+  );
 
   // Input from parent
   transactionId = input<number>(0);
