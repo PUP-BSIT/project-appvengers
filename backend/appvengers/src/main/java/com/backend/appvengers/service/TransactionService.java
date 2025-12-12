@@ -283,18 +283,27 @@ public class TransactionService {
     public Transaction createBudgetExpense(BudgetExpenseRequest req) {
 
         Budget budget = budgetRepository.findById(req.budget_id())
-            .orElseThrow(() -> new RuntimeException("Budget not found"));
+            .orElseThrow(() -> new RuntimeException(
+                "Budget not found"
+            ));
 
-        User user = userRepository.findById((long)budget.getUserId())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById((long) budget.getUserId())
+            .orElseThrow(() -> new RuntimeException(
+                "User not found"
+            ));
+
+        Category category = categoryRepository.findById(req.category_id())
+            .orElseThrow(() -> new RuntimeException(
+                "Category not found"
+            ));
 
         Transaction tx = new Transaction();
         tx.setBudget(budget);
         tx.setUser(user);
+        tx.setCategoryRef(category);  
         tx.setTransactionDate(req.transaction_date());
         tx.setDescription(req.description());
         tx.setAmount(req.amount());
-        tx.setCategoryId(req.category_id());
         tx.setType("expense");
 
         return transactionRepository.save(tx);
@@ -303,17 +312,23 @@ public class TransactionService {
     //Budget Transaction [Update Budget Expense Method]
     @Transactional
     public Transaction updateBudgetExpense(Long id, BudgetExpenseRequest req) {
+
         Transaction tx = transactionRepository.findById(id)
             .orElseThrow(() -> new RuntimeException(
-                    "Budget transaction not found"
-                ));
+                "Budget transaction not found"
+            ));
+
+        Category category = categoryRepository.findById(req.category_id())
+            .orElseThrow(() -> new RuntimeException(
+                "Category not found"
+            ));
 
         tx.setTransactionDate(req.transaction_date());
         tx.setDescription(req.description());
-        tx.setCategoryId(req.category_id());
+        tx.setCategoryRef(category);  
         tx.setAmount(req.amount());
         tx.setType("expense");
-        
+
         return transactionRepository.save(tx);
     }
 
