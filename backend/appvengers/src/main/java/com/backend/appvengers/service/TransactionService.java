@@ -269,6 +269,15 @@ public class TransactionService {
         );
     }
 
+    //Budget Transaction  [List Budget Expense Method]
+    public List<BudgetExpenseResponse> findByBudgetId(Integer budgetId) {
+    return transactionRepository
+            .findByBudget_BudgetIdAndDeletedAtIsNull(budgetId)
+            .stream()
+            .map(this::toBudgetExpenseResponse)
+            .toList();
+    }
+    
     //Budget Transaction  [Create Budget Expense Method]
     @Transactional
     public Transaction createBudgetExpense(BudgetExpenseRequest req) {
@@ -289,15 +298,6 @@ public class TransactionService {
         return transactionRepository.save(tx);
     }
 
-    //Budget Transaction  [List Budget Expense Method]
-    public List<BudgetExpenseResponse> findByBudgetId(Integer budgetId) {
-    return transactionRepository
-            .findByBudget_BudgetIdAndDeletedAtIsNull(budgetId)
-            .stream()
-            .map(this::toBudgetExpenseResponse)
-            .toList();
-    }
-
     //Budget Transaction  [Update Budget Expense Method]
     @Transactional
     public Transaction updateBudgetExpense(Long id, BudgetExpenseRequest req) {
@@ -312,5 +312,17 @@ public class TransactionService {
         tx.setType("expense");
         
         return transactionRepository.save(tx);
+    }
+
+    //Budget Transaction  [Delete Budget Expense Method]
+    @Transactional
+    public void deleteBudgetExpense(Long id) {
+        Transaction tx = transactionRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException(
+                "Budget transaction not found"
+            ));
+
+        tx.setDeletedAt(LocalDate.now());
+        transactionRepository.save(tx);
     }
 }
