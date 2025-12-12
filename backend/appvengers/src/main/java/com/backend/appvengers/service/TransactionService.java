@@ -265,6 +265,7 @@ public class TransactionService {
             t.getBudget() != null ? t.getBudget().getBudgetId() : null,
             t.getTransactionDate(),
             t.getDescription(),
+            t.getCategoryRef() != null ? t.getCategoryRef().getId() : null,
             t.getAmount()
         );
     }
