@@ -16,13 +16,21 @@ export class TransactionsService {
     );
   }
 
-  create(payload: Partial<Transaction>): Observable<TransactionResponse> {
+
+  getAllWithCategory(): Observable<TransactionResponse[]> {
+    const url = `${this.base}/with-category`;
+    return this.http.get<ApiResponse>(url).pipe(
+      map((res: ApiResponse) => (res.data || []) as TransactionResponse[])
+    );
+  }
+
+  create(payload: { amount: number; type: 'income'|'expense'; category_id?: number; description: string; transactionDate: string; }): Observable<TransactionResponse> {
     return this.http.post<ApiResponse>(this.base, payload).pipe(
       map((res: ApiResponse) => res.data as TransactionResponse)
     );
   }
 
-  update(id: number, payload: Partial<Transaction>): Observable<TransactionResponse> {
+  update(id: number, payload: { amount: number; type: 'income'|'expense'; category_id?: number; description: string; transactionDate: string; }): Observable<TransactionResponse> {
     return this.http.put<ApiResponse>(`${this.base}/${id}`, payload).pipe(
       map((res: ApiResponse) => res.data as TransactionResponse)
     );
