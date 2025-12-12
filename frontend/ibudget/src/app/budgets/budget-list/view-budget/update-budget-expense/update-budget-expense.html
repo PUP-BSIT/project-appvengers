@@ -32,9 +32,9 @@
               class="form-select"
               formControlName="category_id">
               <option selected disabled>-- Select Category --</option>
-              <option value="1">Education</option>
-              <option value="2">Food</option>
-              <option value="3">Transportation</option>
+                @for (c of expenseCategories(); track c.id) {
+                  <option [value]="c.id">{{ c.name }}</option>
+                }
             </select>
 
             <label for="description">Description</label>
