@@ -294,6 +294,8 @@ public class TransactionService {
         tx.setTransactionDate(req.transaction_date());
         tx.setDescription(req.description());
         tx.setAmount(req.amount());
+        tx.setCategoryId(req.category_id());
+        tx.setType("expense");
 
         return transactionRepository.save(tx);
     }
