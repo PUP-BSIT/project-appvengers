@@ -1,6 +1,35 @@
 <app-sidebar/>
 <app-header/>
 
+<div class="saving-sub-header bg-primary text-white">
+  <div class="d-flex align-items-center gap-3">
+    <i 
+      class="bi bi-arrow-left"
+      routerLink="/savings"
+      title="Back to Savings"></i>
+    <span class="mb-0">View Saving</span>
+  </div>
+
+  <div class="d-flex flex-row gap-2 justify-content-start">
+    <button 
+      type="button"
+      title="Edit Saving"
+      class="btn btn-sm btn-warning bg-transparent text-white border border-0"
+      [routerLink]="['/savings/update-saving', savingId()]">
+        <i class="bi bi-pencil"></i>
+    </button>
+
+    <button
+      #deleteSavingModalBtn
+      type="button"
+      title="Delete Saving"
+      class="btn btn-sm btn-danger bg-transparent text-white border border-0"
+      (click)="openDeleteModal()">
+        <i class="bi bi-trash-fill"></i>
+    </button>
+  </div>
+</div>
+
 <main>
   @if(isLoading()) {
     <div class="loading-spinner-container">
@@ -10,10 +39,7 @@
 
   <div class="card">
     <div class="card-header bg-dark text-white d-flex align-items-center gap-3">
-      <i 
-        class="bi bi-arrow-return-left"
-        routerLink="/savings"></i>
-      <h4 class="mb-0">{{ currentSaving().name }}</h4>
+      <h5 class="mb-0">{{ currentSaving().name }}</h5>
     </div>
 
     <div class="card-body d-flex flex-column">
@@ -87,23 +113,6 @@
     </div>
   </div>
 
-  <div class="card d-flex flex-row gap-2 justify-content-start p-3 mt-3">
-    <button 
-      type="button"
-      class="btn btn-sm btn-warning"
-      [routerLink]="['/savings/update-saving', savingId()]">
-        Edit Saving
-    </button>
-
-    <button
-      #deleteSavingModalBtn
-      type="button"
-      class="btn btn-sm btn-danger"
-      (click)="openDeleteModal()">
-        Delete Saving
-    </button>
-  </div>
-
   <div class="mt-5">
     <!-- History of Saving Transactions -->
     <div class="history-container">
@@ -175,9 +184,9 @@
                       #deleteTransactionBtn
                       type="button"
                       class="btn btn-sm btn-danger"
-                      (click)="openDeleteTransactionModal(
-                          transaction.id)">
-                        Delete
+                      (click)="openDeleteTransactionModal(transaction.id)"
+                      title="Delete">
+                        <i class="bi bi-trash-fill"></i>
                     </button>
                   </td>
                 </tr>
