@@ -23,6 +23,8 @@ public class Transaction {
     @Column(name = "transaction_id")
     private Long id;
 
+    private String type; // e.g., "income" or "expense"
+
     @ManyToOne
     @JoinColumn(name = "saving_id", referencedColumnName = "saving_id")
     private Saving saving;
