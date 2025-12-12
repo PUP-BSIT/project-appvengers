@@ -4,7 +4,7 @@ import {
 import { Sidebar } from "../sidebar/sidebar";
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe, DatePipe, CommonModule } from '@angular/common';
-import {Transaction, TransactionResponse} from "../../models/user.model";
+import {Transaction, TransactionResponse, Category} from "../../models/user.model";
 import { Header } from '../header/header';
 import { TransactionsService } from '../../services/transactions.service';
 import { AuthService } from '../../services/auth.service';
@@ -47,10 +47,13 @@ export class Transactions implements OnInit, OnDestroy {
   newTransaction = {
     date: new Date().toISOString().split('T')[0],
     description: '',
+    category_id: undefined as number | undefined,
     category: '',
     amount: 0,
     type: 'expense' as 'income' | 'expense'
   };
+  // Holds selected category id for backend payload
+  newTransactionCategoryId: number | null = null;
 
   selectedCategory = 'All Categories';
   categories = [
@@ -109,6 +112,9 @@ export class Transactions implements OnInit, OnDestroy {
     'Interest',
     'Other'
   ];
+
+  // Full category objects from backend
+  allCategories: Category[] = [];
 
   selectedPeriod = 'daily';
 
@@ -169,20 +175,28 @@ export class Transactions implements OnInit, OnDestroy {
           break;
           
         case 'monthly':
-          const startOfMonth = new Date(today.getFullYear(),
-                                        today.getMonth(), 1);
-          const endOfMonth = new Date(today.getFullYear(),
-                                        today.getMonth() + 1, 0);
+          const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+          // Make endOfMonth inclusive (end of day)
+          const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+          endOfMonth.setHours(23, 59, 59, 999);
           filtered = filtered.filter(t => {
-            const transactionDate = new Date(t.date);
+            // Avoid timezone shifting by normalizing string dates to local midnight
+            const transactionDate = typeof t.date === 'string'
+              ? new Date(`${t.date}T00:00:00`)
+              : new Date(t.date);
             transactionDate.setHours(0, 0, 0, 0);
-            return transactionDate >= startOfMonth &&
-                   transactionDate <= endOfMonth;
+            return transactionDate >= startOfMonth && transactionDate <= endOfMonth;
           });
           break;
       }
       
-      this.filteredTransactions = filtered;
+      // Ensure consistent sorting by date desc then id desc
+      this.filteredTransactions = filtered.sort((a, b) => {
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        if (dateB !== dateA) return dateB - dateA;
+        return (b.id || 0) - (a.id || 0);
+      });
       this.currentPage = 1;
     }
 
@@ -195,12 +209,15 @@ export class Transactions implements OnInit, OnDestroy {
   }
 
   onCategorySelectChange() {
-    if (this.newTransaction.category === 'custom') {
-      this.showCustomCategoryInput = true;
-      this.customCategoryName = '';
+    // Bind directly to category_id and keep name in-sync for display
+    this.showCustomCategoryInput = false;
+    this.customCategoryName = '';
+    this.newTransactionCategoryId = this.newTransaction.category_id ?? null;
+    if (this.newTransactionCategoryId) {
+      const match = this.allCategories.find(c => c.id === this.newTransactionCategoryId);
+      this.newTransaction.category = match ? match.name : '';
     } else {
-      this.showCustomCategoryInput = false;
-      this.customCategoryName = '';
+      this.newTransaction.category = '';
     }
   }
 
@@ -214,10 +231,12 @@ export class Transactions implements OnInit, OnDestroy {
     this.newTransaction = {
       date: new Date().toISOString().split('T')[0],
       description: '',
+      category_id: undefined,
       category: '',
       amount: 0,
       type: 'expense'
     };
+    this.newTransactionCategoryId = null;
     this.isIncomeToggle.set(false);
   }
 
@@ -228,27 +247,24 @@ export class Transactions implements OnInit, OnDestroy {
   setExpenseType() {
     this.newTransaction.type = 'expense';
     this.newTransaction.category = '';
+    this.newTransaction.category_id = undefined;
   }
 
   setIncomeType() {
     this.newTransaction.type = 'income';
     this.newTransaction.category = '';
+    this.newTransaction.category_id = undefined;
   }
 
-  getModalCategories(): string[] {
-    return this.newTransaction.type === 'income' 
-      ? this.incomeCategories 
-      : this.expenseCategories;
+  getModalCategories(): Category[] {
+    return this.allCategories.filter(c => c.type === this.newTransaction.type);
   }
 
   addTransaction() {
     if (this.newTransaction.description &&
-        this.newTransaction.category && this.newTransaction.amount > 0) {
+        (this.newTransaction.category_id || this.newTransactionCategoryId) && this.newTransaction.amount > 0) {
 
-      const finalCategory = this.showCustomCategoryInput &&
-                            this.customCategoryName 
-        ? this.customCategoryName 
-        : this.newTransaction.category;
+      const finalCategoryId: number | undefined = this.newTransactionCategoryId ?? this.newTransaction.category_id ?? undefined;
 
       if (this.showCustomCategoryInput && this.customCategoryName && 
           !this.categories.includes(this.customCategoryName)) {
@@ -258,7 +274,7 @@ export class Transactions implements OnInit, OnDestroy {
       const payload = {
         amount: this.newTransaction.amount,
         type: this.newTransaction.type,
-        category: finalCategory,
+        category_id: finalCategoryId,
         description: this.newTransaction.description,
         transactionDate: this.newTransaction.date
       };
@@ -320,9 +336,10 @@ export class Transactions implements OnInit, OnDestroy {
     this.newTransaction = {
       date: transaction.date instanceof Date 
         ? transaction.date.toISOString().split('T')[0]
-        : transaction.date,
+        : (transaction.date as any),
       description: transaction.description,
-      category: transaction.category,
+      category_id: transaction.category_id,
+      category: transaction.category!,
       amount: transaction.amount,
       type: transaction.type!
     };
@@ -331,22 +348,19 @@ export class Transactions implements OnInit, OnDestroy {
   updateTransaction() {
     if (this.editingTransactionId !== null &&
         this.newTransaction.description &&
-        this.newTransaction.category && this.newTransaction.amount > 0) {
+        (this.newTransaction.category_id || this.newTransactionCategoryId) && this.newTransaction.amount > 0) {
 
-      const finalCategory = this.showCustomCategoryInput
-        && this.customCategoryName 
-        ? this.customCategoryName 
-        : this.newTransaction.category;
+      const finalCategoryId: number | undefined = this.newTransactionCategoryId ?? this.newTransaction.category_id ?? undefined;
 
       if (this.showCustomCategoryInput && this.customCategoryName && 
           !this.categories.includes(this.customCategoryName)) {
         this.categories.push(this.customCategoryName);
       }
-      
+ 
       const payload = {
         amount: this.newTransaction.amount,
         type: this.newTransaction.type,
-        category: finalCategory,
+        category_id: finalCategoryId,
         description: this.newTransaction.description,
         transactionDate: this.newTransaction.date
       };
@@ -393,19 +407,21 @@ export class Transactions implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Load transactions
-    this.txService.getAll().subscribe({
+    // Load transactions with category linkage
+    this.txService.getAllWithCategory().subscribe({
       next: (txs) => {
       const backendTransactions = txs.map(
-        (t: TransactionResponse): Transaction => ({
+        (t: any): Transaction => ({
           id: t.id,
-          date: t.transactionDate ? new Date(t.transactionDate) : new Date(),
+          // Normalize date strings to local midnight to avoid timezone shifts breaking filters
+          date: t.transactionDate ? new Date(`${t.transactionDate}T00:00:00`) : new Date(),
           description: t.description,
-          category: t.category,
+          category: t.category ?? t.name,
+          category_id: typeof t.category_id === 'number' ? t.category_id : (t.categoryId != null ? Number(t.categoryId) : undefined),
           amount: t.amount,
           type: t.type
       }));
-      this.transactions = [...this.transactions, ...backendTransactions];
+      this.transactions = [...backendTransactions];
       this.filterTransactions();
       try {
         this.cd.detectChanges();
@@ -421,6 +437,7 @@ export class Transactions implements OnInit, OnDestroy {
     // Load categories for filters and modal dropdown
     this.categoriesService.getCategories().subscribe({
       next: (cats) => {
+      this.allCategories = cats;
       const allNames = cats.map(c => c.name);
       this.categories = ['All Categories', ...allNames];
       this.expenseCategories = cats
@@ -547,6 +564,14 @@ export class Transactions implements OnInit, OnDestroy {
 
   getPageNumbers(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  getCategoryName(categoryId?: number, fallbackName?: string): string {
+    if (categoryId) {
+      const cat = this.allCategories.find(c => c.id === categoryId);
+      if (cat) return cat.name;
+    }
+    return fallbackName || '';
   }
 
   getRelativeDate(date: Date | string | undefined): string {
