@@ -305,7 +305,6 @@ public class TransactionService {
         tx.setTransactionDate(req.transaction_date());
         tx.setDescription(req.description());
         tx.setAmount(req.amount());
-        tx.setType("expense");
 
         return transactionRepository.save(tx);
     }
@@ -328,7 +327,6 @@ public class TransactionService {
         tx.setDescription(req.description());
         tx.setCategoryRef(category);  
         tx.setAmount(req.amount());
-        tx.setType("expense");
 
         return transactionRepository.save(tx);
     }
