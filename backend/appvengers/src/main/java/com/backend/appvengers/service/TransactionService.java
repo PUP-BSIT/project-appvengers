@@ -7,12 +7,15 @@ import com.backend.appvengers.dto.IncomeSummary;
 import com.backend.appvengers.dto.MonthlyReportResponse;
 import com.backend.appvengers.dto.TransactionRequest;
 import com.backend.appvengers.dto.TransactionResponse;
+import com.backend.appvengers.dto.TransactionWithCategoryResponse;
 import com.backend.appvengers.entity.Budget;
 import com.backend.appvengers.entity.Transaction;
 import com.backend.appvengers.entity.User;
+import com.backend.appvengers.entity.Category;
 import com.backend.appvengers.repository.BudgetRepository;
 import com.backend.appvengers.repository.TransactionRepository;
 import com.backend.appvengers.repository.UserRepository;
+import com.backend.appvengers.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,14 +36,33 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
     private final BudgetRepository budgetRepository;
+    private final CategoryRepository categoryRepository;
 
     public List<TransactionResponse> findAllForUser(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return transactionRepository.findByUserAndDeletedAtIsNullAndSavingIsNull(user).stream()
+        return transactionRepository.findByUserAndDeletedAtIsNull(user).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    public List<TransactionWithCategoryResponse> findAllWithCategory(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Match native query constraints: category join present, saving_id NULL, budget_id NULL, category_id NOT NULL
+        List<Transaction> txs = transactionRepository.findByUserAndDeletedAtIsNull(user);
+        return txs.stream().map(t -> new TransactionWithCategoryResponse(
+                t.getId(),
+                t.getAmount(),
+                t.getDescription(),
+                t.getTransactionDate(),
+                t.getCategoryRef() != null ? t.getCategoryRef().getId() : null,
+                t.getCategoryRef() != null ? t.getCategoryRef().getName() : null,
+                t.getCategoryRef() != null ? t.getCategoryRef().getType() : null,
+                t.getCategoryRef() != null ? t.getCategoryRef().getUserId() : null
+        )).toList();
     }
 
     @Transactional
@@ -51,8 +73,13 @@ public class TransactionService {
         Transaction t = new Transaction();
         t.setUser(user);
         t.setAmount(req.getAmount());
-        t.setType(req.getType());
-        t.setCategory(req.getCategory());
+        if (req.getCategory_id() != null) {
+            Category cat = categoryRepository.findById(req.getCategory_id())
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            t.setCategoryRef(cat);
+        } else {
+            t.setCategoryRef(null);
+        }
         t.setDescription(req.getDescription());
         t.setTransactionDate(req.getTransactionDate());
 
@@ -73,8 +100,13 @@ public class TransactionService {
         }
 
         t.setAmount(req.getAmount());
-        t.setType(req.getType());
-        t.setCategory(req.getCategory());
+        if (req.getCategory_id() != null) {
+            Category cat = categoryRepository.findById(req.getCategory_id())
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            t.setCategoryRef(cat);
+        } else {
+            t.setCategoryRef(null);
+        }
         t.setDescription(req.getDescription());
         t.setTransactionDate(req.getTransactionDate());
 
@@ -219,8 +251,9 @@ public class TransactionService {
         return new TransactionResponse(
                 t.getId(),
                 t.getAmount(),
-                t.getType(),
-                t.getCategory(),
+                t.getCategoryRef() != null ? t.getCategoryRef().getId() : null,
+                t.getCategoryRef() != null ? t.getCategoryRef().getName() : null,
+                t.getCategoryRef() != null ? t.getCategoryRef().getType() : null,
                 t.getDescription(),
                 t.getTransactionDate()
         );
@@ -232,8 +265,7 @@ public class TransactionService {
             t.getBudget() != null ? t.getBudget().getBudgetId() : null,
             t.getTransactionDate(),
             t.getDescription(),
-            t.getAmount(),
-            t.getType()
+            t.getAmount()
         );
     }
 
@@ -252,7 +284,6 @@ public class TransactionService {
         tx.setTransactionDate(req.transaction_date());
         tx.setDescription(req.description());
         tx.setAmount(req.amount());
-        tx.setType("expense");
 
         return transactionRepository.save(tx);
     }
