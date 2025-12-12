@@ -131,6 +131,16 @@ public class TransactionController {
         }
     }
 
+    // Budget Transaction endpoint [GET]
+    @GetMapping("/budget-transactions/budget/{budgetId}")
+    public ResponseEntity<ApiResponse> getBudgetExpenses(@PathVariable Integer budgetId) {
+        List<BudgetExpenseResponse> list = transactionService.findByBudgetId(budgetId);
+
+        return ResponseEntity.ok(
+            new ApiResponse(true, "Budget expenses fetched", list)
+        );
+    }
+
     // Budget Transaction endpoint [POST]
     @PostMapping("/budget-transactions")
     public ResponseEntity<ApiResponse> createBudgetExpense(
@@ -157,15 +167,37 @@ public class TransactionController {
                 )
             );
         }
-    } 
+    }
 
-    // Budget Transaction endpoint [GET]
-    @GetMapping("/budget-transactions/budget/{budgetId}")
-    public ResponseEntity<ApiResponse> getBudgetExpenses(@PathVariable Integer budgetId) {
-        List<BudgetExpenseResponse> list = transactionService.findByBudgetId(budgetId);
+    // Budget Transaction Endpoint [PUT]
+    @PutMapping("/budget-transactions/{id}")
+    public ResponseEntity<ApiResponse> updateBudgetExpense(
+        @PathVariable Long id,
+        @RequestBody BudgetExpenseRequest req
+    ) {
+        try {
+            Transaction tx =
+                transactionService.updateBudgetExpense(id, req);
 
-        return ResponseEntity.ok(
-            new ApiResponse(true, "Budget expenses fetched", list)
-        );
+            BudgetExpenseResponse dto =
+                transactionService.toBudgetExpenseResponse(tx);
+
+            return ResponseEntity.ok(
+                new ApiResponse(
+                    true,
+                    "Budget expense updated successfully",
+                    dto
+                )
+            );
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(
+                new ApiResponse(
+                    false,
+                    e.getMessage(),
+                    null
+                )
+            );
+        }
     }
 }
