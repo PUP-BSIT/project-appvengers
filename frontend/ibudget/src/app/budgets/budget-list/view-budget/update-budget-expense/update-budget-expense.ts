@@ -67,16 +67,17 @@ export class UpdateBudgetExpense implements OnInit {
     this.updateBudgetExpenseForm.patchValue({
       transactionDate: this.date()
     });
+  }
+
+  openModal() {
+    const modal = new Modal(this.updateBudgetExpenseModal.nativeElement);
 
     // Load existing transaction data
     const id = this.transactionId();
     if (id && id > 0) {
       this.loadTransaction();
     }
-  }
-
-  openModal() {
-    const modal = new Modal(this.updateBudgetExpenseModal.nativeElement);
+    
     modal.show();
   }
 
