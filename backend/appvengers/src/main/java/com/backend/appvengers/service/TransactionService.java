@@ -266,7 +266,8 @@ public class TransactionService {
             t.getTransactionDate(),
             t.getDescription(),
             t.getCategoryRef().getName(),
-            t.getAmount()
+            t.getAmount(),
+            t.getType()
         );
     }
 
