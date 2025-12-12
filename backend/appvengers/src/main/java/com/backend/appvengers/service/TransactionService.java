@@ -310,6 +310,7 @@ public class TransactionService {
 
         tx.setTransactionDate(req.transaction_date());
         tx.setDescription(req.description());
+        tx.setCategoryId(req.category_id());
         tx.setAmount(req.amount());
         tx.setType("expense");
         
