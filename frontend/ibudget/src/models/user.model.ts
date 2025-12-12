@@ -54,17 +54,19 @@ export type Transaction = {
   id: number;
   date: Date;
   description: string;
-  category: string;
+  category?: string; 
+  category_id?: number; 
   amount: number;
   type?: 'income' | 'expense';
 }
 
 export type TransactionResponse = {
   id: number;
-  transactionDate: string | Date;
-  description: string;
-  category: string;
   amount: number;
+  description: string;
+  transactionDate: string | Date;
+  category: string;
+  category_id?: number;
   type: 'income' | 'expense';
 }
 
