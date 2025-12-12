@@ -7,88 +7,108 @@
     <p>Fill in the details below to update your saving goal.</p>
   
     <form [formGroup]="updateSavingForm">
-      <div class="mb-3">
-        <label for="saving_name" class="form-label">Saving Name</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          id="saving_name" 
-          formControlName="name"
-          placeholder="Enter saving name">
-
-        <!-- Validator Indicator -->
-        @if(updateSavingForm.get('name')?.touched && 
-          updateSavingForm.get('name')?.invalid) 
-        {
-          <div class="text-danger mt-1">
-            Saving Name is required.
+      <div class="first-row">
+        <div class="mb-3">
+          <label for="saving_name" class="form-label">Saving Name</label>
+          <div class="input-group">
+            <i class="bi bi-piggy-bank input-group-text"></i>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="saving_name" 
+              formControlName="name"
+              placeholder="Enter saving name"/>
           </div>
-        }
-      </div>
-  
-      <div class="mb-3">
-        <label for="target_amount" class="form-label">Target Amount</label>
-        <input 
-          type="number" 
-          class="form-control" 
-          id="target_amount" 
-          formControlName="target_amount"
-          placeholder="Enter target amount">
 
-        <!-- Validator Indicator -->
-        @if(updateSavingForm.get('target_amount')?.touched && 
-          updateSavingForm.get('target_amount')?.invalid)
-        {
-          @if(updateSavingForm.get('target_amount')?.errors?.['required']) {
+          <!-- Validator Indicator -->
+          @if(updateSavingForm.get('name')?.touched && 
+            updateSavingForm.get('name')?.invalid) 
+          {
             <div class="text-danger mt-1">
-              Target Amount is required.
-            </div>
-          } @else if(updateSavingForm.get('target_amount')?.errors?.['min']) {
-            <div class="text-danger mt-1">
-              Target Amount must be at least 1.
+              Saving Name is required.
             </div>
           }
-        }
-      </div>
-
-      <div class="mb-3">
-        <label for="frequency" class="form-label">Frequency</label>
-        <select class="form-select" id="frequency" formControlName="frequency">
-          <option value="" disabled selected>Select frequency</option>
-          <option value="Daily">Daily</option>
-          <option value="Weekly">Weekly</option>
-          <option value="Monthly">Monthly</option>
-        </select>
-
-        <!-- Validator Indicator -->
-        @if(updateSavingForm.get('frequency')?.touched &&
-          updateSavingForm.get('frequency')?.invalid) 
-        {
-          <div class="text-danger mt-1">
-            Frequency is required.
+        </div>
+    
+        <div class="mb-3">
+          <label for="target_amount" class="form-label">Target Amount</label>
+          <div class="input-group">
+            <i class="bi bi-currency-dollar input-group-text"></i>
+            <input 
+              type="number" 
+              class="form-control" 
+              id="target_amount" 
+              formControlName="target_amount"
+              placeholder="Enter target amount"/>
           </div>
-        }
+
+          <!-- Validator Indicator -->
+          @if(updateSavingForm.get('target_amount')?.touched && 
+            updateSavingForm.get('target_amount')?.invalid)
+          {
+            @if(updateSavingForm.get('target_amount')?.errors?.['required']) {
+              <div class="text-danger mt-1">
+                Target Amount is required.
+              </div>
+            } @else if(updateSavingForm.get('target_amount')?.errors?.['min']) {
+              <div class="text-danger mt-1">
+                Target Amount must be at least 1.
+              </div>
+            }
+          }
+        </div>
       </div>
-
-      <div class="mb-3">
-        <label for="goal_date" class="form-label">Goal Date</label>
-        <input 
-          type="date" 
-          class="form-control" 
-          formControlName="goal_date"
-          id="goal_date">
-
-        <!-- Validator Indicator -->
-        @if(updateSavingForm.get('goal_date')?.touched &&
-          updateSavingForm.get('goal_date')?.invalid) 
-        {
-          <div class="text-danger mt-1">
-            Goal Date is required.
+      
+      <div class="second-row">
+        <div class="mb-3">
+          <label for="frequency" class="form-label">Frequency</label>
+          <div class="input-group">
+            <i class="bi bi-clock-history input-group-text"></i>
+            <select 
+                class="form-select" 
+                id="frequency" 
+                formControlName="frequency">
+              <option value="" disabled selected>Select frequency</option>
+              <option value="Daily">Daily</option>
+              <option value="Weekly">Weekly</option>
+              <option value="Monthly">Monthly</option>
+            </select>
           </div>
-        }
+
+
+          <!-- Validator Indicator -->
+          @if(updateSavingForm.get('frequency')?.touched &&
+            updateSavingForm.get('frequency')?.invalid) 
+          {
+            <div class="text-danger mt-1">
+              Frequency is required.
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="goal_date" class="form-label">Goal Date</label>
+          <div class="input-group">
+            <i class="bi bi-calendar-event input-group-text"></i>
+            <input 
+            type="date" 
+            class="form-control" 
+            formControlName="goal_date"
+            id="goal_date"/>
+          </div>
+
+          <!-- Validator Indicator -->
+          @if(updateSavingForm.get('goal_date')?.touched &&
+            updateSavingForm.get('goal_date')?.invalid) 
+          {
+            <div class="text-danger mt-1">
+              Goal Date is required.
+            </div>
+          }
+        </div>
       </div>
-  
-      <div class="mb-3">
+      
+      <!-- <div class="mb-3">
         <label for="current_amount" class="form-label">Current Amount</label>
         <input 
           type="number" 
@@ -98,7 +118,7 @@
           formControlName="current_amount"
           title="This is readonly and cannot be changed manually."
           readonly>
-      </div>
+      </div> -->
 
       <div>
         <label for="description" class="form-label">Description</label>

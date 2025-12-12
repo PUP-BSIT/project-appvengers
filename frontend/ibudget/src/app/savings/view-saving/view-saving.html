@@ -85,7 +85,9 @@
         <div class="mb-0 alert alert-dark info-card">
           <i class="bi bi-file-earmark-text m-1"></i>
           <label class="text-dark-emphasis mb-1">Description</label>
-          <p>{{ currentSaving().description }}</p>
+          <p>
+            {{ currentSaving().description || 'No description available.' }}
+          </p>
         </div>
 
         <div class="mb-0 alert alert-primary info-card">
