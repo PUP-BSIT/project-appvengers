@@ -69,15 +69,16 @@ export class UpdateBudgetExpense implements OnInit {
     });
   }
 
-  openModal() {
-    const modal = new Modal(this.updateBudgetExpenseModal.nativeElement);
-
+  ngOnChanges(): void {
     // Load existing transaction data
     const id = this.transactionId();
     if (id && id > 0) {
       this.loadTransaction();
     }
-    
+  }
+
+  openModal() {
+    const modal = new Modal(this.updateBudgetExpenseModal.nativeElement);
     modal.show();
   }
 
