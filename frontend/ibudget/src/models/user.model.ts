@@ -193,7 +193,6 @@ export type BudgetTransaction = {
   userId?: number;
   transactionDate?: string;
   description: string;
-  categoryName: string;
   amount: number;
   type: string;
 };

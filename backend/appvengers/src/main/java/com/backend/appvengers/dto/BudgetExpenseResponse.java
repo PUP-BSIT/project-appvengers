@@ -8,7 +8,5 @@ public record BudgetExpenseResponse(
     Integer budgetId,
     LocalDate transactionDate,
     String description,
-    String categoryName,
-    BigDecimal amount,
-    String type
-) {}    
+    BigDecimal amount
+) {}
