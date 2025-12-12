@@ -173,7 +173,7 @@
                     &#8369; {{ transaction.amount.toFixed(2) }}
                   </td>
                   <td class="text-secondary-emphasis">
-                    {{ transaction.description }}
+                    {{ transaction.description || 'N/A' }}
                   </td>
                   <td class="d-flex gap-1 justify-content-center actions">
                     <app-update-saving-transaction 
@@ -200,7 +200,7 @@
       @if(transactionHistories().length > 0) {
         <nav 
           aria-label="pagination" 
-            class="d-flex justify-content-between align-items-center px-2">
+            class="d-flex justify-content-between align-items-center px-2 mt-2">
           <button 
             class="btn btn-outline-secondary btn-sm" 
             (click)="prevPage()" 
@@ -268,7 +268,7 @@
 
                   <h6 class="mb-0">Description</h6>
                   <p class="text-secondary-emphasis mb-0">
-                    {{ transaction.description }}
+                    {{ transaction.description || 'N/A' }}
                   </p>
 
                   <div class="actions">

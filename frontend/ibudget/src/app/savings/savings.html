@@ -15,6 +15,7 @@
         <button 
           class="btn btn-success"
           routerLink="/savings/add-saving">
+            <i class="bi bi-plus-circle-fill"></i>
             Add New Saving
         </button>
       </div>
@@ -38,7 +39,9 @@
           </div>
 
           <div class="card-body">
-            <p class="card-text">{{ saving.description }}</p>
+            <p class="card-text">
+              {{ saving.description || 'No description available.' }}
+            </p>
 
             <div class="progress-information">
               <label>Progress</label>
