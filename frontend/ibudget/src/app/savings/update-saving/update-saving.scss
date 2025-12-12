@@ -4,17 +4,40 @@ $white-bg: #f9f9f9;
 $form-border: #ccc;
 
 main {
-  @include m.page-layout(50px, auto);
+  @include m.page-layout(30px, auto);
 }
 
 .form-container {
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid $form-border;
   border-radius: 8px;
   background-color: $white-bg;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.first-row, .second-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+  justify-content: space-between;
+
+  input[type="text"] {
+    width: 320px;
+  }
+
+  input[type="number"] {
+    width: 310px;
+  }
+
+  input[type="date"] {
+    width: 310px;
+  }
+
+  select {
+    width: 320px;
+  }
 }
 
 @media (max-width: 320px) {
