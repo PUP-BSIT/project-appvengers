@@ -47,6 +47,7 @@
                 <td>
                   <app-update-budget-expense
                   [transactionId]="transaction.transactionId"
+                  [categories] ="categories()"
                   (updateBudgetExpenseResponse)="onBudgetExpenseUpdated($event)"/>
 
                   <button 
