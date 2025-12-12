@@ -22,6 +22,9 @@ export class Savings implements OnInit {
   isLoading = signal(true);
   toastMessage = signal('');
   toastType = signal<'success' | 'error'>('success');
+  // Pagination state
+  pageSize = signal(3);
+  currentPage = signal(1);
   router = inject(Router);
 
   ngOnInit() {
@@ -57,6 +60,7 @@ export class Savings implements OnInit {
     this.savingsService.getSavings().subscribe({
       next: (savingsData) => {
         this.savings.set(savingsData as Saving[]);
+        this.currentPage.set(1);
         this.isLoading.set(false);
       },
       error: (error) => {
@@ -64,5 +68,36 @@ export class Savings implements OnInit {
         console.error('Error fetching savings:', error);
       }
     });
+  }
+
+  // Pagination helpers
+  paginatedSavings() {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return this.savings().slice(start, start + this.pageSize());
+  }
+
+  totalPages() {
+    const len = this.savings().length;
+    const pages = Math.ceil(len / this.pageSize());
+    return pages > 0 ? pages : 1;
+  }
+
+  getPageNumbers() {
+    return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
+  }
+
+  goToPage(page: number) {
+    const clamped = Math.min(Math.max(page, 1), this.totalPages());
+    this.currentPage.set(clamped);
+  }
+
+  prevPage() { this.goToPage(this.currentPage() - 1); }
+  nextPage() { this.goToPage(this.currentPage() + 1); }
+
+  updateCurrentPage(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const num = Number(input.value);
+    if (!Number.isNaN(num)) this.goToPage(num);
+    else input.value = String(this.currentPage());
   }
 }
