@@ -200,4 +200,31 @@ public class TransactionController {
             );
         }
     }
+
+    // Budget Transaction Endpoint [DELETE]
+    @DeleteMapping("/budget-transactions/{id}")
+    public ResponseEntity<ApiResponse> deleteBudgetExpense(
+        @PathVariable Long id
+    ) {
+        try {
+            transactionService.deleteBudgetExpense(id);
+
+            return ResponseEntity.ok(
+                new ApiResponse(
+                    true,
+                    "Budget expense deleted successfully",
+                    null
+                )
+            );
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(
+                new ApiResponse(
+                    false,
+                    e.getMessage(),
+                    null
+                )
+            );
+        }
+    }
 }
