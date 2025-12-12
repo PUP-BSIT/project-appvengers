@@ -13,8 +13,9 @@ import java.time.LocalDate;
 public class TransactionResponse {
     private Long id;
     private BigDecimal amount;
-    private String type;
-    private String category;
+    private Integer category_id; // optional: present when linked
+    private String category; // category name from Category entity
+    private String type; // type from Category entity (INCOME/EXPENSE)
     private String description;
     private LocalDate transactionDate;
 }

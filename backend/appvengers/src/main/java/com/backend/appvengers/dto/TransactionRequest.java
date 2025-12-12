@@ -1,6 +1,5 @@
 package com.backend.appvengers.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,10 +19,8 @@ public class TransactionRequest {
     @NotNull
     private BigDecimal amount;
 
-    @NotBlank
-    private String type;
-
-    private String category;
+    // New: category id to bind to Category entity
+    private Integer category_id;
 
     private String description;
 

@@ -36,14 +36,14 @@ public class Transaction {
     @JoinColumn(name = "budget_id")
     private Budget budget;
 
+    // Optional relation to Category for normalized linkage
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category categoryRef;
+
     @NotNull
     @Column(nullable = false)
     private BigDecimal amount;
-
-    @Column(name = "type")
-    private String type; // e.g., "income" or "expense"
-
-    private String category;
 
     private String description;
 

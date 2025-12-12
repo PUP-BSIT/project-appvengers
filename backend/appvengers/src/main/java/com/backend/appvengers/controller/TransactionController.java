@@ -9,6 +9,7 @@ import com.backend.appvengers.dto.MonthlyReportResponse;
 import com.backend.appvengers.entity.Transaction;
 import com.backend.appvengers.dto.TransactionRequest;
 import com.backend.appvengers.dto.TransactionResponse;
+import com.backend.appvengers.dto.TransactionWithCategoryResponse;
 import com.backend.appvengers.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,14 @@ public class TransactionController {
         String email = auth.getName();
         List<TransactionResponse> txs = transactionService.findAllForUser(email);
         return ResponseEntity.ok(new ApiResponse(true, "Transactions fetched", txs));
+    }
+
+    @GetMapping("/with-category")
+    public ResponseEntity<ApiResponse> listWithCategory(
+            Authentication auth) {
+        String email = auth.getName();
+        List<TransactionWithCategoryResponse> txs = transactionService.findAllWithCategory(email);
+        return ResponseEntity.ok(new ApiResponse(true, "Transactions with category fetched", txs));
     }
 
     @PostMapping
