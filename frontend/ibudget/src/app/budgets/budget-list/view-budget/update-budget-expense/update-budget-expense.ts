@@ -95,8 +95,9 @@ export class UpdateBudgetExpense implements OnInit {
       this.updateBudgetExpenseForm.patchValue({
         transactionId: tx.transactionId,
         budgetId: tx.budgetId,
-        transactionDate: tx.transactionDate,
+        transaction_date: tx.transactionDate,
         description: tx.description,
+        category_id: tx.categoryId,
         amount: tx.amount,
         type: tx.type
       });
