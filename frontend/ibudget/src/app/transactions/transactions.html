@@ -117,8 +117,8 @@
                 <div class="category-section">
                   <span
                     class="category-tag"
-                    [ngClass]="[(transaction.category || '').toLowerCase()]">
-                    {{ transaction.category }}
+                    [ngClass]="[(getCategoryName(transaction.category_id, transaction.category) || '').toLowerCase()]">
+                    {{ getCategoryName(transaction.category_id, transaction.category) }}
                   </span>
                 </div>
               </div>
@@ -244,14 +244,14 @@
                 <label for="category">Category</label>
                 <select
                   id="category"
-                  [(ngModel)]="newTransaction.category"
-                  name="category"
+                  [(ngModel)]="newTransaction.category_id"
+                  name="category_id"
                   #category="ngModel"
                   (change)="onCategorySelectChange()"
                   required>
                   <option value="" disabled selected>Select category</option>
-                  @for (cat of getModalCategories(); track cat) {
-                    <option [value]="cat">{{ cat }}</option>
+                  @for (cat of getModalCategories(); track cat.id) {
+                    <option [value]="cat.id">{{ cat.name }}</option>
                   }
                 </select>
                 
