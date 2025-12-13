@@ -1,0 +1,36 @@
+# iBudget - Personal Budget Management Application
+# https://i-budget.site
+
+User-agent: *
+
+# Allow public pages
+Allow: /
+Allow: /auth-page
+Allow: /login-page
+Allow: /sign-up
+
+# Disallow authenticated/private user areas
+Disallow: /dashboard
+Disallow: /transactions
+Disallow: /budgets
+Disallow: /savings
+Disallow: /categories
+Disallow: /reports
+Disallow: /settings
+Disallow: /notifications
+
+# Disallow authentication flow pages
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /email-verification
+Disallow: /resend-verification
+Disallow: /setup-account
+
+# Disallow API endpoints
+Disallow: /api/
+
+# Crawl-delay for polite crawling
+Crawl-delay: 10
+
+# Sitemap
+Sitemap: https://i-budget.site/sitemap.xml
