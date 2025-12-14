@@ -27,6 +27,26 @@ export class Notifications implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.notificationService.fetchNotifications();
+    
+    // Subscribe to notifications and trigger confetti for unread milestone/completion notifications
+    this.notificationService.notifications$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(notifications => {
+      notifications.forEach(notification => {
+        // Only trigger confetti for unread notifications we haven't processed yet
+        if (!notification.read && !this.processedNotificationIds.has(notification.id)) {
+          if (notification.type === 'SAVINGS_COMPLETED') {
+            console.log('🎉 Triggering celebration confetti for:', notification.title);
+            this.confettiService.celebrate();
+            this.processedNotificationIds.add(notification.id);
+          } else if (notification.type === 'SAVINGS_MILESTONE_50' || notification.type === 'SAVINGS_MILESTONE_75') {
+            console.log('⭐ Triggering milestone confetti for:', notification.title);
+            this.confettiService.milestone();
+            this.processedNotificationIds.add(notification.id);
+          }
+        }
+      });
+    });
   }
 
   ngOnDestroy() {
