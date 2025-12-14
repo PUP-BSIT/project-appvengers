@@ -69,6 +69,9 @@ public class NotificationService {
 
         // Generate savings deadline notifications
         generateSavingsDeadlineNotifications(userId);
+
+        // Generate savings milestone notifications
+        generateSavingsMilestoneNotifications(userId);
     }
 
     /**
@@ -238,6 +241,96 @@ public class NotificationService {
         notification.setMessage(String.format(
                 "Your \"%s\" savings goal is due in %s! Currently at %.0f%% (₱%d of ₱%d).",
                 saving.getName(), timeLabel, progress, saving.getCurrentAmount(), saving.getTargetAmount()));
+        notification.setReferenceId(saving.getSavingId());
+        notification.setAmount((double) saving.getTargetAmount() - saving.getCurrentAmount());
+        notification.setCategory(saving.getName());
+        notification.setRead(false);
+
+        notificationRepository.save(notification);
+    }
+
+    /**
+     * Check all active savings for milestone completion (50%, 75%, 100%).
+     */
+    private void generateSavingsMilestoneNotifications(int userId) {
+        List<Saving> savings = savingRepository.findActiveSavingsByUserId(userId);
+
+        for (Saving saving : savings) {
+            if (saving.getTargetAmount() <= 0) {
+                continue;
+            }
+
+            double progress = ((double) saving.getCurrentAmount() / saving.getTargetAmount()) * 100;
+
+            // Check 100% completion (Goal Completed)
+            if (progress >= 100) {
+                createSavingsCompletedNotification(userId, saving, progress);
+            }
+            // Check 75% milestone
+            else if (progress >= 75 && progress < 100) {
+                createSavingsMilestoneNotification(userId, saving, 75, progress, Urgency.MEDIUM);
+            }
+            // Check 50% milestone
+            else if (progress >= 50 && progress < 75) {
+                createSavingsMilestoneNotification(userId, saving, 50, progress, Urgency.LOW);
+            }
+        }
+    }
+
+    /**
+     * Create a notification for savings goal completion.
+     */
+    private void createSavingsCompletedNotification(int userId, Saving saving, double progress) {
+        // Check if notification already exists
+        if (notificationRepository.existsByUserIdAndTypeAndReferenceIdAndIsDeletedFalse(
+                userId, NotificationType.SAVINGS_COMPLETED, saving.getSavingId())) {
+            return;
+        }
+
+        Notification notification = new Notification();
+        notification.setUserId(userId);
+        notification.setType(NotificationType.SAVINGS_COMPLETED);
+        notification.setUrgency(Urgency.LOW); // Positive notification
+        notification.setTitle("🎉 Goal Completed!");
+        notification.setMessage(String.format(
+                "Congratulations! You've reached your \"%s\" goal of ₱%d! Time to celebrate!",
+                saving.getName(), saving.getTargetAmount()));
+        notification.setReferenceId(saving.getSavingId());
+        notification.setAmount((double) saving.getCurrentAmount());
+        notification.setCategory(saving.getName());
+        notification.setRead(false);
+
+        notificationRepository.save(notification);
+    }
+
+    /**
+     * Create a notification for savings milestone (50% or 75%).
+     */
+    private void createSavingsMilestoneNotification(int userId, Saving saving, int milestone, double progress, Urgency urgency) {
+        NotificationType milestoneType = milestone == 50 
+            ? NotificationType.SAVINGS_MILESTONE_50 
+            : NotificationType.SAVINGS_MILESTONE_75;
+
+        // Check if this specific milestone notification already exists
+        if (notificationRepository.existsByUserIdAndTypeAndReferenceIdAndIsDeletedFalse(
+                userId, milestoneType, saving.getSavingId())) {
+            return;
+        }
+
+        String milestoneEmoji = milestone == 50 ? "🎯" : "⭐";
+        String milestoneMessage = milestone == 50 
+            ? "You're halfway there!" 
+            : "You're almost there!";
+
+        Notification notification = new Notification();
+        notification.setUserId(userId);
+        notification.setType(milestoneType);
+        notification.setUrgency(urgency);
+        notification.setTitle(String.format("%s Milestone Reached!", milestoneEmoji));
+        notification.setMessage(String.format(
+                "%s Your \"%s\" fund is at %d%% (₱%d of ₱%d). Keep it up! 💪",
+                milestoneMessage, saving.getName(), milestone, 
+                saving.getCurrentAmount(), saving.getTargetAmount()));
         notification.setReferenceId(saving.getSavingId());
         notification.setAmount((double) saving.getTargetAmount() - saving.getCurrentAmount());
         notification.setCategory(saving.getName());

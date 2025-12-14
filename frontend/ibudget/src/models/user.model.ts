@@ -76,10 +76,11 @@ export type Notification = {
   message: string;
   date: string;
   amount?: number;
-  type: 'warning' | 'info' | 'alert' | 'BUDGET_WARNING' | 'BUDGET_EXCEEDED' | 'SAVINGS_DEADLINE';
+  type: 'warning' | 'info' | 'alert' | 'BUDGET_WARNING' | 'BUDGET_EXCEEDED' | 'SAVINGS_DEADLINE' | 'SAVINGS_COMPLETED' | 'SAVINGS_MILESTONE_50' | 'SAVINGS_MILESTONE_75';
   read: boolean;
   category?: string;
   savingName?: string;
+  referenceId?: number; // For "View Details" navigation
 }
 
 export type ReportRecord = {

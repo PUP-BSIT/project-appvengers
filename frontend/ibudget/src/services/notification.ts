@@ -30,6 +30,9 @@ export class NotificationService {
     ['alert', 'fas fa-bell'],
     ['SAVINGS_DEADLINE', 'fas fa-info-circle'],
     ['info', 'fas fa-info-circle'],
+    ['SAVINGS_COMPLETED', 'fas fa-trophy'],
+    ['SAVINGS_MILESTONE_50', 'fas fa-star'],
+    ['SAVINGS_MILESTONE_75', 'fas fa-star'],
   ]);
 
   private readonly colorMap = new Map<string, string>([
@@ -39,6 +42,9 @@ export class NotificationService {
     ['alert', 'alert'],
     ['SAVINGS_DEADLINE', 'info'],
     ['info', 'info'],
+    ['SAVINGS_COMPLETED', 'success'],
+    ['SAVINGS_MILESTONE_50', 'milestone'],
+    ['SAVINGS_MILESTONE_75', 'milestone'],
   ]);
 
   constructor(private http: HttpClient) { }

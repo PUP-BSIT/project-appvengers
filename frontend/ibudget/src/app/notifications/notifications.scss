@@ -175,6 +175,14 @@ $sidebar-width: 100px;
   color: #3498db;
 }
 
+.notification-item.unread.success .notification-icon i {
+  color: #27ae60;
+}
+
+.notification-item.unread.milestone .notification-icon i {
+  color: #9b59b6;
+}
+
 /* Force grey icon for read notifications */
 .notification-item:not(.unread) .notification-icon i {
   color: #95a5a6 !important;
@@ -280,6 +288,16 @@ $sidebar-width: 100px;
 
 .btn-delete:hover {
   background: #e74c3c;
+  color: white;
+}
+
+.btn-view-details {
+  color: #3498db;
+  border: 1px solid #3498db;
+}
+
+.btn-view-details:hover {
+  background: #3498db;
   color: white;
 }
 
