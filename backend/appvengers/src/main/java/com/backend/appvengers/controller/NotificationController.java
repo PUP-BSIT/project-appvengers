@@ -38,7 +38,6 @@ public class NotificationController {
 
     /**
      * Get all notifications for the current user.
-     * This also generates fresh notifications based on current data.
      */
     @GetMapping
     public ResponseEntity<List<NotificationResponse>> getNotifications(Authentication auth) {
