@@ -39,6 +39,23 @@ public class NotificationService {
     private final UserRepository userRepository;
 
     /**
+     * Scheduled task to generate notifications for all users.
+     * Runs every 5 minutes.
+     */
+    @org.springframework.scheduling.annotation.Scheduled(fixedRate = 300000)
+    public void generateAllNotifications() {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            try {
+                generateNotifications(user.getId());
+            } catch (Exception e) {
+                // Log error but continue for other users
+                System.err.println("Error generating notifications for user " + user.getId() + ": " + e.getMessage());
+            }
+        }
+    }
+
+    /**
      * Generate new notifications based on current user data.
      * This checks budgets and savings and creates notifications as needed.
      */
@@ -61,39 +78,59 @@ public class NotificationService {
         List<Budget> budgets = budgetRepository.findActiveBudgetsByUserId(userId);
         LocalDate today = LocalDate.now();
 
+        // Group budgets by date range to minimize DB queries
+        java.util.Map<String, java.util.List<Budget>> budgetsByRange = new java.util.HashMap<>();
         for (Budget budget : budgets) {
             // Skip budgets outside their date range
             if (today.isBefore(budget.getStartDate()) || today.isAfter(budget.getEndDate())) {
                 continue;
             }
+            String key = budget.getStartDate().toString() + "|" + budget.getEndDate().toString();
+            budgetsByRange.computeIfAbsent(key, k -> new java.util.ArrayList<>()).add(budget);
+        }
 
-            // Get category name for this budget
-            String categoryName = getCategoryName(budget.getCategoryId());
+        for (java.util.Map.Entry<String, java.util.List<Budget>> entry : budgetsByRange.entrySet()) {
+            java.util.List<Budget> rangeBudgets = entry.getValue();
+            if (rangeBudgets.isEmpty()) continue;
 
-            // Calculate total spent in this category within budget date range
-            Double totalSpent = transactionRepository.findMonthlyExpenseByCategoryForBudget(
-                    user, categoryName, budget.getStartDate(), budget.getEndDate());
+            LocalDate startDate = rangeBudgets.get(0).getStartDate();
+            LocalDate endDate = rangeBudgets.get(0).getEndDate();
 
-            if (totalSpent == null) {
-                totalSpent = 0.0;
+            // Fetch all expenses for this date range in one query
+            List<Object[]> expenses = transactionRepository.findMonthlyExpenseByCategoryAndDateRange(
+                    user, startDate, endDate);
+
+            java.util.Map<String, Double> expenseMap = new java.util.HashMap<>();
+            for (Object[] row : expenses) {
+                String cat = (String) row[0];
+                Double amt = ((Number) row[1]).doubleValue();
+                expenseMap.put(cat, amt);
             }
 
-            double limitAmount = budget.getLimitAmount();
+            for (Budget budget : rangeBudgets) {
+                // Get category name for this budget
+                String categoryName = getCategoryName(budget.getCategoryId());
 
-            // Guard against division by zero
-            if (limitAmount <= 0) {
-                continue;
-            }
+                // Get total spent from map
+                Double totalSpent = expenseMap.getOrDefault(categoryName, 0.0);
 
-            double remainingPercent = ((limitAmount - totalSpent) / limitAmount) * 100;
+                double limitAmount = budget.getLimitAmount();
 
-            // Check if budget is exceeded
-            if (totalSpent >= limitAmount) {
-                createBudgetExceededNotification(userId, budget, categoryName, totalSpent);
-            }
-            // Check if budget is running low (10-20% remaining)
-            else if (remainingPercent >= 10 && remainingPercent <= 20) {
-                createBudgetWarningNotification(userId, budget, categoryName, totalSpent, remainingPercent);
+                // Guard against division by zero
+                if (limitAmount <= 0) {
+                    continue;
+                }
+
+                double remainingPercent = ((limitAmount - totalSpent) / limitAmount) * 100;
+
+                // Check if budget is exceeded
+                if (totalSpent >= limitAmount) {
+                    createBudgetExceededNotification(userId, budget, categoryName, totalSpent);
+                }
+                // Check if budget is running low (10-20% remaining)
+                else if (remainingPercent >= 10 && remainingPercent <= 20) {
+                    createBudgetWarningNotification(userId, budget, categoryName, totalSpent, remainingPercent);
+                }
             }
         }
     }
@@ -112,9 +149,13 @@ public class NotificationService {
 
             long daysRemaining = ChronoUnit.DAYS.between(today, saving.getGoalDate());
 
-            // Only notify for 7, 3, or 1 days remaining
-            if (daysRemaining == 7 || daysRemaining == 3 || daysRemaining == 1) {
-                createSavingsDeadlineNotification(userId, saving, daysRemaining);
+            // Notify based on ranges
+            if (daysRemaining <= 7 && daysRemaining > 3) {
+                createSavingsDeadlineNotification(userId, saving, daysRemaining, Urgency.LOW);
+            } else if (daysRemaining <= 3 && daysRemaining > 1) {
+                createSavingsDeadlineNotification(userId, saving, daysRemaining, Urgency.MEDIUM);
+            } else if (daysRemaining <= 1 && daysRemaining >= 0) {
+                createSavingsDeadlineNotification(userId, saving, daysRemaining, Urgency.HIGH);
             }
         }
     }
@@ -175,27 +216,16 @@ public class NotificationService {
     /**
      * Create a notification for approaching savings deadline.
      */
-    private void createSavingsDeadlineNotification(int userId, Saving saving, long daysRemaining) {
-        // Determine urgency based on days remaining
-        // 7 days = LOW (blue/info)
-        // 3 days = MEDIUM (yellow/warning)
-        // 1 day = HIGH (red/alert)
-        Urgency urgencyLevel;
-        if (daysRemaining == 7) {
-            urgencyLevel = Urgency.LOW;
-        } else if (daysRemaining == 3) {
-            urgencyLevel = Urgency.MEDIUM;
-        } else {
-            urgencyLevel = Urgency.HIGH;
-        }
-
-        // Check if notification already exists (read or unread)
-        if (notificationRepository.existsNotification(userId, NotificationType.SAVINGS_DEADLINE,
-                saving.getSavingId())) {
+    private void createSavingsDeadlineNotification(int userId, Saving saving, long daysRemaining, Urgency urgencyLevel) {
+        // Check if notification of THIS urgency level already exists
+        if (notificationRepository.existsByUserIdAndTypeAndReferenceIdAndUrgencyAndIsDeletedFalse(
+                userId, NotificationType.SAVINGS_DEADLINE, saving.getSavingId(), urgencyLevel)) {
             return;
         }
 
-        String timeLabel = daysRemaining == 1 ? "Tomorrow" : daysRemaining + " days";
+        String timeLabel = daysRemaining <= 1 ? "Tomorrow" : daysRemaining + " days";
+        if (daysRemaining == 0) timeLabel = "Today";
+        
         double progress = saving.getTargetAmount() > 0
                 ? ((double) saving.getCurrentAmount() / saving.getTargetAmount()) * 100
                 : 0;
@@ -229,9 +259,6 @@ public class NotificationService {
      * Get all notifications for a user.
      */
     public List<NotificationResponse> getNotifications(int userId) {
-        // Generate fresh notifications first
-        generateNotifications(userId);
-
         List<Notification> notifications = notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
 
         return notifications.stream()
