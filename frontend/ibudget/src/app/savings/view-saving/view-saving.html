@@ -360,12 +360,14 @@
     <!-- Toast -->
     <div class="toast-container">
       <div #viewSavingToast 
-          class="toast align-items-center border-0"
-          [ngClass]="{ 
-            'text-bg-success': toastType() === 'success', 
-            'text-bg-danger': toastType() === 'error' }">
+          class="toast align-items-center border-0">
         <div class="d-flex justify-content-between">
           <div class="toast-body" role="alert">
+            <i 
+              class="fas fa-check-circle" 
+              [ngClass]="{ 
+              'fas fa-check-circle': toastType() === 'success', 
+              'bi bi-x-circle-fill': toastType() === 'error' }"></i>
             <span>{{ toastMessage() }}</span>
           </div>
 
