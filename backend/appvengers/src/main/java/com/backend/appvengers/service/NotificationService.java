@@ -272,7 +272,7 @@ public class NotificationService {
     }
 
     /**
-     * Delete a notification.
+     * Delete a notification (soft delete).
      */
     @Transactional
     public void deleteNotification(Long notificationId, int userId) {
@@ -283,6 +283,9 @@ public class NotificationService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unauthorized to delete this notification");
         }
 
-        notificationRepository.delete(notification);
+        // Soft delete: mark as deleted instead of removing from database
+        notification.setDeleted(true);
+        notification.setDeletedAt(java.time.LocalDateTime.now());
+        notificationRepository.save(notification);
     }
 }

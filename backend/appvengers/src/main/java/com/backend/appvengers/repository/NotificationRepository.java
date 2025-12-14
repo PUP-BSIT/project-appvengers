@@ -14,10 +14,12 @@ import com.backend.appvengers.entity.Notification.NotificationType;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    // Get all notifications for a user, ordered by most recent first
+    // Get all notifications for a user, ordered by most recent first (excluding deleted)
+    @Query("SELECT n FROM Notification n WHERE n.userId = :userId AND n.isDeleted = false ORDER BY n.createdAt DESC")
     List<Notification> findByUserIdOrderByCreatedAtDesc(int userId);
 
-    // Get unread count for a user
+    // Get unread count for a user (excluding deleted)
+    @Query("SELECT COUNT(n) FROM Notification n WHERE n.userId = :userId AND n.isRead = false AND n.isDeleted = false")
     long countByUserIdAndIsReadFalse(int userId);
 
     // Mark all notifications as read for a user
@@ -25,12 +27,20 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Query("UPDATE Notification n SET n.isRead = true, n.readAt = CURRENT_TIMESTAMP WHERE n.userId = :userId AND n.isRead = false")
     void markAllAsReadByUserId(@Param("userId") int userId);
 
-    // Check if a notification already exists (read or unread) to avoid duplicates
-    @Query("SELECT COUNT(n) > 0 FROM Notification n WHERE n.userId = :userId AND n.type = :type AND n.referenceId = :referenceId")
+    // Check if a notification already exists (read or unread, excluding deleted) to avoid duplicates
+    @Query("SELECT COUNT(n) > 0 FROM Notification n WHERE n.userId = :userId AND n.type = :type AND n.referenceId = :referenceId AND n.isDeleted = false")
     boolean existsNotification(
             @Param("userId") int userId,
             @Param("type") NotificationType type,
             @Param("referenceId") Integer referenceId);
+
+    // Check if a notification of a specific urgency already exists
+    @Query("SELECT COUNT(n) > 0 FROM Notification n WHERE n.userId = :userId AND n.type = :type AND n.referenceId = :referenceId AND n.urgency = :urgency AND n.isDeleted = false")
+    boolean existsByUserIdAndTypeAndReferenceIdAndUrgencyAndIsDeletedFalse(
+            @Param("userId") int userId,
+            @Param("type") NotificationType type,
+            @Param("referenceId") Integer referenceId,
+            @Param("urgency") com.backend.appvengers.entity.Notification.Urgency urgency);
 
     // Delete old read notifications (cleanup - optional)
     @Modifying
