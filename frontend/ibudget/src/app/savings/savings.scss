@@ -94,6 +94,50 @@ main {
   right: 15px;
   z-index: 9999;
   padding: 10px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.toast-body {
+  i.fa-check-circle {
+    color: #4caf50;
+    font-size: 1.2rem;
+    margin-right: 5px;
+  }
+
+  i.bi-x-circle-fill  {
+    color: #f44336;
+  }
+
+  span {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+}
+
+.toast-container.hide {
+  animation: slideOut 0.5s ease-in forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }
 
 @media (max-width: 320px) {
