@@ -73,24 +73,75 @@ $sidebar-width: 100px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   display: flex;
   gap: 1rem;
-  border-left: 4px solid #ddd;
+  border-left: 4px solid #ddd; /* Default grey border for read notifications */
 }
 
 .notification-item.unread {
-  border-left-color: #3498db;
   background: #f8fafc;
+  border-left-color: #3498db; /* Default unread color */
+
+  &.warning {
+    border-left-color: #f39c12;
+  }
+
+  &.alert {
+    border-left-color: #e74c3c;
+  }
+
+  &.info {
+    border-left-color: #3498db;
+  }
 }
 
-.notification-item.warning {
-  border-left-color: #f39c12;
+.notification-icon {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 0.25rem;
 }
 
-.notification-item.alert {
-  border-left-color: #e74c3c;
+.notification-icon i {
+  font-size: 1.5rem;
+  width: 40px;
+  text-align: center;
+  color: #95a5a6; /* Default icon color for read notifications */
 }
 
-.notification-item.info {
-  border-left-color: #3498db;
+/* Only color icons if the notification is UNREAD */
+.notification-item.unread .notification-icon i {
+  color: #3498db; /* Default unread icon color */
+}
+
+.notification-item.unread.warning .notification-icon i {
+  color: #f39c12;
+}
+
+.notification-item.unread.alert .notification-icon i {
+  color: #e74c3c;
+}
+
+.notification-item.unread.info .notification-icon i {
+  color: #3498db;
+}
+
+.notification-item.unread {
+  background: #f8fafc;
+
+  &.warning {
+    border-left-color: #f39c12;
+  }
+
+  &.alert {
+    border-left-color: #e74c3c;
+  }
+
+  &.info {
+    border-left-color: #3498db;
+  }
+}
+
+/* Ensure read notifications always have grey border regardless of type */
+.notification-item:not(.unread) {
+  border-left-color: #ddd !important;
 }
 
 .notification-item:hover {
@@ -108,18 +159,25 @@ $sidebar-width: 100px;
   font-size: 1.5rem;
   width: 40px;
   text-align: center;
+  color: #95a5a6; /* Default icon color for read notifications */
 }
 
-.notification-item.warning .notification-icon i {
+/* Only color icons if the notification is UNREAD */
+.notification-item.unread.warning .notification-icon i {
   color: #f39c12;
 }
 
-.notification-item.alert .notification-icon i {
+.notification-item.unread.alert .notification-icon i {
   color: #e74c3c;
 }
 
-.notification-item.info .notification-icon i {
+.notification-item.unread.info .notification-icon i {
   color: #3498db;
+}
+
+/* Force grey icon for read notifications */
+.notification-item:not(.unread) .notification-icon i {
+  color: #95a5a6 !important;
 }
 
 .notification-content {

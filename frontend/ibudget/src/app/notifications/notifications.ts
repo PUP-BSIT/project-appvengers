@@ -39,11 +39,40 @@ export class Notifications implements OnInit {
   }
 
   getNotificationIcon(type: string): string {
-    return this.notificationService.getNotificationIcon(type);
+    switch (type) {
+      case 'BUDGET_WARNING':
+      case 'warning': 
+        return 'fas fa-exclamation-triangle';
+      
+      case 'BUDGET_EXCEEDED':
+      case 'alert': 
+        return 'fas fa-bell';
+      
+      case 'SAVINGS_DEADLINE':
+      case 'info': 
+        return 'fas fa-info-circle';
+        
+      default: return 'fas fa-bell';
+    }
   }
 
   getNotificationColor(type: string): string {
-    return this.notificationService.getNotificationColor(type);
+    // Map backend enum types to frontend classes
+    switch (type) {
+      case 'BUDGET_WARNING':
+      case 'warning': 
+        return 'warning';
+      
+      case 'BUDGET_EXCEEDED':
+      case 'alert': 
+        return 'alert';
+      
+      case 'SAVINGS_DEADLINE':
+      case 'info': 
+        return 'info';
+        
+      default: return 'info';
+    }
   }
 
   getWarningCount(): number {
