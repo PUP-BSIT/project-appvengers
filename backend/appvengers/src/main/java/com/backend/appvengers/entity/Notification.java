@@ -73,4 +73,10 @@ public class Notification {
 
     @Column(name = "read_at")
     private LocalDateTime readAt;
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }
