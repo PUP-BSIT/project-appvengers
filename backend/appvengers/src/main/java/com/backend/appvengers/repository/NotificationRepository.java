@@ -42,6 +42,13 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             @Param("referenceId") Integer referenceId,
             @Param("urgency") com.backend.appvengers.entity.Notification.Urgency urgency);
 
+    // Check if a notification already exists (for milestones/completion, excluding deleted)
+    @Query("SELECT COUNT(n) > 0 FROM Notification n WHERE n.userId = :userId AND n.type = :type AND n.referenceId = :referenceId AND n.isDeleted = false")
+    boolean existsByUserIdAndTypeAndReferenceIdAndIsDeletedFalse(
+            @Param("userId") int userId,
+            @Param("type") NotificationType type,
+            @Param("referenceId") Integer referenceId);
+
     // Delete old read notifications (cleanup - optional)
     @Modifying
     @Query("DELETE FROM Notification n WHERE n.userId = :userId AND n.isRead = true AND n.readAt < :olderThan")

@@ -52,6 +52,18 @@
                 <i class="fas fa-check"></i>
               </button>
             }
+            
+            @if (notification.type === 'SAVINGS_COMPLETED' || 
+                 notification.type === 'SAVINGS_MILESTONE_50' || 
+                 notification.type === 'SAVINGS_MILESTONE_75') {
+              <button 
+                class="btn-view-details"
+                (click)="viewDetails(notification.referenceId!)"
+                title="View details">
+                <i class="fas fa-eye"></i>
+              </button>
+            }
+            
             <button 
               class="btn-delete"
               (click)="deleteNotification(notification.id)"

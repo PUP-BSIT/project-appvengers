@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
 import { Notification } from '../../models/user.model';
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { NotificationService } from '../../services/notification';
+import { ConfettiService } from '../../services/confetti.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -15,8 +17,13 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class Notifications implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
+  private processedNotificationIds = new Set<number>();
 
-  constructor(public notificationService: NotificationService) { }
+  constructor(
+    public notificationService: NotificationService,
+    private confettiService: ConfettiService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.notificationService.fetchNotifications();
@@ -41,6 +48,10 @@ export class Notifications implements OnInit, OnDestroy {
 
   deleteNotification(id: number) {
     this.notificationService.deleteNotification(id);
+  }
+
+  viewDetails(referenceId: number) {
+    this.router.navigate(['/savings/view-saving', referenceId]);
   }
 }
 
