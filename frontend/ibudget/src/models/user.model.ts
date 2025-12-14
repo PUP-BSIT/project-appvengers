@@ -76,7 +76,7 @@ export type Notification = {
   message: string;
   date: string;
   amount?: number;
-  type: 'warning' | 'info' | 'alert';
+  type: 'warning' | 'info' | 'alert' | 'BUDGET_WARNING' | 'BUDGET_EXCEEDED' | 'SAVINGS_DEADLINE';
   read: boolean;
   category?: string;
   savingName?: string;

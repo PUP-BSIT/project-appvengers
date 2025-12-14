@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, map } from 'rxjs';
 import { Notification } from '../models/user.model';
 import { environment } from '../environments/environment';
 
@@ -12,6 +12,34 @@ export class NotificationService {
 
   private notificationsSubject = new BehaviorSubject<Notification[]>([]);
   public notifications$ = this.notificationsSubject.asObservable();
+
+  // Computed observables for counts (memoized)
+  public unreadCount$ = this.notifications$.pipe(
+    map(notifications => notifications.filter(n => !n.read).length)
+  );
+
+  public warningCount$ = this.notifications$.pipe(
+    map(notifications => notifications.filter(n => n.type === 'BUDGET_WARNING' || n.type === 'warning').length)
+  );
+
+  // Map-based lookups for O(1) performance
+  private readonly iconMap = new Map<string, string>([
+    ['BUDGET_WARNING', 'fas fa-exclamation-triangle'],
+    ['warning', 'fas fa-exclamation-triangle'],
+    ['BUDGET_EXCEEDED', 'fas fa-bell'],
+    ['alert', 'fas fa-bell'],
+    ['SAVINGS_DEADLINE', 'fas fa-info-circle'],
+    ['info', 'fas fa-info-circle'],
+  ]);
+
+  private readonly colorMap = new Map<string, string>([
+    ['BUDGET_WARNING', 'warning'],
+    ['warning', 'warning'],
+    ['BUDGET_EXCEEDED', 'alert'],
+    ['alert', 'alert'],
+    ['SAVINGS_DEADLINE', 'info'],
+    ['info', 'info'],
+  ]);
 
   constructor(private http: HttpClient) { }
 
@@ -85,24 +113,14 @@ export class NotificationService {
   }
 
   getWarningCount(): number {
-    return this.notifications.filter(n => n.type === 'warning').length;
+    return this.notificationsSubject.value.filter(n => n.type === 'BUDGET_WARNING' || n.type === 'warning').length;
   }
 
   getNotificationIcon(type: string): string {
-    switch (type) {
-      case 'warning': return 'fas fa-exclamation-triangle';
-      case 'alert': return 'fas fa-bell';
-      case 'info': return 'fas fa-info-circle';
-      default: return 'fas fa-bell';
-    }
+    return this.iconMap.get(type) || 'fas fa-bell';
   }
 
   getNotificationColor(type: string): string {
-    switch (type) {
-      case 'warning': return 'warning';
-      case 'alert': return 'alert';
-      case 'info': return 'info';
-      default: return 'info';
-    }
+    return this.colorMap.get(type) || 'info';
   }
 }
