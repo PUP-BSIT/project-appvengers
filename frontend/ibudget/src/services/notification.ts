@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, map } from 'rxjs';
 import { Notification } from '../models/user.model';
 import { environment } from '../environments/environment';
+import { ConfettiService } from './confetti.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,9 @@ export class NotificationService {
 
   private notificationsSubject = new BehaviorSubject<Notification[]>([]);
   public notifications$ = this.notificationsSubject.asObservable();
+
+  // Track previous notification IDs to detect new notifications
+  private previousNotificationIds = new Set<number>();
 
   // Computed observables for counts (memoized)
   public unreadCount$ = this.notifications$.pipe(
@@ -47,12 +51,33 @@ export class NotificationService {
     ['SAVINGS_MILESTONE_75', 'milestone'],
   ]);
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private confettiService: ConfettiService
+  ) { }
 
   fetchNotifications(): void {
     this.http.get<Notification[]>(this.apiUrl)
       .subscribe({
-        next: (data) => this.notificationsSubject.next(data),
+        next: (data) => {
+          // Find truly NEW notifications (not present in previous fetch AND unread)
+          const newNotifications = data.filter(notification => 
+            !this.previousNotificationIds.has(notification.id) && !notification.read
+          );
+
+          // Play sound if there are new unread notifications (but not on first load)
+          if (newNotifications.length > 0 && this.previousNotificationIds.size > 0) {
+            this.confettiService.playNotificationSound();
+            console.log('🔔 New notification(s) received:', newNotifications.length);
+            console.log('New notification IDs:', newNotifications.map(n => n.id));
+          }
+
+          // Update previous IDs tracker (store ALL notification IDs, not just unread)
+          this.previousNotificationIds = new Set(data.map(n => n.id));
+
+          // Update notifications subject
+          this.notificationsSubject.next(data);
+        },
         error: (error) => console.error('Error fetching notifications:', error)
       });
   }
