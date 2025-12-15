@@ -7,11 +7,14 @@
       <i class="fas fa-check-double"></i>
         Mark all as read
     </button>
+    <div class="notifications-stats">
+      <span>Showing {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ Math.min(currentPage * itemsPerPage, notifications.length) }} of {{ notifications.length }}</span>
+    </div>
   </div>
 
   <div class="notifications-content">
     <div class="notifications-list">
-      @for (notification of notifications; track notification.id) {
+      @for (notification of paginatedNotifications; track notification.id) {
         <div
           class="notification-item"
           [class.unread]="!notification.read"
@@ -82,5 +85,51 @@
         </div>
       }
     </div>
+
+    <!-- Pagination Controls -->
+    @if (notifications.length > itemsPerPage) {
+      <div class="pagination">
+        <button 
+          class="pagination-btn"
+          [disabled]="currentPage === 1"
+          (click)="previousPage()">
+          <i class="fas fa-chevron-left"></i>
+          Previous
+        </button>
+
+        <div class="pagination-numbers">
+          @if (visiblePageNumbers[0] > 1) {
+            <button class="pagination-number" (click)="goToPage(1)">1</button>
+            @if (visiblePageNumbers[0] > 2) {
+              <span class="pagination-ellipsis">...</span>
+            }
+          }
+
+          @for (page of visiblePageNumbers; track page) {
+            <button 
+              class="pagination-number"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+              {{ page }}
+            </button>
+          }
+
+          @if (visiblePageNumbers[visiblePageNumbers.length - 1] < totalPages) {
+            @if (visiblePageNumbers[visiblePageNumbers.length - 1] < totalPages - 1) {
+              <span class="pagination-ellipsis">...</span>
+            }
+            <button class="pagination-number" (click)="goToPage(totalPages)">{{ totalPages }}</button>
+          }
+        </div>
+
+        <button 
+          class="pagination-btn"
+          [disabled]="currentPage === totalPages"
+          (click)="nextPage()">
+          Next
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    }
   </div>
 </main>

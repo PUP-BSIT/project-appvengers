@@ -12,8 +12,15 @@ $sidebar-width: 100px;
 
 .notifications-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
+}
+
+.notifications-stats {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .header-left {
@@ -56,6 +63,7 @@ $sidebar-width: 100px;
 
 .notifications-content {
   display: flex;
+  flex-direction: column;
   padding: 0 2rem 2rem 2rem;
 }
 
@@ -325,6 +333,86 @@ $sidebar-width: 100px;
   margin: 0;
 }
 
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding: 1rem 0;
+}
+
+.pagination-btn {
+  background: white;
+  color: #3498db;
+  border: 1px solid #3498db;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  font-weight: 500;
+
+  &:hover:not(:disabled) {
+    background: #3498db;
+    color: white;
+  }
+
+  &:disabled {
+    background: #ecf0f1;
+    color: #95a5a6;
+    border-color: #bdc3c7;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  i {
+    font-size: 0.8rem;
+  }
+}
+
+.pagination-numbers {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.pagination-number {
+  background: white;
+  color: #2c3e50;
+  border: 1px solid #ddd;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  min-width: 40px;
+  text-align: center;
+  transition: all 0.2s;
+  font-weight: 500;
+
+  &:hover {
+    background: #ecf0f1;
+    border-color: #3498db;
+  }
+
+  &.active {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+    font-weight: 600;
+  }
+}
+
+.pagination-ellipsis {
+  color: #7f8c8d;
+  padding: 0 0.25rem;
+  font-weight: 600;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .notifications-container {
@@ -365,5 +453,29 @@ $sidebar-width: 100px;
   .notification-actions {
     flex-direction: row;
     justify-content: flex-end;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .pagination-btn {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+
+    i {
+      font-size: 0.7rem;
+    }
+  }
+
+  .pagination-number {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+    min-width: 35px;
+  }
+
+  .notifications-stats {
+    font-size: 0.8rem;
   }
 }
