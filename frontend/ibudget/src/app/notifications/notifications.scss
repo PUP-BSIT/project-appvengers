@@ -1,4 +1,4 @@
-$background-color: #ffffff;
+$background-color: #f8f9fa;
 $sidebar-width: 100px;
 
 .notifications-container {
@@ -55,6 +55,7 @@ $sidebar-width: 100px;
   display: flex;
   align-items: left;
   gap: 0.5rem;
+  margin-right: 2rem;
 }
 
 .btn-mark-all:hover {
