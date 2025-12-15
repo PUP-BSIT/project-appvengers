@@ -7,10 +7,48 @@ import confetti from 'canvas-confetti';
 export class ConfettiService {
   
   /**
+   * Play a minimal celebration sound - Profile 5: Bell Chime (Classic)
+   * Uses Web Audio API to generate classic bell-like notification sounds
+   */
+  private playSound(type: 'celebrate' | 'milestone') {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const gainNode = audioContext.createGain();
+      gainNode.connect(audioContext.destination);
+      gainNode.gain.value = 0.1; // 10% volume for crisp bells
+
+      if (type === 'celebrate') {
+        // Triangle wave bells C6→E6→G6 (bell-like chime)
+        const frequencies = [1046.50, 1318.51, 1567.98]; // C6, E6, G6
+        frequencies.forEach((freq, index) => {
+          const oscillator = audioContext.createOscillator();
+          oscillator.type = 'triangle'; // Triangle wave for bell-like tone
+          oscillator.frequency.value = freq;
+          oscillator.connect(gainNode);
+          oscillator.start(audioContext.currentTime + index * 0.12);
+          oscillator.stop(audioContext.currentTime + index * 0.12 + 0.25);
+        });
+      } else {
+        // Single C6 bell tone for milestone
+        const oscillator = audioContext.createOscillator();
+        oscillator.type = 'triangle'; // Triangle wave for bell-like tone
+        oscillator.frequency.value = 1046.50; // C6
+        oscillator.connect(gainNode);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.2);
+      }
+    } catch (error) {
+      // Silently fail if audio context not supported
+      console.debug('Audio playback not available:', error);
+    }
+  }
+
+  /**
    * Celebrate with confetti for savings goal completion
-   * Green/gold theme with lots of particles
+   * Green/gold theme with lots of particles + minimal sound
    */
   celebrate() {
+    this.playSound('celebrate');
     const duration = 3000; // 3 seconds
     const animationEnd = Date.now() + duration;
     const defaults = {
@@ -57,9 +95,10 @@ export class ConfettiService {
 
   /**
    * Subtle confetti for milestone achievements (50%, 75%)
-   * Purple/blue theme with fewer particles
+   * Purple/blue theme with fewer particles + minimal sound
    */
   milestone() {
+    this.playSound('milestone');
     const duration = 2000; // 2 seconds
     const animationEnd = Date.now() + duration;
     const defaults = {
