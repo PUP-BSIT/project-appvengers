@@ -5,19 +5,25 @@ import confetti from 'canvas-confetti';
   providedIn: 'root'
 })
 export class ConfettiService {
-  
+
   /**
    * Play a minimal celebration sound - Profile 5: Bell Chime (Classic)
    * Uses Web Audio API to generate classic bell-like notification sounds
    */
-  private playSound(type: 'celebrate' | 'milestone') {
+  private async playSound(type: 'celebrate' | 'milestone' | 'notification') {
     try {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+      // Resume AudioContext if suspended (browser autoplay policy)
+      if (audioContext.state === 'suspended') {
+        await audioContext.resume();
+      }
+
       const gainNode = audioContext.createGain();
       gainNode.connect(audioContext.destination);
-      gainNode.gain.value = 0.1; // 10% volume for crisp bells
 
       if (type === 'celebrate') {
+        gainNode.gain.value = 0.15; // 15% volume for celebration
         // Triangle wave bells C6→E6→G6 (bell-like chime)
         const frequencies = [1046.50, 1318.51, 1567.98]; // C6, E6, G6
         frequencies.forEach((freq, index) => {
@@ -28,7 +34,8 @@ export class ConfettiService {
           oscillator.start(audioContext.currentTime + index * 0.12);
           oscillator.stop(audioContext.currentTime + index * 0.12 + 0.25);
         });
-      } else {
+      } else if (type === 'milestone') {
+        gainNode.gain.value = 0.15; // 15% volume for milestone
         // Single C6 bell tone for milestone
         const oscillator = audioContext.createOscillator();
         oscillator.type = 'triangle'; // Triangle wave for bell-like tone
@@ -36,11 +43,30 @@ export class ConfettiService {
         oscillator.connect(gainNode);
         oscillator.start(audioContext.currentTime);
         oscillator.stop(audioContext.currentTime + 0.2);
+      } else if (type === 'notification') {
+        gainNode.gain.value = 0.12; // 12% volume for general notifications
+        // Gentle G5 notification ping
+        const oscillator = audioContext.createOscillator();
+        oscillator.type = 'triangle'; // Soft triangle wave
+        oscillator.frequency.value = 783.99; // G5 (pleasant, non-intrusive)
+        oscillator.connect(gainNode);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.15);
       }
+
+      console.log(`🔊 Playing ${type} sound (AudioContext state: ${audioContext.state})`);
     } catch (error) {
       // Silently fail if audio context not supported
-      console.debug('Audio playback not available:', error);
+      console.error('Audio playback error:', error);
     }
+  }
+
+  /**
+   * Play subtle notification sound for general notifications
+   * Lower volume and shorter duration than milestone sounds
+   */
+  playNotificationSound() {
+    this.playSound('notification');
   }
 
   /**

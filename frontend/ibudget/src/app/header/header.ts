@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal, OnInit, HostListener } from '@angular/core';
+import { Component, inject, computed, signal, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../services/notification';
@@ -14,12 +14,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
-export class Header implements OnInit {
+export class Header implements OnInit, OnDestroy {
   private notificationService = inject(NotificationService);
   private sidebarService = inject(SidebarService);
   private chatbotService = inject(ChatbotService);
   private router = inject(Router);
   private authService = inject(AuthService);
+
+  private notificationPolling: any;
 
   isChatbotOpen = this.chatbotService.isOpen;
   username = signal<string>('');
@@ -43,6 +45,19 @@ export class Header implements OnInit {
   ngOnInit(): void {
     this.loadUserProfile();
     this.notificationService.fetchNotifications();
+    
+    // Poll for new notifications every 30 seconds
+    this.notificationPolling = setInterval(() => {
+      console.log('🔄 Polling for new notifications...');
+      this.notificationService.fetchNotifications();
+    }, 30000);
+  }
+
+  ngOnDestroy(): void {
+    // Clear polling interval on component destroy
+    if (this.notificationPolling) {
+      clearInterval(this.notificationPolling);
+    }
   }
 
   private loadUserProfile(): void {
