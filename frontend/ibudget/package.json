@@ -36,6 +36,7 @@
     "@ngx-loading-bar/core": "^7.0.0",
     "@ngx-loading-bar/http-client": "^7.0.0",
     "@ngx-loading-bar/router": "^7.0.0",
+    "@stomp/stompjs": "^7.2.1",
     "@types/dompurify": "^3.0.5",
     "angular-svg-round-progressbar": "^15.0.0",
     "bootstrap": "^5.3.8",
@@ -48,6 +49,7 @@
     "marked": "^17.0.1",
     "ng2-charts": "^8.0.0",
     "rxjs": "~7.8.0",
+    "sockjs-client": "^1.6.1",
     "tslib": "^2.3.0",
     "zone.js": "^0.15.1"
   },
@@ -61,6 +63,7 @@
     "@types/canvas-confetti": "^1.9.0",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^24.10.1",
+    "@types/sockjs-client": "^1.5.4",
     "@types/xlsx": "^0.0.35",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.0",

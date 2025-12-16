@@ -24,11 +24,14 @@ import com.backend.appvengers.repository.NotificationRepository;
 import com.backend.appvengers.repository.SavingRepository;
 import com.backend.appvengers.repository.TransactionRepository;
 import com.backend.appvengers.repository.UserRepository;
+import com.backend.appvengers.controller.NotificationWebSocketController;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
@@ -37,6 +40,7 @@ public class NotificationService {
     private final TransactionRepository transactionRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final NotificationWebSocketController webSocketController;
 
     /**
      * Scheduled task to generate notifications for all users.
@@ -186,7 +190,10 @@ public class NotificationService {
         notification.setCategory(categoryName);
         notification.setRead(false);
 
-        notificationRepository.save(notification);
+        Notification savedNotification = notificationRepository.save(notification);
+        
+        // Send via WebSocket for real-time notification
+        sendWebSocketNotification(userId, savedNotification, categoryName);
     }
 
     /**
@@ -213,7 +220,10 @@ public class NotificationService {
         notification.setCategory(categoryName);
         notification.setRead(false);
 
-        notificationRepository.save(notification);
+        Notification savedNotification = notificationRepository.save(notification);
+        
+        // Send via WebSocket for real-time notification
+        sendWebSocketNotification(userId, savedNotification, categoryName);
     }
 
     /**
@@ -246,7 +256,10 @@ public class NotificationService {
         notification.setCategory(saving.getName());
         notification.setRead(false);
 
-        notificationRepository.save(notification);
+        Notification savedNotification = notificationRepository.save(notification);
+        
+        // Send via WebSocket for real-time notification
+        sendWebSocketNotification(userId, savedNotification, saving.getName());
     }
 
     /**
@@ -300,7 +313,10 @@ public class NotificationService {
         notification.setCategory(saving.getName());
         notification.setRead(false);
 
-        notificationRepository.save(notification);
+        Notification savedNotification = notificationRepository.save(notification);
+        
+        // Send via WebSocket for real-time notification
+        sendWebSocketNotification(userId, savedNotification, saving.getName());
     }
 
     /**
@@ -336,7 +352,10 @@ public class NotificationService {
         notification.setCategory(saving.getName());
         notification.setRead(false);
 
-        notificationRepository.save(notification);
+        Notification savedNotification = notificationRepository.save(notification);
+        
+        // Send via WebSocket for real-time notification
+        sendWebSocketNotification(userId, savedNotification, saving.getName());
     }
 
     /**
@@ -407,5 +426,20 @@ public class NotificationService {
         notification.setDeleted(true);
         notification.setDeletedAt(java.time.LocalDateTime.now());
         notificationRepository.save(notification);
+    }
+
+    /**
+     * Helper method to send notification via WebSocket.
+     * Converts the notification entity to response DTO and sends to user.
+     */
+    private void sendWebSocketNotification(int userId, Notification notification, String categoryOrSavingName) {
+        try {
+            NotificationResponse response = NotificationResponse.fromEntity(notification, categoryOrSavingName);
+            webSocketController.sendNotificationToUser(userId, response);
+            log.info("📤 WebSocket notification sent to user {}: {}", userId, notification.getTitle());
+        } catch (Exception e) {
+            // Log error but don't fail the notification creation
+            log.error("❌ Failed to send WebSocket notification to user {}: {}", userId, e.getMessage());
+        }
     }
 }
