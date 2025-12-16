@@ -114,9 +114,6 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit {
         this.lastError.set(null);
 
         this.chatbotService.sendMessage(text)
-            .pipe(
-                finalize(() => this.isLoading.set(false))
-            )
             .subscribe({
                 next: (response: any) => {
                     // Handle null/undefined response
@@ -125,13 +122,30 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit {
                         return;
                     }
                     // Extract bot response from various possible response structures
-                    const botResponse = response.output || response.text || response.message || response.response || 
+                    const botResponse = response.output || response.text || response.message || response.response ||
                                        (typeof response === 'string' ? response : JSON.stringify(response));
                     this.messages.update(msgs => [...msgs, { text: botResponse, isUser: false, timestamp: new Date() }]);
+                    this.isLoading.set(false);
                 },
                 error: (error) => {
-                    console.error('Chatbot error:', error);
-                    this.handleError("Sorry, I couldn't reach the server. Please check your connection and try again.");
+                    // Extract user-friendly error message from error object
+                    let errorMessage = "Sorry, I couldn't reach the server. Please try again.";
+                    
+                    if (error) {
+                        // Try to extract error message from various possible structures
+                        if (typeof error === 'string') {
+                            errorMessage = error;
+                        } else if (error.error) {
+                            errorMessage = typeof error.error === 'string' 
+                                ? error.error 
+                                : error.error.message || errorMessage;
+                        } else if (error.message) {
+                            errorMessage = error.message;
+                        }
+                    }
+                    
+                    this.handleError(errorMessage);
+                    this.isLoading.set(false);
                 }
             });
     }

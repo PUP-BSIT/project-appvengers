@@ -22,9 +22,25 @@ export class ChatbotService {
     private readonly MESSAGES_STORAGE_KEY = 'bonzi_chat_history';
     
     // Unique session ID for conversation continuity with n8n AI agent
-    private readonly sessionId = this.loadOrGenerateSessionId();
+    private _sessionId: string | null = null;
 
     isOpen = signal(false);
+
+    get sessionId(): string {
+        try {
+            const stored = localStorage.getItem(this.SESSION_STORAGE_KEY);
+            if (stored) {
+                return stored;
+            }
+        } catch (error) {
+            // Ignore
+        }
+        if (!this._sessionId) {
+            this._sessionId = this.generateSessionId();
+            this.saveSessionId(this._sessionId);
+        }
+        return this._sessionId;
+    }
 
     sendMessage(message: string): Observable<any> {
         return this.http.post(this.apiUrl, {
