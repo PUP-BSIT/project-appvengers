@@ -17,6 +17,8 @@ import com.backend.appvengers.repository.TransactionRepository;
 import com.backend.appvengers.repository.UserRepository;
 import com.backend.appvengers.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,12 +33,15 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
     private final BudgetRepository budgetRepository;
     private final CategoryRepository categoryRepository;
+    @Lazy
+    private final NotificationService notificationService;
 
     public List<TransactionResponse> findAllForUser(String email) {
         User user = userRepository.findByEmail(email)
@@ -306,7 +311,18 @@ public class TransactionService {
         tx.setDescription(req.description());
         tx.setAmount(req.amount());
 
-        return transactionRepository.save(tx);
+        Transaction saved = transactionRepository.save(tx);
+        
+        // Trigger immediate notification check for budget warnings/exceeded
+        // This sends WebSocket notifications in real-time
+        try {
+            notificationService.generateNotifications(user.getId());
+            log.info("Budget notifications checked for user {} after expense", user.getId());
+        } catch (Exception e) {
+            log.error("Failed to generate notifications for user {}: {}", user.getId(), e.getMessage());
+        }
+        
+        return saved;
     }
 
     //Budget Transaction [Update Budget Expense Method]
@@ -328,7 +344,19 @@ public class TransactionService {
         tx.setCategoryRef(category);  
         tx.setAmount(req.amount());
 
-        return transactionRepository.save(tx);
+        Transaction saved = transactionRepository.save(tx);
+        
+        // Trigger immediate notification check for budget warnings/exceeded
+        // This sends WebSocket notifications in real-time
+        try {
+            int userId = tx.getUser().getId();
+            notificationService.generateNotifications(userId);
+            log.info("Budget notifications checked for user {} after expense update", userId);
+        } catch (Exception e) {
+            log.error("Failed to generate notifications after expense update: {}", e.getMessage());
+        }
+        
+        return saved;
     }
 
     //Budget Transaction [Delete Budget Expense Method]
@@ -341,5 +369,14 @@ public class TransactionService {
 
         tx.setDeletedAt(LocalDate.now());
         transactionRepository.save(tx);
+        
+        // Trigger notification check after delete (budget may no longer be exceeded)
+        try {
+            int userId = tx.getUser().getId();
+            notificationService.generateNotifications(userId);
+            log.info("Budget notifications checked for user {} after expense delete", userId);
+        } catch (Exception e) {
+            log.error("Failed to generate notifications after expense delete: {}", e.getMessage());
+        }
     }
 }
