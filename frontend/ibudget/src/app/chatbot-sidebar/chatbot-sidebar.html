@@ -5,9 +5,14 @@
             <i class="bi bi-robot"></i>
             <h3>Bonzi Buddy Chat</h3>
         </div>
-        <button class="close-btn" (click)="toggleSidebar()">
-            <i class="bi bi-x-lg"></i>
-        </button>
+        <div class="header-actions">
+            <button class="icon-btn" (click)="clearChat()" title="Clear chat history">
+                <i class="bi bi-trash"></i>
+            </button>
+            <button class="close-btn" (click)="toggleSidebar()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
     </div>
 
     <div class="messages-container" #scrollContainer>
@@ -33,11 +38,34 @@
             <span>{{ loadingWord() }}</span>
         </div>
         }
+
+        @if (lastError()) {
+        <div class="error-actions">
+            <button class="retry-btn" (click)="retryLastMessage()">
+                <i class="bi bi-arrow-clockwise"></i>
+                Retry
+            </button>
+        </div>
+        }
+
+        @if (messages().length <= 1 && !isLoading()) {
+        <div class="quick-actions">
+            <p class="quick-actions-title">Quick Actions:</p>
+            <div class="quick-actions-grid">
+                @for (action of quickActions; track action.text) {
+                <button class="quick-action-chip" (click)="sendQuickAction(action.prompt)">
+                    <i class="bi" [class]="action.icon"></i>
+                    <span>{{ action.text }}</span>
+                </button>
+                }
+            </div>
+        </div>
+        }
     </div>
 
     <div class="input-area">
         <textarea [ngModel]="userInput()" (ngModelChange)="userInput.set($event)" (keydown)="handleKeydown($event)"
-            placeholder="Type a message..." rows="1"></textarea>
+            placeholder="Type a message..." rows="1" maxlength="1000"></textarea>
         <button class="send-btn" (click)="sendMessage()" [disabled]="!userInput().trim() || isLoading()">
             <i class="bi bi-send-fill"></i>
         </button>

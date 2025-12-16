@@ -1,17 +1,11 @@
-import { Component, signal, inject, effect, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, signal, inject, effect, ElementRef, ViewChild, AfterViewChecked, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChatbotService } from './chatbot.service';
+import { ChatbotService, ChatMessage } from './chatbot.service';
 import { finalize } from 'rxjs/operators';
 import { marked } from 'marked';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import DOMPurify from 'dompurify';
-
-interface ChatMessage {
-    text: string;
-    isUser: boolean;
-    timestamp: Date;
-}
 
 @Component({
     selector: 'app-chatbot-sidebar',
@@ -20,7 +14,7 @@ interface ChatMessage {
     templateUrl: './chatbot-sidebar.html',
     styleUrl: './chatbot-sidebar.scss'
 })
-export class ChatbotSidebar implements AfterViewChecked {
+export class ChatbotSidebar implements AfterViewChecked, OnInit {
     private chatbotService = inject(ChatbotService);
     private sanitizer = inject(DomSanitizer);
 
@@ -30,6 +24,8 @@ export class ChatbotSidebar implements AfterViewChecked {
     messages = signal<ChatMessage[]>([]);
     userInput = signal('');
     loadingWord = signal('Thinking...');
+    lastError = signal<string | null>(null);
+    showWelcome = signal(true);
 
     @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
@@ -37,6 +33,13 @@ export class ChatbotSidebar implements AfterViewChecked {
         'Thinking...', 'Processing...', 'Analyzing...', 'Computing...',
         'Brainstorming...', 'Consulting the oracle...', 'Doing math...',
         'Connecting dots...', 'Loading wisdom...', 'Asking the stars...'
+    ];
+
+    readonly quickActions = [
+        { icon: 'bi-pie-chart', text: 'Show my spending', prompt: 'Show me a breakdown of my spending by category' },
+        { icon: 'bi-lightbulb', text: 'Budget tips', prompt: 'Give me some budgeting tips for students' },
+        { icon: 'bi-plus-circle', text: 'How to add transaction', prompt: 'How do I add a new transaction?' },
+        { icon: 'bi-piggy-bank', text: 'Savings advice', prompt: 'How can I save more money?' }
     ];
 
     constructor() {
@@ -50,6 +53,36 @@ export class ChatbotSidebar implements AfterViewChecked {
             }
             return undefined;
         });
+
+        // Save messages to localStorage whenever they change
+        effect(() => {
+            const msgs = this.messages();
+            if (msgs.length > 0) {
+                this.chatbotService.saveMessages(msgs);
+            }
+        });
+    }
+
+    ngOnInit() {
+        // Load persisted messages on component init
+        const savedMessages = this.chatbotService.loadMessages();
+        if (savedMessages.length > 0) {
+            this.messages.set(savedMessages);
+            this.showWelcome.set(false);
+        } else {
+            // Show welcome message for new sessions
+            this.addWelcomeMessage();
+        }
+    }
+
+    private addWelcomeMessage() {
+        const welcomeMsg: ChatMessage = {
+            text: "👋 Hi! I'm **Bonzi**, your AI Financial Assistant for iBudget!\n\nI'm here to help you manage your budget, track expenses, and achieve your financial goals. Feel free to ask me anything about budgeting or use the quick actions below!",
+            isUser: false,
+            timestamp: new Date()
+        };
+        this.messages.set([welcomeMsg]);
+        this.showWelcome.set(false);
     }
 
     ngAfterViewChecked() {
@@ -70,10 +103,15 @@ export class ChatbotSidebar implements AfterViewChecked {
         const text = this.userInput().trim();
         if (!text || this.isLoading()) return;
 
+        this.sendMessageWithText(text);
+    }
+
+    private sendMessageWithText(text: string) {
         // Add user message
         this.messages.update(msgs => [...msgs, { text, isUser: true, timestamp: new Date() }]);
         this.userInput.set('');
         this.isLoading.set(true);
+        this.lastError.set(null);
 
         this.chatbotService.sendMessage(text)
             .pipe(
@@ -83,7 +121,7 @@ export class ChatbotSidebar implements AfterViewChecked {
                 next: (response: any) => {
                     // Handle null/undefined response
                     if (!response) {
-                        this.messages.update(msgs => [...msgs, { text: "Sorry, I received an empty response. Please try again.", isUser: false, timestamp: new Date() }]);
+                        this.handleError("Sorry, I received an empty response. Please try again.");
                         return;
                     }
                     // Extract bot response from various possible response structures
@@ -93,9 +131,35 @@ export class ChatbotSidebar implements AfterViewChecked {
                 },
                 error: (error) => {
                     console.error('Chatbot error:', error);
-                    this.messages.update(msgs => [...msgs, { text: "Sorry, I couldn't reach the server.", isUser: false, timestamp: new Date() }]);
+                    this.handleError("Sorry, I couldn't reach the server. Please check your connection and try again.");
                 }
             });
+    }
+
+    private handleError(errorMessage: string) {
+        this.lastError.set(errorMessage);
+        this.messages.update(msgs => [...msgs, { text: errorMessage, isUser: false, timestamp: new Date() }]);
+    }
+
+    retryLastMessage() {
+        // Get the last user message and resend it
+        const userMessages = this.messages().filter(m => m.isUser);
+        if (userMessages.length > 0) {
+            const lastUserMessage = userMessages[userMessages.length - 1];
+            this.sendMessageWithText(lastUserMessage.text);
+        }
+    }
+
+    sendQuickAction(prompt: string) {
+        this.userInput.set(prompt);
+        this.sendMessage();
+    }
+
+    clearChat() {
+        this.messages.set([]);
+        this.chatbotService.clearHistory();
+        this.addWelcomeMessage();
+        this.lastError.set(null);
     }
 
     handleKeydown(event: KeyboardEvent) {
