@@ -22,20 +22,18 @@ public class NotificationWebSocketController {
     /**
      * Send a notification to a specific user via WebSocket.
      * The user subscribes to /user/{userId}/queue/notifications
+     * We send directly to this destination since we're not using Spring Security WebSocket auth.
      * 
      * @param userId The target user's ID
      * @param notification The notification to send
      */
     public void sendNotificationToUser(int userId, NotificationResponse notification) {
-        String destination = "/queue/notifications";
-        log.info("📬 Sending WebSocket notification to user {}: {}", userId, notification.getTitle());
+        // Send directly to the destination the client is subscribed to
+        // Client subscribes to: /user/{userId}/queue/notifications
+        String destination = "/user/" + userId + "/queue/notifications";
+        log.info("📬 Sending WebSocket notification to {}: {}", destination, notification.getTitle());
         
-        // convertAndSendToUser automatically prepends /user/{userId} to the destination
-        messagingTemplate.convertAndSendToUser(
-            String.valueOf(userId),
-            destination,
-            notification
-        );
+        messagingTemplate.convertAndSend(destination, notification);
     }
 
     /**
@@ -57,11 +55,8 @@ public class NotificationWebSocketController {
      * @param count The new unread notification count
      */
     public void sendUnreadCountToUser(int userId, long count) {
-        log.debug("🔢 Sending unread count {} to user {}", count, userId);
-        messagingTemplate.convertAndSendToUser(
-            String.valueOf(userId),
-            "/queue/notifications/count",
-            count
-        );
+        String destination = "/user/" + userId + "/queue/notifications/count";
+        log.debug("🔢 Sending unread count {} to {}", count, destination);
+        messagingTemplate.convertAndSend(destination, count);
     }
 }
