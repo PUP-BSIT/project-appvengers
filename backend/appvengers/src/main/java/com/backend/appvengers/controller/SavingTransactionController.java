@@ -9,7 +9,10 @@ import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.SavingRepository;
 import com.backend.appvengers.repository.TransactionRepository;
 import com.backend.appvengers.repository.UserRepository;
+import com.backend.appvengers.service.NotificationService;
+import com.backend.appvengers.service.SavingService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +22,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Slf4j
 public class SavingTransactionController {
 
   private final SavingRepository savingRepository;
   private final TransactionRepository transactionRepository;
   private final UserRepository userRepository;
+  private final SavingService savingService;
+  private final NotificationService notificationService;
 
   private int currentUserId(Authentication auth) {
     String email = auth.getName();
@@ -57,6 +63,15 @@ public class SavingTransactionController {
     // Map category and type for general Transaction entity
     
     Transaction saved = transactionRepository.save(t);
+    
+    // Update the saving's current amount and check for milestones/completion
+    try {
+      savingService.refreshCurrentAmount(savingId);
+      notificationService.generateNotifications(userId);
+      log.info("Savings notifications checked for user {} after transaction", userId);
+    } catch (Exception e) {
+      log.error("Failed to generate savings notifications for user {}: {}", userId, e.getMessage());
+    }
 
     return new SavingTransaction(
         saved.getId(),
@@ -136,6 +151,15 @@ public class SavingTransactionController {
     transaction.setSavingsAction(req.getSavingsAction());
     transaction.setTransactionDate(req.getTransactionDate());
     Transaction updated = transactionRepository.save(transaction);
+    
+    // Update the saving's current amount and check for milestones/completion
+    try {
+      savingService.refreshCurrentAmount(savingId);
+      notificationService.generateNotifications(userId);
+      log.info("Savings notifications checked for user {} after transaction update", userId);
+    } catch (Exception e) {
+      log.error("Failed to generate savings notifications for user {}: {}", userId, e.getMessage());
+    }
 
     Saving saving = transaction.getSaving();
     SavingTransaction dto = new SavingTransaction(
@@ -177,6 +201,16 @@ public class SavingTransactionController {
     // Soft delete by setting deletedAt
     transaction.setDeletedAt(java.time.LocalDate.now());
     transactionRepository.save(transaction);
+    
+    // Update the saving's current amount after delete
+    try {
+      savingService.refreshCurrentAmount(savingId);
+      notificationService.generateNotifications(userId);
+      log.info("Savings notifications checked for user {} after transaction delete", userId);
+    } catch (Exception e) {
+      log.error("Failed to generate savings notifications for user {}: {}", userId, e.getMessage());
+    }
+    
     return ResponseEntity.noContent().build();
   }
 }
