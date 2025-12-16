@@ -4,10 +4,13 @@ import com.backend.appvengers.dto.UserFinancialContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,13 +32,15 @@ public class ChatbotService {
     private String n8nWebhookUrl;
 
     private final UserContextService userContextService;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate; // Injected from RestTemplateConfig
 
     /**
      * Sends a message to the AI chatbot with user's financial context, session ID, and JWT authentication.
      * The context allows the AI to provide personalized insights and recommendations.
      * The session ID enables conversation continuity in the n8n AI agent.
      * The JWT token is forwarded to n8n for webhook authentication.
+     * 
+     * Retries up to 3 times with exponential backoff (2s, 4s, 8s) on transient errors.
      *
      * @param message User's message/question
      * @param userEmail Authenticated user's email for fetching their data
@@ -43,6 +48,11 @@ public class ChatbotService {
      * @param jwtToken JWT token for n8n webhook authentication
      * @return AI chatbot response
      */
+    @Retryable(
+        retryFor = {ResourceAccessException.class, HttpServerErrorException.class},
+        maxAttempts = 3,
+        backoff = @Backoff(delay = 2000, multiplier = 2)
+    )
     public Object sendMessage(String message, String userEmail, String sessionId, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -99,10 +109,12 @@ public class ChatbotService {
             return errorResponse;
         } catch (HttpServerErrorException e) {
             log.error("n8n server error ({}): {}", e.getStatusCode(), e.getResponseBodyAsString());
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "Chatbot service error.");
-            errorResponse.put("output", "Sorry, the AI service encountered an error. Please try again later.");
-            return errorResponse;
+            // This will trigger retry
+            throw e;
+        } catch (ResourceAccessException e) {
+            log.error("n8n timeout or connection error: {}", e.getMessage());
+            // This will trigger retry
+            throw e;
         } catch (Exception e) {
             log.error("Failed to communicate with n8n: {}", e.getMessage(), e);
             Map<String, String> errorResponse = new HashMap<>();
