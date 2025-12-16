@@ -45,8 +45,8 @@ export class Header implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Disconnect WebSocket when component is destroyed
-    this.notificationService.disconnectWebSocket();
+    // Don't disconnect WebSocket on component destroy - it should persist across navigations
+    // WebSocket will be disconnected only on explicit logout
   }
 
   private loadUserProfile(): void {

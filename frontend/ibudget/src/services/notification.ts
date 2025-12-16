@@ -66,13 +66,21 @@ export class NotificationService implements OnDestroy {
    * Should be called after user login with the user's ID.
    */
   initializeWebSocket(userId: number): void {
+    // Check if already initialized to prevent duplicate subscriptions on navigation
+    if (this.wsSubscription && this.webSocketService.isConnected()) {
+      console.log('🔌 WebSocket already initialized, skipping');
+      return;
+    }
+    
     // Connect to WebSocket
     this.webSocketService.connect(userId);
     
-    // Subscribe to incoming notifications
-    this.wsSubscription = this.webSocketService.notification$.subscribe(
-      (notification) => this.handleWebSocketNotification(notification)
-    );
+    // Subscribe to incoming notifications (only if not already subscribed)
+    if (!this.wsSubscription) {
+      this.wsSubscription = this.webSocketService.notification$.subscribe(
+        (notification) => this.handleWebSocketNotification(notification)
+      );
+    }
     
     console.log('🔌 WebSocket initialized for notifications');
   }
