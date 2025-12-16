@@ -21,8 +21,6 @@ export class Header implements OnInit, OnDestroy {
   private router = inject(Router);
   private authService = inject(AuthService);
 
-  private notificationPolling: any;
-
   isChatbotOpen = this.chatbotService.isOpen;
   username = signal<string>('');
   userId = signal<number>(0);
@@ -44,20 +42,11 @@ export class Header implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadUserProfile();
-    this.notificationService.fetchNotifications();
-    
-    // Poll for new notifications every 30 seconds
-    this.notificationPolling = setInterval(() => {
-      console.log('🔄 Polling for new notifications...');
-      this.notificationService.fetchNotifications();
-    }, 30000);
   }
 
   ngOnDestroy(): void {
-    // Clear polling interval on component destroy
-    if (this.notificationPolling) {
-      clearInterval(this.notificationPolling);
-    }
+    // Disconnect WebSocket when component is destroyed
+    this.notificationService.disconnectWebSocket();
   }
 
   private loadUserProfile(): void {
@@ -65,6 +54,12 @@ export class Header implements OnInit, OnDestroy {
       if (res.success && res.data) {
         this.username.set(res.data.username || res.data.email || 'User');
         this.userId.set(res.data.id);
+        
+        // Initialize WebSocket for real-time notifications
+        this.notificationService.initializeWebSocket(res.data.id);
+        
+        // Fetch existing notifications once
+        this.notificationService.fetchNotifications();
       }
     });
   }
@@ -112,6 +107,8 @@ export class Header implements OnInit, OnDestroy {
   }
 
   confirmLogout() {
+    // Disconnect WebSocket before logout
+    this.notificationService.disconnectWebSocket();
     this.authService.logout();
     this.router.navigate(['/']);
     this.showLogoutModal.set(false);
@@ -133,4 +130,3 @@ export class Header implements OnInit, OnDestroy {
     }
   }
 }
-

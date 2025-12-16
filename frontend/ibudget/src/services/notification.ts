@@ -1,14 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, map } from 'rxjs';
+import { BehaviorSubject, Subscription, map } from 'rxjs';
 import { Notification } from '../models/user.model';
 import { environment } from '../environments/environment';
 import { ConfettiService } from './confetti.service';
+import { WebSocketService } from './websocket.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationService {
+export class NotificationService implements OnDestroy {
   private apiUrl = `${environment.apiUrl}/notifications`;
 
   private notificationsSubject = new BehaviorSubject<Notification[]>([]);
@@ -16,6 +17,9 @@ export class NotificationService {
 
   // Track previous notification IDs to detect new notifications
   private previousNotificationIds = new Set<number>();
+  
+  // WebSocket subscription
+  private wsSubscription: Subscription | null = null;
 
   // Computed observables for counts (memoized)
   public unreadCount$ = this.notifications$.pipe(
@@ -53,8 +57,81 @@ export class NotificationService {
 
   constructor(
     private http: HttpClient,
-    private confettiService: ConfettiService
+    private confettiService: ConfettiService,
+    private webSocketService: WebSocketService
   ) { }
+
+  /**
+   * Initialize WebSocket connection for real-time notifications.
+   * Should be called after user login with the user's ID.
+   */
+  initializeWebSocket(userId: number): void {
+    // Connect to WebSocket
+    this.webSocketService.connect(userId);
+    
+    // Subscribe to incoming notifications
+    this.wsSubscription = this.webSocketService.notification$.subscribe(
+      (notification) => this.handleWebSocketNotification(notification)
+    );
+    
+    console.log('🔌 WebSocket initialized for notifications');
+  }
+
+  /**
+   * Handle incoming WebSocket notification.
+   * Adds notification to the list and triggers appropriate effects.
+   */
+  private handleWebSocketNotification(notification: Notification): void {
+    console.log('📬 Processing WebSocket notification:', notification.title);
+    
+    // Add to the beginning of the list
+    const currentNotifications = this.notificationsSubject.value;
+    
+    // Check if notification already exists (prevent duplicates)
+    if (currentNotifications.some(n => n.id === notification.id)) {
+      console.log('⚠️ Notification already exists, skipping:', notification.id);
+      return;
+    }
+    
+    // Add new notification at the beginning
+    const updatedNotifications = [notification, ...currentNotifications];
+    this.notificationsSubject.next(updatedNotifications);
+    
+    // Track this notification ID
+    this.previousNotificationIds.add(notification.id);
+    
+    // Play notification sound
+    this.confettiService.playNotificationSound();
+    
+    // Trigger confetti for special notifications
+    if (notification.type === 'SAVINGS_COMPLETED') {
+      console.log('🎉 Triggering celebration confetti!');
+      this.confettiService.celebrate();
+    } else if (notification.type === 'SAVINGS_MILESTONE_50' || notification.type === 'SAVINGS_MILESTONE_75') {
+      console.log('⭐ Triggering milestone confetti!');
+      this.confettiService.milestone();
+    }
+  }
+
+  /**
+   * Disconnect WebSocket connection.
+   * Should be called on logout or component destruction.
+   */
+  disconnectWebSocket(): void {
+    if (this.wsSubscription) {
+      this.wsSubscription.unsubscribe();
+      this.wsSubscription = null;
+    }
+    this.webSocketService.disconnect();
+    console.log('🔌 WebSocket disconnected');
+  }
+
+  /**
+   * Check if WebSocket is currently connected.
+   */
+  isWebSocketConnected(): boolean {
+    return this.webSocketService.isConnected();
+  }
 
   fetchNotifications(): void {
     this.http.get<Notification[]>(this.apiUrl)
@@ -66,10 +143,10 @@ export class NotificationService {
           );
 
           // Play sound if there are new unread notifications (but not on first load)
+          // Note: With WebSocket, this should rarely trigger since real-time updates handle new notifications
           if (newNotifications.length > 0 && this.previousNotificationIds.size > 0) {
             this.confettiService.playNotificationSound();
-            console.log('🔔 New notification(s) received:', newNotifications.length);
-            console.log('New notification IDs:', newNotifications.map(n => n.id));
+            console.log('🔔 New notification(s) from HTTP fetch:', newNotifications.length);
           }
 
           // Update previous IDs tracker (store ALL notification IDs, not just unread)
@@ -153,5 +230,9 @@ export class NotificationService {
 
   getNotificationColor(type: string): string {
     return this.colorMap.get(type) || 'info';
+  }
+
+  ngOnDestroy(): void {
+    this.disconnectWebSocket();
   }
 }
