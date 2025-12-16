@@ -101,10 +101,9 @@ export class WebSocketService implements OnDestroy {
     if (!this.client) return;
 
     // Subscribe to user-specific notifications
-    // The backend sends to /user/{userId}/queue/notifications
-    // STOMP client subscribes to /user/queue/notifications (userId is handled by Spring)
+    // Using /topic/user/{userId}/notifications which works with simple broker
     this.notificationSubscription = this.client.subscribe(
-      `/user/${userId}/queue/notifications`,
+      `/topic/user/${userId}/notifications`,
       (message: IMessage) => {
         try {
           const notification: Notification = JSON.parse(message.body);
@@ -120,7 +119,7 @@ export class WebSocketService implements OnDestroy {
 
     // Optional: Subscribe to unread count updates
     this.countSubscription = this.client.subscribe(
-      `/user/${userId}/queue/notifications/count`,
+      `/topic/user/${userId}/notifications/count`,
       (message: IMessage) => {
         try {
           const count = JSON.parse(message.body);
