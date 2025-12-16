@@ -128,6 +128,16 @@
   		<artifactId>spring-boot-devtools</artifactId>
   		<optional>true</optional>
 	</dependency>
+
+	<!-- Spring Retry for automatic retry logic -->
+	<dependency>
+		<groupId>org.springframework.retry</groupId>
+		<artifactId>spring-retry</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-aspects</artifactId>
+	</dependency>
 </dependencies>
 
 	<build>
