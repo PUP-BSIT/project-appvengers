@@ -14,6 +14,9 @@ import java.util.Map;
 public class ChatbotController {
 
     private final ChatbotService chatbotService;
+    
+    // Maximum message length to prevent abuse and ensure reasonable processing time
+    private static final int MAX_MESSAGE_LENGTH = 1000;
 
     /**
      * Send a message to the AI chatbot.
@@ -31,8 +34,22 @@ public class ChatbotController {
             @RequestHeader("Authorization") String authHeader) {
         
         String message = payload.get("message");
+        
+        // Validate message is not null or empty
         if (message == null || message.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Message cannot be empty"));
+            return ResponseEntity.badRequest().body(Map.of(
+                "error", "Message cannot be empty",
+                "output", "Please enter a message to send."
+            ));
+        }
+        
+        // Validate message length
+        if (message.length() > MAX_MESSAGE_LENGTH) {
+            return ResponseEntity.badRequest().body(Map.of(
+                "error", "Message too long",
+                "output", String.format("Message must be %d characters or less. Your message is %d characters.", 
+                    MAX_MESSAGE_LENGTH, message.length())
+            ));
         }
 
         // Get the authenticated user's email
