@@ -32,6 +32,9 @@ describe('ChatbotService', () => {
         });
 
         it('should generate and persist session ID to localStorage on first creation', () => {
+            // Ensure localStorage is clear before test
+            localStorage.clear();
+            
             const sessionId = service.getSessionId();
             
             expect(sessionId).toBeTruthy();
@@ -43,11 +46,11 @@ describe('ChatbotService', () => {
 
         it('should reuse existing session ID from localStorage', () => {
             const existingSessionId = 'chat-test-session-123';
+            localStorage.clear();
             localStorage.setItem(SESSION_STORAGE_KEY, existingSessionId);
 
-            // Create a new service instance
-            const newService = TestBed.inject(ChatbotService);
-            const retrievedSessionId = newService.getSessionId();
+            // Call getSessionId which should return the stored value
+            const retrievedSessionId = service.getSessionId();
 
             expect(retrievedSessionId).toBe(existingSessionId);
         });

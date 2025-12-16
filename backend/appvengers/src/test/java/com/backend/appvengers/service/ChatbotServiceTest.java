@@ -168,8 +168,9 @@ class ChatbotServiceTest {
 
         // Assert - verify the sessionId in the request contains the email
         verify(restTemplate).postForEntity(eq(N8N_WEBHOOK_URL), argThat(httpEntity -> {
+            HttpEntity<?> entity = (HttpEntity<?>) httpEntity;
             @SuppressWarnings("unchecked")
-            Map<String, Object> body = (Map<String, Object>) httpEntity.getBody();
+            Map<String, Object> body = (Map<String, Object>) entity.getBody();
             String sessionId = (String) body.get("sessionId");
             return sessionId != null && sessionId.contains(TEST_USER_EMAIL) && sessionId.contains("simple-id");
         }), eq(Object.class));
