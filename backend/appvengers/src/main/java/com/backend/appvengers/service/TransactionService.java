@@ -2,6 +2,7 @@ package com.backend.appvengers.service;
 
 import com.backend.appvengers.dto.BudgetExpenseRequest;
 import com.backend.appvengers.dto.BudgetExpenseResponse;
+import com.backend.appvengers.dto.BudgetSummaryResponse;
 import com.backend.appvengers.dto.ExpenseSummary;
 import com.backend.appvengers.dto.IncomeSummary;
 import com.backend.appvengers.dto.MonthlyReportResponse;
@@ -383,5 +384,30 @@ public class TransactionService {
     //Budget Transaction [Get Total]
     public Double getTotalExpensesForBudget(Integer budgetId) {
         return transactionRepository.sumByBudgetId(budgetId);
+    }
+
+    //Budget Transaction [Get Budget Summary]
+    public BudgetSummaryResponse getBudgetSummary(Integer budgetId) {
+
+        Budget budget = budgetRepository.findById(budgetId)
+            .orElseThrow(() -> 
+                new RuntimeException("Budget not found"
+            ));
+
+        Double totalExpenses = getTotalExpensesForBudget(budgetId);
+        Double remaining = budget.getLimitAmount() - totalExpenses;
+
+        String categoryName = categoryRepository.findById(budget.getCategoryId())
+            .map(Category::getName)
+            .orElse("Unknown");
+
+        return new BudgetSummaryResponse(
+            budget.getBudgetId(),
+            budget.getCategoryId(),
+            categoryName,
+            budget.getLimitAmount(),
+            totalExpenses,
+            remaining
+        );
     }
 }
