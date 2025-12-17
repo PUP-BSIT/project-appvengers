@@ -25,6 +25,15 @@ export class BudgetTransactionsService {
     );
   }
 
+  // GET /budgets/{budgetId}/summary
+  getBudgetSummary(budgetId: number): Observable<any> {
+    const url = `${environment.apiUrl}/transactions/budgets/${budgetId}/summary`;
+    return this.http.get<ApiResponse>(url).pipe(
+      map((res: ApiResponse) => res.data)
+    );
+  }
+
+
   // POST /budget-transactions
   create(payload: Partial<BudgetTransaction>): Observable<BudgetTransaction> {
     return this.http.post<ApiResponse>(this.base, payload).pipe(
