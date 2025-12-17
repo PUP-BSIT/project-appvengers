@@ -30,7 +30,7 @@ import java.util.Map;
 public class TransactionController {
 
     private final TransactionService transactionService;
-    private TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
 
     @GetMapping
     public ResponseEntity<ApiResponse> list(Authentication auth) {
