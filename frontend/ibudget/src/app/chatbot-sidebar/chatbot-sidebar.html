@@ -33,9 +33,18 @@
         }
 
         @if (isLoading()) {
-        <div class="loading-indicator">
-            <div class="spinner"></div>
-            <span>{{ loadingWord() }}</span>
+        <div class="typing-indicator">
+            <div class="typing-avatar">
+                <i class="bi bi-robot"></i>
+            </div>
+            <div class="typing-bubble">
+                <div class="typing-dots">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+                <span class="typing-text">{{ loadingWord() }}</span>
+            </div>
         </div>
         }
 
