@@ -84,8 +84,8 @@ export class AddSaving implements OnInit {
     // Parse target amount
     const targetAmount = params['targetAmount'] ? parseFloat(params['targetAmount']) : 0;
 
-    // Parse goal date (default to today if not provided)
-    const goalDate = params['goalDate'] || this.dateNow;
+    // Parse goal date (use provided date or leave empty for user to fill)
+    const goalDate = params['goalDate'] || '';
 
     // Validate frequency value
     const validFrequencies = ['Daily', 'Weekly', 'Monthly'];
@@ -98,14 +98,20 @@ export class AddSaving implements OnInit {
       }
     }
 
-    // Patch form values
-    this.addSavingForm.patchValue({
+    // Patch form values (only patch goal_date if provided)
+    const patchData: any = {
       name: params['name'] || '',
       target_amount: isNaN(targetAmount) ? 0 : targetAmount,
       frequency: frequency,
-      goal_date: goalDate,
       description: params['description'] || ''
-    });
+    };
+    
+    // Only include goal_date if a valid date was provided
+    if (goalDate && goalDate !== '') {
+      patchData.goal_date = goalDate;
+    }
+    
+    this.addSavingForm.patchValue(patchData);
   }
 
   getSavingsLength() {
