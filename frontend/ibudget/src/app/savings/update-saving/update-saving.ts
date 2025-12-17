@@ -1,14 +1,14 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Header } from "../../header/header";
-import { Sidebar } from "../../sidebar/sidebar";
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SavingsService } from '../../../services/savings.service';
 import { Saving } from '../../../models/user.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ToggleableSidebar } from "../../toggleable-sidebar/toggleable-sidebar";
 
 @Component({
   selector: 'app-update-saving',
-  imports: [Header, Sidebar, RouterLink, ReactiveFormsModule],
+  imports: [Header, RouterLink, ReactiveFormsModule, ToggleableSidebar],
   templateUrl: './update-saving.html',
   styleUrl: './update-saving.scss',
 })

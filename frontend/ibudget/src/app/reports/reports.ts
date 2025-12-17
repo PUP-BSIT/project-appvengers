@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
 import { FormsModule } from '@angular/forms';
 import { MonthlyReport } from '../../models/user.model';
 import { TransactionsService } from '../../services/transactions.service';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
+import { ToggleableSidebar } from "../toggleable-sidebar/toggleable-sidebar";
 
 @Component({
   selector: 'app-reports',
-  imports: [CommonModule, Sidebar, Header, FormsModule, BaseChartDirective],
+  imports: [CommonModule, Header, FormsModule, BaseChartDirective, ToggleableSidebar],
   templateUrl: './reports.html',
   styleUrl: './reports.scss',
 })

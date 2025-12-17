@@ -10,10 +10,11 @@ import { Header } from '../header/header';
 import { TransactionsService } from '../../services/transactions.service';
 import { AuthService } from '../../services/auth.service';
 import { CategoriesService } from '../../services/categories.service';
+import { ToggleableSidebar } from "../toggleable-sidebar/toggleable-sidebar";
 
 @Component({
   selector: 'app-transactions',
-  imports: [Sidebar, FormsModule, CurrencyPipe, DatePipe, CommonModule, Header],
+  imports: [FormsModule, CurrencyPipe, DatePipe, CommonModule, Header, ToggleableSidebar],
   templateUrl: './transactions.html',
   styleUrl: './transactions.scss',
 })

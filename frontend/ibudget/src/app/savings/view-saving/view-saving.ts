@@ -1,5 +1,4 @@
 import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
-import { Sidebar } from "../../sidebar/sidebar";
 import { Header } from "../../header/header";
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HistoryService } from '../../../services/history';
@@ -12,18 +11,19 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import { SavingTransactionService } from '../../../services/saving-transaction.service';
 import { Modal, Toast } from 'bootstrap';
+import { ToggleableSidebar } from "../../toggleable-sidebar/toggleable-sidebar";
 
 @Component({
   selector: 'app-view-saving',
   imports: [
-    Sidebar,
     Header,
     RouterLink,
     AddSavingTransaction,
     UpdateSavingTransaction,
     SavingProgress,
     CommonModule,
-    FormsModule
+    FormsModule,
+    ToggleableSidebar
 ],
   templateUrl: './view-saving.html',
   styleUrls: ['./view-saving.scss'],
