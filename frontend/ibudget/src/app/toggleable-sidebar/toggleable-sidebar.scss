@@ -5,7 +5,7 @@ $sidebar-bg: #212529;
   left: 0;
   top: 0;
   height: 100%;
-  width: 100px;
+  width: 80px;
   background-color: #212529;
   color: white;
   z-index: 1000;
@@ -17,7 +17,7 @@ $sidebar-bg: #212529;
   justify-content: center;
   padding-top: 10px;
   max-width: 240px;
-  gap: 10px;
+  gap: 70px;
   overflow: hidden;
 
   .sidebar-inner-container {
@@ -27,6 +27,7 @@ $sidebar-bg: #212529;
     align-items: center;
     width: 100%;
     gap: 10px;
+    // padding-bottom: 92px;
 
     div {
       display: flex;
@@ -59,15 +60,46 @@ $sidebar-bg: #212529;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.sidebar-container.expanded {
+/* Type = expandable: only change appearance when also expanded at runtime */
+.sidebar-container.expandable.expanded {
   width: 240px;
-  
+
   .sidebar-inner-container div span {
     display: inline-block;
     opacity: 1;
     transform: translateX(0);
   }
+
+  .sidebar-inner-container div {
+    transform: translateX(10px);
+  }
+}
+
+.sidebar-container.collapsable:hover {
+  width: 240px;
+
+  .sidebar-inner-container div span {
+    display: inline-block;
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .sidebar-inner-container div {
+    transform: translateX(10px);
+  }
   
+}
+
+/* Runtime expanded state (applies when `isExpanded` is true regardless of type) */
+.sidebar-container.expanded {
+  width: 240px;
+
+  .sidebar-inner-container div span {
+    display: inline-block;
+    opacity: 1;
+    transform: translateX(0);
+  }
+
   .sidebar-inner-container div {
     transform: translateX(10px);
   }
@@ -89,6 +121,10 @@ $sidebar-bg: #212529;
   border-radius: 5px; 
 }
 
+.sidebar-inner-container .nav-item {
+  cursor: pointer;
+}
+
 /* Active route styling */
 .sidebar-inner-container .nav-item.active {
   background-color: #343a40;
@@ -104,10 +140,11 @@ $sidebar-bg: #212529;
   opacity: 1;
 }
 
-.sidebar-container .sidebar-inner-container .image-container {
+.sidebar-container .image-container {
   width: 100px;
-  height: 60px;
-  margin-bottom: 10px;
+  height: 80px;
+  border-bottom: 1px solid #6c757d;
+  padding: 5px;
 
   img {
     width: 100%;
@@ -124,25 +161,27 @@ $sidebar-bg: #212529;
 
 .toggle-button-container {
   position: fixed;
-  top: 50%;
-  left: calc(100px - 22px);
+  top: 52.5%;
+  left: 80px;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
   z-index: 1100;
-  pointer-events: auto;
+  pointer-events: none;
   transition: left 0.3s ease;
 
   button {
     background: #ffffff;
     color: $sidebar-bg;
     border: none;
-    border-radius: 8px;
+    border-radius: 15px;
     padding: 8px 10px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-    font-size: 20px;  
+    font-size: 15px;  
+    font-weight: bold;
     cursor: pointer;
     outline: none;
+    pointer-events: auto; /* re-enable clicks for the button */
 
     &:hover {
       transform: translateY(-1px);
@@ -154,4 +193,70 @@ $sidebar-bg: #212529;
 /* When the sidebar expands, move the fixed button to match the wider width */
 .sidebar-container.expanded ~ .toggle-button-container {
   left: calc(240px - 22px);
+}
+
+.sidebar-control {
+  position: fixed;
+  bottom: 8px;  
+  left: 10px;
+  border: none;
+  width: 30px;
+  height: 30px;
+  z-index: 1100;
+
+  i {
+    color: white;
+    font-size: 18px;
+  }
+
+  button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover i {
+      color: #adb5bd;
+    }
+  }
+}
+
+.sidebar-control-dropdown {
+  position: absolute;
+  z-index: 1100;
+  bottom: 20px;
+  left: 10px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+
+  li {
+    list-style: none;
+    padding: 8px 12px;
+    margin: 5px 0;
+    transition: all 0.2s ease;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+      color: #ffffff;
+      background-color: #343a40;
+    }
+  }
+}
+
+// Hide Class 
+.hide {
+  display: none !important;
 }
