@@ -2,7 +2,7 @@
 <div class="chatbot-sidebar" [class.open]="isOpen()">
     <div class="chatbot-header">
         <div class="header-content">
-            <i class="bi bi-robot"></i>
+            <img src="assets/images/kamen-rider-gotchard.jpg" alt="Bonzi" class="header-avatar">
             <h3>Bonzi Buddy Chat</h3>
         </div>
         <div class="header-actions">
@@ -24,10 +24,17 @@
         }
 
         @for (msg of messages(); track msg.timestamp) {
-        <div class="message" [class.user]="msg.isUser" [class.bot]="!msg.isUser">
-            <div class="message-content" [innerHTML]="parseMarkdown(msg.text)"></div>
-            <div class="message-time">
-                {{ msg.timestamp | date:'shortTime' }}
+        <div class="message-wrapper" [class.user]="msg.isUser" [class.bot]="!msg.isUser">
+            @if (!msg.isUser) {
+            <div class="bot-avatar">
+                <img src="assets/images/kamen-rider-gotchard.jpg" alt="Bonzi">
+            </div>
+            }
+            <div class="message" [class.user]="msg.isUser" [class.bot]="!msg.isUser">
+                <div class="message-content" [innerHTML]="parseMarkdown(msg.text)"></div>
+                <div class="message-time">
+                    {{ msg.timestamp | date:'shortTime' }}
+                </div>
             </div>
         </div>
         }
@@ -35,7 +42,7 @@
         @if (isLoading()) {
         <div class="typing-indicator">
             <div class="typing-avatar">
-                <i class="bi bi-robot"></i>
+                <img src="assets/images/kamen-rider-gotchard.jpg" alt="Bonzi">
             </div>
             <div class="typing-bubble">
                 <div class="typing-dots">

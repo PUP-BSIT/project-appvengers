@@ -89,6 +89,15 @@ $border-color: #e5e7eb;
         align-items: center;
         gap: 10px;
 
+        .header-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid $primary-color;
+            box-shadow: 0 2px 6px rgba($primary-color, 0.3);
+        }
+
         i {
             font-size: 1.2rem;
             color: $primary-color;
@@ -179,6 +188,41 @@ $border-color: #e5e7eb;
     }
 }
 
+// Message Wrapper with Avatar
+.message-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    width: 100%;
+
+    &.user {
+        flex-direction: row-reverse;
+        justify-content: flex-start;
+    }
+
+    &.bot {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+}
+
+.bot-avatar {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    align-self: flex-end;
+    margin-bottom: 3px;
+
+    img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid $primary-color;
+        box-shadow: 0 2px 6px rgba($primary-color, 0.2);
+    }
+}
+
 .message {
     max-width: 85%;
     padding: 12px 16px;
@@ -232,13 +276,21 @@ $border-color: #e5e7eb;
     .typing-avatar {
         width: 36px;
         height: 36px;
-        background: linear-gradient(135deg, $primary-color, color.adjust($primary-color, $lightness: -10%));
+        background: transparent;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         box-shadow: 0 2px 8px rgba($primary-color, 0.3);
         flex-shrink: 0;
+        overflow: hidden;
+        border: 2px solid $primary-color;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
         i {
             color: white;
