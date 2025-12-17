@@ -26,6 +26,10 @@ export class KpiPanel implements OnInit {
     this.getBudgetData();
   }
 
+  refresh() {
+    this.getBudgetData();
+  }
+
   // Fetch budget data based on budgetId (budget service)
   getBudgetData() {
     const id = this.budgetId();

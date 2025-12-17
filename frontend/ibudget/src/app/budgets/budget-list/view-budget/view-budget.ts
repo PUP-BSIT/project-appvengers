@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, signal, ViewChild } from '@angular/core'; 
+import { Sidebar } from "../../../sidebar/sidebar";
 import { Header } from "../../../header/header";
 import { KpiPanel } from "../../kpi-panel/kpi-panel";
 import { AddBudgetExpense } from "./add-budget-expense/add-budget-expense";
@@ -11,12 +12,15 @@ import { ToggleableSidebar } from "../../../toggleable-sidebar/toggleable-sideba
 
 @Component({
   selector: 'app-view-budget',
-  imports: [Header, KpiPanel, AddBudgetExpense, UpdateBudgetExpense, ToggleableSidebar],
+  standalone: true, 
+  imports: [Sidebar, Header, KpiPanel, AddBudgetExpense, UpdateBudgetExpense],
   templateUrl: './view-budget.html',
   styleUrl: './view-budget.scss',
 })
 
-export class ViewBudget implements OnInit {
+export class ViewBudget implements OnInit, AfterViewInit {
+  @ViewChild(KpiPanel) kpiPanel!: KpiPanel; 
+
   // Services
   budgetTxService = inject(BudgetTransactionsService);
   categoriesService = inject(CategoriesService);
@@ -36,6 +40,10 @@ export class ViewBudget implements OnInit {
     this.initBudgetId();
     this.getCategories();
     this.getBudgetExpenses();
+  }
+
+  ngAfterViewInit(): void {
+    this.kpiPanel.refresh(); // refresh KPI panel once available
   }
 
   initBudgetId() {
@@ -68,8 +76,9 @@ export class ViewBudget implements OnInit {
   deleteBudgetExpense(transactionId: number) {
     this.budgetTxService.delete(transactionId).subscribe({
       next: () => {
-        this.getBudgetExpenses(),
-        this.showNotificationMessage("Expense deleted succesfully!");
+        this.getBudgetExpenses();
+        this.kpiPanel.refresh(); //Refresh KPI panel data
+        this.showNotificationMessage("Expense deleted successfully!");
       },
       error: (err) => console.error('Failed to delete expense', err)
     });
@@ -77,10 +86,12 @@ export class ViewBudget implements OnInit {
 
   onBudgetExpenseAdded(_event: BudgetTransaction) {
     this.getBudgetExpenses();
+    this.kpiPanel.refresh(); 
   }
 
   onBudgetExpenseUpdated(_event: BudgetTransaction) {
     this.getBudgetExpenses();
+    this.kpiPanel.refresh(); 
   }
 
   showNotificationMessage(message: string) {
