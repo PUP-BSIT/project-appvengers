@@ -78,12 +78,11 @@ main {
 .saving-sub-header {
   position: relative;
   top: 0;
-  // z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  margin-left: 100px;
+  margin-left: 80px;
 
   i.bi-arrow-left {
     font-size: 1.8rem;
