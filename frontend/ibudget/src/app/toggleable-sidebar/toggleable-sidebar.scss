@@ -1,3 +1,5 @@
+$sidebar-bg: #212529;
+
 .sidebar-container {
   position: fixed;
   left: 0;
@@ -57,20 +59,18 @@
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.sidebar-container:hover 
-.sidebar-inner-container div {
-  transform: translateX(10px);
-}
-
-.sidebar-container:hover 
-.sidebar-inner-container div span {
-  opacity: 1;
-  display: inline-block;
-  transform: translateX(0);
-}
-
-.sidebar-container:hover {
+.sidebar-container.expanded {
   width: 240px;
+  
+  .sidebar-inner-container div span {
+    display: inline-block;
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .sidebar-inner-container div {
+    transform: translateX(10px);
+  }
 }
 
 .sidebar-inner-container div span {
@@ -105,4 +105,38 @@
     background-color: transparent;
     border-radius: 0;
   }
+}
+
+.toggle-button-container {
+  position: fixed;
+  top: 50%;
+  left: calc(100px - 22px); /* default (collapsed) position */
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  z-index: 1100;
+  pointer-events: auto;
+  transition: left 0.3s ease;
+
+  button {
+    background: #ffffff;
+    color: $sidebar-bg;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    font-size: 20px;  
+    cursor: pointer;
+    outline: none;
+
+    &:hover {
+      transform: translateY(-1px);
+      color: #adb5bd;
+    }
+  }
+}
+
+/* When the sidebar expands, move the fixed button to match the wider width */
+.sidebar-container.expanded ~ .toggle-button-container {
+  left: calc(240px - 22px);
 }
