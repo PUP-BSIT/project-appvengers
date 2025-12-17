@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { ViewBudget } from './view-budget';
 
@@ -19,8 +21,10 @@ describe('ViewBudget', () => {
       imports: [ViewBudget, HttpClientTestingModule],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteStub },
-        provideRouter([]) // optional if router directives are used
-      ]
+        provideRouter([]),
+        provideCharts(withDefaultRegisterables())
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
 
