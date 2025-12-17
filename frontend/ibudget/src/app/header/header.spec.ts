@@ -3,6 +3,8 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
 import { signal } from '@angular/core';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { Header } from './header';
 import { ChatbotService } from '../chatbot-sidebar/chatbot.service';
@@ -24,8 +26,10 @@ describe('Header', () => {
       providers: [
         provideRouter([]),
         provideHttpClient(),
+        provideCharts(withDefaultRegisterables()),
         { provide: ChatbotService, useValue: chatbotServiceMock }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
 

@@ -106,6 +106,7 @@
               "src/styles.scss"
             ],
             "polyfills": [
+              "src/test-polyfills.js",
               "zone.js",
               "zone.js/testing"
             ],
