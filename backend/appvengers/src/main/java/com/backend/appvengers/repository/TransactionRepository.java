@@ -132,4 +132,13 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("categoryName") String categoryName,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
+    
+    //Sum budget expenses
+    @Query("""
+        SELECT COALESCE(SUM(t.amount), 0)
+        FROM Transaction t
+        WHERE t.budget.budgetId = :budgetId
+        AND t.deletedAt IS NULL
+    """)
+    Double sumByBudgetId(@Param("budgetId") Integer budgetId);
 }
