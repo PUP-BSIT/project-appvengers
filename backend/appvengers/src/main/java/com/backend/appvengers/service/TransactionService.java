@@ -379,4 +379,9 @@ public class TransactionService {
             log.error("Failed to generate notifications after expense delete: {}", e.getMessage());
         }
     }
+
+    //Budget Transaction [Get Total]
+    public Double getTotalExpensesForBudget(Integer budgetId) {
+        return transactionRepository.sumByBudgetId(budgetId);
+    }
 }
