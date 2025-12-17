@@ -1,21 +1,20 @@
 import { Component, inject, signal } from '@angular/core';
-import { Sidebar } from "../../sidebar/sidebar";
 import { Header } from "../../header/header";
 import { SubHeader } from "../sub-header/sub-header";
 import { RouterLink } from '@angular/router';
 import { 
     FormGroup, 
-    FormControl,
     ReactiveFormsModule, 
     FormBuilder,
     Validators
   } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { ToggleableSidebar } from "../../toggleable-sidebar/toggleable-sidebar";
 
 @Component({
   selector: 'app-security',
-  imports: [Sidebar, Header, ReactiveFormsModule, SubHeader, RouterLink, CommonModule],
+  imports: [Header, ReactiveFormsModule, SubHeader, RouterLink, CommonModule, ToggleableSidebar],
   templateUrl: './security.html',
   styleUrl: './security.scss',
 })

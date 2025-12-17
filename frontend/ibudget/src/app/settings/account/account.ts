@@ -1,5 +1,4 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Sidebar } from "../../sidebar/sidebar";
 import { Header } from "../../header/header";
 import {
   FormGroup,
@@ -12,10 +11,11 @@ import { SubHeader } from "../sub-header/sub-header";
 import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
 import { CommonModule } from '@angular/common';
+import { ToggleableSidebar } from "../../toggleable-sidebar/toggleable-sidebar";
 
 @Component({
   selector: 'app-account',
-  imports: [Sidebar, Header, ReactiveFormsModule, SubHeader, CommonModule],
+  imports: [Header, ReactiveFormsModule, SubHeader, CommonModule, ToggleableSidebar],
   templateUrl: './account.html',
   styleUrl: './account.scss',
 })
