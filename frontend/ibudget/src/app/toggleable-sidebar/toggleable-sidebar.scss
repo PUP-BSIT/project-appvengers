@@ -110,7 +110,7 @@ $sidebar-bg: #212529;
 .toggle-button-container {
   position: fixed;
   top: 50%;
-  left: calc(100px - 22px); /* default (collapsed) position */
+  left: calc(100px - 22px);
   transform: translateY(-50%);
   display: flex;
   align-items: center;
