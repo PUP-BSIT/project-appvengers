@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
 import { Notification } from '../../models/user.model';
 import { CurrencyPipe, NgClass } from '@angular/common';
@@ -8,10 +7,11 @@ import { NotificationService } from '../../services/notification';
 import { ConfettiService } from '../../services/confetti.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ToggleableSidebar } from "../toggleable-sidebar/toggleable-sidebar";
 
 @Component({
   selector: 'app-notifications',
-  imports: [Sidebar, Header, CurrencyPipe, NgClass],
+  imports: [Header, CurrencyPipe, NgClass, ToggleableSidebar],
   templateUrl: './notifications.html',
   styleUrl: './notifications.scss',
 })
