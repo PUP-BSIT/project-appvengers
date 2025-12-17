@@ -220,23 +220,86 @@ $border-color: #e5e7eb;
     }
 }
 
-.loading-indicator {
+// Typing Indicator with Avatar and Bouncing Dots
+.typing-indicator {
     align-self: flex-start;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 10px;
-    padding: 10px;
-    color: #6b7280;
-    font-size: 0.9rem;
-    font-style: italic;
+    padding: 5px 0;
+    animation: fadeIn 0.3s ease;
 
-    .spinner {
-        width: 16px;
-        height: 16px;
-        border: 2px solid rgba($primary-color, 0.3);
-        border-top-color: $primary-color;
+    .typing-avatar {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, $primary-color, color.adjust($primary-color, $lightness: -10%));
         border-radius: 50%;
-        animation: spin 1s linear infinite;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba($primary-color, 0.3);
+        flex-shrink: 0;
+
+        i {
+            color: white;
+            font-size: 1.1rem;
+        }
+    }
+
+    .typing-bubble {
+        background-color: $bot-msg-bg;
+        border: 1px solid $border-color;
+        border-radius: 12px;
+        border-bottom-left-radius: 2px;
+        padding: 12px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .typing-dots {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        height: 20px;
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: $primary-color;
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out both;
+
+            &:nth-child(1) {
+                animation-delay: 0s;
+            }
+
+            &:nth-child(2) {
+                animation-delay: 0.16s;
+            }
+
+            &:nth-child(3) {
+                animation-delay: 0.32s;
+            }
+        }
+    }
+
+    .typing-text {
+        font-size: 0.8rem;
+        color: #6b7280;
+        font-style: italic;
+    }
+}
+
+@keyframes typingBounce {
+    0%, 80%, 100% {
+        transform: scale(0.6);
+        opacity: 0.4;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
     }
 }
 
@@ -370,29 +433,116 @@ $border-color: #e5e7eb;
         background-color: rgba(0, 0, 0, 0.1);
         padding: 2px 4px;
         border-radius: 4px;
-        font-family: monospace;
-        font-size: 0.9em;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        font-size: 0.85em;
     }
 
     pre {
-        background-color: rgba(0, 0, 0, 0.1);
-        padding: 10px;
+        background-color: #1e1e1e;
+        color: #d4d4d4;
+        padding: 12px;
         border-radius: 8px;
         overflow-x: auto;
-        margin-bottom: 8px;
+        margin: 8px 0;
+        font-size: 0.85em;
+        line-height: 1.4;
 
         code {
             background-color: transparent;
             padding: 0;
+            color: inherit;
+            font-size: inherit;
         }
     }
 
     blockquote {
-        border-left: 3px solid rgba(0, 0, 0, 0.2);
-        padding-left: 10px;
-        margin-left: 0;
+        border-left: 4px solid $primary-color;
+        background-color: rgba($primary-color, 0.05);
+        padding: 10px 15px;
+        margin: 8px 0;
+        border-radius: 0 8px 8px 0;
         font-style: italic;
-        opacity: 0.8;
+
+        p {
+            margin-bottom: 0;
+        }
+    }
+
+    // Enhanced Table Styles
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 10px 0;
+        font-size: 0.9em;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    thead {
+        background-color: $primary-color;
+        color: white;
+
+        th {
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+    }
+
+    tbody {
+        tr {
+            border-bottom: 1px solid $border-color;
+
+            &:nth-child(even) {
+                background-color: rgba(0, 0, 0, 0.02);
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            &:hover {
+                background-color: rgba($primary-color, 0.05);
+            }
+        }
+
+        td {
+            padding: 10px 12px;
+        }
+    }
+
+    // Horizontal Rule
+    hr {
+        border: none;
+        border-top: 1px solid $border-color;
+        margin: 15px 0;
+    }
+
+    // Task List / Checkboxes
+    input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+        accent-color: $primary-color;
+        vertical-align: middle;
+    }
+
+    // Links
+    a {
+        color: $primary-color;
+        text-decoration: none;
+        
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    // Tip/Warning Callouts (using bold + emoji patterns)
+    > p:first-child {
+        &:has(strong:first-child) {
+            // Style for tip callouts like "**💡 Tip:**"
+        }
     }
 }
 
