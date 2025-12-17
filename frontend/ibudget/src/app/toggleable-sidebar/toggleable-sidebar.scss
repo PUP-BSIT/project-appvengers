@@ -89,6 +89,21 @@ $sidebar-bg: #212529;
   border-radius: 5px; 
 }
 
+/* Active route styling */
+.sidebar-inner-container .nav-item.active {
+  background-color: #343a40;
+  border-radius: 5px;
+}
+
+.sidebar-inner-container .nav-item.active i {
+  color: #ffffff;
+}
+
+.sidebar-inner-container .nav-item.active span {
+  color: #ffffff;
+  opacity: 1;
+}
+
 .sidebar-container .sidebar-inner-container .image-container {
   width: 100px;
   height: 60px;
