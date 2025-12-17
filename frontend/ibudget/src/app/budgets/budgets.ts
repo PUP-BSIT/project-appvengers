@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
 import { BudgetList } from "./budget-list/budget-list";
+import { ToggleableSidebar } from "../toggleable-sidebar/toggleable-sidebar";
 
 @Component({
   selector: 'app-budgets',
-  imports: [Sidebar, Header, BudgetList],
+  imports: [Header, BudgetList, ToggleableSidebar],
   templateUrl: './budgets.html',
   styleUrl: './budgets.scss',
 })

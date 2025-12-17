@@ -1,5 +1,4 @@
 import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
-import { Sidebar } from "../sidebar/sidebar";
 import { Header } from "../header/header";
 import { Saving } from '../../models/user.model';
 import { SavingsService } from '../../services/savings.service';
@@ -8,10 +7,11 @@ import { SavingProgress } from "./saving-progress/saving-progress";
 import { CommonModule } from '@angular/common';
 import { Toast } from 'bootstrap';
 import { SavingsNavState } from '../../models/user.model';
+import { ToggleableSidebar } from "../toggleable-sidebar/toggleable-sidebar";
 
 @Component({
   selector: 'app-savings',
-  imports: [CommonModule, Sidebar, Header, RouterLink, SavingProgress],
+  imports: [CommonModule, Header, RouterLink, SavingProgress, ToggleableSidebar],
   templateUrl: './savings.html',
   styleUrl: './savings.scss',
 })

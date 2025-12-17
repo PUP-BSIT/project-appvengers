@@ -1,5 +1,4 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Sidebar } from "../../../sidebar/sidebar";
 import { Header } from "../../../header/header";
 import { KpiPanel } from "../../kpi-panel/kpi-panel";
 import { AddBudgetExpense } from "./add-budget-expense/add-budget-expense";
@@ -8,10 +7,11 @@ import { CategoriesService } from '../../../../services/categories.service';
 import { BudgetTransactionsService } from '../../../../services/budget.transactions.service';
 import { BudgetTransaction, Category } from '../../../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
+import { ToggleableSidebar } from "../../../toggleable-sidebar/toggleable-sidebar";
 
 @Component({
   selector: 'app-view-budget',
-  imports: [Sidebar, Header, KpiPanel, AddBudgetExpense, UpdateBudgetExpense],
+  imports: [Header, KpiPanel, AddBudgetExpense, UpdateBudgetExpense, ToggleableSidebar],
   templateUrl: './view-budget.html',
   styleUrl: './view-budget.scss',
 })
