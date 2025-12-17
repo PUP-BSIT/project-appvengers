@@ -40,7 +40,8 @@ public class ChatbotService {
      * The session ID enables conversation continuity in the n8n AI agent.
      * The JWT token is forwarded to n8n for webhook authentication.
      * 
-     * Retries up to 3 times with exponential backoff (2s, 4s, 8s) on transient errors.
+     * Retries up to 3 times with exponential backoff (3s, 6s, 12s) on transient errors.
+     * Total retry window: ~21 seconds between attempts, plus 45s connect timeout per attempt.
      *
      * @param message User's message/question
      * @param userEmail Authenticated user's email for fetching their data
@@ -51,7 +52,7 @@ public class ChatbotService {
     @Retryable(
         retryFor = {ResourceAccessException.class, HttpServerErrorException.class},
         maxAttempts = 3,
-        backoff = @Backoff(delay = 2000, multiplier = 2)
+        backoff = @Backoff(delay = 3000, multiplier = 2)
     )
     public Object sendMessage(String message, String userEmail, String sessionId, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();

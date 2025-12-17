@@ -20,23 +20,27 @@ public class RestTemplateConfig {
     /**
      * Creates a RestTemplate bean with custom timeout settings.
      * 
-     * Timeouts are configured for n8n webhook which can have cold start delays.
-     * - Connect timeout: 10 seconds (initial connection)
-     * - Read timeout: 30 seconds (waiting for response)
+     * Timeouts are configured for n8n webhook on Render free tier which can have
+     * cold start delays of 30-50 seconds when the service has been idle.
+     * 
+     * - Connect timeout: 45 seconds (allows Render to wake up from cold start)
+     * - Read timeout: 60 seconds (AI processing can take time for complex queries)
      */
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         
         // Connection timeout: max time to establish connection
-        requestFactory.setConnectTimeout(10000); // 10 seconds
+        // Set to 45s to handle Render cold starts (30-50s typical)
+        requestFactory.setConnectTimeout(45000); // 45 seconds
         
         // Read timeout: max time to wait for response after connection
-        requestFactory.setReadTimeout(30000); // 30 seconds
+        // Set to 60s to allow AI processing time
+        requestFactory.setReadTimeout(60000); // 60 seconds
         
         return builder
-                .setConnectTimeout(Duration.ofSeconds(10))
-                .setReadTimeout(Duration.ofSeconds(30))
+                .setConnectTimeout(Duration.ofSeconds(45))
+                .setReadTimeout(Duration.ofSeconds(60))
                 .requestFactory(() -> requestFactory)
                 .build();
     }
