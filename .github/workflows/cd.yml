@@ -36,7 +36,7 @@ jobs:
       - name: Build Frontend
         working-directory: frontend/ibudget
         run: |
-          npm ci --legacy-peer-deps
+          npm ci
           npm run build --configuration=production
 
       - name: Build Backend
