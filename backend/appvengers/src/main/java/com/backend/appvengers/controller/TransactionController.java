@@ -8,6 +8,7 @@ import com.backend.appvengers.dto.ExpenseSummary;
 import com.backend.appvengers.dto.IncomeSummary;
 import com.backend.appvengers.dto.MonthlyReportResponse;
 import com.backend.appvengers.entity.Transaction;
+import com.backend.appvengers.repository.TransactionRepository;
 import com.backend.appvengers.dto.TransactionRequest;
 import com.backend.appvengers.dto.TransactionResponse;
 import com.backend.appvengers.dto.TransactionWithCategoryResponse;
@@ -29,6 +30,7 @@ import java.util.Map;
 public class TransactionController {
 
     private final TransactionService transactionService;
+    private TransactionRepository transactionRepository;
 
     @GetMapping
     public ResponseEntity<ApiResponse> list(Authentication auth) {
@@ -132,7 +134,7 @@ public class TransactionController {
         }
     }
 
-    // Budget Transaction endpoint [GET]
+    // Budget Transaction endpoint [GET by List]
     @GetMapping("/budget-transactions/budget/{budgetId}")
     public ResponseEntity<ApiResponse> getBudgetExpenses(@PathVariable Integer budgetId) {
         List<BudgetExpenseResponse> list = transactionService.findByBudgetId(budgetId);
@@ -140,6 +142,42 @@ public class TransactionController {
         return ResponseEntity.ok(
             new ApiResponse(true, "Budget expenses fetched", list)
         );
+    }
+
+    // Budget Transaction Endpoint [GET by ID]
+    @GetMapping("/budget-transactions/{id}")
+    public ResponseEntity<ApiResponse> getBudgetExpenseById(
+        @PathVariable Long id
+    ) {
+        try {
+            Transaction tx = transactionRepository
+                .findById(id)
+                .orElseThrow(() ->
+                    new RuntimeException(
+                        "Transaction not found with id " + id
+                    )
+                );
+
+            BudgetExpenseResponse dto =
+                transactionService.toBudgetExpenseResponse(tx);
+
+            return ResponseEntity.ok(
+                new ApiResponse(
+                    true,
+                    "Budget expense fetched successfully",
+                    dto
+                )
+            );
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(
+                new ApiResponse(
+                    false,
+                    e.getMessage(),
+                    null
+                )
+            );
+        }
     }
 
     // Budget Transaction endpoint [POST]
