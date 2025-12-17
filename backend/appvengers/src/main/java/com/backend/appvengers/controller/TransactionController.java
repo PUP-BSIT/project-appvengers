@@ -3,6 +3,7 @@ package com.backend.appvengers.controller;
 import com.backend.appvengers.dto.ApiResponse;
 import com.backend.appvengers.dto.BudgetExpenseRequest;
 import com.backend.appvengers.dto.BudgetExpenseResponse;
+import com.backend.appvengers.dto.BudgetSummaryResponse;
 import com.backend.appvengers.dto.ExpenseSummary;
 import com.backend.appvengers.dto.IncomeSummary;
 import com.backend.appvengers.dto.MonthlyReportResponse;
@@ -226,5 +227,21 @@ public class TransactionController {
                 )
             );
         }
+    }
+
+    //Budget Transaction Endpoint [GET Budget Summary]
+    @GetMapping("/budgets/{budgetId}/summary")
+    public ResponseEntity<ApiResponse> getBudgetSummary(
+        @PathVariable Integer budgetId
+    ) {
+        BudgetSummaryResponse summary = transactionService.getBudgetSummary(budgetId);
+
+        return ResponseEntity.ok(
+            new ApiResponse(
+                true,
+                "Budget summary fetched",
+                summary
+            )
+        );
     }
 }
