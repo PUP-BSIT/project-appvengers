@@ -10,17 +10,18 @@ import { Router } from '@angular/router';
 import { Transaction } from '../../models/user.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { ToggleableSidebar } from "../toggleable-sidebar/toggleable-sidebar";
 
 @Component({
   selector: 'app-dashboard',
   imports: [
-    Sidebar,
     Header,
     IncomeChart,
     ExpenseChart,
     DecimalPipe,
-    SpendingChart
-  ],
+    SpendingChart,
+    ToggleableSidebar
+],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
