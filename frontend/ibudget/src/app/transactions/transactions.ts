@@ -1,6 +1,7 @@
 import { 
-  Component,signal, Renderer2, OnInit, OnDestroy, ChangeDetectorRef
+  Component,signal, Renderer2, OnInit, OnDestroy, ChangeDetectorRef, inject
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Sidebar } from "../sidebar/sidebar";
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe, DatePipe, CommonModule } from '@angular/common';
@@ -18,6 +19,7 @@ import { CategoriesService } from '../../services/categories.service';
 })
 export class Transactions implements OnInit, OnDestroy {
   private unlisten: (() => void) | null = null;
+  private route = inject(ActivatedRoute);
 
   constructor(private renderer: Renderer2,
               private txService: TransactionsService,
@@ -221,7 +223,7 @@ export class Transactions implements OnInit, OnDestroy {
     }
   }
 
-  openAddModal() {
+openAddModal() {
     this.showAddModal.set(true);
     this.isEditing.set(false);
     this.editingTransactionId = null;
@@ -238,6 +240,68 @@ export class Transactions implements OnInit, OnDestroy {
     };
     this.newTransactionCategoryId = null;
     this.isIncomeToggle.set(false);
+  }
+
+  /**
+   * Opens the add modal with pre-filled data from query params (chatbot deep links).
+   * Supports: amount, description, category, type, date
+   */
+  openAddModalWithParams(params: Record<string, string>) {
+    this.showAddModal.set(true);
+    this.isEditing.set(false);
+    this.editingTransactionId = null;
+    this.showCustomCategoryInput = false;
+    this.customCategoryName = '';
+
+    // Determine transaction type
+    const type = (params['type'] === 'income') ? 'income' : 'expense';
+    this.isIncomeToggle.set(type === 'income');
+
+    // Parse amount
+    const amount = params['amount'] ? parseFloat(params['amount']) : 0;
+
+    // Parse date (default to today)
+    const date = params['date'] || new Date().toISOString().split('T')[0];
+
+    // Find category by name and get its ID
+    let categoryId: number | undefined = undefined;
+    let categoryName = '';
+    
+    if (params['category']) {
+      const categoryParam = params['category'].toLowerCase();
+      const matchedCategory = this.allCategories.find(
+        c => c.name.toLowerCase() === categoryParam && c.type === type
+      );
+      if (matchedCategory) {
+        categoryId = matchedCategory.id;
+        categoryName = matchedCategory.name;
+      } else {
+        // Try partial match
+        const partialMatch = this.allCategories.find(
+          c => c.name.toLowerCase().includes(categoryParam) && c.type === type
+        );
+        if (partialMatch) {
+          categoryId = partialMatch.id;
+          categoryName = partialMatch.name;
+        }
+      }
+    }
+
+    // Set the transaction data
+    this.newTransaction = {
+      date: date,
+      description: params['description'] || '',
+      category_id: categoryId,
+      category: categoryName,
+      amount: isNaN(amount) ? 0 : amount,
+      type: type
+    };
+    this.newTransactionCategoryId = categoryId ?? null;
+
+    // Show notification that form was pre-filled
+    if (params['amount'] || params['description'] || params['category']) {
+      this.showNotificationMessage('Form pre-filled by Bonzi! Review and click Add to save.');
+    }
   }
 
   closeAddModal() {
@@ -406,7 +470,28 @@ export class Transactions implements OnInit, OnDestroy {
     }, 3000);
   }
 
-  ngOnInit() {
+ngOnInit() {
+    // Handle query params from chatbot deep links
+    this.route.queryParams.subscribe(params => {
+      if (params['openModal'] === 'true' || params['amount'] || params['description']) {
+        // Wait for categories to load before opening modal with pre-filled data
+        this.categoriesService.getCategories().subscribe({
+          next: (cats) => {
+            this.allCategories = cats;
+            const allNames = cats.map(c => c.name);
+            this.categories = ['All Categories', ...allNames];
+            this.expenseCategories = cats
+              .filter(c => c.type === 'expense').map(c => c.name);
+            this.incomeCategories = cats
+              .filter(c => c.type === 'income').map(c => c.name);
+            
+            // Now open the modal with pre-filled data
+            this.openAddModalWithParams(params);
+          }
+        });
+      }
+    });
+
     // Load transactions with category linkage
     this.txService.getAllWithCategory().subscribe({
       next: (txs) => {

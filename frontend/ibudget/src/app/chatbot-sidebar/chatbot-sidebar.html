@@ -32,6 +32,17 @@
             }
             <div class="message" [class.user]="msg.isUser" [class.bot]="!msg.isUser">
                 <div class="message-content" [innerHTML]="parseMarkdown(msg.text)"></div>
+                
+                @if (msg.action && !msg.isUser) {
+                <div class="message-action">
+                    <button class="action-btn" (click)="executeAction(msg.action)">
+                        <i class="bi" [ngClass]="msg.action.icon || 'bi-arrow-right-circle'"></i>
+                        <span>{{ msg.action.label || 'Take action' }}</span>
+                        <i class="bi bi-chevron-right action-arrow"></i>
+                    </button>
+                </div>
+                }
+                
                 <div class="message-time">
                     {{ msg.timestamp | date:'shortTime' }}
                 </div>
