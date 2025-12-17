@@ -7,6 +7,41 @@ export interface ChatMessage {
     text: string;
     isUser: boolean;
     timestamp: Date;
+    action?: ChatbotAction;
+}
+
+/**
+ * Represents an action that Bonzi can suggest to the user.
+ * Actions enable smart navigation with pre-filled forms.
+ */
+export interface ChatbotAction {
+    /** Type of action to perform */
+    type: 'navigate' | 'scroll' | 'open-modal';
+    /** Route path for navigation (e.g., '/transactions', '/savings/add-saving') */
+    path?: string;
+    /** Query parameters to pass (e.g., { amount: 500, category: 'Food' }) */
+    queryParams?: Record<string, string | number>;
+    /** Element ID for scroll actions */
+    elementId?: string;
+    /** Button label to display (e.g., 'Add this transaction') */
+    label?: string;
+    /** Icon class for the button (e.g., 'bi-plus-circle') */
+    icon?: string;
+}
+
+/**
+ * Structured response from the chatbot that may include actions.
+ */
+export interface ChatbotResponse {
+    /** The text response to display */
+    text?: string;
+    output?: string;
+    message?: string;
+    response?: string;
+    /** Optional action for the user to take */
+    action?: ChatbotAction;
+    /** Optional error message */
+    error?: string;
 }
 
 @Injectable({

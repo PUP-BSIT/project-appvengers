@@ -67,6 +67,45 @@ export class AddSaving implements OnInit {
       updated_at: [this.dateNow],
       deleted_at: ['']
     });
+
+    // Handle query params from chatbot deep links
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params['name'] || params['targetAmount'] || params['description']) {
+        this.prefillFormFromParams(params);
+      }
+    });
+  }
+
+  /**
+   * Pre-fills the add saving form from query params (chatbot deep links).
+   * Supports: name, targetAmount, frequency, goalDate, description
+   */
+  private prefillFormFromParams(params: Record<string, string>): void {
+    // Parse target amount
+    const targetAmount = params['targetAmount'] ? parseFloat(params['targetAmount']) : 0;
+
+    // Parse goal date (default to today if not provided)
+    const goalDate = params['goalDate'] || this.dateNow;
+
+    // Validate frequency value
+    const validFrequencies = ['Daily', 'Weekly', 'Monthly'];
+    let frequency = '';
+    if (params['frequency']) {
+      const paramFreq = params['frequency'].charAt(0).toUpperCase() + 
+                        params['frequency'].slice(1).toLowerCase();
+      if (validFrequencies.includes(paramFreq)) {
+        frequency = paramFreq;
+      }
+    }
+
+    // Patch form values
+    this.addSavingForm.patchValue({
+      name: params['name'] || '',
+      target_amount: isNaN(targetAmount) ? 0 : targetAmount,
+      frequency: frequency,
+      goal_date: goalDate,
+      description: params['description'] || ''
+    });
   }
 
   getSavingsLength() {
