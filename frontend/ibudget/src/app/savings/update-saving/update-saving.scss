@@ -35,8 +35,22 @@ main {
     width: 310px;
   }
 
-  select {
+  select, ::picker(select) {
+    appearance: base-select;
     width: 320px;
+    overflow: hidden;
+  }
+
+  ::picker(select) {
+    text-overflow: ellipsis;
+    border: 0;
+    margin: 0;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+  }
+
+  option {
+    font-size: 14px;
+    padding: 8px 12px;
   }
 }
 
@@ -49,6 +63,18 @@ main {
   .form-container {
     padding: 20px;
   }
+
+  .first-row, .second-row {
+    flex-direction: column;
+    gap: 10px;
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      width: 80%;
+    }
+  }
 }
 
 @media (min-width: 321px) and (max-width: 768px) {
@@ -59,5 +85,17 @@ main {
 
   .form-container {
     padding: 20px;
+  }
+
+  .first-row, .second-row {
+    flex-direction: column;
+    gap: 10px;
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      width: 80%;
+    }
   }
 }
