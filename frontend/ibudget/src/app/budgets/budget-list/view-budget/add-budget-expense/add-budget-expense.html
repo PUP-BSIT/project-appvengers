@@ -78,6 +78,7 @@
   #openAddBudgetExpenseModalBtn
   type="button" 
   class="btn btn-sm btn-danger mb-3"
+  [disabled]="disabled()"
   (click)="openModal()">
     Add Expense
 </button>

@@ -15,6 +15,7 @@
       <div>
         <app-add-budget-expense
         [categories]="categories()"
+        [disabled]="isBudgetExceeded()"
         (addBudgetExpenseResponse)="onBudgetExpenseAdded($event)"/>
       </div>
     </div>
