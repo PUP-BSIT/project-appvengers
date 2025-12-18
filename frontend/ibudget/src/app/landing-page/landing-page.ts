@@ -54,4 +54,23 @@ export class LandingPage implements OnInit, OnDestroy {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
+
+  // Scroll to Features section when navbar link is clicked
+  scrollToFeatures(event?: Event) {
+    if (event) {
+      event.preventDefault();
+    }
+    const section = document.getElementById('features');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  // Scroll to top when Home navbar link is clicked
+  scrollToTop(event?: Event) {
+    if (event) {
+      event.preventDefault();
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
