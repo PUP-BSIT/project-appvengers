@@ -14,6 +14,7 @@ $sidebar-width: 80px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 2rem;
   margin-bottom: 1rem;
 }
 
@@ -53,9 +54,9 @@ $sidebar-width: 80px;
   cursor: pointer;
   font-size: 0.9rem;
   display: flex;
-  align-items: left;
+  align-items: center;
   gap: 0.5rem;
-  margin-right: 2rem;
+  margin-right: 0;
 }
 
 .btn-mark-all:hover {
