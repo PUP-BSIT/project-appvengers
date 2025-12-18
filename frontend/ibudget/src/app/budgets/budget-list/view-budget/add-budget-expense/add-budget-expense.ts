@@ -101,6 +101,11 @@ export class AddBudgetExpense implements OnInit {
     if (this.addBudgetExpenseForm.valid) {
       const payload = this.addBudgetExpenseForm.value as Partial<BudgetTransaction>;
 
+      // Set Description to N/A if no user input
+      if(!payload.description || payload.description.trim() === '') {
+        payload.description = 'N/A';
+      }
+
       this.budgetTxService.create(payload).subscribe((response) => {
         this.addBudgetExpenseResponse.emit(response);
         this.addBudgetExpenseForm.reset();
