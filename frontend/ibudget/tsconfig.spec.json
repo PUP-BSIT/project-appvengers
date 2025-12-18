@@ -4,6 +4,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
+    "lib": [
+      "ES2022",
+      "dom"
+    ],
     "types": [
       "jasmine"
     ]
