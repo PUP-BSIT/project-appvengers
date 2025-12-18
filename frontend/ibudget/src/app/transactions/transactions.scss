@@ -703,7 +703,7 @@ $sidebar-width: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 11000; /* keep modal above header and overlays */
 }
 
 .modal-content {
