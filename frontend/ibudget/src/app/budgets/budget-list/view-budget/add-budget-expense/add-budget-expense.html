@@ -79,11 +79,14 @@
             @if(addBudgetExpenseForm.get('category_id')?.touched &&
               addBudgetExpenseForm.get('category_id')?.invalid)
             {
-              <div class="text-danger mt-1">Amount is required</div>
-            } @else if(addBudgetExpenseForm.get('amount')?.errors?.['min']) {
-              <div class="text-danger mt-1">Amount must be greater than 0.</div>
-            }
-
+              @if(addBudgetExpenseForm.get('amount')?.errors?.['required']) {
+                <div class="text-danger mt-1">Amount is required</div>
+              } @else if(addBudgetExpenseForm.get('amount')?.errors?.['min']) {
+                <div class="text-danger mt-1">
+                  Amount must be greater than 0.
+                </div>
+              }
+            } 
           </form>
         </div>
 
