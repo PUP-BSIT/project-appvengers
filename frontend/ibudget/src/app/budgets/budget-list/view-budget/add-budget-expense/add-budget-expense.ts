@@ -77,16 +77,18 @@ export class AddBudgetExpense implements OnInit {
 
   ngOnInit(): void {
     this.getCurrentBudgetId();
-    
+  }
+
+  openModal() {
+    if (this.disabled()) return;
+
+    // Refill values everytime modal opens
     this.addBudgetExpenseForm.patchValue({
       transaction_date: this.date(),
       created_at: this.date(),
       updated_at: this.date()
     });
-  }
 
-  openModal() {
-    if (this.disabled()) return;
     const modal = new Modal(this.addBudgetExpenseModal.nativeElement);
     modal.show();
   }
@@ -121,7 +123,14 @@ export class AddBudgetExpense implements OnInit {
 
       this.budgetTxService.create(payload).subscribe((response) => {
         this.addBudgetExpenseResponse.emit(response);
-        this.addBudgetExpenseForm.reset();
+        
+        this.addBudgetExpenseForm.reset({
+          budget_id: +this.currentBudgetId(),
+          transaction_date: this.date(),
+          created_at: this.date(),
+          updated_at: this.date()
+        });
+
         this.showNotificationMessage("Expense added successfully!");
         this.closeModal();
       });
