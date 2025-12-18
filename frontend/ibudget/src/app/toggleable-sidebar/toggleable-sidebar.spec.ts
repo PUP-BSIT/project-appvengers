@@ -1,3 +1,4 @@
+import { ActivatedRoute, provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ToggleableSidebar } from './toggleable-sidebar';
@@ -8,7 +9,10 @@ describe('ToggleableSidebar', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ToggleableSidebar]
+      imports: [ToggleableSidebar],
+      providers: [
+        provideRouter([])
+      ]
     })
     .compileComponents();
 
