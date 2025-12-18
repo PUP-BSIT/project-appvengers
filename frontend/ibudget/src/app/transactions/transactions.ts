@@ -47,6 +47,12 @@ export class Transactions implements OnInit, OnDestroy {
   itemsPerPage = 5;
   totalPages = 1;
 
+  // Weekly section pagination
+  todayPage = 1;
+  yesterdayPage = 1;
+  olderPage = 1;
+  itemsPerGroup = 5;
+
   newTransaction = {
     date: new Date().toISOString().split('T')[0],
     description: '',
@@ -201,6 +207,9 @@ export class Transactions implements OnInit, OnDestroy {
         return (b.id || 0) - (a.id || 0);
       });
       this.currentPage = 1;
+      this.todayPage = 1;
+      this.yesterdayPage = 1;
+      this.olderPage = 1;
     }
 
   onCategoryChange() {
@@ -571,33 +580,6 @@ ngOnInit() {
     return this.transactions.find(t => t.id === this.selectedTransactionId());
   }
 
-  getTodayTransactions(): Transaction[] {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    const todayTransactions = this.filteredTransactions.filter(t => {
-      const transactionDate = new Date(t.date);
-      transactionDate.setHours(0, 0, 0, 0);
-      return transactionDate.getTime() === today.getTime();
-    });
-
-    return todayTransactions.sort((a, b) => (b.id || 0) - (a.id || 0));
-  }
-
-  getYesterdayTransactions(): Transaction[] {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    yesterday.setHours(0, 0, 0, 0);
-    
-    const yesterdayTransactions = this.filteredTransactions.filter(t => {
-      const transactionDate = new Date(t.date);
-      transactionDate.setHours(0, 0, 0, 0);
-      return transactionDate.getTime() === yesterday.getTime();
-    });
-
-    return yesterdayTransactions.sort((a, b) => (b.id || 0) - (a.id || 0));
-  }
-
   getOlderTransactions(): Transaction[] {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -614,6 +596,99 @@ ngOnInit() {
     });
 
     return olderTransactions.sort((a, b) => (b.id || 0) - (a.id || 0));
+  }
+
+  getTodayTransactions(): Transaction[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return this.filteredTransactions
+      .filter(t => {
+        const d = new Date(t.date);
+        d.setHours(0, 0, 0, 0);
+        return d.getTime() === today.getTime();
+      })
+      .sort((a, b) => (b.id || 0) - (a.id || 0));
+  }
+
+  getPaginatedTodayTransactions(): Transaction[] {
+    const all = this.getTodayTransactions();
+    const start = (this.todayPage - 1) * this.itemsPerGroup;
+    return all.slice(start, start + this.itemsPerGroup);
+  }
+
+  getTodayTotalPages(): number {
+    return Math.ceil(this.getTodayTransactions().length / this.itemsPerGroup) || 1;
+  }
+
+  nextTodayPage() {
+    if (this.todayPage < this.getTodayTotalPages()) {
+      this.todayPage++;
+    }
+  }
+
+  previousTodayPage() {
+    if (this.todayPage > 1) {
+      this.todayPage--;
+    }
+  }
+
+  getYesterdayTransactions(): Transaction[] {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0);
+
+    return this.filteredTransactions
+      .filter(t => {
+        const d = new Date(t.date);
+        d.setHours(0, 0, 0, 0);
+        return d.getTime() === yesterday.getTime();
+      })
+      .sort((a, b) => (b.id || 0) - (a.id || 0));
+  }
+
+  getPaginatedYesterdayTransactions(): Transaction[] {
+    const all = this.getYesterdayTransactions();
+    const start = (this.yesterdayPage - 1) * this.itemsPerGroup;
+    return all.slice(start, start + this.itemsPerGroup);
+  }
+
+  getYesterdayTotalPages(): number {
+    return Math.ceil(this.getYesterdayTransactions().length / this.itemsPerGroup) || 1;
+  }
+
+  nextYesterdayPage() {
+    if (this.yesterdayPage < this.getYesterdayTotalPages()) {
+      this.yesterdayPage++;
+    }
+  }
+
+  previousYesterdayPage() {
+    if (this.yesterdayPage > 1) {
+      this.yesterdayPage--;
+    }
+  }
+
+  getPaginatedOlderTransactions(): Transaction[] {
+    const all = this.getOlderTransactions();
+    const start = (this.olderPage - 1) * this.itemsPerGroup;
+    return all.slice(start, start + this.itemsPerGroup);
+  }
+
+  getOlderTotalPages(): number {
+    return Math.ceil(this.getOlderTransactions().length / this.itemsPerGroup) || 1;
+  }
+
+  nextOlderPage() {
+    if (this.olderPage < this.getOlderTotalPages()) {
+      this.olderPage++;
+    }
+  }
+
+  previousOlderPage() {
+    if (this.olderPage > 1) {
+      this.olderPage--;
+    }
   }
 
   getPaginatedTransactions(): Transaction[] {
