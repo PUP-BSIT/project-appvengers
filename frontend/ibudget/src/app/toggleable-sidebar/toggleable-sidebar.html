@@ -1,4 +1,7 @@
-<nav [ngClass]="'sidebar-container ' + getSidebarType()" 
+<nav [ngClass]="'sidebar-container ' + 
+  getSidebarType() + 
+  ' ' + 
+  (getToggleState() ? 'open' : 'closed')" 
   [class.expanded]="isExpanded">
   <!-- Coin Image here -->
   <!-- <div class="image-container">
@@ -81,3 +84,7 @@
   <li (click)="setSidebarType('collapsable')">Collapsable</li>
   <li (click)="setSidebarType('expandable')">Expandable</li>
 </ul>
+
+@if (getToggleState()) {
+  <div class="mobile-overlay" (click)="closeSidebarOnMobile()"></div>
+}

@@ -435,3 +435,46 @@ $card-drop-shadow: #00000040;
     }
   }
 }
+
+@media(max-width: 483px) {
+  .profile-section .username {
+    display: none;
+  }
+
+  .page-title-section .page-title .date-text {
+    display: none;
+  }
+
+  .page-title-section .page-title .title-text {
+    min-width: 85px;
+  }
+
+  .profile-section .profile-display {
+    padding: 0;
+  }
+
+  .notifications-nav .nav-link {
+    padding: 0;
+  }
+}
+
+@media (min-width: 484px) and (max-width: 540px) {
+  .profile-section .username {
+    display: block;
+  }
+
+  .page-title-section .page-title .date-text {
+    display: none;
+  }
+}
+
+@media (min-width: 541px) and (max-width: 768px) {
+  .profile-section .username {
+    display: block;
+  }
+
+  .page-title-section .page-title .date-text {
+    display: block;
+  }
+}
+

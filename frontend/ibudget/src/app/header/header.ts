@@ -81,7 +81,7 @@ export class Header implements OnInit, OnDestroy {
   }
 
   toggleSidebar() {
-    this.sidebarService.toggle();
+    this.sidebarService.toggle(); 
   }
 
   toggleChatbot() {
