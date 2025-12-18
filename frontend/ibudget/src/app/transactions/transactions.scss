@@ -333,10 +333,9 @@ $sidebar-width: 80px;
 }
 
 .transactions-cards-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
   width: 100%;
 }
 
@@ -348,11 +347,9 @@ $sidebar-width: 80px;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
   border: 1px solid rgba(15,23,42,0.04);
   display: flex;
-  flex-direction: column;
+  align-items: center;
   padding: 0.5rem 1rem;
   position: relative;
-  width: 345px;
-  min-height: 160px;
 }
 
 .transaction-card:hover {
@@ -388,14 +385,13 @@ $sidebar-width: 80px;
   margin-top: 0.5rem;
   margin-bottom: 0.75rem;
   padding-left: 0.25rem;
-  width: 100%;
-  flex-basis: 100%;
 }
 
 .card-actions {
+  /* place three-dot menu at the far right of the card */
   position: absolute;
   right: 0.75rem;
-  top: 0.75rem;
+  top: 0.6rem;
   display: flex;
   align-items: center;
 }
@@ -403,10 +399,11 @@ $sidebar-width: 80px;
 .card-body {
   padding: 0.6rem 0.75rem;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   width: 100%;
   gap: 1rem;
-  flex: 1;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .card-left {
@@ -414,17 +411,13 @@ $sidebar-width: 80px;
   flex-direction: column;
   gap: 0.5rem;
   flex: 1;
-  width: 100%;
 }
 
 .card-right {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: auto;
-  padding-top: 0.5rem;
-  border-top: 1px solid #f0f0f0;
+  flex-shrink: 0;
+  margin-right: 0.8rem;
 }
 
 .card-top {
@@ -685,8 +678,6 @@ $sidebar-width: 80px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   border: 1px solid #f0f0f0;
-  width: 100%;
-  flex-basis: 100%;
 
   i {
     font-size: 3rem;
@@ -1129,7 +1120,7 @@ $sidebar-width: 80px;
 }
 
 /* Responsive Design */
-/* Mobile S - 320px */
+/* Mobile S */
 @media (max-width: 320px) {
   .transactions-container {
     margin-left: 0;
@@ -1137,153 +1128,51 @@ $sidebar-width: 80px;
   }
 
   .transactions-content {
+    flex-direction: column;
     padding: 0.5rem;
   }
 
-  .summary-cards {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-  }
-
-  .card {
-    padding: 0.875rem;
-    gap: 0.75rem;
-    flex-direction: row;
-
-    h3 {
-      font-size: 0.7rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .amount {
-      font-size: 1.25rem;
-    }
-
-    i {
-      font-size: 1.5rem !important;
-      padding: 0.5rem;
-    }
-  }
-
   .filter-add-row {
     flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
+    gap: 1rem;
     align-items: stretch;
   }
 
-  .filters-group {
-    flex-direction: column;
-    gap: 0.75rem;
+  .sidebar {
     width: 100%;
+    padding: 1rem;
   }
 
-  .category-section,
-  .period-section {
-    width: 100%;
-
-    .category-select,
-    .period-select {
-      width: 100%;
-      font-size: 0.85rem;
-      padding: 0.5rem 2.5rem 0.5rem 2.25rem;
-    }
-
-    .filter-icon {
-      font-size: 0.95rem;
-      left: 0.7rem;
-    }
+  .summary-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  .button-container {
-    width: 100%;
-
-    .btn-add {
-      width: 100%;
-      margin-left: 0;
-      padding: 0.6rem 1.25rem;
-      font-size: 0.85rem;
-      gap: 0.4rem;
-
-      i {
-        font-size: 0.8rem;
-      }
-    }
+  .transactions-cards-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  .date-group-label {
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+  .card {
+    padding: 1rem;
   }
 
-  .transaction-card {
-    width: 100%;
-    min-height: 140px;
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
-
-    .card-body {
-      padding: 0.5rem;
-      gap: 0.75rem;
-    }
-
-    .card-left {
-      gap: 0.4rem;
-
-      .card-description h4 {
-        font-size: 0.95rem;
-      }
-    }
-
-    .card-right {
-      padding-top: 0.4rem;
-
-      .amount-text {
-        font-size: 1rem;
-      }
-    }
-
-    .card-actions {
-      right: 0.5rem;
-      top: 0.5rem;
-
-      .btn-dots {
-        font-size: 1rem;
-        padding: 0.25rem;
-      }
-    }
-
-    .category-tag {
-      font-size: 0.75rem;
-    }
+  .card .amount {
+    font-size: 1.5rem;
   }
 
-  .pagination-container {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1rem;
-    padding: 0.75rem 0;
+  .transactions-table-container {
+    overflow-x: auto;
   }
 
-  .pagination-btn {
-    padding: 0.4rem 0.75rem;
+  .transactions-table {
     font-size: 0.8rem;
-
-    i {
-      font-size: 0.7rem;
-    }
+    min-width: 600px;
   }
 
-  .pagination-numbers {
-    gap: 0.35rem;
-
-    .pagination-number {
-      width: 32px;
-      height: 32px;
-      font-size: 0.8rem;
-    }
+  .transactions-table th,
+  .transactions-table td {
+    padding: 0.5rem 0.25rem;
   }
 
   .modal-content {
@@ -1291,275 +1180,80 @@ $sidebar-width: 80px;
     max-width: none;
   }
 
-  .modal-header {
-    padding: 0.75rem 1rem;
-
-    h2 {
-      font-size: 1.1rem;
-      gap: 0.5rem;
-
-      i {
-        font-size: 1rem;
-      }
-    }
-
-    .btn-close {
-      width: 30px;
-      height: 30px;
-      font-size: 1rem;
-    }
-  }
-
+  .modal-header,
   .modal-body {
     padding: 1rem;
   }
 
-  .type-toggle-wrapper {
-    margin-bottom: 1.25rem;
+  .notification-modal {
+    padding: 1rem;
   }
 
-  .header-toggles {
-    min-width: 100%;
-    padding: 6px;
-
-    a {
-      font-size: 0.8rem;
-      padding: 8px 12px;
-    }
+  .success-icon {
+    font-size: 2rem;
   }
 
-  .form-row {
-    flex-direction: column;
-    gap: 0;
-    margin-bottom: 1rem;
-
-    .form-group {
-      margin-bottom: 1rem;
-    }
-  }
-
-  .form-group {
-    margin-bottom: 1rem;
-
-    label {
-      font-size: 0.85rem;
-      margin-bottom: 0.4rem;
-    }
-
-    input,
-    select {
-      padding: 0.65rem;
-      font-size: 0.9rem;
-    }
-  }
-
-  .form-actions {
-    flex-direction: column-reverse;
-    gap: 0.75rem;
-    margin-top: 1.25rem;
-    padding-top: 1rem;
-
-    .btn-cancel,
-    .btn-submit {
-      width: 100%;
-      padding: 0.75rem 1.5rem;
-      font-size: 0.9rem;
-    }
-  }
-
-  .snackbar {
-    bottom: 1rem;
-    right: 1rem;
-    left: 1rem;
-    padding: 0.75rem 1rem;
-    font-size: 0.85rem;
-
-    i {
-      font-size: 1rem;
-    }
-
-    span {
-      font-size: 0.85rem;
-    }
-  }
-
-  .popup-menu {
-    width: 90px;
-    font-size: 0.85rem;
-
-    .menu-item {
-      padding: 0.6rem 0.75rem;
-      font-size: 0.85rem;
-    }
-  }
-
-  .no-data-card {
-    padding: 2rem 1rem;
-
-    i {
-      font-size: 2rem;
-    }
-
-    p {
-      font-size: 0.95rem;
-    }
+  .btn-add,
+  .btn-submit,
+  .btn-cancel {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
   }
 }
 
-/* Mobile M - 321px to 375px */
+/* Mobile M  */
 @media (min-width: 321px) and (max-width: 375px) {
   .transactions-container {
     margin-left: 0;
-    padding: 6px;
+    padding: 5px;
   }
 
   .transactions-content {
+    flex-direction: column;
     padding: 0.75rem;
-  }
-
-  .summary-cards {
-    grid-template-columns: 1fr;
-    gap: 0.875rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .card {
-    padding: 1rem;
-    gap: 0.875rem;
-
-    h3 {
-      font-size: 0.75rem;
-      margin-bottom: 0.55rem;
-    }
-
-    .amount {
-      font-size: 1.4rem;
-    }
-
-    i {
-      font-size: 1.65rem !important;
-      padding: 0.6rem;
-    }
   }
 
   .filter-add-row {
     flex-direction: column;
-    gap: 0.875rem;
-    margin-bottom: 1.25rem;
+    gap: 1rem;
     align-items: stretch;
   }
 
-  .filters-group {
-    flex-direction: column;
-    gap: 0.875rem;
+  .sidebar {
     width: 100%;
+    padding: 1rem;
   }
 
-  .category-section,
-  .period-section {
-    width: 100%;
-
-    .category-select,
-    .period-select {
-      width: 100%;
-      font-size: 0.875rem;
-      padding: 0.55rem 2.6rem 0.55rem 2.35rem;
-    }
-
-    .filter-icon {
-      font-size: 1rem;
-      left: 0.75rem;
-    }
+  .summary-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  .button-container {
-    width: 100%;
-
-    .btn-add {
-      width: 100%;
-      margin-left: 0;
-      padding: 0.65rem 1.35rem;
-      font-size: 0.875rem;
-      gap: 0.45rem;
-
-      i {
-        font-size: 0.85rem;
-      }
-    }
+  .transactions-cards-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  .date-group-label {
-    font-size: 0.95rem;
-    margin-top: 0.55rem;
-    margin-bottom: 0.6rem;
+  .card {
+    padding: 1rem;
   }
 
-  .transaction-card {
-    width: 100%;
-    min-height: 145px;
-    padding: 0.55rem 0.825rem;
-    border-radius: 9px;
-
-    .card-body {
-      padding: 0.55rem;
-      gap: 0.825rem;
-    }
-
-    .card-left {
-      gap: 0.45rem;
-
-      .card-description h4 {
-        font-size: 1rem;
-      }
-    }
-
-    .card-right {
-      padding-top: 0.45rem;
-
-      .amount-text {
-        font-size: 1.05rem;
-      }
-    }
-
-    .card-actions {
-      right: 0.6rem;
-      top: 0.55rem;
-
-      .btn-dots {
-        font-size: 1.05rem;
-        padding: 0.3rem;
-      }
-    }
-
-    .category-tag {
-      font-size: 0.775rem;
-    }
+  .card .amount {
+    font-size: 1.6rem;
   }
 
-  .pagination-container {
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    margin-top: 1.25rem;
-    padding: 0.875rem 0;
+  .transactions-table-container {
+    overflow-x: auto;
   }
 
-  .pagination-btn {
-    padding: 0.45rem 0.875rem;
+  .transactions-table {
     font-size: 0.85rem;
-
-    i {
-      font-size: 0.75rem;
-    }
+    min-width: 600px;
   }
 
-  .pagination-numbers {
-    gap: 0.4rem;
-
-    .pagination-number {
-      width: 34px;
-      height: 34px;
-      font-size: 0.85rem;
-    }
+  .transactions-table th,
+  .transactions-table td {
+    padding: 0.6rem 0.3rem;
   }
 
   .modal-content {
@@ -1567,785 +1261,229 @@ $sidebar-width: 80px;
     max-width: none;
   }
 
-  .modal-header {
-    padding: 0.875rem 1.15rem;
-
-    h2 {
-      font-size: 1.2rem;
-      gap: 0.6rem;
-
-      i {
-        font-size: 1.05rem;
-      }
-    }
-
-    .btn-close {
-      width: 32px;
-      height: 32px;
-      font-size: 1.05rem;
-    }
-  }
-
+  .modal-header,
   .modal-body {
-    padding: 1.15rem;
+    padding: 1.25rem;
   }
 
-  .type-toggle-wrapper {
-    margin-bottom: 1.4rem;
+  .notification-modal {
+    padding: 1.25rem;
   }
 
-  .header-toggles {
-    min-width: 100%;
-    padding: 7px;
-
-    a {
-      font-size: 0.85rem;
-      padding: 9px 14px;
-    }
+  .success-icon {
+    font-size: 2.25rem;
   }
 
-  .form-row {
-    flex-direction: column;
-    gap: 0;
-    margin-bottom: 1.15rem;
-
-    .form-group {
-      margin-bottom: 1.15rem;
-    }
-  }
-
-  .form-group {
-    margin-bottom: 1.15rem;
-
-    label {
-      font-size: 0.875rem;
-      margin-bottom: 0.45rem;
-    }
-
-    input,
-    select {
-      padding: 0.7rem;
-      font-size: 0.925rem;
-    }
-  }
-
-  .form-actions {
-    flex-direction: column-reverse;
-    gap: 0.875rem;
-    margin-top: 1.4rem;
-    padding-top: 1.15rem;
-
-    .btn-cancel,
-    .btn-submit {
-      width: 100%;
-      padding: 0.8rem 1.6rem;
-      font-size: 0.925rem;
-    }
-  }
-
-  .snackbar {
-    bottom: 1.15rem;
-    right: 1.15rem;
-    left: 1.15rem;
-    padding: 0.825rem 1.1rem;
-
-    i {
-      font-size: 1.05rem;
-    }
-
-    span {
-      font-size: 0.875rem;
-    }
-  }
-
-  .popup-menu {
-    width: 95px;
-
-    .menu-item {
-      padding: 0.65rem 0.825rem;
-      font-size: 0.875rem;
-    }
-  }
-
-  .no-data-card {
-    padding: 2.25rem 1.15rem;
-
-    i {
-      font-size: 2.25rem;
-    }
-
-    p {
-      font-size: 1rem;
-    }
+  .btn-add,
+  .btn-submit,
+  .btn-cancel {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.95rem;
   }
 }
 
-/* Mobile L - 376px to 425px */
+/* Mobile L */
 @media (min-width: 376px) and (max-width: 425px) {
   .transactions-container {
     margin-left: 0;
-    padding: 8px;
+    padding: 10px;
   }
 
   .transactions-content {
+    flex-direction: column;
     padding: 1rem;
-  }
-
-  .summary-cards {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .card {
-    padding: 1.15rem;
-    gap: 1rem;
-
-    h3 {
-      font-size: 0.8rem;
-      margin-bottom: 0.6rem;
-    }
-
-    .amount {
-      font-size: 1.55rem;
-    }
-
-    i {
-      font-size: 1.75rem !important;
-      padding: 0.65rem;
-    }
   }
 
   .filter-add-row {
     flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 1.5rem;
     align-items: stretch;
   }
 
-  .filters-group {
-    flex-direction: column;
+  .sidebar {
+    width: 100%;
+    padding: 1.25rem;
+  }
+
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    width: 100%;
   }
 
-  .category-section,
-  .period-section {
-    width: 100%;
-
-    .category-select,
-    .period-select {
-      width: 100%;
-      font-size: 0.9rem;
-      padding: 0.6rem 2.65rem 0.6rem 2.5rem;
-    }
-
-    .filter-icon {
-      font-size: 1.05rem;
-      left: 0.8rem;
-    }
+  .transactions-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
 
-  .button-container {
-    width: 100%;
-
-    .btn-add {
-      width: 100%;
-      margin-left: 0;
-      padding: 0.7rem 1.5rem;
-      font-size: 0.9rem;
-      gap: 0.5rem;
-
-      i {
-        font-size: 0.875rem;
-      }
-    }
+  .card {
+    padding: 1.25rem;
   }
 
-  .date-group-label {
-    font-size: 1rem;
-    margin-top: 0.6rem;
-    margin-bottom: 0.65rem;
+  .card .amount {
+    font-size: 1.7rem;
   }
 
-  .transaction-card {
-    width: 100%;
-    min-height: 150px;
-    padding: 0.6rem 0.9rem;
-    border-radius: 10px;
-
-    .card-body {
-      padding: 0.6rem;
-      gap: 0.9rem;
-    }
-
-    .card-left {
-      gap: 0.5rem;
-
-      .card-description h4 {
-        font-size: 1.05rem;
-      }
-    }
-
-    .card-right {
-      padding-top: 0.5rem;
-
-      .amount-text {
-        font-size: 1.075rem;
-      }
-    }
-
-    .card-actions {
-      right: 0.7rem;
-      top: 0.6rem;
-
-      .btn-dots {
-        font-size: 1.1rem;
-        padding: 0.32rem;
-      }
-    }
-
-    .category-tag {
-      font-size: 0.8rem;
-    }
+  .transactions-table-container {
+    overflow-x: auto;
   }
 
-  .pagination-container {
-    gap: 0.75rem;
-    margin-top: 1.5rem;
-    padding: 1rem 0;
+  .transactions-table {
+    font-size: 0.9rem;
+    min-width: 600px;
   }
 
-  .pagination-btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-
-    i {
-      font-size: 0.775rem;
-    }
-  }
-
-  .pagination-numbers {
-    gap: 0.45rem;
-
-    .pagination-number {
-      width: 36px;
-      height: 36px;
-      font-size: 0.875rem;
-    }
+  .transactions-table th,
+  .transactions-table td {
+    padding: 0.75rem 0.4rem;
   }
 
   .modal-content {
-    width: 92%;
+    width: 90%;
   }
 
-  .modal-header {
-    padding: 1rem 1.35rem;
-
-    h2 {
-      font-size: 1.3rem;
-      gap: 0.65rem;
-
-      i {
-        font-size: 1.1rem;
-      }
-    }
-
-    .btn-close {
-      width: 34px;
-      height: 34px;
-      font-size: 1.1rem;
-    }
+  .notification-modal {
+    padding: 1.5rem;
   }
 
-  .modal-body {
-    padding: 1.35rem;
-  }
-
-  .type-toggle-wrapper {
-    margin-bottom: 1.5rem;
-  }
-
-  .header-toggles {
-    min-width: 100%;
-    padding: 7px;
-
-    a {
-      font-size: 0.875rem;
-      padding: 9px 16px;
-    }
-  }
-
-  .form-row {
-    flex-direction: column;
-    gap: 0;
-    margin-bottom: 1.35rem;
-
-    .form-group {
-      margin-bottom: 1.35rem;
-    }
-  }
-
-  .form-group {
-    margin-bottom: 1.35rem;
-
-    label {
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-    }
-
-    input,
-    select {
-      padding: 0.75rem;
-      font-size: 0.95rem;
-    }
-  }
-
-  .form-actions {
-    flex-direction: row;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    padding-top: 1.35rem;
-
-    .btn-cancel,
-    .btn-submit {
-      flex: 1;
-      padding: 0.825rem 1.65rem;
-      font-size: 0.95rem;
-    }
-  }
-
-  .snackbar {
-    bottom: 1.35rem;
-    right: 1.35rem;
-    left: 1.35rem;
-    padding: 0.9rem 1.2rem;
-
-    i {
-      font-size: 1.1rem;
-    }
-
-    span {
-      font-size: 0.9rem;
-    }
-  }
-
-  .popup-menu {
-    width: 98px;
-
-    .menu-item {
-      padding: 0.7rem 0.9rem;
-      font-size: 0.9rem;
-    }
-  }
-
-  .no-data-card {
-    padding: 2.5rem 1.35rem;
-
-    i {
-      font-size: 2.5rem;
-    }
-
-    p {
-      font-size: 1.05rem;
-    }
+  .success-icon {
+    font-size: 2.5rem;
   }
 }
 
-/* Tablet - 426px to 768px */
-@media (min-width: 426px) and (max-width: 768px) {
+/* Mobile XL (720px) */
+@media (min-width: 426px) and (max-width: 720px) {
   .transactions-container {
     margin-left: 0;
-    padding: 12px;
+    padding: 10px;
   }
 
   .transactions-content {
-    padding: 1.25rem 1.5rem;
+    flex-direction: column;
+    padding: 1.25rem;
+  }
+
+  .filter-add-row {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 1.5rem;
   }
 
   .summary-cards {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
-    margin-bottom: 1.75rem;
+  }
 
-    .balance-card {
-      grid-column: 1 / -1;
-    }
+  .transactions-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
   }
 
   .card {
-    padding: 1.4rem;
-    gap: 1.1rem;
+    padding: 1.5rem;
+  }
 
-    h3 {
-      font-size: 0.82rem;
-    }
+  .card .amount {
+    font-size: 1.75rem;
+  }
 
-    .amount {
-      font-size: 1.7rem;
-    }
+  .transactions-table-container {
+    overflow-x: auto;
+  }
 
-    i {
-      font-size: 1.85rem !important;
-      padding: 0.7rem;
-    }
+  .transactions-table {
+    font-size: 0.95rem;
+    min-width: 600px;
+  }
+
+  .transactions-table th,
+  .transactions-table td {
+    padding: 0.8rem 0.5rem;
+  }
+
+  .modal-content {
+    width: 88%;
+  }
+
+  .notification-modal {
+    padding: 1.75rem;
+  }
+
+  .success-icon {
+    font-size: 2.75rem;
+  }
+}
+
+/* Tablet */
+@media (min-width: 721px) and (max-width: 768px) {
+  .transactions-container {
+    margin-left: 0
+  }
+
+  .transactions-content {
+    flex-direction: column;
+    padding: 1.5rem;
   }
 
   .filter-add-row {
     flex-direction: row;
-    flex-wrap: wrap;
-    gap: 1.25rem;
-    margin-bottom: 1.75rem;
+    gap: 1.5rem;
+    justify-content: space-between;
   }
 
-  .filters-group {
-    flex: 1;
-    min-width: 280px;
-    gap: 1rem;
+  .sidebar {
+    width: 100%;
+    padding: 1.5rem;
   }
 
-  .category-section,
-  .period-section {
-    .category-select,
-    .period-select {
-      width: 190px;
-      font-size: 0.92rem;
-      padding: 0.625rem 2.7rem 0.625rem 2.6rem;
-    }
-
-    .filter-icon {
-      font-size: 1.08rem;
-      left: 0.82rem;
-    }
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
   }
 
-  .button-container {
-    .btn-add {
-      margin-left: 0;
-      padding: 0.7rem 1.6rem;
-      font-size: 0.92rem;
-    }
+  .card {
+    padding: 1.5rem;
   }
 
-  .date-group-label {
-    font-size: 1.05rem;
-    margin-bottom: 0.7rem;
+  .card .amount {
+    font-size: 1.8rem;
   }
 
-  .transaction-card {
-    width: calc(50% - 0.625rem);
-    min-height: 155px;
-    padding: 0.65rem 1rem;
-    border-radius: 11px;
-
-    .card-body {
-      padding: 0.65rem 0.8rem;
-    }
-
-    .card-left {
-      .card-description h4 {
-        font-size: 1.075rem;
-      }
-    }
-
-    .card-right {
-      .amount-text {
-        font-size: 1.08rem;
-      }
-    }
-
-    .card-actions {
-      .btn-dots {
-        font-size: 1.15rem;
-      }
-    }
-
-    .category-tag {
-      font-size: 0.82rem;
-    }
+  .transactions-table {
+    font-size: 1rem;
   }
 
-  .pagination-container {
-    gap: 0.875rem;
-    margin-top: 1.75rem;
-    padding: 1.15rem 0;
-  }
-
-  .pagination-btn {
-    padding: 0.55rem 1.1rem;
-    font-size: 0.9rem;
-  }
-
-  .pagination-numbers {
-    gap: 0.5rem;
-
-    .pagination-number {
-      width: 38px;
-      height: 38px;
-      font-size: 0.9rem;
-    }
+  .transactions-table th,
+  .transactions-table td {
+    padding: 1rem;
   }
 
   .modal-content {
     width: 85%;
-    max-width: 520px;
   }
 
-  .modal-header {
-    padding: 1.15rem 1.65rem;
-
-    h2 {
-      font-size: 1.4rem;
-    }
-
-    .btn-close {
-      width: 35px;
-      height: 35px;
-      font-size: 1.15rem;
-    }
+  .notification-modal {
+    padding: 2rem;
   }
 
-  .modal-body {
-    padding: 1.65rem;
-  }
-
-  .type-toggle-wrapper {
-    margin-bottom: 1.75rem;
-  }
-
-  .header-toggles {
-    min-width: 400px;
-
-    a {
-      font-size: 0.9rem;
-      padding: 10px 18px;
-    }
-  }
-
-  .form-row {
-    margin-bottom: 1.4rem;
-  }
-
-  .form-group {
-    margin-bottom: 1.4rem;
-
-    label {
-      font-size: 0.92rem;
-    }
-
-    input,
-    select {
-      padding: 0.8rem;
-      font-size: 0.96rem;
-    }
-  }
-
-  .form-actions {
-    margin-top: 1.75rem;
-    padding-top: 1.4rem;
-
-    .btn-cancel,
-    .btn-submit {
-      padding: 0.85rem 1.75rem;
-      font-size: 0.96rem;
-    }
-  }
-
-  .snackbar {
-    bottom: 1.5rem;
-    right: 1.5rem;
-    padding: 1rem 1.35rem;
-
-    span {
-      font-size: 0.93rem;
-    }
-  }
-
-  .no-data-card {
-    padding: 2.75rem 1.5rem;
-
-    i {
-      font-size: 2.75rem;
-    }
-
-    p {
-      font-size: 1.075rem;
-    }
+  .success-icon {
+    font-size: 3rem;
   }
 }
 
-/* Laptop - 769px to 1024px */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .transactions-container {
-    margin-left: $sidebar-width;
-    padding: 12px;
-  }
-
-  .transactions-content {
-    padding: 1.5rem 1.75rem;
-  }
-
+/* Small mobile devices 412px wide */
+@media (min-width: 400px) and (max-height: 425px) {
   .summary-cards {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.35rem;
-    margin-bottom: 1.85rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  .card {
-    padding: 1.55rem;
-
-    h3 {
-      font-size: 0.84rem;
-    }
-
-    .amount {
-      font-size: 1.85rem;
-    }
-
-    i {
-      font-size: 1.95rem !important;
-    }
-  }
-
-  .filter-add-row {
-    margin-bottom: 1.85rem;
-    gap: 1.5rem;
-  }
-
-  .filters-group {
-    gap: 1.15rem;
-  }
-
-  .category-section,
-  .period-section {
-    .category-select,
-    .period-select {
-      width: 195px;
-      font-size: 0.94rem;
-      padding: 0.64rem 2.72rem 0.64rem 2.68rem;
-    }
-
-    .filter-icon {
-      font-size: 1.09rem;
-    }
-  }
-
-  .button-container {
-    .btn-add {
-      padding: 0.72rem 1.7rem;
-      font-size: 0.94rem;
-    }
-  }
-
-  .date-group-label {
-    font-size: 1.075rem;
-  }
-
-  .transaction-card {
-    width: calc(33.333% - 0.875rem);
-    min-height: 160px;
-
-    .card-left {
-      .card-description h4 {
-        font-size: 1.085rem;
-      }
-    }
-
-    .card-right {
-      .amount-text {
-        font-size: 1.085rem;
-      }
-    }
-
-    .category-tag {
-      font-size: 0.84rem;
-    }
-  }
-
-  .pagination-container {
-    gap: 0.95rem;
-    margin-top: 1.85rem;
-  }
-
-  .pagination-btn {
-    padding: 0.58rem 1.15rem;
-    font-size: 0.92rem;
-  }
-
-  .pagination-numbers {
-    .pagination-number {
-      width: 39px;
-      height: 39px;
-      font-size: 0.92rem;
-    }
-  }
-
-  .modal-content {
-    width: 80%;
-    max-width: 540px;
-  }
-
-  .modal-header {
-    h2 {
-      font-size: 1.45rem;
-    }
-  }
-
-  .modal-body {
-    padding: 1.75rem;
-  }
-
-  .type-toggle-wrapper {
-    margin-bottom: 1.85rem;
-  }
-
-  .header-toggles {
-    min-width: 450px;
-
-    a {
-      font-size: 0.92rem;
-    }
-  }
-
-  .form-group {
-    margin-bottom: 1.45rem;
-
-    label {
-      font-size: 0.94rem;
-    }
-
-    input,
-    select {
-      padding: 0.84rem;
-      font-size: 0.98rem;
-    }
-  }
-
-  .form-actions {
-    margin-top: 1.85rem;
-  }
-}
-
-/* Desktop & Above - 1025px+ */
-@media (min-width: 1025px) {
-  .transactions-container {
-    margin-left: $sidebar-width;
-  }
-
-  .summary-cards {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .filter-add-row {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  .filters-group {
-    flex-direction: row;
-  }
-
-  .transaction-card {
-    width: calc(33.333% - 0.875rem);
+  .transactions-cards-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }
