@@ -299,24 +299,376 @@ $card-drop-shadow: #00000040;
   }
 }
 
-@media (max-width: 768px) {
+/* Mobile S - 320px */
+@media (max-width: 320px) {
   .header-container {
+    height: 60px;
     margin-left: 0;
+    padding: 0 8px;
+    gap: 6px;
+  }
+
+  .menu-toggle {
+    display: block;
+    font-size: 20px;
+  }
+
+  .left-section {
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .page-title-section {
+    flex: 1;
+    min-width: 0;
+    
+    .page-title {
+      font-size: 14px;
+      gap: 6px;
+
+      .title-text {
+        font-size: 14px;
+        min-width: auto;
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .divider {
+        display: none;
+      }
+
+      .date-text {
+        display: none;
+      }
+    }
+  }
+
+  .right-section {
+    gap: 6px;
+  }
+
+  .notifications-nav {
+    a {
+      padding: 6px;
+    }
+
+    .notification-icon {
+      font-size: 18px;
+    }
+
+    .notification-count {
+      width: 14px;
+      height: 14px;
+      font-size: 8px;
+      top: 2px;
+      right: 0;
+    }
+  }
+
+  .chatbot-nav {
+    .chatbot-btn {
+      padding: 6px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+
+      span {
+        display: none;
+      }
+
+      i {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .profile-section {
+    .profile-display {
+      padding: 6px;
+      gap: 0;
+
+      .profile-icon {
+        font-size: 20px;
+      }
+
+      .username {
+        display: none;
+      }
+
+      .dropdown-arrow {
+        display: none;
+      }
+    }
+
+    .profile-dropdown {
+      right: -10px;
+      min-width: 160px;
+    }
+  }
+
+  .about-nav {
+    display: none;
+  }
+}
+
+/* Mobile M - 321px to 375px */
+@media (min-width: 321px) and (max-width: 375px) {
+  .header-container {
+    height: 60px;
+    margin-left: 0;
+    padding: 0 10px;
+    gap: 8px;
+  }
+
+  .menu-toggle {
+    display: block;
+    font-size: 22px;
+  }
+
+  .left-section {
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .page-title-section {
+    flex: 1;
+    min-width: 0;
+    
+    .page-title {
+      font-size: 16px;
+      gap: 6px;
+
+      .title-text {
+        font-size: 16px;
+        min-width: auto;
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .divider {
+        font-size: 14px;
+      }
+
+      .date-text {
+        display: none;
+      }
+    }
+  }
+
+  .right-section {
+    gap: 8px;
+  }
+
+  .notifications-nav {
+    a {
+      padding: 7px;
+    }
+
+    .notification-icon {
+      font-size: 19px;
+    }
+
+    .notification-count {
+      width: 15px;
+      height: 15px;
+      font-size: 8px;
+      top: 3px;
+      right: 1px;
+    }
+  }
+
+  .chatbot-nav {
+    .chatbot-btn {
+      padding: 7px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+
+      span {
+        display: none;
+      }
+
+      i {
+        font-size: 17px;
+      }
+    }
+  }
+
+  .profile-section {
+    .profile-display {
+      padding: 7px 10px;
+      gap: 6px;
+
+      .profile-icon {
+        font-size: 21px;
+      }
+
+      .username {
+        display: none;
+      }
+
+      .dropdown-arrow {
+        font-size: 10px;
+      }
+    }
+
+    .profile-dropdown {
+      right: -5px;
+      min-width: 180px;
+    }
+  }
+
+  .about-nav {
+    display: none;
+  }
+}
+
+/* Mobile L - 376px to 425px */
+@media (min-width: 376px) and (max-width: 425px) {
+  .header-container {
+    height: 65px;
+    margin-left: 0;
+    padding: 0 12px;
     gap: 10px;
   }
 
   .menu-toggle {
     display: block;
+    font-size: 23px;
+  }
+
+  .left-section {
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .page-title-section {
+    flex: 1;
+    min-width: 0;
+    
+    .page-title {
+      font-size: 18px;
+      gap: 8px;
+
+      .title-text {
+        font-size: 18px;
+        min-width: auto;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .divider {
+        font-size: 16px;
+      }
+
+      .date-text {
+        font-size: 13px;
+        display: none;
+      }
+    }
+  }
+
+  .right-section {
+    gap: 10px;
+  }
+
+  .notifications-nav {
+    a {
+      padding: 8px;
+    }
+
+    .notification-icon {
+      font-size: 20px;
+    }
+
+    .notification-count {
+      width: 16px;
+      height: 16px;
+      font-size: 9px;
+      top: 4px;
+      right: 2px;
+    }
+  }
+
+  .chatbot-nav {
+    .chatbot-btn {
+      padding: 8px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+
+      span {
+        display: none;
+      }
+
+      i {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .profile-section {
+    .profile-display {
+      padding: 8px 12px;
+      gap: 8px;
+
+      .profile-icon {
+        font-size: 22px;
+      }
+
+      .username {
+        font-size: 13px;
+        max-width: 80px;
+      }
+
+      .dropdown-arrow {
+        font-size: 11px;
+      }
+    }
+
+    .profile-dropdown {
+      right: 0;
+      min-width: 190px;
+    }
+  }
+
+  .about-nav {
+    display: none;
+  }
+}
+
+/* Tablet - 426px to 768px */
+@media (min-width: 426px) and (max-width: 768px) {
+  .header-container {
+    height: 70px;
+    margin-left: 0;
+    padding: 0 16px;
+    gap: 12px;
+  }
+
+  .menu-toggle {
+    display: block;
+    font-size: 24px;
+  }
+
+  .left-section {
+    gap: 14px;
   }
 
   .page-title-section {
     .page-title {
       font-size: 20px;
-      gap: 8px;
+      gap: 10px;
 
       .title-text {
-        min-width: 120px;
-        font-size: 18px;
+        font-size: 20px;
+        min-width: 130px;
       }
 
       .divider {
@@ -330,66 +682,152 @@ $card-drop-shadow: #00000040;
   }
 
   .right-section {
-    gap: 10px;
+    gap: 12px;
   }
 
   .notifications-nav {
     a {
-      padding: 8px;
-      border-radius: 6px;
+      padding: 9px;
     }
 
     .notification-icon {
-      font-size: 20px;
+      font-size: 22px;
     }
 
     .notification-count {
-      top: 1px;
-      right: 1px;
-      width: 16px;
-      height: 16px;
+      width: 17px;
+      height: 17px;
       font-size: 9px;
+      top: 5px;
+      right: 3px;
     }
   }
 
   .chatbot-nav {
     .chatbot-btn {
-      padding: 8px;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      justify-content: center;
-      
+      padding: 8px 12px;
+      border-radius: 20px;
+
       span {
-        display: none;
+        display: inline;
+        font-size: 13px;
       }
-      
+
       i {
-        font-size: 18px;
-        margin: 0;
+        font-size: 16px;
       }
     }
   }
 
   .profile-section {
-
     .profile-display {
-      padding: 8px 12px;
-      gap: 8px;
-      border-radius: 6px;
+      padding: 9px 14px;
+      gap: 9px;
 
       .profile-icon {
-        font-size: 22px;
+        font-size: 23px;
       }
 
       .username {
         font-size: 14px;
-        max-width: 100px;
+        max-width: 110px;
       }
+
+      .dropdown-arrow {
+        font-size: 11px;
+      }
+    }
+
+    .profile-dropdown {
+      min-width: 200px;
     }
   }
 
   .about-nav {
+    display: none;
+  }
+}
+
+/* Laptop - 769px to 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .header-container {
+    margin-left: $header-margin-left;
+    padding: 0 18px;
+    gap: 16px;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+
+  .page-title-section {
+    .page-title {
+      font-size: 22px;
+      gap: 11px;
+
+      .title-text {
+        font-size: 22px;
+        min-width: 140px;
+      }
+
+      .divider {
+        font-size: 20px;
+      }
+
+      .date-text {
+        font-size: 15px;
+      }
+    }
+  }
+
+  .right-section {
+    gap: 16px;
+  }
+
+  .notifications-nav {
+    .notification-icon {
+      font-size: 24px;
+    }
+
+    .notification-count {
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      top: 7px;
+      right: 3px;
+    }
+  }
+
+  .chatbot-nav {
+    .chatbot-btn {
+      padding: 8px 14px;
+
+      span {
+        font-size: 14px;
+      }
+
+      i {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .profile-section {
+    .profile-display {
+      .username {
+        max-width: 130px;
+      }
+    }
+  }
+}
+
+/* Desktop & Above - 1025px+ */
+@media (min-width: 1025px) {
+  .header-container {
+    margin-left: $header-margin-left;
+  }
+
+  .menu-toggle {
     display: none;
   }
 }
