@@ -76,7 +76,7 @@
         </div>
 
         <!-- Password Field -->
-        <div class="d-flex flex-row gap-3">
+        <div class="password-fields">
           <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <div class="input-group">
@@ -122,7 +122,6 @@
           </div>
         </div>
         
-
         <button type="submit" class="btn login-button w-100"
           [disabled]="signupForm.invalid || loading()">
           {{ loading() ? 'Creating Account...' : 'Create Account' }}
