@@ -72,7 +72,7 @@ export class UpdateBudgetExpense implements OnInit {
 
     // Set updated_at equivalent
     this.updateBudgetExpenseForm.patchValue({
-      transaction_date: this.date()
+      transactionDate: this.date()
     });
   }
 
