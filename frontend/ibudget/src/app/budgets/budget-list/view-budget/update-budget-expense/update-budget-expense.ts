@@ -72,7 +72,7 @@ export class UpdateBudgetExpense implements OnInit {
 
     // Set updated_at equivalent
     this.updateBudgetExpenseForm.patchValue({
-      transactionDate: this.date()
+      transaction_date: this.date()
     });
   }
 
@@ -115,16 +115,25 @@ export class UpdateBudgetExpense implements OnInit {
 
   // Update expense via backend
   updateExpense() {
-    if (this.updateBudgetExpenseForm.valid) {
-      const payload = this.updateBudgetExpenseForm.value as Partial<BudgetTransaction>;
-      const id = this.transactionId();
-
-      this.budgetTxService.update(id, payload).subscribe((response) => {
-        this.updateBudgetExpenseResponse.emit(response);
-        this.showNotificationMessage("Expense updated successfully!");
-        this.closeModal();
-      });
+    // Displays error messages once 'add expense' button is pressed
+    if (this.updateBudgetExpenseForm.invalid) {
+      this.updateBudgetExpenseForm.markAllAsTouched();
+      return;
     }
+
+    const payload = this.updateBudgetExpenseForm.value as Partial<BudgetTransaction>;
+    const id = this.transactionId();
+
+    // Set Description to N/A if no user input
+    if(!payload.description || payload.description.trim() === '') {
+      payload.description = 'N/A';
+    }
+    
+    this.budgetTxService.update(id, payload).subscribe((response) => {
+      this.updateBudgetExpenseResponse.emit(response);
+      this.showNotificationMessage("Expense updated successfully!");
+      this.closeModal();
+    });  
   }
 
   // Get budget ID from route
