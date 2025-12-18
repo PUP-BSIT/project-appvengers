@@ -41,6 +41,23 @@
       <i class="bi bi-bar-chart-line"></i>
       <span>Reports</span>
     </div>
+
+    <!-- Sidebar Control -->
+    <div class="sidebar-control">
+      <button 
+        type="button"
+        class="btn btn-light sidebar-control-button"
+        title="Sidebar Control"
+        (click)="toggleSidebarControl()">
+
+        @if(getSidebarType() === 'collapsable') {
+          <i class="bi bi-layout-sidebar-inset-reverse"></i>
+        } @else {
+          <i class="bi bi-layout-sidebar-inset"></i>
+        }
+
+      </button>
+    </div>
   </div>
 </nav>
 
@@ -60,24 +77,6 @@
   </button>
 </div>
 }
-
-
-<!-- Sidebar Control -->
-<div class="sidebar-control">
-  <button 
-    type="button"
-    class="btn btn-light sidebar-control-button"
-    title="Sidebar Control"
-    (click)="toggleSidebarControl()">
-
-    @if(getSidebarType() === 'collapsable') {
-      <i class="bi bi-layout-sidebar-inset-reverse"></i>
-    } @else {
-      <i class="bi bi-layout-sidebar-inset"></i>
-    }
-
-  </button>
-</div>
 
 <!-- Sidebar Control Dropdown -->
 <ul [class]="'sidebar-control-dropdown' + (isSidebarControlOpen() ? '' : ' hide')">
