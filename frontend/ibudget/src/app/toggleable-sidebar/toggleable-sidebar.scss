@@ -163,7 +163,7 @@ $sidebar-bg: #212529;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
-  z-index: 1100;
+  z-index: 1030;
   pointer-events: none;
   transition: left 0.3s ease;
 
@@ -199,7 +199,7 @@ $sidebar-bg: #212529;
   border: none;
   width: 30px;
   height: 30px;
-  z-index: 1100;
+  z-index: 1030;
 
   i {
     color: white;
