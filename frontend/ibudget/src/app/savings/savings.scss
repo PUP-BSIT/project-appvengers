@@ -168,8 +168,26 @@ main {
     width: 250px;
     max-width: 100%;
   }
+
+  .toast-container {
+    top: auto;
+    bottom: 15px;
+    left: 0;
+  }
 }
 
+/* Ensure toast is visible on Mobile M, L, and Tablets */
+@media (max-width: 992px) {
+  .toast-container {
+    top: auto;
+    bottom: 15px;
+    right: 15px;
+    left: 0;
+    z-index: 1300;
+  }
+}
+
+// Tablet and Medium Devices
 @media (min-width: 321px) and (max-width: 768px) {
   main {
     margin-left: 0;
