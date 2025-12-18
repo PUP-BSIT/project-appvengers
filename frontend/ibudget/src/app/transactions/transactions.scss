@@ -1421,7 +1421,7 @@ $sidebar-width: 80px;
 /* Tablet */
 @media (min-width: 721px) and (max-width: 768px) {
   .transactions-container {
-    margin-left: $sidebar-width;
+    margin-left: 0
   }
 
   .transactions-content {

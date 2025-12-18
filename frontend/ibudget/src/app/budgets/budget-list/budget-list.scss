@@ -131,6 +131,10 @@
 
 @media (max-width: 768px) {
   .budget-container {
+    height: auto;
+  }
+
+  .budget-container {
     margin: 10px 20px;
   }
 
@@ -143,5 +147,45 @@
     .budget-list-title {
       text-align: center;
     }
+  }
+}
+
+@media (max-width: 320px) {
+  .budget-container {
+    height: auto;
+  }
+
+  .category-info-container {
+    width: 250px;
+  }
+  
+  .budget-card-header {
+    width: 200px !important;
+    justify-content: center !important;
+  }
+
+ .budget-card-body{
+    width: 250px !important;
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 375px) and (min-width: 321px) {
+  .budget-container {
+    height: auto;
+  }
+
+  .category-info-container {
+    width: 280px;
+  }
+
+  .budget-card-header {
+    width: 250px !important;
+    justify-content: center !important;
+  }
+
+  .budget-card-body {
+    width: 300px !important;
+    justify-content: center !important;
   }
 }
