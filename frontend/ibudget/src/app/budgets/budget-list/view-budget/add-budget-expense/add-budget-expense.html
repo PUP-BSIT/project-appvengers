@@ -76,8 +76,8 @@
             </div>
 
             <!--Validator Indicator for Amount-->
-            @if(addBudgetExpenseForm.get('category_id')?.touched &&
-              addBudgetExpenseForm.get('category_id')?.invalid)
+            @if(addBudgetExpenseForm.get('amount')?.touched &&
+              addBudgetExpenseForm.get('amount')?.invalid)
             {
               @if(addBudgetExpenseForm.get('amount')?.errors?.['required']) {
                 <div class="text-danger mt-1">Amount is required</div>
