@@ -85,6 +85,11 @@ export class UpdateBudgetExpense implements OnInit {
   }
 
   openModal() {
+    const id = this.transactionId();
+    if (id) {
+      this.loadTransaction();
+    }
+
     const modal = new Modal(this.updateBudgetExpenseModal.nativeElement);
     modal.show();
   }
