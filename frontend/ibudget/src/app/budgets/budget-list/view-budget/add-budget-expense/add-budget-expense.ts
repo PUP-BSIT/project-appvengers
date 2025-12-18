@@ -96,6 +96,7 @@ export class AddBudgetExpense implements OnInit {
 
   closeModal() {
     const modal = Modal.getInstance(this.addBudgetExpenseModal.nativeElement);
+    this.addBudgetExpenseForm.markAsUntouched();
     modal?.hide();
   }
 
