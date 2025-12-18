@@ -4,6 +4,7 @@ import { BudgetTransactionsService } from '../../../../../services/budget.transa
 import { BudgetTransaction, Category } from '../../../../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
 import { computed } from '@angular/core';
+import { Validators } from '@angular/forms';
 import {
   Component,
   ElementRef,
@@ -58,14 +59,20 @@ export class AddBudgetExpense implements OnInit {
   constructor() {
     this.addBudgetExpenseForm = this.formBuilder.group({
       budget_id: [''],
-      transaction_date: [''],
+      transaction_date: ['', Validators.required],
       description: [''],
-      category_id: [''],
-      amount: [''],
+      category_id: ['', Validators.required],
+      amount: ['', [Validators.required, Validators.min(1)]],
       created_at: [''],
       updated_at: [''],
       deleted_at: ['']
     });
+  }
+
+  // Validator Method for Budget Expense Fields
+  isInvalid(control: string) {
+    const c = this.addBudgetExpenseForm.get(control);
+    return !!c && c.invalid && c.touched;
   }
 
   ngOnInit(): void {
@@ -98,6 +105,12 @@ export class AddBudgetExpense implements OnInit {
   }
 
   addExpense() {
+    // Displays error messages once 'add expense' button is pressed
+    if(this.addBudgetExpenseForm.invalid) {
+      this.addBudgetExpenseForm.markAllAsTouched();
+      return;
+    }
+
     if (this.addBudgetExpenseForm.valid) {
       const payload = this.addBudgetExpenseForm.value as Partial<BudgetTransaction>;
 
