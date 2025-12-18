@@ -178,17 +178,17 @@ export class Transactions implements OnInit, OnDestroy {
           break;
           
         case 'monthly':
-          const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-          // Make endOfMonth inclusive (end of day)
-          const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-          endOfMonth.setHours(23, 59, 59, 999);
+          // Show transactions from last month only
+          const startOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+          const endOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+          endOfLastMonth.setHours(23, 59, 59, 999);
           filtered = filtered.filter(t => {
             // Avoid timezone shifting by normalizing string dates to local midnight
             const transactionDate = typeof t.date === 'string'
               ? new Date(`${t.date}T00:00:00`)
               : new Date(t.date);
             transactionDate.setHours(0, 0, 0, 0);
-            return transactionDate >= startOfMonth && transactionDate <= endOfMonth;
+            return transactionDate >= startOfLastMonth && transactionDate <= endOfLastMonth;
           });
           break;
       }
