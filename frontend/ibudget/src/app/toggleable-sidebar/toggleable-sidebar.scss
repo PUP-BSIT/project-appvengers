@@ -10,15 +10,15 @@ $sidebar-bg: #212529;
   color: white;
   z-index: 1000;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, transform 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 10px;
   max-width: 240px;
   gap: 70px;
   overflow: hidden;
+  margin-top: 70px;
 
   .sidebar-inner-container {
     display: flex;
@@ -27,7 +27,6 @@ $sidebar-bg: #212529;
     align-items: center;
     width: 100%;
     gap: 10px;
-    // padding-bottom: 92px;
 
     div {
       display: flex;
@@ -259,4 +258,87 @@ $sidebar-bg: #212529;
 // Hide Class 
 .hide {
   display: none !important;
+}
+
+.opened-mobile-sidebar {
+  width: 240px !important;
+}
+
+/* Low-opacity dark background overlay for mobile/tablets when sidebar is open */
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .mobile-overlay {
+    display: block;
+  }
+
+  /* Off-canvas slide animation for mobile/tablets */
+  .sidebar-container {
+    transform: translateX(-100%);
+  }
+
+  .sidebar-container.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-container.closed {
+    transform: translateX(-100%);
+    pointer-events: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .toggle-button-container {
+    display: none;
+  }
+
+  .sidebar-control {
+    display: none;
+  }
+
+  .sidebar-container {
+    width: 100px;
+    margin-top: 70px;
+    padding-top: 0;
+  }
+
+  .sidebar-container .sidebar-inner-container .nav-item {
+    display: flex;
+    flex-direction: column !important;
+  }
+
+  .sidebar-container .sidebar-inner-container .nav-item i {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  .sidebar-container .sidebar-inner-container .nav-item span {
+    display: block !important;
+    margin-left: 0 !important;
+    text-align: center !important;
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar-inner-container {
+    padding-bottom: 90px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .sidebar-inner-container {
+    padding-bottom: 92px;
+  }
 }

@@ -11,6 +11,10 @@ export class SidebarService {
     this.isOpen.set(!this.isOpen());
   }
 
+  getToggleState(): boolean {
+    return this.isOpen();
+  }
+
   setSidebarType(type: string) {
     this.sidebarType.set(type);
     console.log(`Sidebar type set to: ${type}`);
