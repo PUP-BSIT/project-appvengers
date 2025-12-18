@@ -30,7 +30,7 @@ export class Sidebar implements AfterViewInit, OnDestroy {
     this.tooltips = [];
 
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    this.tooltips = [...tooltipTriggerList].map(tooltipTriggerEl => 
+    this.tooltips = Array.from(tooltipTriggerList).map(tooltipTriggerEl => 
       new Tooltip(tooltipTriggerEl as Element, {
         trigger: 'hover',
         delay: { show: 300, hide: 100 }
