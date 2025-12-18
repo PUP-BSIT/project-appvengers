@@ -39,7 +39,7 @@ export class LandingPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.timeoutId !== null) {
-      clearTimeout(this.timeoutId as number);
+      clearTimeout(this.timeoutId);
       this.timeoutId = null;
     }
   }
