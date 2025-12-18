@@ -123,7 +123,8 @@ export class AddBudgetExpense implements OnInit {
 
       this.budgetTxService.create(payload).subscribe((response) => {
         this.addBudgetExpenseResponse.emit(response);
-        
+
+        // Resets the values to default
         this.addBudgetExpenseForm.reset({
           budget_id: +this.currentBudgetId(),
           transaction_date: this.date(),
