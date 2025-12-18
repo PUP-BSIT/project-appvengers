@@ -76,11 +76,8 @@
 
     <!-- Transactions Cards -->
     <div class="transactions-cards-container">
-      <!-- Paginated Transactions with Date Labels -->
       @for (transaction of getPaginatedTransactions(); track transaction.id) {
-        <!-- Show date label if it's different from previous transaction -->
-        @if ($first || getRelativeDate(transaction.date)
-            !== getRelativeDate(getPaginatedTransactions()[$index - 1]?.date)) {
+        @if ($first || getRelativeDate(transaction.date) !== getRelativeDate(getPaginatedTransactions()[$index - 1]?.date)) {
           <div class="date-group-label">
             @if (getRelativeDate(transaction.date) === 'Today') {
               Today
@@ -99,8 +96,7 @@
                 class="btn-dots"
                 (click)="toggleActions($event, transaction.id)"
                 aria-label="Open actions menu"
-                [attr.aria-expanded]="showPopup() &&
-                  selectedTransactionId() === transaction.id"
+                [attr.aria-expanded]="showPopup() && selectedTransactionId() === transaction.id"
                 aria-haspopup="true">
                 <i class="fas fa-ellipsis-v"></i>
               </button>
@@ -115,9 +111,7 @@
 
               <div class="card-bottom">
                 <div class="category-section">
-                  <span
-                    class="category-tag"
-                    [ngClass]="[(getCategoryName(transaction.category_id, transaction.category) || '').toLowerCase()]">
+                  <span class="category-tag" [ngClass]="[(getCategoryName(transaction.category_id, transaction.category) || '').toLowerCase()]">
                     {{ getCategoryName(transaction.category_id, transaction.category) }}
                   </span>
                 </div>
@@ -126,10 +120,7 @@
 
             <div class="card-right">
               <div class="amount-section">
-                <span
-                  class="amount-text"
-                  [ngClass]="{'income': transaction.type === 'income',
-                              'expense': transaction.type === 'expense'}">
+                <span class="amount-text" [ngClass]="{'income': transaction.type === 'income', 'expense': transaction.type === 'expense'}">
                   {{ transaction.type === 'income' ? '+' : '-' }}
                   {{ transaction.amount | currency : 'PHP' }}
                 </span>
@@ -147,34 +138,23 @@
       }
     </div>
 
-    <!-- Pagination Controls -->
+    <!-- Pagination Controls (all periods) -->
     @if (totalPages > 1) {
       <div class="pagination-container">
-        <button 
-          class="pagination-btn" 
-          (click)="previousPage()" 
-          [disabled]="currentPage === 1">
-          <i class="fas fa-chevron-left"></i>
-          Previous
+        <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+          <i class="fas fa-chevron-left"></i> Previous
         </button>
 
         <div class="pagination-numbers">
           @for (pageNum of getPageNumbers(); track pageNum) {
-            <button 
-              class="pagination-number" 
-              [class.active]="currentPage === pageNum"
-              (click)="goToPage(pageNum)">
+            <button class="pagination-number" [class.active]="currentPage === pageNum" (click)="goToPage(pageNum)">
               {{ pageNum }}
             </button>
           }
         </div>
 
-        <button 
-          class="pagination-btn" 
-          (click)="nextPage()" 
-          [disabled]="currentPage === totalPages">
-          Next
-          <i class="fas fa-chevron-right"></i>
+        <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          Next <i class="fas fa-chevron-right"></i>
         </button>
       </div>
     }
