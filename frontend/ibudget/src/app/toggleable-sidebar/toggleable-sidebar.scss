@@ -19,6 +19,7 @@ $sidebar-bg: #212529;
   gap: 70px;
   overflow: hidden;
   margin-top: 70px;
+  border-right: #545454 1px solid;
 
   .sidebar-inner-container {
     display: flex;
@@ -48,7 +49,7 @@ $sidebar-bg: #212529;
   min-height: 50px;
   padding: 0 15px;       
   box-sizing: border-box;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .sidebar-inner-container div span {
@@ -59,7 +60,6 @@ $sidebar-bg: #212529;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Type = expandable: only change appearance when also expanded at runtime */
 .sidebar-container.expandable.expanded {
   width: 240px;
 
@@ -86,10 +86,8 @@ $sidebar-bg: #212529;
   .sidebar-inner-container div {
     transform: translateX(10px);
   }
-  
 }
 
-/* Runtime expanded state (applies when `isExpanded` is true regardless of type) */
 .sidebar-container.expanded {
   width: 240px;
 
@@ -170,8 +168,8 @@ $sidebar-bg: #212529;
   transition: left 0.3s ease;
 
   button {
-    background: #ffffff;
-    color: $sidebar-bg;
+    background-color: #343a40;
+    color: white;
     border: none;
     border-radius: 15px;
     padding: 8px 10px;
@@ -180,7 +178,7 @@ $sidebar-bg: #212529;
     font-weight: bold;
     cursor: pointer;
     outline: none;
-    pointer-events: auto; /* re-enable clicks for the button */
+    pointer-events: auto;
 
     &:hover {
       transform: translateY(-1px);
