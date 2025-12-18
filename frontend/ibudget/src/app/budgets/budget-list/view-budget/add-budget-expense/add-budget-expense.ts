@@ -84,6 +84,7 @@ export class AddBudgetExpense implements OnInit {
 
     // Refill values everytime modal opens
     this.addBudgetExpenseForm.patchValue({
+      budget_id: +this.currentBudgetId(),
       transaction_date: this.date(),
       created_at: this.date(),
       updated_at: this.date()

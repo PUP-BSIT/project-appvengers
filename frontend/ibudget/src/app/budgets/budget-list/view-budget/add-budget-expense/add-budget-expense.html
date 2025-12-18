@@ -29,9 +29,7 @@
             />
 
             <!--Validator Indicator for Transaction Date-->
-            @if(addBudgetExpenseForm.get('transaction_date')?.touched &&
-              addBudgetExpenseForm.get('transaction_date')?.invalid)
-            {
+            @if(isInvalid('transaction_date')) {
               <div class="text-danger mt-1">Transaction Date is required</div>
             }
 
@@ -49,9 +47,7 @@
             </select>
 
             <!--Validator Indicator for Category-->
-            @if(addBudgetExpenseForm.get('category_id')?.touched &&
-              addBudgetExpenseForm.get('category_id')?.invalid)
-            {
+            @if(isInvalid('category_id')) {
               <div class="text-danger mt-1">Category is required</div>
             }
 
@@ -76,17 +72,16 @@
             </div>
 
             <!--Validator Indicator for Amount-->
-            @if(addBudgetExpenseForm.get('amount')?.touched &&
-              addBudgetExpenseForm.get('amount')?.invalid)
-            {
-              @if(addBudgetExpenseForm.get('amount')?.errors?.['required']) {
+            @if(isInvalid('amount')) {
+              @if (addBudgetExpenseForm.get('amount')?.errors?.['required']) {
                 <div class="text-danger mt-1">Amount is required</div>
-              } @else if(addBudgetExpenseForm.get('amount')?.errors?.['min']) {
+              } @else if (addBudgetExpenseForm.get('amount')?.errors?.['min']) {
                 <div class="text-danger mt-1">
                   Amount must be greater than 0.
                 </div>
               }
-            } 
+            }
+
           </form>
         </div>
 
