@@ -193,9 +193,12 @@ $sidebar-bg: #212529;
 }
 
 .sidebar-control {
-  position: fixed;
-  bottom: 8px;  
-  left: 10px;
+  // position: fixed;
+  // bottom: 8px;  
+  // left: 10px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
   border: none;
   width: 30px;
   height: 30px;
@@ -226,8 +229,8 @@ $sidebar-bg: #212529;
 .sidebar-control-dropdown {
   position: absolute;
   z-index: 1100;
-  bottom: 20px;
-  left: 10px;
+  bottom: 0.2px;
+  left: 55px;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 5px;
