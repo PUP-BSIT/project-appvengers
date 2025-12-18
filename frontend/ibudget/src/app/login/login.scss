@@ -327,7 +327,8 @@ $link-color-hover: #283593;
   }
 }
 
-/* Mobile S   */ @media (max-width: 320px) {
+/* Mobile S   */ 
+@media (max-width: 320px) {
   .login-container {
     padding: 10px;
   }
@@ -358,9 +359,14 @@ $link-color-hover: #283593;
   .signup-text {
     font-size: 0.85rem;
   }
+
+  .login-form {
+    width: 100%;
+  }
 }
 
-/* Mobile M  */ @media (min-width: 321px) and (max-width: 375px) {
+/* Mobile M  */ 
+@media (min-width: 321px) and (max-width: 375px) {
   .login-container {
     padding: 15px;
   }
@@ -390,6 +396,10 @@ $link-color-hover: #283593;
 
   .signup-text {
     font-size: 0.9rem;
+  }
+
+  .login-form {
+    width: 100%;
   }
 }
 

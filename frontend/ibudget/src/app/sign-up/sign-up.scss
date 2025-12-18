@@ -320,6 +320,12 @@ $link-color-hover: #283593;
     font-size: 50px;
 }
 
+.password-fields {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
 @keyframes slowBounce {
   0%, 100% {
     transform: translateY(0);
@@ -360,9 +366,14 @@ $link-color-hover: #283593;
   .signup-text {
     font-size: 0.85rem;
   }
+
+  .password-fields {
+    flex-direction: column;
+  }
 }
 
-/* Mobile M  */ @media (min-width: 321px) and (max-width: 375px) {
+/* Mobile M  */ 
+@media (min-width: 321px) and (max-width: 375px) {
   .login-container {
     padding: 15px;
   }
@@ -393,9 +404,14 @@ $link-color-hover: #283593;
   .signup-text {
     font-size: 0.9rem;
   }
+
+  .password-fields {
+    flex-direction: column;
+  }
 }
 
-/* Mobile L   */ @media (min-width: 376px) and (max-width: 425px) {
+/* Mobile L   */ 
+@media (min-width: 376px) and (max-width: 425px) {
   .login-container {
     padding: 20px;
   }
@@ -426,9 +442,14 @@ $link-color-hover: #283593;
   .signup-text {
     font-size: 0.95rem;
   }
+
+  .password-fields {
+    flex-direction: column;
+  }
 }
 
-/* Tablet       */ @media (min-width: 426px) and (max-width: 768px) {
+/* Tablet       */ 
+@media (min-width: 426px) and (max-width: 768px) {
   .login-container {
     padding: 25px;
   }
@@ -445,9 +466,14 @@ $link-color-hover: #283593;
       width: 155px;
     }
   }
+  
+  .password-fields {
+    flex-direction: column;
+  }
 }
 
-/* Laptop     */ @media (min-width: 769px) and (max-width: 1024px) {
+/* Laptop     */ 
+@media (min-width: 769px) and (max-width: 1024px) {
   .login-card {
     max-width: 480px;
   }

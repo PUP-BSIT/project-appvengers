@@ -154,3 +154,41 @@ span.highlight-yellow {
   from { transform: translateX(0%); }
   to   { transform: translateX(-50%); }
 }
+
+@media (max-width: 768px) {
+  .auth-page-container {
+    flex-direction: column;
+    padding: 10px;
+    gap: 2em;
+    height: auto;
+  }
+
+  .main-panel {
+    width: 100%;
+    height: auto;
+    padding: 40px 20px;
+  }
+
+  .main-panel, .header-toggles {
+    width: 100%;
+  }
+
+  .auth-form-container {
+    width: 100%;
+  } 
+
+  .left-panel {
+    margin-right: 0;
+    // margin-bottom: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .left-panel, .app-name span {
+    font-size: 26px;
+  }
+
+  .slogan {
+    font-size: 16px;
+  }
+}
