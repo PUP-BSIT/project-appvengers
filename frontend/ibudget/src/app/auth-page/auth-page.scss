@@ -1,174 +1,156 @@
 @use 'sass:color';
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
-$left-panel: #2D5A87;
+$bg-color: #2D5A87;
 
-// Animation settings for auth page entrance
-$auth-animation-duration: 600ms;
-$auth-animation-easing: cubic-bezier(.22,.9,.3,1);
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.auth-page-container {
+  height: 100%;
+  background-color: $bg-color;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3em;
 }
 
-.split-auth-container {
+.main-panel {
+  height: 580px;
+  width: 600px;
   display: flex;
-  min-height: 100%;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  background-color: #F5F5F5;
+  border: 2px solid color.scale($bg-color, $lightness: -10%);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  // margin-left: 90px;
+  padding: 60px;
+}
+
+.main-page, .header-toggles {
+  display: flex;
+  gap: 5px;
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  border-radius: 25px;
+  width: 500px;
+  justify-content: center;
+  margin-bottom: 20px;
+
+  a {
+    text-decoration: none;
+    color: color.scale($bg-color, $lightness: -10%);
+    cursor: pointer;
+    padding: 10px 20px;
+    font-family: "Nunito", sans-serif;
+    font-weight: 900;
+    font-size: large;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    text-align: center;
+
+    &:hover {
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    &.active {
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
 }
 
 .left-panel {
-  position: absolute;
-  color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
-  background-image: url('../../assets/images/left-panel.png');
-  background-size: cover;
-  background-position: center;
-  width: 50%;
-  max-width: 50%;
-  height: 100%;
-  max-height: 100%;
-
-  // entrance animation for left panel
-  opacity: 0;
-  animation: fadeInUp $auth-animation-duration $auth-animation-easing both;
-  animation-delay: 0ms;
-
-  .slogan {
-    font-size: 1.5rem;
-    text-align: center;
-    margin-top: 43px;
-    position: relative;
-    bottom: 240px;
-    opacity: 0;
-    animation: fadeInUp $auth-animation-duration $auth-animation-easing both;
-    animation-delay: 240ms;
-
-    .highlight-yellow {
-      color: #FFD54F;
-      font-weight: 700; 
-      text-shadow: 0 1px 0 rgba(0,0,0,0.08); 
-    }
-  }
+  margin-right: 40px;
+  position: relative;
 }
 
-.right-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column; 
-  justify-content: center;
-  align-items: center;
-  padding: 2rem 3rem;
-  background-color: #f9f9f9;
-  margin-left: 40%;
-  opacity: 0;
-  animation: fadeInUp $auth-animation-duration $auth-animation-easing both;
-  animation-delay: 120ms;
-
-  .auth-form-container {
-    width: 100%;
-    max-width: 600px;
-    padding: 1rem;
-
-    .login-card {
-      width: 100%;
-      max-width: 420px; // keep it from growing past this
-      box-sizing: border-box;
-    }
-  }
+.left-panel .app-name {
+  font-size: 50px;
 }
 
-.header-toggles {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  background-color: transparent;
-
-  a {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-    border-bottom: 2px solid transparent;
-    transition: border-color 0.3s;
-    text-decoration: none;
-    color: inherit;
-
-    &.active {
-      border-color: $left-panel;
-      font-weight: bold;
-    }
-
-    &:hover {
-      border-color: color.adjust($left-panel, $lightness: 20%);
-    }
-  }
-}
-
-.login-mode {
-  height: 100%;
-}
-
-.signup-mode {
-  height: 100%;
-}
-
-.app-name {
+.left-panel .app-name span:nth-child(1) {
   font-family: 'Inter', 'Roboto', sans-serif;
-  font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   color: white;
-  margin: .5rem;
-  opacity: 50%;
-  z-index: 2;
-  cursor: pointer;
-  transition: all 0.3s ease;
 
-  i {
-    font-size: 1.5rem;
-  }
-
-  &:hover {
-    opacity: 100%;
+  .highlight-yellow {
+    color: #FFD54F;
+    font-weight: 700; 
+    text-shadow: 0 1px 0 rgba(0,0,0,0.08); 
   }
 }
 
-@media (max-width: 768px) {
-  .split-auth-container {
-    flex-direction: column;
-    justify-content: center;
-    margin: 10px 0;
+.slogan {
+  font-family: 'Inter', 'Roboto', sans-serif;
+  font-weight: 600;
+  color: white;
+  font-size: 24px;
+  text-align: center;
+}
+
+span.highlight-yellow {
+  color: #FFD54F;
+  font-weight: 700; 
+  text-shadow: 0 1px 0 rgba(0,0,0,0.08); 
+}
+
+/* Simple Wave Animation Helpers */
+.wave-wrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px; 
+  height: 70px;
+  pointer-events: none;
+  overflow: hidden;
+  }
+  .wave-wrap {
+    position: fixed; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 140px; 
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
   }
 
-  .left-panel {
-    background-image: none;
-    background-color: $left-panel;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: 900px !important;
-    max-height: 100% !important;
-    // margin: 10px 0 !important;
-    position: relative;
-
-    .slogan {
-      top: 10px;
-    }
+.wave {
+  width: 200%;
+  height: 100%;
+  display: block;
+  color: color.scale($bg-color, $lightness: 45%);
+  opacity: 0.06; 
+  transform: translateX(0);
+  animation: waveMove 8s linear infinite; 
+  }
+  .wave {
+    width: 240%;
+    height: 100%;
+    display: block;
+    color: color.scale($bg-color, $lightness: 45%);
+    opacity: 0.06;
+    transform: translateX(0);
+    animation: waveMove 32s linear infinite;
   }
 
-  .right-panel {
-    margin-left: 0;
-    padding: 1.5rem;
-  }
+.wave path {
+  fill: currentColor;
+}
+
+// Animation Keyframes
+@keyframes waveMove {
+  from { transform: translateX(0%); }
+  to   { transform: translateX(-50%); }
 }

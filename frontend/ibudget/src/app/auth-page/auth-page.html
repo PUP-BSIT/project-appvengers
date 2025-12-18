@@ -1,23 +1,27 @@
-<div [ngClass]="['split-auth-container', isLoginMode() ? 'login-mode' : 'signup-mode']">
+<main class="auth-page-container">
 
-  <div 
+  <!-- <div 
     class="app-name"
     routerLink="/"
     title="Go to home">
       <i class="bi bi-caret-left-square-fill"></i>
-  </div>
+  </div> -->
   
   <div class="left-panel">
+    <div class="app-name" routerLink="/" title="Go to home">
+      <span>i</span><span class="highlight-yellow">Budget</span>
+    </div>
+
     <div class="slogan">
       simple <span class="highlight-yellow">tracking</span>, 
-      smarter <span class="highlight-yellow">spending!</span>
+      smarter <span class="highlight-yellow">spending ~</span>
     </div>
   </div>
 
-  <div class="right-panel">
+  <div class="main-panel">
     <div class="header-toggles">
       <a (click)="setLoginMode()" [class.active]="isLoginMode()">Login</a>
-      <a (click)="setSignupMode()" [class.active]="!isLoginMode()">Signup</a>
+      <a (click)="setSignupMode()" [class.active]="!isLoginMode()">Register</a>
     </div>
 
     <div class="auth-form-container">
@@ -28,4 +32,11 @@
       }
     </div>
   </div>
+</main>
+
+<!-- Wave moved to page background so it sits behind panels -->
+<div class="wave-wrap" aria-hidden="true">
+  <svg class="wave" viewBox="0 0 1200 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 30 C150 90 350 -30 600 30 C850 90 1050 -30 1200 30 L1200 100 L0 100 Z"/>
+  </svg>
 </div>
