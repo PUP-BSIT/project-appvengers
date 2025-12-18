@@ -2,8 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { KpiPanel } from './kpi-panel';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { BudgetTransactionsService } from '../../../services/budget.transactions.service';
 import { BudgetService } from '../../../services/budget.service';
-import { Budget } from '../../../models/user.model';
 
 describe('KpiPanel', () => {
   let component: KpiPanel;
@@ -14,26 +15,27 @@ describe('KpiPanel', () => {
     snapshot: { paramMap: new Map<string, string>([['id', '1']]) }
   } as unknown as ActivatedRoute;
 
-  const mockBudget: Budget = {
-    id: 1,
-    category_id: 10,
-    category_name: 'Food',
-    limit_amount: 1000,
-    current_amount: 400,
-    start_date: '2025-01-01',
-    end_date: '2025-01-31'
-  } as Budget;
+  const mockSummary = {
+    limitAmount: 1000,
+    totalExpenses: 400,
+    remainingBudget: 600,
+    categoryName: 'Food'
+  };
 
-  const budgetServiceStub = {
-    getBudgetById: (_id: number) => of(mockBudget)
-  } as Partial<BudgetService>;
+  const budgetTransactionsServiceStub = {
+    getBudgetSummary: (_id: number) => of(mockSummary)
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [KpiPanel],
       providers: [
+        provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: activatedRouteStub },
-        { provide: BudgetService, useValue: budgetServiceStub }
+        { provide: BudgetTransactionsService, useValue: budgetTransactionsServiceStub },
+
+        // IMPORTANT: mock BudgetService so Angular doesn't instantiate the real one
+        { provide: BudgetService, useValue: {} }
       ]
     }).compileComponents();
 
@@ -42,7 +44,7 @@ describe('KpiPanel', () => {
     fixture.detectChanges();
   });
 
-  it('should load budget data from BudgetService', () => {
+  it('should load budget summary data', () => {
     expect(component.currentBudget().category_name).toBe('Food');
     expect(component.totalBudget).toBe(1000);
     expect(component.totalExpenses).toBe(400);
