@@ -6,6 +6,7 @@ import { BudgetTransactionsService } from '../../../../../services/budget.transa
 import { BudgetTransaction } from '../../../../../models/user.model';
 import { computed } from '@angular/core';
 import { Category } from '../../../../../models/user.model';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-update-budget-expense',
@@ -52,12 +53,18 @@ export class UpdateBudgetExpense implements OnInit {
     this.updateBudgetExpenseForm = this.formBuilder.group({
       transactionId: [''],
       budgetId: [''],
-      transaction_date: [''], 
+      transaction_date: ['', Validators.required], 
       description: [''],
-      category_id: [''],
-      amount: [''],
+      category_id: ['', Validators.required],
+      amount: ['', [Validators.required, Validators.min(1)]],
       type: ['expense']
     });
+  }
+
+  // Validator Helper Method for Budget Expense Fields
+  isInvalid(control: string) {
+    const c = this.updateBudgetExpenseForm.get(control);
+    return !!c && c.invalid && c.touched;
   }
 
   ngOnInit(): void {

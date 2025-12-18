@@ -69,7 +69,7 @@ export class AddBudgetExpense implements OnInit {
     });
   }
 
-  // Validator Method for Budget Expense Fields
+  // Validator Helper Method for Budget Expense Fields
   isInvalid(control: string) {
     const c = this.addBudgetExpenseForm.get(control);
     return !!c && c.invalid && c.touched;

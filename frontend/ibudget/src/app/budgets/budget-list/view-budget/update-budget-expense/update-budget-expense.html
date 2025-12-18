@@ -24,18 +24,30 @@
               formControlName="transaction_date"
               class="form-control"
               id="transaction_date"
-              type="date"/>
+              type="date"
+              [class.is-invalid]="isInvalid('transaction_date')"/>
             
+            <!--Validator Indicator for Transaction Date-->
+            @if (isInvalid('transaction_date')) {
+              <div class="text-danger mt-1">Transaction date is required</div>
+            }
+
             <label for="category_id">Category</label>
             <select 
               id="category_id" 
               class="form-select"
-              formControlName="category_id">
+              formControlName="category_id"
+              [class.is-invalid]="isInvalid('category_id')">
               <option selected disabled>-- Select Category --</option>
                 @for (c of expenseCategories(); track c.id) {
                   <option [value]="c.id">{{ c.name }}</option>
                 }
             </select>
+
+            <!--Validator Indicator for Category-->
+            @if (isInvalid('category_id')) {
+              <div class="text-danger mt-1">Category is required</div>
+            }
 
             <label for="description">Description</label>
             <textarea 
@@ -52,8 +64,20 @@
                 class="form-control"
                 id="amount"
                 type="number" 
-                min="0"/>
+                [class.is-invalid]="isInvalid('amount')"
+                min="1"/>
             </div>
+
+            @if (isInvalid('amount')) {
+              @if (updateBudgetExpenseForm.get('amount')?.errors?.['required']) {
+                <div class="text-danger mt-1">Amount is required</div>
+              } @else if (updateBudgetExpenseForm.get('amount')?.errors?.['min']) {
+                <div class="text-danger mt-1">
+                  Amount must be greater than 0.
+                </div>
+              }
+            }
+
           </form>
         </div>
 
