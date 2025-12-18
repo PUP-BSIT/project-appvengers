@@ -25,6 +25,11 @@
   }
 }
 
+button:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 .snackbar.hide {
   animation: slideOut 0.3s ease-in forwards;
 }

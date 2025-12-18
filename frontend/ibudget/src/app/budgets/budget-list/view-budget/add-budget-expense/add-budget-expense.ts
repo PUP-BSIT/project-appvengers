@@ -17,16 +17,20 @@ import {
 
 @Component({
   selector: 'app-add-budget-expense',
+  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './add-budget-expense.html',
   styleUrl: './add-budget-expense.scss',
 })
+
 export class AddBudgetExpense implements OnInit {
   @ViewChild('addBudgetExpenseModal') addBudgetExpenseModal!: ElementRef;
-  @ViewChild('openAddBudgetExpenseModalBtn') openAddBudgetExpenseModalBtn!: ElementRef;
 
   // Categories passed from parent
   categories = input<Category[]>([]);
+
+  // Disable 'add expense' button if budget limit reached
+  disabled = input<boolean>(false);
 
   // Derived signal: expense-only categories
   expenseCategories = computed(() => 
@@ -75,6 +79,7 @@ export class AddBudgetExpense implements OnInit {
   }
 
   openModal() {
+    if (this.disabled()) return;
     const modal = new Modal(this.addBudgetExpenseModal.nativeElement);
     modal.show();
   }
@@ -82,7 +87,6 @@ export class AddBudgetExpense implements OnInit {
   closeModal() {
     const modal = Modal.getInstance(this.addBudgetExpenseModal.nativeElement);
     modal?.hide();
-    this.openAddBudgetExpenseModalBtn.nativeElement.focus();
   }
 
   getCurrentBudgetId() {

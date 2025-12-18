@@ -13,7 +13,7 @@ import { ToggleableSidebar } from "../../../toggleable-sidebar/toggleable-sideba
 @Component({
   selector: 'app-view-budget',
   standalone: true, 
-  imports: [Sidebar, Header, KpiPanel, AddBudgetExpense, UpdateBudgetExpense],
+  imports: [ToggleableSidebar, Header, KpiPanel, AddBudgetExpense, UpdateBudgetExpense],
   templateUrl: './view-budget.html',
   styleUrl: './view-budget.scss',
 })
@@ -28,6 +28,7 @@ export class ViewBudget implements OnInit, AfterViewInit {
 
   // State
   budgetExpenses = signal<BudgetTransaction[]>([]);
+  isBudgetExceeded = signal(false);
   categories = signal<Category[]>([]);
   budgetId = signal<number>(0);
 
@@ -40,6 +41,7 @@ export class ViewBudget implements OnInit, AfterViewInit {
     this.initBudgetId();
     this.getCategories();
     this.getBudgetExpenses();
+    this.getBudgetSummary();
   }
 
   ngAfterViewInit(): void {
@@ -61,6 +63,19 @@ export class ViewBudget implements OnInit, AfterViewInit {
     });
   }
 
+  getBudgetSummary() {
+  const id = this.budgetId();
+  if (!id) return;
+
+  this.budgetTxService.getBudgetSummary(id).subscribe({
+    next: (summary) => {
+      const exceeded = +summary.totalExpenses >= +summary.limitAmount;
+      this.isBudgetExceeded.set(exceeded);
+    },
+    error: (err) => console.error('Failed to load summary', err)
+  });
+}
+
   getCategories() {
     this.categoriesService.getCategories().subscribe({
       next: (cats) => this.categories.set(cats),
@@ -77,6 +92,7 @@ export class ViewBudget implements OnInit, AfterViewInit {
     this.budgetTxService.delete(transactionId).subscribe({
       next: () => {
         this.getBudgetExpenses();
+        this.getBudgetSummary();
         this.kpiPanel.refresh(); //Refresh KPI panel data
         this.showNotificationMessage("Expense deleted successfully!");
       },
@@ -86,11 +102,13 @@ export class ViewBudget implements OnInit, AfterViewInit {
 
   onBudgetExpenseAdded(_event: BudgetTransaction) {
     this.getBudgetExpenses();
+    this.getBudgetSummary();
     this.kpiPanel.refresh(); 
   }
 
   onBudgetExpenseUpdated(_event: BudgetTransaction) {
     this.getBudgetExpenses();
+    this.getBudgetSummary();
     this.kpiPanel.refresh(); 
   }
 
