@@ -8,86 +8,194 @@
         Mark all as read
     </button>
     <div class="notifications-stats">
-      <span>Showing {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ Math.min(currentPage * itemsPerPage, notifications.length) }} of {{ notifications.length }}</span>
+      <span>Showing {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ Math.min(currentPage * itemsPerPage, filteredNotifications.length) }} of {{ filteredNotifications.length }}</span>
     </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    <button 
+      class="filter-tab" 
+      [class.active]="activeFilter === 'all'"
+      (click)="setFilter('all')">
+      <i class="fas fa-bell"></i>
+      All
+      <span class="tab-count">{{ getFilterCount('all') }}</span>
+    </button>
+    <button 
+      class="filter-tab" 
+      [class.active]="activeFilter === 'budgets'"
+      (click)="setFilter('budgets')">
+      <i class="fas fa-wallet"></i>
+      Budgets
+      <span class="tab-count">{{ getFilterCount('budgets') }}</span>
+    </button>
+    <button 
+      class="filter-tab" 
+      [class.active]="activeFilter === 'savings'"
+      (click)="setFilter('savings')">
+      <i class="fas fa-piggy-bank"></i>
+      Savings
+      <span class="tab-count">{{ getFilterCount('savings') }}</span>
+    </button>
+    <button 
+      class="filter-tab" 
+      [class.active]="activeFilter === 'unread'"
+      (click)="setFilter('unread')">
+      <i class="fas fa-envelope"></i>
+      Unread
+      <span class="tab-count">{{ getFilterCount('unread') }}</span>
+    </button>
   </div>
 
   <div class="notifications-content">
     <div class="notifications-list">
-      @for (notification of paginatedNotifications; track notification.id) {
-        <div
-          class="notification-item"
-          [class.unread]="!notification.read"
-          [ngClass]="notificationService.getNotificationColor(notification.type, notification.urgency)">
+      @for (group of groupedNotifications; track group.label) {
+        <div class="notification-group">
+          <h2 class="group-label">{{ group.label }}</h2>
           
-          <div class="notification-icon">
-            <i [ngClass]="notificationService.getNotificationIcon(notification.type)"></i>
-          </div>
-          
-          <div class="notification-content">
-            <h3 class="notification-title">{{ notification.title }}</h3>
-            <span class="notification-date">{{ notification.date }}</span>
+          @for (notification of group.notifications; track notification.id) {
+            <div
+              class="notification-item"
+              [class.unread]="!notification.read"
+              [ngClass]="notificationService.getNotificationColor(notification.type, notification.urgency)">
+              
+              <div class="notification-icon">
+                <i [ngClass]="notificationService.getNotificationIcon(notification.type, notification.urgency)"></i>
+              </div>
+              
+              <div class="notification-content">
+                <h3 class="notification-title">{{ notification.title }}</h3>
+                <span class="notification-date">{{ notification.date }}</span>
 
-            <div class="notification-meta">
-              @if (notification.category) {
-                <div class="notification-category">
-                  <span class="category-tag">{{ notification.category }}</span>
-                </div>
-              }
+                <div class="notification-meta">
+                  @if (notification.category) {
+                    <div class="notification-category">
+                      <span class="category-tag">{{ notification.category }}</span>
+                    </div>
+                  }
 
-              @if (notification.amount) {
-                <div class="notification-amount">
-                  <i class="fas fa-money-bill-wave"></i>
-                  {{ notification.amount | currency:'PHP' }}
+                  @if (notification.amount) {
+                    <div class="notification-amount">
+                      <i class="fas fa-money-bill-wave"></i>
+                      {{ notification.amount | currency:'PHP' }}
+                    </div>
+                  }
                 </div>
-              }
+
+                <p class="notification-message">{{ notification.message }}</p>
+              </div>
+              
+              <div class="notification-actions">
+                @if (!notification.read) {
+                  <button 
+                    class="btn-mark-read"
+                    (click)="markAsRead(notification)"
+                    title="Mark as read">
+                    <i class="fas fa-check"></i>
+                  </button>
+                }
+                
+                @if (notification.type === 'SAVINGS_COMPLETED' || 
+                     notification.type === 'SAVINGS_MILESTONE_50' || 
+                     notification.type === 'SAVINGS_MILESTONE_75' ||
+                     notification.type === 'SAVINGS_DEADLINE') {
+                  <button 
+                    class="btn-view-details"
+                    (click)="viewDetails(notification.referenceId!)"
+                    title="View details">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                }
+
+                @if (notification.type === 'BUDGET_WARNING' || 
+                     notification.type === 'BUDGET_EXCEEDED') {
+                  <button 
+                    class="btn-view-details"
+                    (click)="viewBudgetDetails(notification.referenceId!)"
+                    title="View budget">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                }
+                
+                <button 
+                  class="btn-delete"
+                  (click)="deleteNotification(notification.id)"
+                  title="Delete notification">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
             </div>
-
-            <p class="notification-message">{{ notification.message }}</p>
-          </div>
-          
-          <div class="notification-actions">
-            @if (!notification.read) {
-              <button 
-                class="btn-mark-read"
-                (click)="markAsRead(notification)"
-                title="Mark as read">
-                <i class="fas fa-check"></i>
-              </button>
-            }
-            
-            @if (notification.type === 'SAVINGS_COMPLETED' || 
-                 notification.type === 'SAVINGS_MILESTONE_50' || 
-                 notification.type === 'SAVINGS_MILESTONE_75') {
-              <button 
-                class="btn-view-details"
-                (click)="viewDetails(notification.referenceId!)"
-                title="View details">
-                <i class="fas fa-eye"></i>
-              </button>
-            }
-            
-            <button 
-              class="btn-delete"
-              (click)="deleteNotification(notification.id)"
-              title="Delete notification">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
+          }
         </div>
       }
       
+      <!-- Empty state when no notifications at all -->
       @if (notifications.length === 0) {
-        <div class="no-notifications">
-          <i class="fas fa-bell-slash"></i>
-          <h3>No notifications</h3>
-          <p>You're all caught up! New notifications will appear here.</p>
+        <div class="empty-state">
+          <div class="empty-state-illustration">
+            <i class="fas fa-bell-slash"></i>
+            <div class="empty-state-circles">
+              <span class="circle circle-1"></span>
+              <span class="circle circle-2"></span>
+              <span class="circle circle-3"></span>
+            </div>
+          </div>
+          
+          <h3 class="empty-state-title">You're all caught up!</h3>
+          <p class="empty-state-message">No notifications at the moment.</p>
+          
+          <div class="empty-state-tips">
+            <h4>Did you know?</h4>
+            <ul>
+              <li>
+                <i class="fas fa-piggy-bank"></i>
+                <span>You'll get notified when savings goals reach 50% and 75%</span>
+              </li>
+              <li>
+                <i class="fas fa-chart-line"></i>
+                <span>Budget warnings appear when you've used 80% of your limit</span>
+              </li>
+              <li>
+                <i class="fas fa-calendar-alt"></i>
+                <span>Deadline reminders help you stay on track with savings</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      }
+
+      <!-- Empty state when filter yields no results but notifications exist -->
+      @if (filteredNotifications.length === 0 && notifications.length > 0) {
+        <div class="empty-state empty-state-filtered">
+          <i class="fas fa-filter"></i>
+          <h3 class="empty-state-title">No matching notifications</h3>
+          <p class="empty-state-message">
+            @switch (activeFilter) {
+              @case ('budgets') {
+                You don't have any budget notifications.
+              }
+              @case ('savings') {
+                You don't have any savings notifications.
+              }
+              @case ('unread') {
+                All caught up! No unread notifications.
+              }
+              @default {
+                No notifications match your current filter.
+              }
+            }
+          </p>
+          <button class="btn-clear-filter" (click)="setFilter('all')">
+            <i class="fas fa-bell"></i>
+            Show all notifications
+          </button>
         </div>
       }
     </div>
 
     <!-- Pagination Controls -->
-    @if (notifications.length > itemsPerPage) {
+    @if (filteredNotifications.length > itemsPerPage) {
       <div class="pagination">
         <button 
           class="pagination-btn"

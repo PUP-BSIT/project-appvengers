@@ -9,6 +9,15 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ToggleableSidebar } from "../toggleable-sidebar/toggleable-sidebar";
 
+// Interface for grouped notifications
+export interface NotificationGroup {
+  label: string;
+  notifications: Notification[];
+}
+
+// Filter types
+export type NotificationFilter = 'all' | 'budgets' | 'savings' | 'unread';
+
 @Component({
   selector: 'app-notifications',
   imports: [Header, CurrencyPipe, NgClass, ToggleableSidebar],
@@ -22,9 +31,12 @@ export class Notifications implements OnInit, OnDestroy {
   // Expose Math to template
   Math = Math;
 
+  // Filter properties
+  activeFilter: NotificationFilter = 'all';
+
   // Pagination properties
   currentPage: number = 1;
-  itemsPerPage: number = 5;
+  itemsPerPage: number = 10; // Increased for grouped view
   totalPages: number = 1;
 
   constructor(
@@ -40,8 +52,8 @@ export class Notifications implements OnInit, OnDestroy {
     this.notificationService.notifications$.pipe(
       takeUntil(this.destroy$)
     ).subscribe(notifications => {
-      // Calculate total pages
-      this.totalPages = Math.ceil(notifications.length / this.itemsPerPage);
+      // Calculate total pages based on filtered notifications
+      this.totalPages = Math.ceil(this.filteredNotifications.length / this.itemsPerPage);
       
       notifications.forEach(notification => {
         // Only trigger confetti for unread notifications we haven't processed yet
@@ -69,11 +81,72 @@ export class Notifications implements OnInit, OnDestroy {
     return this.notificationService.notifications;
   }
 
-  // Get paginated notifications
+  /**
+   * Get filtered notifications based on active filter
+   */
+  get filteredNotifications(): Notification[] {
+    const allNotifications = this.notifications;
+    
+    switch (this.activeFilter) {
+      case 'budgets':
+        return allNotifications.filter(n => 
+          n.type === 'BUDGET_WARNING' || n.type === 'BUDGET_EXCEEDED'
+        );
+      case 'savings':
+        return allNotifications.filter(n => 
+          n.type === 'SAVINGS_DEADLINE' || 
+          n.type === 'SAVINGS_COMPLETED' || 
+          n.type === 'SAVINGS_MILESTONE_50' || 
+          n.type === 'SAVINGS_MILESTONE_75'
+        );
+      case 'unread':
+        return allNotifications.filter(n => !n.read);
+      case 'all':
+      default:
+        return allNotifications;
+    }
+  }
+
+  /**
+   * Set the active filter and reset pagination
+   */
+  setFilter(filter: NotificationFilter): void {
+    this.activeFilter = filter;
+    this.currentPage = 1;
+    this.totalPages = Math.ceil(this.filteredNotifications.length / this.itemsPerPage);
+  }
+
+  /**
+   * Get count for each filter tab
+   */
+  getFilterCount(filter: NotificationFilter): number {
+    const allNotifications = this.notifications;
+    
+    switch (filter) {
+      case 'budgets':
+        return allNotifications.filter(n => 
+          n.type === 'BUDGET_WARNING' || n.type === 'BUDGET_EXCEEDED'
+        ).length;
+      case 'savings':
+        return allNotifications.filter(n => 
+          n.type === 'SAVINGS_DEADLINE' || 
+          n.type === 'SAVINGS_COMPLETED' || 
+          n.type === 'SAVINGS_MILESTONE_50' || 
+          n.type === 'SAVINGS_MILESTONE_75'
+        ).length;
+      case 'unread':
+        return allNotifications.filter(n => !n.read).length;
+      case 'all':
+      default:
+        return allNotifications.length;
+    }
+  }
+
+  // Get paginated notifications (uses filtered notifications)
   get paginatedNotifications(): Notification[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    return this.notifications.slice(startIndex, endIndex);
+    return this.filteredNotifications.slice(startIndex, endIndex);
   }
 
   // Get page numbers for pagination controls
@@ -132,6 +205,63 @@ export class Notifications implements OnInit, OnDestroy {
 
   viewDetails(referenceId: number) {
     this.router.navigate(['/savings/view-saving', referenceId]);
+  }
+
+  viewBudgetDetails(referenceId: number) {
+    this.router.navigate(['/budgets/view-budget', referenceId]);
+  }
+
+  /**
+   * Get notifications grouped by date (Today, Yesterday, This Week, Older)
+   */
+  get groupedNotifications(): NotificationGroup[] {
+    const groups: Map<string, Notification[]> = new Map();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    const weekAgo = new Date(today);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    // Use paginated notifications for grouping
+    this.paginatedNotifications.forEach(notification => {
+      const notificationDate = new Date(notification.date);
+      notificationDate.setHours(0, 0, 0, 0);
+      
+      let groupLabel: string;
+      
+      if (notificationDate.getTime() === today.getTime()) {
+        groupLabel = 'Today';
+      } else if (notificationDate.getTime() === yesterday.getTime()) {
+        groupLabel = 'Yesterday';
+      } else if (notificationDate >= weekAgo) {
+        groupLabel = 'This Week';
+      } else {
+        groupLabel = 'Older';
+      }
+      
+      if (!groups.has(groupLabel)) {
+        groups.set(groupLabel, []);
+      }
+      groups.get(groupLabel)!.push(notification);
+    });
+
+    // Convert to array with correct order
+    const orderedLabels = ['Today', 'Yesterday', 'This Week', 'Older'];
+    const result: NotificationGroup[] = [];
+    
+    for (const label of orderedLabels) {
+      if (groups.has(label)) {
+        result.push({
+          label,
+          notifications: groups.get(label)!
+        });
+      }
+    }
+    
+    return result;
   }
 }
 

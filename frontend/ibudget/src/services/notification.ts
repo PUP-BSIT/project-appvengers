@@ -1,10 +1,12 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription, map } from 'rxjs';
 import { Notification } from '../models/user.model';
 import { environment } from '../environments/environment';
 import { ConfettiService } from './confetti.service';
 import { WebSocketService } from './websocket.service';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +61,13 @@ export class NotificationService implements OnDestroy {
     private http: HttpClient,
     private confettiService: ConfettiService,
     private webSocketService: WebSocketService
-  ) { }
+  ) {
+    this.router = inject(Router);
+    this.toastService = inject(ToastService);
+  }
+
+  private router: Router;
+  private toastService: ToastService;
 
   /**
    * Initialize WebSocket connection for real-time notifications.
@@ -118,6 +126,54 @@ export class NotificationService implements OnDestroy {
     } else if (notification.type === 'SAVINGS_MILESTONE_50' || notification.type === 'SAVINGS_MILESTONE_75') {
       console.log('⭐ Triggering milestone confetti!');
       this.confettiService.milestone();
+    }
+
+    // Show toast notification (only if not on notifications page)
+    if (!this.router.url.includes('/notifications')) {
+      this.showNotificationToast(notification);
+    }
+  }
+
+  /**
+   * Show a toast for a notification.
+   */
+  private showNotificationToast(notification: Notification): void {
+    const truncatedMessage = notification.message.length > 100 
+      ? notification.message.substring(0, 100) + '...' 
+      : notification.message;
+
+    this.toastService.show({
+      title: notification.title,
+      message: truncatedMessage,
+      type: this.getToastType(notification.type),
+      icon: this.getNotificationIcon(notification.type, notification.urgency),
+      duration: 6000,
+      action: {
+        label: 'View',
+        callback: () => {
+          this.router.navigate(['/notifications']);
+        }
+      }
+    });
+  }
+
+  /**
+   * Map notification type to toast type.
+   */
+  private getToastType(notificationType: string): 'info' | 'success' | 'warning' | 'error' {
+    switch (notificationType) {
+      case 'BUDGET_EXCEEDED':
+        return 'error';
+      case 'BUDGET_WARNING':
+        return 'warning';
+      case 'SAVINGS_COMPLETED':
+      case 'SAVINGS_MILESTONE_50':
+      case 'SAVINGS_MILESTONE_75':
+        return 'success';
+      case 'SAVINGS_DEADLINE':
+        return 'warning';
+      default:
+        return 'info';
     }
   }
 
@@ -232,7 +288,19 @@ export class NotificationService implements OnDestroy {
     return this.notificationsSubject.value.filter(n => n.type === 'BUDGET_WARNING' || n.type === 'warning').length;
   }
 
-  getNotificationIcon(type: string): string {
+  getNotificationIcon(type: string, urgency?: string): string {
+    // For SAVINGS_DEADLINE, use urgency-based icons
+    if (type === 'SAVINGS_DEADLINE' && urgency) {
+      switch (urgency) {
+        case 'HIGH':
+          return 'fas fa-exclamation-circle'; // Urgent - today/tomorrow
+        case 'MEDIUM':
+          return 'fas fa-clock';              // Reminder - 3 days
+        case 'LOW':
+        default:
+          return 'fas fa-info-circle';        // Info - 7 days
+      }
+    }
     return this.iconMap.get(type) || 'fas fa-bell';
   }
 
