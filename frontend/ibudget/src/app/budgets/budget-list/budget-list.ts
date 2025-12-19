@@ -8,6 +8,8 @@ import { UpdateBudgetButton } from "./update-budget-button/update-budget-button"
 import { BudgetProgressBar } from "./budget-progress-bar/budget-progress-bar";
 import { Router } from '@angular/router';
 import { BudgetTransactionsService } from '../../../services/budget.transactions.service';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-budget-list',
@@ -21,6 +23,7 @@ import { BudgetTransactionsService } from '../../../services/budget.transactions
   templateUrl: './budget-list.html',
   styleUrl: './budget-list.scss',
 })
+
 export class BudgetList implements OnInit {
   budgets = signal<Budget[]>([]);
   budgetService = inject(BudgetService);
@@ -29,63 +32,66 @@ export class BudgetList implements OnInit {
 
   ngOnInit(): void {
     this.getBudgets();
-    console.log(this.budgets());
   }
 
-  // Fetch budget summary for each budget and aggregate them
+  // Hydrate budgets with summary data 
+  private hydrateBudgets(budgets: Budget[]) {
+    const calls = budgets.map(b =>
+      this.budgetTransactionsService.getBudgetSummary(b.id).pipe(
+        map(summary => ({
+          ...b,
+          limit_amount: summary.limitAmount,
+          current_amount: summary.totalExpenses,
+          remaining_amount: summary.remainingBudget
+        })),
+        catchError(err => {
+          console.warn(`Skipping budget ${b.id}:`, err);
+          return of(b);
+        })
+      )
+    );
+    return forkJoin(calls); 
+  }
+
+  // Fetch budgets and enrich with summaries
   getBudgets() {
-    this.budgetService.getBudgets().subscribe(budgets => {
-      budgets.forEach(b => {
-        this.budgetTransactionsService.getBudgetSummary(b.id).subscribe({
-          next: summary => {
-            b.limit_amount = summary.limitAmount;
-            b.current_amount = summary.totalExpenses;
-          },
-          error: err => console.error('Summary failed for budget', b.id, err)
-        });
+    this.budgetService.getBudgets()
+      .pipe(switchMap(budgets => this.hydrateBudgets(budgets)))
+      .subscribe({
+        next: hydrated => this.budgets.set(hydrated),
+        error: err => console.error('Failed to load budgets', err)
       });
-      this.budgets.set(budgets);
+  }
+
+  // Handle add/update/delete by re-fetching hydrated budgets
+  onBudgetAdded(_: Budget) {
+    this.getBudgets();
+  }
+
+  onBudgetUpdated(_: Budget) {
+    this.getBudgets();
+  }
+
+  onBudgetDeleted(updatedBudgets: Budget[]) {
+    this.hydrateBudgets(updatedBudgets).subscribe({
+      next: hydrated => this.budgets.set(hydrated),
+      error: err => console.error('Failed to hydrate after delete', err)
     });
   }
 
-  // Get newly added budget
-  onBudgetAdded(newBudget: Budget) {
-    // this.budgets.set([...this.budgets(), newBudget]);
-    // DONE: This fetches real data from backend after adding a new budget
-    this.getBudgets();
-  }
-
-  // Get updated budget after editing
-  onBudgetUpdated(updatedBudget: Budget) {
-    // this.budgets.update(list =>
-    //   list.map(b => b.id === updatedBudget.id ? updatedBudget : b)
-    // );
-    
-    // DONE: This fetches real data from backend after adding a new budget
-    this.getBudgets();
-  }
-
-  // Get updated budgets after deletion
-  onBudgetDeleted(updatedBudgets: Budget[]) {
-    this.budgets.set(updatedBudgets);
-  }
-
-  // Get the total budgeted amount across all budgets
+  // Totals and helpers
   totalBudgetsAmount() {
     return this.budgets().reduce((t, b) => t + b.limit_amount, 0);
   }
 
-  // Get the total spent amount across all budgets
   totalSpentAmount() {
     return this.budgets().reduce((t, b) => t + (b.current_amount ?? 0), 0);
   }
 
-  // Get the count of budgets
   getBudgetsCount() {
     return this.budgets().length;
   }
 
-  // Get the percentage of budget spent
   getBudgetPercent(budget: Budget): number {
     const limit = Number(budget.limit_amount ?? 0);
     const spent = Number(budget.current_amount ?? 0);
