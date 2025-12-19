@@ -27,18 +27,11 @@ export class BudgetList implements OnInit {
 
   ngOnInit(): void {
     this.getBudgets();
-    this.getBudgetsSummary();
     console.log(this.budgets());
   }
 
   getBudgets() {
     this.budgetService.getBudgets().subscribe(budgets => {
-      this.budgets.set(budgets);
-    });
-  }
-
-  getBudgetsSummary() {
-    this.budgetService.getBudgetsSummary().subscribe(budgets => {
       this.budgets.set(budgets);
     });
   }
@@ -90,11 +83,5 @@ export class BudgetList implements OnInit {
 
   viewBudgetDetails(budgetId: number) {
     this.router.navigate(['/budgets/view-budget/', budgetId]);
-  }
-
-  totalRemainingAmount() {
-    return this.budgets().reduce(
-      (t, b) => t + (b.remaining_amount ?? 0), 0
-    );
   }
 }

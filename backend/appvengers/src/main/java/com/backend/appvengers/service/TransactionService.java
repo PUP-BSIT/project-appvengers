@@ -386,7 +386,7 @@ public class TransactionService {
         return transactionRepository.sumByBudgetId(budgetId);
     }
 
-    //Budget Transaction [Get Specific Budget Summary]
+    //Budget Transaction [Get Budget Summary]
     public BudgetSummaryResponse getBudgetSummary(Integer budgetId) {
 
         Budget budget = budgetRepository.findById(budgetId)
@@ -409,29 +409,5 @@ public class TransactionService {
             totalExpenses,
             remaining
         );
-    }
-
-    //Budget Transaction [Get All Budget Summary]
-    public List<BudgetSummaryResponse> getAllBudgetsSummary(Integer userId) {
-        List<Budget> budgets = budgetRepository.findByUserId(userId);
-
-        return budgets.stream().map(budget -> {
-            Double totalExpenses = getTotalExpensesForBudget(budget.getBudgetId());
-            Double remaining = budget.getLimitAmount() - totalExpenses;
-
-            String categoryName = categoryRepository
-                .findById(budget.getCategoryId())
-                .map(Category::getName)
-                .orElse("Unknown");
-
-            return new BudgetSummaryResponse(
-                budget.getBudgetId(),
-                budget.getCategoryId(),
-                categoryName,
-                budget.getLimitAmount(),
-                totalExpenses,
-                remaining
-            );
-        }).toList();
     }
 }

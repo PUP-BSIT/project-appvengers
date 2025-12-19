@@ -19,8 +19,7 @@ export class BudgetService {
       limit_amount: b.limitAmount,
       start_date: b.startDate,
       end_date: b.endDate,
-      current_amount: b.totalExpenses,
-      remaining_amount: b.remainingBudget
+      current_amount: 0,
     } as Budget;
   }
 
@@ -42,13 +41,6 @@ export class BudgetService {
   getBudgetById(id: number): Observable<Budget> {
     return this.http.get<BackendBudget>(`${this.baseUrl}/${id}`).pipe(
       map(this.toFrontend)
-    );
-  }
-
-  // Budget summaries from /budgets/summary
-  getBudgetsSummary(): Observable<Budget[]> {
-    return this.http.get<BackendBudget[]>(`${this.baseUrl}/summary`).pipe(
-      map(list => list.map(this.toFrontend))
     );
   }
 
