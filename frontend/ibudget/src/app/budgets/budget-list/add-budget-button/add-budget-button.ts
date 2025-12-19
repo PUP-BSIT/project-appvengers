@@ -54,11 +54,17 @@ export class AddBudgetButton implements OnInit, OnChanges {
       id: [],
       category_id: ['', { validators: [Validators.required] }],
       // category_name: [''],
-      limit_amount: [0, { validators: [Validators.required] }],
+      limit_amount: [0, [Validators.required, Validators.min(1)]],
       current_amount: [0],
       start_date: ['', { validators: [Validators.required] }],
       end_date: ['', { validators: [Validators.required] }]
     });
+  }
+
+  // Validator Helper
+  isInvalid(control: string) {
+    const c = this.budgetForm.get(control);
+    return !!c && c.invalid && c.touched;
   }
 
   ngOnInit() {
@@ -110,7 +116,10 @@ export class AddBudgetButton implements OnInit, OnChanges {
   }
 
   addBudget() {
-    if (this.budgetForm.invalid) return;
+    if (this.budgetForm.invalid) {
+      this.budgetForm.markAllAsTouched();
+      return;
+    }
 
     this.budgetService.addBudget(this.budgetForm.value)
       .subscribe((newBudget: Budget) => {
