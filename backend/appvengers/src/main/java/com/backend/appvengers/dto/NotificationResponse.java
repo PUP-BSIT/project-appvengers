@@ -16,6 +16,7 @@ public class NotificationResponse {
     private String date;
     private Double amount;
     private String type; // NotificationType enum value (e.g., 'SAVINGS_MILESTONE_50', 'BUDGET_WARNING')
+    private String urgency; // Urgency level: LOW, MEDIUM, HIGH (for deadline-based coloring)
     private boolean read;
     private String category;
     private String savingName; // Optional for savings notifications
@@ -48,6 +49,11 @@ public class NotificationResponse {
             response.setType(notification.getType().name());
         } else {
             response.setType("info"); // Fallback
+        }
+
+        // Set urgency level for deadline-based coloring (HIGH=red, MEDIUM=orange, LOW=blue)
+        if (notification.getUrgency() != null) {
+            response.setUrgency(notification.getUrgency().name());
         }
 
         return response;

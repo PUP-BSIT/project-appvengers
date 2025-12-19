@@ -77,6 +77,7 @@ export type Notification = {
   date: string;
   amount?: number;
   type: 'warning' | 'info' | 'alert' | 'BUDGET_WARNING' | 'BUDGET_EXCEEDED' | 'SAVINGS_DEADLINE' | 'SAVINGS_COMPLETED' | 'SAVINGS_MILESTONE_50' | 'SAVINGS_MILESTONE_75';
+  urgency?: 'LOW' | 'MEDIUM' | 'HIGH'; // Urgency level for deadline-based coloring
   read: boolean;
   category?: string;
   savingName?: string;
