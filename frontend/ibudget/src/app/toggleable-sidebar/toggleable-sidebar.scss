@@ -227,9 +227,9 @@ $sidebar-bg: #212529;
 }
 
 .sidebar-control-dropdown {
-  position: absolute;
+  position: fixed;
   z-index: 1100;
-  bottom: -70px;
+  bottom: 10px;
   left: 55px;
   background-color: white;
   border: 1px solid #ccc;
