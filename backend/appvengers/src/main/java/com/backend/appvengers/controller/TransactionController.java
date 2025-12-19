@@ -283,6 +283,7 @@ public class TransactionController {
         );
     }
 
+    //Budget Transaction Endpoint [GET All Budgets Summary]
     @GetMapping
     public ResponseEntity<List<BudgetListSummaryResponse>> getBudgets(
         @AuthenticationPrincipal User user

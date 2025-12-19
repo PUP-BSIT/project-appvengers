@@ -19,7 +19,7 @@ export class BudgetService {
       limit_amount: b.limitAmount,
       start_date: b.startDate,
       end_date: b.endDate,
-      current_amount: 0,
+      current_amount: b.currentAmount ?? 0,
     } as Budget;
   }
 
