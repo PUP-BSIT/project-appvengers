@@ -129,6 +129,7 @@ export type BackendBudget = {
   limitAmount: number;
   startDate: string; // ISO yyyy-MM-dd
   endDate: string;   // ISO yyyy-MM-dd
+  currentAmount: number;
 };
 
 // Frontend entity shape

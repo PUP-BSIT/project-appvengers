@@ -33,7 +33,6 @@ export class BudgetTransactionsService {
     );
   }
 
-
   // POST /budget-transactions
   create(payload: Partial<BudgetTransaction>): Observable<BudgetTransaction> {
     return this.http.post<ApiResponse>(this.base, payload).pipe(
