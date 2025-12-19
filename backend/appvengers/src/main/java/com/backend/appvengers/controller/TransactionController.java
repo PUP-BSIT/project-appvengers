@@ -4,7 +4,6 @@ import com.backend.appvengers.dto.ApiResponse;
 import com.backend.appvengers.dto.BudgetExpenseRequest;
 import com.backend.appvengers.dto.BudgetExpenseResponse;
 import com.backend.appvengers.dto.BudgetSummaryResponse;
-import com.backend.appvengers.dto.BudgetListSummaryResponse;
 import com.backend.appvengers.dto.ExpenseSummary;
 import com.backend.appvengers.dto.IncomeSummary;
 import com.backend.appvengers.dto.MonthlyReportResponse;
@@ -19,8 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import com.backend.appvengers.entity.User;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -283,16 +280,6 @@ public class TransactionController {
                 "Budget summary fetched",
                 summary
             )
-        );
-    }
-
-    // Budget Transaction Endpoint [GET All Budgets Summary]
-    @GetMapping
-    public ResponseEntity<List<BudgetListSummaryResponse>> getBudgets(
-        @AuthenticationPrincipal User user
-    ) {
-        return ResponseEntity.ok(
-            transactionService.getAllBudgetsSummary(user)
         );
     }
 }
