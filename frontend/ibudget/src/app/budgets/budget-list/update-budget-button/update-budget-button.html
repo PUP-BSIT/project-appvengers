@@ -108,3 +108,11 @@
     </li>
   </ul>
 </div>
+
+<!-- Snackbar -->
+@if (showNotification()) {
+  <div class="snackbar" [class.hide]="isHidingNotification()">
+    <i class="fas fa-check-circle"></i>
+    <span>{{ notificationMessage() }}</span>
+  </div>
+}
