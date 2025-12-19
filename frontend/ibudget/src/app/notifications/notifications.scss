@@ -1,8 +1,10 @@
 $background-color: #F9FAFB;
 $sidebar-width: 80px;
+$header-height: 70px;
 
 .notifications-container {
   margin-left: $sidebar-width;
+  margin-top: $header-height;
   padding: 10px;
   height: 100%;
   background-color: $background-color;
