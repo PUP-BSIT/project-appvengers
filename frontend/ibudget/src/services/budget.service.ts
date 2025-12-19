@@ -45,6 +45,13 @@ export class BudgetService {
     );
   }
 
+  // Budget summaries from /budgets/summary
+  getBudgetsSummary(): Observable<Budget[]> {
+    return this.http.get<BackendBudget[]>(`${this.baseUrl}/summary`).pipe(
+      map(list => list.map(this.toFrontend))
+    );
+  }
+
   addBudget(budget: Budget): Observable<Budget> {
     const payload = this.toBackend(budget);
     return this.http.post<BackendBudget>(this.baseUrl, payload).pipe(
