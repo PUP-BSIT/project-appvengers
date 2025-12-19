@@ -6,7 +6,7 @@
     </div>
 
     <div class="d-flex justify-content-end">
-      <app-add-budget-button 
+      <app-add-budget-button
         (addedBudget)="onBudgetAdded($event)"
         [budgetId]="budgets().length + 1"/>
     </div>
@@ -16,26 +16,37 @@
     <div class="card total-budgets-card">
       <div class="card-content">
         <h3>Total Budgets</h3>
-        <p class="amount">&#8369; {{ totalBudgetsAmount() | number:'1.0-0': 'en-US' }}</p>
+        <p class="amount">
+          &#8369; {{ totalBudgetsAmount() | number:'1.0-0':'en-US' }}
+        </p>
       </div>
-      <i class="bi bi-wallet-fill" style="color: #007bff; font-size: 2rem;"></i>
+      <i class="bi bi-wallet-fill"
+         style="color:#007bff;font-size:2rem;"></i>
     </div>
+
     <div class="card total-spent-card">
       <div class="card-content">
         <h3>Total Spent</h3>
-        <p class="amount">&#8369; {{ totalSpentAmount() | number:'1.0-0': 'en-US' }}</p>
+        <p class="amount">
+          &#8369; {{ totalSpentAmount() | number:'1.0-0':'en-US' }}
+        </p>
       </div>
-      <i class="bi bi-graph-down-arrow" style="color: #dc3545; font-size: 2rem;"></i>
+      <i class="bi bi-graph-down-arrow"
+         style="color:#dc3545;font-size:2rem;"></i>
     </div>
+
     <div class="card remaining-card">
       <div class="card-content">
         <h3>Remaining</h3>
-        <p class="amount">&#8369; {{ totalBudgetsAmount() - totalSpentAmount() | number:'1.0-0': 'en-US' }}</p>
+        <p class="amount">
+          &#8369; {{ totalRemainingAmount() | number:'1.0-0':'en-US' }}
+        </p>
       </div>
-      <i class="bi bi-cash-stack" style="color: #28a745; font-size: 2rem;"></i>
+      <i class="bi bi-cash-stack"
+         style="color:#28a745;font-size:2rem;"></i>
     </div>
   </div>
-  
+
   <div class="budget-list-container">
     @if(!budgets().length) {
       <span>No budgets available.</span>
@@ -46,15 +57,17 @@
         <div class="card-body budget-card-body">
           <div class="budget-card-header">
             <div class="category-info-container-budget-list">
-              <label class="mb-0 text-black"> {{ budget.category_name }} </label>
+              <label class="mb-0 text-black">
+                {{ budget.category_name }}
+              </label>
               <span class="text-secondary">
-                From {{ budget.start_date | date: 'MMM d, y' }} to
-                {{ budget.end_date | date: 'MMM d, y' }}
+                From {{ budget.start_date | date:'MMM d, y' }} to
+                {{ budget.end_date | date:'MMM d, y' }}
               </span>
             </div>
 
             <div class="update-btn-container">
-              <app-update-budget-button 
+              <app-update-budget-button
                 (updatedBudgetResponse)="onBudgetUpdated($event)"
                 (deletedBudgetResponse)="onBudgetDeleted($event)"
                 [budgetId]="budget.id"/>
@@ -65,43 +78,39 @@
             <div class="amount-container">
               <div class="spent-amount">
                 <span>
-                  &#8369; {{ budget.current_amount | number:'1.0-0': 'en-US' }} 
+                  &#8369; {{ budget.current_amount
+                    | number:'1.0-0':'en-US' }}
                 </span>
-
                 <span class="text-secondary mb-0">
-                  of &#8369; {{ budget.limit_amount | number:'1.0-0': 'en-US' }}
+                  of &#8369; {{ budget.limit_amount
+                    | number:'1.0-0':'en-US' }}
                 </span>
               </div>
 
               <div class="progress-percentage">
                 <span class="text-success">
-                  {{
-                    getBudgetPercent(budget) 
-                  }}% Spent
+                  {{ getBudgetPercent(budget) }}% Spent
                 </span>
               </div>
             </div>
-            
+
             <div class="budget-progress-bar-container">
-              <app-budget-progress-bar 
+              <app-budget-progress-bar
                 [progressPercentage]="getBudgetPercent(budget)"/>
             </div>
 
             <div class="remaining-amount">
               <span>
-                &#8369; {{
-                  ((budget.limit_amount) - (budget.current_amount ?? 0))
-                    | number:'1.0-0':'en-US'
-                }} remaining
+                &#8369; {{ budget.remaining_amount
+                  | number:'1.0-0':'en-US' }} remaining
               </span>
             </div>
           </div>
 
           <div class="budget-card-action">
-            <button
-            type="button"
-            class="btn btn-primary"
-            (click)="viewBudgetDetails(budget.id)">
+            <button type="button"
+                    class="btn btn-primary"
+                    (click)="viewBudgetDetails(budget.id)">
               View Budget
             </button>
           </div>
