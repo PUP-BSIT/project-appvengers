@@ -1,20 +1,66 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject, OnDestroy } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SidebarService {
-  isOpen = signal(false);
-  sidebarType = signal(this.getInitialSidebarType());
+export class SidebarService implements OnDestroy {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private routerSub: Subscription;
 
-  private getInitialSidebarType(): string {
-    if (typeof localStorage !== 'undefined') {
-      const storedType = localStorage.getItem('sidebarType');
-      if (storedType) {
-        return storedType;
-      }
+  isOpen = signal(false);
+  sidebarType = signal('expandable');
+
+  constructor() {
+    // Re-initialize state on every navigation change to 
+    // ensure the correct user's settings are loaded.
+    this.routerSub = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.initializeSidebarType();
+    });
+  }
+
+  private getUserEmailFromToken(): string | null {
+    const token = this.authService.getToken();
+    if (!token) {
+      return null;
     }
-    return 'expandable'; // Default sidebar type
+    try {
+      // The 'sub' claim in the JWT contains the user's email.
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.sub;
+    } catch (e) {
+      console.error('Error decoding JWT token:', e);
+      return null;
+    }
+  }
+
+  private initializeSidebarType(): void {
+    const userEmail = this.getUserEmailFromToken();
+    if (typeof localStorage !== 'undefined' && userEmail) {
+      const storedType = localStorage.getItem(`sidebarType_${userEmail}`);
+      if (storedType) {
+        this.sidebarType.set(storedType);
+      } else {
+        this.sidebarType.set('expandable');
+      }
+    } else {
+      // If no user is logged in, reset to default.
+      this.sidebarType.set('expandable');
+    }
+  }
+
+  setSidebarType(type: string) {
+    this.sidebarType.set(type);
+    const userEmail = this.getUserEmailFromToken();
+    if (typeof localStorage !== 'undefined' && userEmail) {
+      localStorage.setItem(`sidebarType_${userEmail}`, type);
+    }
   }
 
   toggle() {
@@ -25,14 +71,13 @@ export class SidebarService {
     return this.isOpen();
   }
 
-  setSidebarType(type: string) {
-    this.sidebarType.set(type);
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('sidebarType', type);
-    }
-  }
-
   getSidebarType(): string {
     return this.sidebarType();
+  }
+
+  ngOnDestroy(): void {
+    if (this.routerSub) {
+      this.routerSub.unsubscribe();
+    }
   }
 }
