@@ -71,7 +71,7 @@ Set financial goals and create budgets with progress tracking.
 
 ### 🤖 AI-Powered Bonzi Buddy Chatbot
 
-- **Context-aware financial advice** - sees your actual income, expenses, and budgets
+- **Context-aware financial advice** - sees your actual data (income, expenses, and budgets)
 - **Session memory** - remembers conversation context across multiple messages
 - **Smart navigation** - creates "Add Transaction" buttons from natural language
 - **Personalized insights** - gives advice based on your real financial data
@@ -107,9 +107,8 @@ Bank-level security with JWT authentication and rate limiting.
 - **Charts:** Chart.js + ng2-charts
 - **HTTP Client:** Angular HttpClient with interceptors
 - **Testing:** Jasmine + Karma + Playwright E2E
-- **AI Integration:** n8n Chat Widget with Bonzi Buddy
+- **AI Integration:** microservice with Bonzi Buddy Chat
 - **Real-time:** WebSocket for live notifications
-- **PDF Generation:** jsPDF for report exports
 
 ### Backend
 
@@ -146,7 +145,8 @@ Bank-level security with JWT authentication and rate limiting.
 - **Hosting:** Hostinger
 - **Version Control:** Git & GitHub
 - **E2E Testing:** Playwright for browser automation
-- **AI Workflow:** n8n for Bonzi Buddy chatbot automation
+- **AI Workflow:** seperate microservice for Bonzi Buddy chatbot automation
+- **LazyGit** for terminal git TUI
 - **RAG Database:** Pinecone for AI knowledge base
 - **Environment Management:** Angular environment configs
 
@@ -194,7 +194,7 @@ project-appvengers/
 │   └── src/test/              # Unit & integration tests
 ├── documents/                 # Comprehensive documentation
 │   ├── markdown/              # Implementation guides
-│   ├── microservice/          # n8n workflow configs
+│   ├── microservice/          # microservice workflow configs
 │   ├── sprints/               # Sprint planning docs
 │   └── testcases/             # Test results & cases
 ├── coverage/                  # Code coverage reports
@@ -202,101 +202,7 @@ project-appvengers/
 └── .github/workflows/         # CI/CD pipelines
 ```
 
----
 
-## 🚦 Getting Started
-
-### Prerequisites
-
-- **Frontend:** Node.js 18+ and npm
-- **Backend:** Java 21+ and Maven
-- **Database:** MySQL 8.0+
-- **AI Services:** n8n workflow automation (optional for chatbot)
-- **Vector Database:** Pinecone (optional for RAG)
-
-### Quick Start
-
-#### 1️⃣ Clone the Repository
-
-```bash
-git clone git@github.com:PUP-BSIT/project-appvengers.git
-cd project-appvengers
-```
-
-#### 2️⃣ Backend Setup
-
-```bash
-cd backend/appvengers
-
-# Copy environment template
-copy .env.example .env  # Windows
-cp .env.example .env    # Mac/Linux
-
-# Edit .env with your database credentials
-# DB_URL, DB_USERNAME, DB_PASSWORD, JWT_SECRET
-
-# Build and run
-./mvnw clean install    # Mac/Linux
-.\mvnw clean install    # Windows
-
-./mvnw spring-boot:run  # Mac/Linux
-.\mvnw spring-boot:run  # Windows
-./start-dev.ps1 # Runs backend and SSH tunnel at the same time
-```
-
-**Backend runs on:** `http://localhost:8081`
-
-#### 3️⃣ Frontend Setup
-
-```bash
-cd frontend/ibudget
-
-# Install dependencies
-npm install
-
-# Start development server
-npm start
-```
-
-**Frontend runs on:** `http://localhost:4200`
-
-### 🧪 Running Tests
-
-**Frontend:**
-
-```bash
-cd frontend/ibudget
-npm test              # Run tests with coverage (headless)
-npm run test:watch    # Run tests with Chrome UI
-npm run test:coverage # Run tests and open coverage report
-```
-
-**Backend:**
-
-```bash
-cd backend/appvengers
-./mvnw test           # Mac/Linux
-.\mvnw test           # Windows
-```
-
-**E2E Testing:**
-
-```bash
-cd frontend/ibudget
-npx playwright test   # Run Playwright E2E tests
-```
-
-**View Coverage Reports:**
-
-- Frontend: `coverage/frontend/index.html`
-- Backend: `coverage/backend/index.html`
-
-**Chatbot Testing:**
-
-- See `documents/testcases/Bonzi_Chatbot_Test_Results.md` for compliance testing
-- Test account: test@example.com / password123
-
----
 
 ## 📚 Documentation
 
@@ -367,12 +273,12 @@ npx playwright test   # Run Playwright E2E tests
 #### Technical Architecture
 
 ```
-User Browser → iBudget App → Backend Server → n8n AI → Pinecone RAG → AI Response
+User Browser → iBudget App → Backend Server → microservice AI → Pinecone RAG → AI Response
 ```
 
-- **Frontend:** Angular chat widget with n8n integration
+- **Frontend:** Angular chat widget with microservice integration
 - **Backend:** Spring Boot REST API with UserContextService
-- **AI:** n8n workflow with custom system prompt
+- **AI:**  workflow with custom system prompt and AI agent with memory database
 - **RAG:** Pinecone vector database for knowledge retrieval
 
 #### Testing Results
@@ -447,7 +353,6 @@ Our GitHub Actions workflows ensure code quality and automated deployment:
 - 📈 **Code Coverage** - JaCoCo (Backend) + Karma (Frontend)
 - 🎉 **PR Greetings** - Automated contributor welcome
 - 🧪 **E2E Testing** - Playwright browser automation tests
-- 🤖 **AI Workflow** - n8n chatbot automation deployment
 
 **Deployment Flow:** `Push to main` → `CI Tests` → `Build Artifacts` → `Deploy to prod branch` → `VPS Deployment` → `Live at i-budget.site`
 
@@ -519,39 +424,14 @@ We use Notion for:
 
 </div>
 
----
+
 
 ## 📜 License
 
 This project is part of an academic program at **Polytechnic University of the Philippines**.
 
----
-
-## 🙏 Acknowledgments
-
-- **PUP BSIT** - For the opportunity to build this project
-- **Spring Boot Community** - For excellent documentation
-- **Angular Team** - For the powerful framework
-- **Open Source Contributors** - For the amazing tools and libraries
-- **n8n Community** - For the workflow automation platform
-- **Pinecone Team** - For the vector database technology
-- **Playwright Team** - For the E2E testing framework
-
-### Special Thanks
-
-To the open source projects that made this possible:
-- **Bootstrap** - UI framework and components
-- **Chart.js** - Data visualization
-- **JWT.io** - Authentication security
-- **Maven** - Build automation
-- **Node.js & npm** - Frontend ecosystem
-- **Java & Spring** - Backend framework
-
----
-
 <div align="center">
 
-**Made with ❤️ by Team Appvengers**
 
 [⬆ Back to Top](#-ibudget)
 
