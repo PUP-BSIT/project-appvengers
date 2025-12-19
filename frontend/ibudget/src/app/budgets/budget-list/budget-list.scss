@@ -24,7 +24,7 @@
   margin-top: 30px;
   display: flex;
   flex-direction: row;
-  gap: 5px;
+  gap: 1.25rem;
   flex-wrap: wrap;
 }
 
@@ -35,21 +35,117 @@
   margin-top: 20px;
 }
 
-.budget-cards-container {
-  margin-top: 20px;
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+}
+
+.card {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  gap: 5px;
+  gap: 1.25rem;
+  border: 2px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 
-  span {
-    font-size: 15px;
-    color: black;
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    flex: 1;
   }
 
-  .extra-info {
-    font-size: 20px !important;
-    color: gray;
+  i {
+    flex-shrink: 0;
+    align-self: center;
+    margin-left: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 12px;
+  }
+}
+
+.card h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.card .amount {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: left;
+  line-height: 1;
+}
+
+.total-budgets-card {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border: 2px solid #3b82f630;
+  color: #3b82f6;
+
+  h3 {
+    color: #2563eb;
+  }
+
+  .amount {
+    color: #3b82f6;
+  }
+
+  i {
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.15);
+  }
+}
+
+.total-spent-card {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border: 2px solid #ef444430;
+  color: #ef4444;
+
+  h3 {
+    color: #dc2626;
+  }
+
+  .amount {
+    color: #ef4444;
+  }
+
+  i {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.15);
+  }
+}
+
+.remaining-card {
+  background: linear-gradient(135deg, #d4f4dd 0%, #a7f3d0 100%);
+  border: 2px solid #10b98130;
+  color: #10b981;
+
+  h3 {
+    color: #059669;
+  }
+
+  .amount {
+    color: #10b981;
+  }
+
+  i {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.15);
   }
 }
 
@@ -58,22 +154,28 @@
 }
 
 .budget-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 315px;
-}
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   width: 310px;
+   margin-top: -10px;
+ }
 
 .budget-card-body {
   display: flex;
   flex-direction: column;
-  // justify-content: space-between;
+  justify-content: space-between;
   align-items: center;
-  width: 345px;
+  width: 325px;
 }
 
 .b-card-height {
-  height: 250px;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  gap: 10px;
 }
 
 .category-info-container {
@@ -132,21 +234,73 @@
 @media (max-width: 768px) {
   .budget-container {
     height: auto;
-  }
-
-  .budget-container {
-    margin: 10px 20px;
+    margin: 8px 4px;
+    width: 100%;
   }
 
   .budget-info-container {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-
+    gap: 12px;
+    width: 100%;
     .budget-list-title {
       text-align: center;
+      width: 100%;
     }
+  }
+
+  .summary-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+
+  .card {
+    min-width: 220px;
+    width: 90vw;
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 1rem;
+  }
+
+  .budget-list-container {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .budget-card {
+    width: 100%;
+    min-width: 220px;
+    margin-bottom: 1rem;
+  }
+
+  .budget-card-header {
+    width: 100%;
+    margin-top: -10px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .budget-card-body {
+    width: 100%;
+    padding: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .category-info-container,
+  .category-info-container-budget-list {
+    width: 100%;
+    padding: 0.5rem;
   }
 }
 
