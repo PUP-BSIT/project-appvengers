@@ -56,9 +56,7 @@ export class UpdateBudgetButton implements OnInit {
   constructor() {
     this.budgetForm = this.formBuilder.group({
       category_id: [],
-      limit_amount: [0, {
-        validators: [Validators.required]
-      }],
+      limit_amount: [0, [Validators.required, Validators.min(1)]],
       current_amount: [0],
       start_date: ['', {
         validators: [Validators.required]
@@ -67,6 +65,12 @@ export class UpdateBudgetButton implements OnInit {
         validators: [Validators.required]
       }]
     });
+  }
+
+  // Validator helper
+  isInvalid(control: string) {
+    const c = this.budgetForm.get(control);
+    return !!c && c.invalid && c.touched;
   }
 
   ngOnInit(): void {
