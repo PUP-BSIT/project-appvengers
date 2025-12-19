@@ -50,6 +50,16 @@ export type AccountSetupResponse = {
   gender: string;
 }
 
+export type DeactivateAccountRequest = {
+  password: string;
+  reason: string;
+}
+
+export type DeleteAccountRequest = {
+  password: string;
+  reason: string;
+}
+
 export type Transaction = {
   id: number;
   date: Date;

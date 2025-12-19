@@ -138,18 +138,140 @@
       <div class="card-body">
         <button 
           type="button"
-          class="btn btn-sm btn-secondary"
-          routerLink="/">
+          class="btn btn-sm btn-secondary me-2"
+          (click)="openDeactivateModal()">
             Deactivate Account
         </button>
 
         <button
           type="button"
           class="btn btn-sm btn-danger"
-          routerLink="/">
+          (click)="openDeleteModal()">
             Delete Account
         </button>
       </div>
     </div>
   </div>
 </main>
+
+<!-- Deactivate Modal -->
+<div class="modal fade" #deactivateModal tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Deactivate Account</h5>
+        <button type="button" class="btn-close" (click)="closeDeactivateModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted">
+          Deactivating your account will temporarily disable your access. You can reactivate it by logging in again.
+        </p>
+        
+        <form [formGroup]="deactivateForm" (ngSubmit)="onDeactivateSubmit()">
+          <div class="mb-3">
+            <label class="form-label">Reason for deactivation</label>
+            <textarea 
+              class="form-control" 
+              formControlName="reason" 
+              rows="3"
+              placeholder="Please tell us why you are leaving..."></textarea>
+            @if(deactivateReason?.invalid && deactivateReason?.touched) {
+              <div class="text-danger small mt-1">Reason is required</div>
+            }
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Confirm Password</label>
+            <div class="input-group">
+              <input 
+                [type]="hideDeactivatePassword() ? 'password' : 'text'"
+                class="form-control" 
+                formControlName="password"
+                placeholder="Enter your password">
+              <button 
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="hideDeactivatePassword.set(!hideDeactivatePassword())">
+                <i class="bi" [class.bi-eye]="!hideDeactivatePassword()" [class.bi-eye-slash]="hideDeactivatePassword()"></i>
+              </button>
+            </div>
+            @if(deactivatePassword?.invalid && deactivatePassword?.touched) {
+              <div class="text-danger small mt-1">Password is required</div>
+            }
+          </div>
+          
+          <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary" (click)="closeDeactivateModal()">Cancel</button>
+            <button type="submit" class="btn btn-warning" [disabled]="deactivateForm.invalid || isSubmitting()">
+              @if(isSubmitting()) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+              }
+              Deactivate
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" #deleteModal tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">Delete Account</h5>
+        <button type="button" class="btn-close" (click)="closeDeleteModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger">
+          <strong>Warning:</strong> This action is permanent. Your data will be soft-deleted and permanently removed after 30 days.
+        </div>
+        
+        <form [formGroup]="deleteForm" (ngSubmit)="onDeleteSubmit()">
+          <div class="mb-3">
+            <label class="form-label">Reason for deletion</label>
+            <textarea 
+              class="form-control" 
+              formControlName="reason" 
+              rows="3"
+              placeholder="Please tell us why you are deleting your account..."></textarea>
+            @if(deleteReason?.invalid && deleteReason?.touched) {
+              <div class="text-danger small mt-1">Reason is required</div>
+            }
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Confirm Password</label>
+            <div class="input-group">
+              <input 
+                [type]="hideDeletePassword() ? 'password' : 'text'"
+                class="form-control" 
+                formControlName="password"
+                placeholder="Enter your password">
+              <button 
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="hideDeletePassword.set(!hideDeletePassword())">
+                <i class="bi" [class.bi-eye]="!hideDeletePassword()" [class.bi-eye-slash]="hideDeletePassword()"></i>
+              </button>
+            </div>
+            @if(deletePassword?.invalid && deletePassword?.touched) {
+              <div class="text-danger small mt-1">Password is required</div>
+            }
+          </div>
+          
+          <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+            <button type="submit" class="btn btn-danger" [disabled]="deleteForm.invalid || isSubmitting()">
+              @if(isSubmitting()) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+              }
+              Delete Permanently
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
