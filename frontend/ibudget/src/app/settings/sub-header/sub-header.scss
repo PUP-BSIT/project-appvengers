@@ -1,10 +1,12 @@
 $header-bg: #ffffff;
 $header-margin-left: 100px;
+$header-height: 70px;
 
 .sub-header-wrapper {
   background-color: $header-bg;
   padding: 15px 15px 0 15px;
   margin-left: $header-margin-left;
+  margin-top: $header-height;
 }
 
 .sub-header-selections {
