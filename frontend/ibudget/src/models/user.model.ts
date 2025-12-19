@@ -118,7 +118,6 @@ export type Budget = {
   start_date: string;
   end_date: string;
   current_amount?: number;
-  remaining_amount?: number;
 }
 
 // Backend entity shape
@@ -130,8 +129,6 @@ export type BackendBudget = {
   limitAmount: number;
   startDate: string; // ISO yyyy-MM-dd
   endDate: string;   // ISO yyyy-MM-dd
-  totalExpenses: number;    
-  remainingBudget: number;   
 };
 
 // Frontend entity shape
