@@ -18,6 +18,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import com.backend.appvengers.entity.User;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -267,7 +272,7 @@ public class TransactionController {
         }
     }
 
-    //Budget Transaction Endpoint [GET Budget Summary]
+    //Budget Transaction Endpoint [GET Specific Budget Summary]
     @GetMapping("/budgets/{budgetId}/summary")
     public ResponseEntity<ApiResponse> getBudgetSummary(
         @PathVariable Integer budgetId
@@ -280,6 +285,16 @@ public class TransactionController {
                 "Budget summary fetched",
                 summary
             )
+        );
+    }
+
+    //Budget Transaction Endpoint [GET All Budget Summary]
+    @GetMapping("/budgets")
+    public ResponseEntity<List<BudgetSummaryResponse>> getBudgets(
+        @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity.ok(
+            transactionService.getAllBudgetsSummary(user.getId())
         );
     }
 }
