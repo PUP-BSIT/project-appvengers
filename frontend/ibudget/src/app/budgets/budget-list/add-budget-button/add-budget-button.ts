@@ -44,6 +44,11 @@ export class AddBudgetButton implements OnInit, OnChanges {
   currentCategoryName = signal('');
   currentCategoryId = signal<number>(0);
 
+  // Snackbar signals
+  showNotification = signal(false);
+  isHidingNotification = signal(false);
+  notificationMessage = signal('');
+
   constructor() {
     this.budgetForm = this.formBuilder.group({
       id: [],
@@ -110,6 +115,7 @@ export class AddBudgetButton implements OnInit, OnChanges {
     this.budgetService.addBudget(this.budgetForm.value)
       .subscribe((newBudget: Budget) => {
         this.addedBudget.emit(newBudget);
+        this.showNotificationMessage("Budget added successfully!");
         this.closeModal();
     });
   }
@@ -122,5 +128,18 @@ export class AddBudgetButton implements OnInit, OnChanges {
     this.budgetForm.get('category_name')?.setValue(cat?.name ?? '');
     this.currentCategoryId.set(selectedId);
     this.currentCategoryName.set(cat?.name ?? '');
+  }
+
+  showNotificationMessage(message: string) {
+    this.notificationMessage.set(message);
+    this.showNotification.set(true);
+    this.isHidingNotification.set(false);
+    setTimeout(() => {
+      this.isHidingNotification.set(true);
+      setTimeout(() => {
+        this.showNotification.set(false);
+        this.isHidingNotification.set(false);
+      }, 300);
+    }, 3000);
   }
 }
