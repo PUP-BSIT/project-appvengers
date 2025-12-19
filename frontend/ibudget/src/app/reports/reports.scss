@@ -385,6 +385,7 @@ $header-height: 70px;
 
   .overall-computation {
     padding: 20px;
+    margin-top: 20px;
   }
 }
 
@@ -444,12 +445,12 @@ $header-height: 70px;
   }
 }
 
-/* Tablet       */ 
+/* Tablet       */
 @media (min-width: 426px) and (max-width: 768px) {
   .reports-container {
     margin-left: 0;
     padding: 35px;
-    padding-top: 110px;
+    // padding-top: 110px;
   }
 
   .tabs-container {
@@ -458,6 +459,18 @@ $header-height: 70px;
 
   .reports-grid {
     grid-template-columns: 1fr;
+  }
+
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-section {
+    grid-template-columns: 1fr;
+  }
+
+  .overall-computation {
+    padding: 20px;
   }
 }
 
