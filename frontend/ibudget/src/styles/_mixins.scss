@@ -1,10 +1,11 @@
 $page-margin-left: 80px;
 $background-color: #F9FAFB;
+$header-height: 70px;
 
 @mixin page-layout($padding: 10px, $page-height: 100%) {
   margin-left: $page-margin-left;
   background-color: $background-color;
   padding: $padding;
   height: $page-height;
-  // min-height: 100vh;
+  margin-top: $header-height;
 }
