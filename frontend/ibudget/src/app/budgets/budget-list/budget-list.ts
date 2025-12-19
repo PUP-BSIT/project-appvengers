@@ -84,4 +84,10 @@ export class BudgetList implements OnInit {
   viewBudgetDetails(budgetId: number) {
     this.router.navigate(['/budgets/view-budget/', budgetId]);
   }
+
+  totalRemainingAmount() {
+    return this.budgets().reduce(
+      (t, b) => t + (b.remaining_amount ?? 0), 0
+    );
+  }
 }
