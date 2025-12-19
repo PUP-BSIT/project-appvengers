@@ -15,6 +15,7 @@ main {
     "chatbot-panel chatbot-panel";
 }
 
+// Card Styles
 .card.greeting-panel {
   box-shadow: 0 4px 8px $card-drop-shadow;
   border-radius: 10px;
@@ -40,10 +41,21 @@ main {
     align-items: center;
     justify-content: space-between;
 
-    i {
-      font-size: 5rem;
-      opacity: 0.8;
-      color: #FEE133; // yellow accent
+    .logo-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      img {
+        height: 130px;
+        margin-right: 15px;
+      }
+
+      span {
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-shadow: 1px 1px 2px #00000080;
+      }
     }
   }
 }
@@ -91,17 +103,12 @@ main {
   margin-bottom: 20px;
   margin-left: 20px;
   margin-right: 20px;
-  background-image: linear-gradient(to top, #505285 0%, #585e92 12%, #65689f 25%, #7474b0 37%, #7e7ebb 50%, #8389c7 62%, #9795d4 75%, #a2a1dc 87%, #b5aee4 100%);
+  background-image: linear-gradient(-225deg, #DFFFCD 0%, #90F9C4 48%, #39F3BB 100%);
+  // background-image: linear-gradient(to top, #505285 0%, #585e92 12%, #65689f 25%, #7474b0 37%, #7e7ebb 50%, #8389c7 62%, #9795d4 75%, #a2a1dc 87%, #b5aee4 100%);
 
   h2 {
     font-family: 'Atkinson Hyperlegible', sans-serif;
     margin-bottom: 15px;
-  }
-
-  i {
-    color: #1d0041; // yellow accent
-    font-size: 4rem;
-    opacity: 0.7;
   }
 }
 
@@ -112,7 +119,8 @@ main {
   margin-bottom: 20px;
   margin-left: 20px;
   margin-right: 20px;
-  background-image: linear-gradient(-225deg, #DFFFCD 0%, #90F9C4 48%, #39F3BB 100%);
+  background-image: linear-gradient(-225deg, #B6CEE8 0%, #F578DC 100%);
+  // background-image: linear-gradient(-225deg, #DFFFCD 0%, #90F9C4 48%, #39F3BB 100%);
   border: 1px solid #FFEEBA; // slightly darker yellow border
 
   h2 {
@@ -143,63 +151,66 @@ main {
   margin-bottom: 20px;
   margin-left: 20px;
   margin-right: 20px;
-  background-image: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+  background-image: linear-gradient(-225deg, #7085B6 0%, #87A7D9 50%, #DEF3F8 100%);
 
   h2 {
     font-family: 'Atkinson Hyperlegible', sans-serif;
     margin-bottom: 15px;
   }
 
-  i {
-    color: #00203e;
-    font-size: 4rem;
-    opacity: 0.7;
+  .chatbot-img-container {
+    text-align: center;
+
+    img {
+      height: 120px;
+    }
   }
 }
 
-.card.add-transaction-panel .btn.transaction-button {
-  background-color: peru;
-  font-weight: 500;
-  color: white;
-  transition: background-color 0.2s ease-in-out;
+//  Button Styles for each panel
+// .card.add-transaction-panel .btn.transaction-button {
+//   background-color: peru;
+//   font-weight: 500;
+//   color: white;
+//   transition: background-color 0.2s ease-in-out;
 
-  &:hover {
-    background-color: rgb(165, 107, 49);
-  }
-}
+//   &:hover {
+//     background-color: rgb(165, 107, 49);
+//   }
+// }
 
-.card.add-budget-panel .btn.budget-button {
-  background-color: teal;
-  font-weight: 500;
-  color: white;
-  transition: background-color 0.2s ease-in-out;
+// .card.add-budget-panel .btn.budget-button {
+//   background-color: teal;
+//   font-weight: 500;
+//   color: white;
+//   transition: background-color 0.2s ease-in-out;
 
-  &:hover {
-    background-color: rgb(0, 100, 100);
-  }
-}
+//   &:hover {
+//     background-color: rgb(0, 100, 100);
+//   }
+// }
 
-.card.add-saving-panel .btn.saving-button {
-  background-color: rgb(37, 37, 250);
-  font-weight: 500;
-  color: white;
-  transition: background-color 0.2s ease-in-out;
+// .card.add-saving-panel .btn.saving-button {
+//   background-color: rgb(37, 37, 250);
+//   font-weight: 500;
+//   color: white;
+//   transition: background-color 0.2s ease-in-out;
 
-  &:hover {
-    background-color: rgb(31, 31, 130);
-  }
-}
+//   &:hover {
+//     background-color: rgb(31, 31, 130);
+//   }
+// }
 
-.card.reports-panel .btn.report-button {
-  background-color: rgb(255, 169, 63);
-  font-weight: 500;
-  color: white;
-  transition: background-color 0.2s ease-in-out;
+// .card.reports-panel .btn.report-button {
+//   background-color: rgb(255, 169, 63);
+//   font-weight: 500;
+//   color: white;
+//   transition: background-color 0.2s ease-in-out;
 
-  &:hover {
-    background-color: rgb(180, 90, 0);
-  }
-}
+//   &:hover {
+//     background-color: rgb(180, 90, 0);
+//   }
+// }
 
 .card.greeting-panel {
   grid-area: greeting-panel;
