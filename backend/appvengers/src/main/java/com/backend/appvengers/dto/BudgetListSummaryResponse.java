@@ -9,5 +9,5 @@ public record BudgetListSummaryResponse(
     Integer limitAmount,
     LocalDate startDate,
     LocalDate endDate,
-    Double currentAmount // <-- total spent for this budget
+    Double currentAmount 
 ) {}
