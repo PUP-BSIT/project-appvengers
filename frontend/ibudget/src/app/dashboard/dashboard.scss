@@ -94,6 +94,12 @@ main {
     font-family: 'Atkinson Hyperlegible', sans-serif;
     margin-bottom: 15px;
   }
+
+  i {
+    color: #3a6073;
+    font-size: 4rem;
+    opacity: 0.7;
+  }
 }
 
 .card.add-saving-panel {
@@ -104,11 +110,16 @@ main {
   margin-left: 20px;
   margin-right: 20px;
   background-image: linear-gradient(-225deg, #DFFFCD 0%, #90F9C4 48%, #39F3BB 100%);
-  // background-image: linear-gradient(to top, #505285 0%, #585e92 12%, #65689f 25%, #7474b0 37%, #7e7ebb 50%, #8389c7 62%, #9795d4 75%, #a2a1dc 87%, #b5aee4 100%);
 
   h2 {
     font-family: 'Atkinson Hyperlegible', sans-serif;
     margin-bottom: 15px;
+  }
+
+  i {
+    color: #00523b;
+    font-size: 4rem;
+    opacity: 0.7;
   }
 }
 
@@ -120,12 +131,17 @@ main {
   margin-left: 20px;
   margin-right: 20px;
   background-image: linear-gradient(-225deg, #B6CEE8 0%, #F578DC 100%);
-  // background-image: linear-gradient(-225deg, #DFFFCD 0%, #90F9C4 48%, #39F3BB 100%);
   border: 1px solid #FFEEBA; // slightly darker yellow border
 
   h2 {
     font-family: 'Atkinson Hyperlegible', sans-serif;
     margin-bottom: 15px;
+  }
+
+  i {
+    color: #6e003d;
+    font-size: 4rem;
+    opacity: 0.7;
   }
 }
 
@@ -141,6 +157,12 @@ main {
   h2 {
     font-family: 'Atkinson Hyperlegible', sans-serif;
     margin-bottom: 15px;
+  }
+
+  i {
+    color: #a73737;
+    font-size: 4rem;
+    opacity: 0.7;
   }
 }
 
