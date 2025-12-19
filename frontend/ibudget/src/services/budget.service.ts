@@ -19,7 +19,8 @@ export class BudgetService {
       limit_amount: b.limitAmount,
       start_date: b.startDate,
       end_date: b.endDate,
-      current_amount: 0,
+      current_amount: b.totalExpenses,
+      remaining_amount: b.remainingBudget
     } as Budget;
   }
 
