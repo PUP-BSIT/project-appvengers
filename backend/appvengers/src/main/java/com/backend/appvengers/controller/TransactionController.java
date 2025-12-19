@@ -289,7 +289,7 @@ public class TransactionController {
     }
 
     //Budget Transaction Endpoint [GET All Budget Summary]
-    @GetMapping("/budgets")
+    @GetMapping("/budgets/summary")
     public ResponseEntity<List<BudgetSummaryResponse>> getBudgets(
         @AuthenticationPrincipal User user
     ) {
