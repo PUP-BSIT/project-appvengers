@@ -1,0 +1,323 @@
+<app-toggleable-sidebar/>
+<app-header/>
+<app-sub-header/>
+
+<main>
+  <div class="notification-preferences-panel">
+    <div class="info-container">
+      <h5 class="fw-semibold">Notification Preferences</h5>
+      <p class="text-muted">
+        Customize which notifications you receive and how they're delivered.
+      </p>
+    </div>
+
+    @if (isLoading()) {
+      <div class="loading-container">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    } @else {
+      <!-- Success/Error Messages -->
+      @if (successMessage()) {
+        <div class="alert alert-success alert-dismissible fade show mx-auto message-alert" role="alert">
+          <i class="fas fa-check-circle me-2"></i>
+          {{ successMessage() }}
+          <button type="button" class="btn-close" (click)="successMessage.set(null)"></button>
+        </div>
+      }
+
+      @if (errorMessage()) {
+        <div class="alert alert-danger alert-dismissible fade show mx-auto message-alert" role="alert">
+          <i class="fas fa-exclamation-circle me-2"></i>
+          {{ errorMessage() }}
+          <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
+        </div>
+      }
+
+      <div class="cards-container">
+        <!-- Budget Notifications Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="header-icon budget">
+              <i class="fas fa-wallet"></i>
+            </div>
+            <div class="header-text">
+              <h6 class="fw-semibold m-0">Budget Notifications</h6>
+              <small class="text-muted">Alerts about your budget spending</small>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <!-- Budget Warning -->
+            <div class="preference-item">
+              <div class="preference-info">
+                <div class="preference-icon warning">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="preference-text">
+                  <span class="preference-title">Budget Warning</span>
+                  <small class="preference-desc">Get notified when spending reaches threshold</small>
+                </div>
+              </div>
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  role="switch"
+                  id="budgetWarning"
+                  [checked]="getPreference('budgetWarningEnabled')"
+                  (change)="updatePreference('budgetWarningEnabled', $any($event.target).checked)">
+              </div>
+            </div>
+
+            <!-- Warning Threshold Slider -->
+            @if (getPreference('budgetWarningEnabled')) {
+              <div class="threshold-slider">
+                <label class="form-label">
+                  Warning Threshold: <strong>{{ getPreference('budgetWarningThreshold') }}%</strong>
+                </label>
+                <input 
+                  type="range" 
+                  class="form-range" 
+                  min="50" 
+                  max="95" 
+                  step="5"
+                  [value]="getPreference('budgetWarningThreshold')"
+                  (input)="updatePreference('budgetWarningThreshold', +$any($event.target).value)">
+                <div class="range-labels">
+                  <span>50%</span>
+                  <span>95%</span>
+                </div>
+              </div>
+            }
+
+            <!-- Budget Exceeded -->
+            <div class="preference-item">
+              <div class="preference-info">
+                <div class="preference-icon alert">
+                  <i class="fas fa-bell"></i>
+                </div>
+                <div class="preference-text">
+                  <span class="preference-title">Budget Exceeded</span>
+                  <small class="preference-desc">Alert when you exceed your budget limit</small>
+                </div>
+              </div>
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  role="switch"
+                  id="budgetExceeded"
+                  [checked]="getPreference('budgetExceededEnabled')"
+                  (change)="updatePreference('budgetExceededEnabled', $any($event.target).checked)">
+              </div>
+            </div>
+
+            <!-- Budget Near End -->
+            <div class="preference-item">
+              <div class="preference-info">
+                <div class="preference-icon warning">
+                  <i class="fas fa-calendar-times"></i>
+                </div>
+                <div class="preference-text">
+                  <span class="preference-title">Budget Ending Soon</span>
+                  <small class="preference-desc">Reminder when budget period is ending</small>
+                </div>
+              </div>
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  role="switch"
+                  id="budgetNearEnd"
+                  [checked]="getPreference('budgetNearEndEnabled')"
+                  (change)="updatePreference('budgetNearEndEnabled', $any($event.target).checked)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Savings Notifications Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="header-icon savings">
+              <i class="fas fa-piggy-bank"></i>
+            </div>
+            <div class="header-text">
+              <h6 class="fw-semibold m-0">Savings Notifications</h6>
+              <small class="text-muted">Updates about your savings goals</small>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <!-- Savings Deadline -->
+            <div class="preference-item">
+              <div class="preference-info">
+                <div class="preference-icon info">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="preference-text">
+                  <span class="preference-title">Deadline Reminders</span>
+                  <small class="preference-desc">Get reminded before savings deadlines</small>
+                </div>
+              </div>
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  role="switch"
+                  id="savingsDeadline"
+                  [checked]="getPreference('savingsDeadlineEnabled')"
+                  (change)="updatePreference('savingsDeadlineEnabled', $any($event.target).checked)">
+              </div>
+            </div>
+
+            <!-- Deadline Days Dropdown -->
+            @if (getPreference('savingsDeadlineEnabled')) {
+              <div class="deadline-days-select">
+                <label class="form-label">Remind me:</label>
+                <select 
+                  class="form-select"
+                  [value]="getPreference('savingsDeadlineDays')"
+                  (change)="updatePreference('savingsDeadlineDays', +$any($event.target).value)">
+                  @for (option of deadlineDaysOptions; track option.value) {
+                    <option [value]="option.value">{{ option.label }}</option>
+                  }
+                </select>
+              </div>
+            }
+
+            <!-- Savings Milestones -->
+            <div class="preference-item">
+              <div class="preference-info">
+                <div class="preference-icon milestone">
+                  <i class="fas fa-star"></i>
+                </div>
+                <div class="preference-text">
+                  <span class="preference-title">Milestone Celebrations</span>
+                  <small class="preference-desc">Celebrate at 50% and 75% progress</small>
+                </div>
+              </div>
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  role="switch"
+                  id="savingsMilestone"
+                  [checked]="getPreference('savingsMilestoneEnabled')"
+                  (change)="updatePreference('savingsMilestoneEnabled', $any($event.target).checked)">
+              </div>
+            </div>
+
+            <!-- Savings Completed -->
+            <div class="preference-item">
+              <div class="preference-info">
+                <div class="preference-icon success">
+                  <i class="fas fa-trophy"></i>
+                </div>
+                <div class="preference-text">
+                  <span class="preference-title">Goal Completed</span>
+                  <small class="preference-desc">Celebrate when you reach your goal</small>
+                </div>
+              </div>
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  role="switch"
+                  id="savingsCompleted"
+                  [checked]="getPreference('savingsCompletedEnabled')"
+                  (change)="updatePreference('savingsCompletedEnabled', $any($event.target).checked)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Settings Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="header-icon delivery">
+              <i class="fas fa-paper-plane"></i>
+            </div>
+            <div class="header-text">
+              <h6 class="fw-semibold m-0">Delivery Settings</h6>
+              <small class="text-muted">How notifications are delivered</small>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <!-- Sound -->
+            <div class="preference-item">
+              <div class="preference-info">
+                <div class="preference-icon sound">
+                  <i class="fas fa-volume-up"></i>
+                </div>
+                <div class="preference-text">
+                  <span class="preference-title">Notification Sound</span>
+                  <small class="preference-desc">Play sound for new notifications</small>
+                </div>
+              </div>
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  role="switch"
+                  id="soundEnabled"
+                  [checked]="getPreference('soundEnabled')"
+                  (change)="updatePreference('soundEnabled', $any($event.target).checked)">
+              </div>
+            </div>
+
+            <!-- Toast -->
+            <div class="preference-item">
+              <div class="preference-info">
+                <div class="preference-icon toast">
+                  <i class="fas fa-comment-alt"></i>
+                </div>
+                <div class="preference-text">
+                  <span class="preference-title">Toast Popups</span>
+                  <small class="preference-desc">Show popup notifications on screen</small>
+                </div>
+              </div>
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  role="switch"
+                  id="toastEnabled"
+                  [checked]="getPreference('toastEnabled')"
+                  (change)="updatePreference('toastEnabled', $any($event.target).checked)">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          (click)="resetToDefaults()"
+          [disabled]="isSaving()">
+          <i class="fas fa-undo me-2"></i>
+          Reset to Defaults
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-primary"
+          (click)="savePreferences()"
+          [disabled]="isSaving() || !hasChanges()">
+          @if (isSaving()) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Saving...
+          } @else {
+            <i class="fas fa-save me-2"></i>
+            Save Changes
+          }
+        </button>
+      </div>
+    }
+  </div>
+</main>

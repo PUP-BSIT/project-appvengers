@@ -71,6 +71,9 @@ public class NotificationService {
         // Generate budget-related notifications
         generateBudgetNotifications(userId, user);
 
+        // Generate budget near end notifications
+        generateBudgetNearEndNotifications(userId);
+
         // Generate savings deadline notifications
         generateSavingsDeadlineNotifications(userId);
 
@@ -140,6 +143,79 @@ public class NotificationService {
                 }
             }
         }
+    }
+
+    /**
+     * Check all active budgets for periods ending in 3 days.
+     * Notifies users to review their spending before the budget period ends.
+     */
+    private void generateBudgetNearEndNotifications(int userId) {
+        LocalDate today = LocalDate.now();
+        LocalDate threeDaysFromNow = today.plusDays(3);
+
+        // Find budgets ending in exactly 3 days
+        List<Budget> endingBudgets = budgetRepository.findByEndDate(threeDaysFromNow);
+
+        for (Budget budget : endingBudgets) {
+            // Only process budgets belonging to this user
+            if (budget.getUserId() != userId) {
+                continue;
+            }
+
+            // Check if notification already exists for this budget
+            if (notificationRepository.existsNotification(userId, NotificationType.BUDGET_NEAR_END, budget.getBudgetId())) {
+                continue;
+            }
+
+            // Get category name
+            String categoryName = getCategoryName(budget.getCategoryId());
+
+            // Calculate spent amount for this budget period
+            User user = userRepository.findById((long) userId).orElse(null);
+            if (user == null) continue;
+
+            List<Object[]> expenses = transactionRepository.findMonthlyExpenseByCategoryAndDateRange(
+                    user, budget.getStartDate(), budget.getEndDate());
+
+            double totalSpent = 0.0;
+            for (Object[] row : expenses) {
+                String cat = (String) row[0];
+                if (cat.equals(categoryName)) {
+                    totalSpent = ((Number) row[1]).doubleValue();
+                    break;
+                }
+            }
+
+            createBudgetNearEndNotification(userId, budget, categoryName, totalSpent);
+        }
+    }
+
+    /**
+     * Create a notification for budget period ending soon.
+     */
+    private void createBudgetNearEndNotification(int userId, Budget budget, String categoryName, double totalSpent) {
+        double remaining = budget.getLimitAmount() - totalSpent;
+        double usedPercent = (totalSpent / budget.getLimitAmount()) * 100;
+
+        Notification notification = new Notification();
+        notification.setUserId(userId);
+        notification.setType(NotificationType.BUDGET_NEAR_END);
+        notification.setUrgency(Urgency.MEDIUM);
+        notification.setTitle("Budget Period Ending Soon");
+        notification.setMessage(String.format(
+                "Your '%s' budget ends in 3 days. You've used ₱%.2f of ₱%d (%.0f%%). Remaining: ₱%.2f",
+                categoryName, totalSpent, budget.getLimitAmount(), usedPercent, remaining));
+        notification.setReferenceId(budget.getBudgetId());
+        notification.setAmount(remaining);
+        notification.setCategory(categoryName);
+        notification.setRead(false);
+
+        Notification savedNotification = notificationRepository.save(notification);
+
+        // Send via WebSocket for real-time notification
+        sendWebSocketNotification(userId, savedNotification, categoryName);
+        
+        log.info("Created BUDGET_NEAR_END notification for budget {} (user {})", budget.getBudgetId(), userId);
     }
 
     /**

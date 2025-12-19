@@ -109,7 +109,8 @@
                 }
 
                 @if (notification.type === 'BUDGET_WARNING' || 
-                     notification.type === 'BUDGET_EXCEEDED') {
+                     notification.type === 'BUDGET_EXCEEDED' ||
+                     notification.type === 'BUDGET_NEAR_END') {
                   <button 
                     class="btn-view-details"
                     (click)="viewBudgetDetails(notification.referenceId!)"
