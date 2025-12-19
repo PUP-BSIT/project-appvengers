@@ -5,7 +5,7 @@ $card-drop-shadow: #00000040;
 $page-margin-left: 100px;
 
 main {
-  @include m.page-layout(10px, 100%);
+  @include m.page-layout(10px, auto);
   display: grid;
   grid-template-areas:
     "greeting-panel greeting-panel"
@@ -31,6 +31,19 @@ main {
   h1 {
     font-size: 3rem;
   }
+
+  .card-body {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    i {
+      font-size: 5rem;
+      opacity: 0.8;
+      color: #FEE133; // yellow accent
+    }
+  }
 }
 
 .card.add-transaction-panel {
@@ -45,6 +58,12 @@ main {
   h2 {
     font-family: 'Atkinson Hyperlegible', sans-serif;
     margin-bottom: 15px;
+  }
+
+  i {
+    color: #975d12;
+    font-size: 4rem;
+    opacity: 0.7;
   }
 }
 
@@ -75,6 +94,12 @@ main {
   h2 {
     font-family: 'Atkinson Hyperlegible', sans-serif;
     margin-bottom: 15px;
+  }
+
+  i {
+    color: #1d0041; // yellow accent
+    font-size: 4rem;
+    opacity: 0.7;
   }
 }
 
@@ -135,5 +160,38 @@ main {
     opacity: 1 !important;
     transform: none !important;
     will-change: auto;
+  }
+}
+
+.card.card.greeting-panel:hover,
+.card.card.add-transaction-panel:hover,
+.card.card.add-budget-panel:hover,
+.card.card.add-saving-panel:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px $card-drop-shadow;
+  transition: box-shadow 200ms ease, transform 200ms ease;
+  cursor: pointer;
+}
+
+.flip-vertical {
+  display: inline-block; /* allow transforms without affecting flow */
+  transform: scaleY(-1); /* flips vertically */
+  transform-origin: center;
+  backface-visibility: hidden; /* small perf/paint hint */
+}
+
+@media (max-width: 768px) {
+  main {
+    display: block;
+    margin-left: 0;
+    padding: 30px;
+  }
+
+  .card.greeting-panel,
+  .card.add-transaction-panel,
+  .card.add-budget-panel,
+  .card.add-saving-panel {
+    margin-left: auto;
+    margin-right: auto;
   }
 }
