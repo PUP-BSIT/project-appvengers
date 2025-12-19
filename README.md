@@ -59,20 +59,27 @@ Automatically categorize transactions to understand where your money goes.
 
 Set financial goals and create budgets with progress tracking.
 
+### 🔔 Enhanced Notification System
+
+- Urgency-based visual indicators (🔴 High, 🟡 Medium, 🟢 Low)
+- Smart date grouping (Today, Yesterday, This Week)
+- Filter tabs (All, Budgets, Savings, Unread)
+- Real-time toast notifications via WebSocket
+
 </td>
 <td width="50%">
 
-### 🔔 Smart Notifications
+### 🤖 AI-Powered Bonzi Buddy Chatbot
 
-Stay informed about bills, budget limits, and financial milestones.
+- **Context-aware financial advice** - sees your actual income, expenses, and budgets
+- **Session memory** - remembers conversation context across multiple messages
+- **Smart navigation** - creates "Add Transaction" buttons from natural language
+- **Personalized insights** - gives advice based on your real financial data
+- **RAG integration** - uses knowledge base for accurate iBudget guidance
 
 ### 📈 Visual Analytics
 
 Interactive charts and graphs powered by Chart.js for deep insights.
-
-### 🤖 Personalized Insights
-
-AI-driven recommendations based on your spending behavior.
 
 ### 🔒 Secure Account Management
 
@@ -99,7 +106,10 @@ Bank-level security with JWT authentication and rate limiting.
 - **UI Library:** Bootstrap 5 + Bootstrap Icons
 - **Charts:** Chart.js + ng2-charts
 - **HTTP Client:** Angular HttpClient with interceptors
-- **Testing:** Jasmine + Karma
+- **Testing:** Jasmine + Karma + Playwright E2E
+- **AI Integration:** n8n Chat Widget with Bonzi Buddy
+- **Real-time:** WebSocket for live notifications
+- **PDF Generation:** jsPDF for report exports
 
 ### Backend
 
@@ -117,6 +127,10 @@ Bank-level security with JWT authentication and rate limiting.
 - **Rate Limiting:** Bucket4j
 - **Testing:** JUnit 5 + H2 Database
 - **Code Coverage:** JaCoCo
+- **Real-time:** WebSocket for live notifications
+- **Email Service:** Spring Boot Mail for verification & notifications
+- **AI Integration:** REST API for Bonzi Buddy chatbot
+- **Context Services:** UserFinancialContext for AI data aggregation
 
 ### DevOps & Tools
 
@@ -124,12 +138,17 @@ Bank-level security with JWT authentication and rate limiting.
 ![Hostinger](https://img.shields.io/badge/Hostinger-673DE6?style=for-the-badge&logo=hostinger&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
 ![Gitleaks](https://img.shields.io/badge/Gitleaks-000000?style=for-the-badge&logo=git&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)
 
 - **CI/CD:** GitHub Actions (automated testing & security scans)
 - **Secret Scanning:** Gitleaks
 - **Build Tools:** Maven Wrapper, Angular CLI
 - **Hosting:** Hostinger
 - **Version Control:** Git & GitHub
+- **E2E Testing:** Playwright for browser automation
+- **AI Workflow:** n8n for Bonzi Buddy chatbot automation
+- **RAG Database:** Pinecone for AI knowledge base
+- **Environment Management:** Angular environment configs
 
 ---
 
@@ -152,21 +171,34 @@ Bank-level security with JWT authentication and rate limiting.
 project-appvengers/
 ├── frontend/ibudget/          # Angular 20 application
 │   ├── src/app/               # Components, services, models
+│   │   ├── chatbot-sidebar/   # AI chatbot integration
+│   │   ├── notifications/     # Enhanced notification system
+│   │   ├── transactions/      # Transaction management
+│   │   ├── budgets/           # Budget tracking
+│   │   ├── savings/           # Savings goals
+│   │   └── dashboard/         # Analytics dashboard
 │   ├── src/environments/      # Environment configurations
-│   └── src/styles/            # Global SCSS styles
+│   ├── src/services/          # Business logic services
+│   ├── src/styles/            # Global SCSS styles
+│   └── playwright-tests/      # E2E test suites
 ├── backend/appvengers/        # Spring Boot API
 │   ├── src/main/java/         # Java source code
 │   │   └── com.backend.appvengers/
-│   │       ├── controller/    # REST controllers
-│   │       ├── service/       # Business logic
+│   │       ├── controller/    # REST controllers (incl. ChatbotController)
+│   │       ├── service/       # Business logic (incl. ChatbotService, UserContextService)
 │   │       ├── repository/    # Data access layer
 │   │       ├── entity/        # JPA entities
 │   │       ├── dto/           # Data transfer objects
 │   │       ├── security/      # JWT & authentication
-│   │       └── config/        # Spring configuration
+│   │       └── config/        # Spring & WebSocket config
 │   └── src/test/              # Unit & integration tests
-├── documents/                 # Project documentation & diagrams
+├── documents/                 # Comprehensive documentation
+│   ├── markdown/              # Implementation guides
+│   ├── microservice/          # n8n workflow configs
+│   ├── sprints/               # Sprint planning docs
+│   └── testcases/             # Test results & cases
 ├── coverage/                  # Code coverage reports
+├── tasks/                     # Feature development tasks
 └── .github/workflows/         # CI/CD pipelines
 ```
 
@@ -179,6 +211,8 @@ project-appvengers/
 - **Frontend:** Node.js 18+ and npm
 - **Backend:** Java 21+ and Maven
 - **Database:** MySQL 8.0+
+- **AI Services:** n8n workflow automation (optional for chatbot)
+- **Vector Database:** Pinecone (optional for RAG)
 
 ### Quick Start
 
@@ -234,6 +268,7 @@ npm start
 cd frontend/ibudget
 npm test              # Run tests with coverage (headless)
 npm run test:watch    # Run tests with Chrome UI
+npm run test:coverage # Run tests and open coverage report
 ```
 
 **Backend:**
@@ -244,35 +279,161 @@ cd backend/appvengers
 .\mvnw test           # Windows
 ```
 
+**E2E Testing:**
+
+```bash
+cd frontend/ibudget
+npx playwright test   # Run Playwright E2E tests
+```
+
 **View Coverage Reports:**
 
 - Frontend: `coverage/frontend/index.html`
 - Backend: `coverage/backend/index.html`
 
+**Chatbot Testing:**
+
+- See `documents/testcases/Bonzi_Chatbot_Test_Results.md` for compliance testing
+- Test account: test@example.com / password123
+
 ---
 
 ## 📚 Documentation
+
+### Core Documentation
 
 | Document | Description |
 |----------|-------------|
 | [API Documentation](backend/appvengers/API_DOCUMENTATION.md) | Complete REST API reference |
 | [Integration Guide](backend/appvengers/INTEGRATION_GUIDE.md) | Frontend-Backend integration |
 | [Quick Start Guide](backend/appvengers/QUICK_START.md) | Setup and deployment guide |
-| [Environment Setup](ENVIRONMENT_SETUP.md) | Environment configuration |
-| [Code Coverage Guide](CODE_COVERAGE_GUIDE.md) | Testing and coverage setup |
-| [Sprint Documents](documents/sprints/) | Sprint planning and retrospectives |
-| [Test Cases](documents/testcases/) | Comprehensive test documentation |
+| [Environment Setup](documents/markdown/ENVIRONMENT_SETUP.md) | Environment configuration |
+| [Code Coverage Guide](documents/markdown/CODE_COVERAGE_GUIDE.md) | Testing and coverage setup |
+
+### AI & Chatbot Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Chatbot Implementation Guide](documents/markdown/CHATBOT_IMPLEMENTATION_GUIDE.md) | Bonzi Buddy context-aware AI system |
+| [Smart Navigation Guide](documents/microservice/SMART_NAVIGATION_N8N_UPDATE.md) | Deep linking from chatbot to app features |
+| [AI Agent System Prompt](documents/markdown/iBudget_AI_Agent_System_Prompt.md) | Bonzi Buddy personality and behavior |
+| [AI Knowledge Base](documents/markdown/iBudget_Knowledge_Base.md) | RAG information for AI assistance |
+
+### Testing & Quality
+
+| Document | Description |
+|----------|-------------|
+| [Chatbot Test Results](documents/testcases/Bonzi_Chatbot_Test_Results.md) | 100% compliance testing results |
+| [E2E Authentication Tests](documents/testcases/E2E_Authentication_Test_Results.md) | End-to-end authentication flows |
+| [Test Cases](documents/testcases/TEST_CASES.md) | Comprehensive test documentation |
+
+### Development & Operations
+
+| Document | Description |
+|----------|-------------|
+| [CI/CD Setup](documents/markdown/CI_CD_SETUP.md) | Continuous integration and deployment |
+| [Communication Flow](documents/markdown/COMMUNICATION_FLOW_GUIDE.md) | Team development workflow |
+| [SSH Key Fix](documents/markdown/SSH_KEY_FIX.md) | SSH configuration for deployment |
+
+---
+
+## 🤖 AI-Powered Features
+
+### Bonzi Buddy - Your Financial AI Assistant
+
+**Meet Bonzi Buddy** - An intelligent chatbot that understands your actual financial situation and provides personalized advice.
+
+#### Key Capabilities
+
+- **Context-Aware:** Sees your real income, expenses, budgets, and savings goals
+- **Session Memory:** Remembers conversation context across multiple messages
+- **Smart Navigation:** Creates "Add Transaction" buttons from natural language
+- **Personalized Advice:** Gives recommendations based on your actual financial data
+- **Knowledge Base:** Uses RAG (Retrieval-Augmented Generation) for accurate iBudget guidance
+
+#### Examples
+
+**User:** *"I spent 500 pesos on groceries at SM yesterday"*
+
+**Bonzi:** *"Got it! I've prepared a transaction entry for you. Just review the details and click the button below to add it to your records.*
+
+- **Amount:** ₱500
+- **Category:** Groceries
+- **Description:** Groceries at SM
+- **Date:** 2024-12-17
+
+[ACTION:navigate:/transactions?amount=500&category=Groceries&description=Groceries at SM&type=expense&date=2024-12-17&openModal=true]*
+
+#### Technical Architecture
+
+```
+User Browser → iBudget App → Backend Server → n8n AI → Pinecone RAG → AI Response
+```
+
+- **Frontend:** Angular chat widget with n8n integration
+- **Backend:** Spring Boot REST API with UserContextService
+- **AI:** n8n workflow with custom system prompt
+- **RAG:** Pinecone vector database for knowledge retrieval
+
+#### Testing Results
+
+- **100% Compliance** with system prompt requirements
+- **7/7 Tests Passed** covering identity, knowledge base, security, and behavior
+- **Production Ready** with full privacy and security compliance
+
+See [Chatbot Test Results](documents/testcases/Bonzi_Chatbot_Test_Results.md) for details.
 
 ---
 
 ## 🔒 Security
 
-- **🔐 JWT Authentication:** Secure token-based authentication
-- **🛡️ Spring Security:** Role-based access control
-- **⏱️ Rate Limiting:** Bucket4j for brute-force protection
+- **🔐 JWT Authentication:** Secure token-based authentication with refresh tokens
+- **🛡️ Spring Security:** Role-based access control and CORS protection
+- **⏱️ Rate Limiting:** Bucket4j for brute-force protection on login endpoints
 - **🔍 Secret Scanning:** Automated Gitleaks checks via GitHub Actions
-- **✅ Input Validation:** Jakarta Bean Validation
+- **✅ Input Validation:** Jakarta Bean Validation on all API endpoints
 - **🔄 CORS Protection:** Configured for production environment
+- **📧 Email Security:** Secure email verification with temporary tokens
+- **🔒 Account Management:** Secure password reset and account deactivation
+- **📧 Email Security:** Secure email verification with temporary tokens
+- **🔒 Account Management:** Secure password reset and account deactivation
+
+---
+
+## 🔔 Enhanced Notification System
+
+Our notification system has been significantly improved with smart, user-friendly features:
+
+### Smart Visual Indicators
+
+- **🔴 High Priority:** Urgent deadlines, budget exceeded
+- **🟡 Medium Priority:** Budget warnings, upcoming deadlines  
+- **🟢 Low Priority:** Informational updates, general reminders
+
+### Intelligent Organization
+
+- **Date Grouping:** Automatically groups notifications by "Today", "Yesterday", "This Week"
+- **Smart Filtering:** Filter tabs for "All", "Budgets", "Savings", "Unread"
+- **Real-time Updates:** WebSocket-powered live notifications
+
+### User Experience Enhancements
+
+- **Toast Notifications:** Non-intrusive popup notifications for immediate events
+- **View Details Buttons:** One-click navigation to related features
+- **Empty State:** Helpful illustrations and guidance when no notifications exist
+- **Confetti Respect:** Animation preferences are respected across the app
+
+### Backend Intelligence
+
+- **Scheduler Integration:** Automated budget monitoring and deadline checking
+- **User Preferences:** Customizable notification settings and thresholds
+- **Context-Aware:** Notifications based on actual user behavior and patterns
+
+### Current Implementation Status
+
+- ✅ **Phase 1-3:** Urgency icons, View Details buttons (completed)
+- 🔄 **Phase 4-5:** Date grouping, filter tabs, preferences (in progress)
+- 📋 **Task Tracking:** See `tasks/subtasks/notification-improvements/` for detailed progress
 
 ---
 
@@ -285,8 +446,17 @@ Our GitHub Actions workflows ensure code quality and automated deployment:
 - 🔒 **Security Scanning** - Gitleaks secret detection
 - 📈 **Code Coverage** - JaCoCo (Backend) + Karma (Frontend)
 - 🎉 **PR Greetings** - Automated contributor welcome
+- 🧪 **E2E Testing** - Playwright browser automation tests
+- 🤖 **AI Workflow** - n8n chatbot automation deployment
 
 **Deployment Flow:** `Push to main` → `CI Tests` → `Build Artifacts` → `Deploy to prod branch` → `VPS Deployment` → `Live at i-budget.site`
+
+### Quality Gates
+
+- **Test Coverage:** Minimum 80% coverage required
+- **Security:** No secrets detected, OWASP compliance
+- **Performance:** E2E tests pass within time limits
+- **AI Compliance:** Chatbot system prompt compliance verified
 
 ---
 
@@ -300,6 +470,21 @@ We use Notion for:
 - User stories and requirements
 - Technical documentation
 - Team collaboration
+
+### Task Management
+
+**Task Structure:** `tasks/subtasks/` organized by feature area
+
+- **Notification Improvements:** 9-phase enhancement project
+- **Bug Fixes:** Targeted resolution of specific issues
+- **Feature Development:** New capability implementation
+- **Performance Optimization:** Speed and efficiency improvements
+
+### Current Active Tasks
+
+- **Notification System:** Enhanced urgency-based icons, date grouping, filter tabs
+- **Chatbot Integration:** Smart navigation and context-aware improvements
+- **Performance:** Code coverage optimization and E2E test expansion
 
 ---
 
@@ -348,6 +533,19 @@ This project is part of an academic program at **Polytechnic University of the P
 - **Spring Boot Community** - For excellent documentation
 - **Angular Team** - For the powerful framework
 - **Open Source Contributors** - For the amazing tools and libraries
+- **n8n Community** - For the workflow automation platform
+- **Pinecone Team** - For the vector database technology
+- **Playwright Team** - For the E2E testing framework
+
+### Special Thanks
+
+To the open source projects that made this possible:
+- **Bootstrap** - UI framework and components
+- **Chart.js** - Data visualization
+- **JWT.io** - Authentication security
+- **Maven** - Build automation
+- **Node.js & npm** - Frontend ecosystem
+- **Java & Spring** - Backend framework
 
 ---
 
