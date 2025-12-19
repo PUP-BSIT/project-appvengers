@@ -3,7 +3,6 @@ package com.backend.appvengers.service;
 import com.backend.appvengers.dto.BudgetExpenseRequest;
 import com.backend.appvengers.dto.BudgetExpenseResponse;
 import com.backend.appvengers.dto.BudgetSummaryResponse;
-import com.backend.appvengers.dto.BudgetListSummaryResponse;
 import com.backend.appvengers.dto.ExpenseSummary;
 import com.backend.appvengers.dto.IncomeSummary;
 import com.backend.appvengers.dto.MonthlyReportResponse;
@@ -410,29 +409,5 @@ public class TransactionService {
             totalExpenses,
             remaining
         );
-    }
-
-    // Budget Transaction [Get All Budgets Summary]
-    public List<BudgetListSummaryResponse> getAllBudgetsSummary(User user) {
-        List<Budget> budgets = budgetRepository.findByUser(user);
-
-        return budgets.stream().map(budget -> {
-            Double totalExpenses = getTotalExpensesForBudget(budget.getBudgetId());
-            Double remaining = budget.getLimitAmount() - totalExpenses;
-
-            String categoryName = categoryRepository.findById(budget.getCategoryId())
-                .map(Category::getName)
-                .orElse("Unknown");
-
-            return new BudgetListSummaryResponse(
-                budget.getBudgetId(),
-                budget.getCategoryId(),
-                categoryName,
-                budget.getLimitAmount(),
-                budget.getStartDate(),
-                budget.getEndDate(),
-                totalExpenses // currentAmount for this budget
-            );
-        }).toList();
     }
 }
