@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 export interface NotificationPreferences {
   // Budget notifications
   budgetWarningEnabled: boolean;
-  budgetWarningThreshold: number;  // Percentage (50-95)
   budgetExceededEnabled: boolean;
   budgetNearEndEnabled: boolean;
 
@@ -21,7 +20,6 @@ export interface NotificationPreferences {
 
 const DEFAULT_PREFERENCES: NotificationPreferences = {
   budgetWarningEnabled: true,
-  budgetWarningThreshold: 80,
   budgetExceededEnabled: true,
   budgetNearEndEnabled: true,
   savingsDeadlineEnabled: true,
@@ -112,26 +110,6 @@ export class NotificationPreferencesService {
    */
   isToastEnabled(): boolean {
     return this.preferencesSubject.value.toastEnabled;
-  }
-
-  /**
-   * Get the budget warning threshold percentage
-   */
-  getBudgetWarningThreshold(): number {
-    return this.preferencesSubject.value.budgetWarningThreshold;
-  }
-
-  /**
-   * Check if a budget warning notification should be shown based on threshold preference.
-   * @param spentPercent The percentage of budget spent (0-100)
-   */
-  shouldShowBudgetWarning(spentPercent: number): boolean {
-    const prefs = this.preferencesSubject.value;
-    if (!prefs.budgetWarningEnabled) {
-      return false;
-    }
-    // Show warning if spent percentage >= user's threshold
-    return spentPercent >= prefs.budgetWarningThreshold;
   }
 
   /**

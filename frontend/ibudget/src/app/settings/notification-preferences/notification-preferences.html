@@ -49,7 +49,7 @@
           </div>
 
           <div class="card-body">
-            <!-- Budget Warning -->
+<!-- Budget Warning -->
             <div class="preference-item">
               <div class="preference-info">
                 <div class="preference-icon warning">
@@ -57,7 +57,7 @@
                 </div>
                 <div class="preference-text">
                   <span class="preference-title">Budget Warning</span>
-                  <small class="preference-desc">Get notified when spending reaches threshold</small>
+                  <small class="preference-desc">Get notified when spending reaches 50% of budget</small>
                 </div>
               </div>
               <div class="form-check form-switch">
@@ -70,27 +70,6 @@
                   (change)="updatePreference('budgetWarningEnabled', $any($event.target).checked)">
               </div>
             </div>
-
-            <!-- Warning Threshold Slider -->
-            @if (getPreference('budgetWarningEnabled')) {
-              <div class="threshold-slider">
-                <label class="form-label">
-                  Warning Threshold: <strong>{{ getPreference('budgetWarningThreshold') }}%</strong>
-                </label>
-                <input 
-                  type="range" 
-                  class="form-range" 
-                  min="50" 
-                  max="95" 
-                  step="5"
-                  [value]="getPreference('budgetWarningThreshold')"
-                  (input)="updatePreference('budgetWarningThreshold', +$any($event.target).value)">
-                <div class="range-labels">
-                  <span>50%</span>
-                  <span>95%</span>
-                </div>
-              </div>
-            }
 
             <!-- Budget Exceeded -->
             <div class="preference-item">

@@ -19,10 +19,9 @@ import {
 export class NotificationPreferencesComponent implements OnInit {
   private preferencesService = inject(NotificationPreferencesService);
 
-  // Form state
+// Form state
   preferences = signal<NotificationPreferences>({
     budgetWarningEnabled: true,
-    budgetWarningThreshold: 80,
     budgetExceededEnabled: true,
     budgetNearEndEnabled: true,
     savingsDeadlineEnabled: true,
