@@ -235,7 +235,10 @@ main {
 .card.card.greeting-panel:hover,
 .card.card.add-transaction-panel:hover,
 .card.card.add-budget-panel:hover,
-.card.card.add-saving-panel:hover {
+.card.card.add-saving-panel:hover,
+.card.card.notifications-panel:hover,
+.card.card.reports-panel:hover,
+.card.card.chatbot-panel:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 16px $card-drop-shadow;
   transition: box-shadow 200ms ease, transform 200ms ease;
@@ -259,7 +262,10 @@ main {
   .card.greeting-panel,
   .card.add-transaction-panel,
   .card.add-budget-panel,
-  .card.add-saving-panel {
+  .card.add-saving-panel,
+  .card.notifications-panel,
+  .card.reports-panel,
+  .card.chatbot-panel {
     margin-left: auto;
     margin-right: auto;
   }
