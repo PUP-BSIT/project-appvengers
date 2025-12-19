@@ -14,7 +14,7 @@ $header-height: 70px;
 
 .notifications-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding: 0 2rem;
   margin-bottom: 1rem;
@@ -47,30 +47,20 @@ $header-height: 70px;
   font-weight: 600;
 }
 
-.btn-mark-all {
-  background: #3498db;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-right: 0;
-}
-
-.btn-mark-all:hover {
-  background: #2980b9;
-}
-
 // Filter tabs styling
 .filter-tabs {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 0.5rem;
   padding: 0 2rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-tabs-left {
+  display: flex;
+  gap: 0.5rem;
   flex-wrap: wrap;
 }
 
@@ -92,9 +82,14 @@ $header-height: 70px;
     font-size: 0.85rem;
   }
 
-  &:hover {
+  &:hover:not(:disabled) {
     border-color: #3498db;
     color: #3498db;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   &.active {
@@ -105,6 +100,24 @@ $header-height: 70px;
     .tab-count {
       background: rgba(255, 255, 255, 0.2);
       color: white;
+    }
+  }
+
+  // Mark all as read button styling
+  &.mark-all-read {
+    background: white;
+    border-color: #27ae60;
+    color: #27ae60;
+
+    &:hover:not(:disabled) {
+      background: #27ae60;
+      border-color: #27ae60;
+      color: white;
+    }
+
+    &:disabled {
+      border-color: #ddd;
+      color: #bdc3c7;
     }
   }
 }
