@@ -347,3 +347,35 @@ main {
     margin-right: auto;
   }
 }
+
+@media (max-width: 480px) {
+  main {
+    padding: 20px;
+  }
+
+  .card.greeting-panel .logo-container img {
+    display: none !important;
+  }
+
+  .card.greeting-panel .card-body h1 {
+    font-size: 1.4rem !important;
+    text-align: center;
+  }
+
+  .card.greeting-panel .card-body {
+    justify-content: center !important;
+  }
+
+  .card.greeting-panel .card-body h2 {
+    font-size: 1.2rem !important;
+    text-align: center;
+  }
+
+  i {
+    display: none !important;
+  }
+
+  img {
+    display: none !important;
+  }
+}
