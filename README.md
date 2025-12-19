@@ -1,6 +1,6 @@
 <div align="center">
 
-# 💰 iBudget
+<img src="documents/assets/ibudget-readme.png" alt="iBudget Banner" width="600px">
 
 **Smart Personal Finance Management Made Simple**
 
