@@ -410,4 +410,28 @@ public class TransactionService {
             remaining
         );
     }
+
+    // Budget Transaction [Get All Budgets Summary]
+    public List<BudgetListSummaryResponse> getAllBudgetsSummary(User user) {
+        List<Budget> budgets = budgetRepository.findByUser(user);
+
+        return budgets.stream().map(budget -> {
+            Double totalExpenses = getTotalExpensesForBudget(budget.getBudgetId());
+            Double remaining = budget.getLimitAmount() - totalExpenses;
+
+            String categoryName = categoryRepository.findById(budget.getCategoryId())
+                .map(Category::getName)
+                .orElse("Unknown");
+
+            return new BudgetListSummaryResponse(
+                budget.getBudgetId(),
+                budget.getCategoryId(),
+                categoryName,
+                budget.getLimitAmount(),
+                budget.getStartDate(),
+                budget.getEndDate(),
+                totalExpenses // currentAmount for this budget
+            );
+        }).toList();
+    }
 }
