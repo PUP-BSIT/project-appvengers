@@ -18,7 +18,7 @@
         <div
           class="notification-item"
           [class.unread]="!notification.read"
-          [ngClass]="notificationService.getNotificationColor(notification.type)">
+          [ngClass]="notificationService.getNotificationColor(notification.type, notification.urgency)">
           
           <div class="notification-icon">
             <i [ngClass]="notificationService.getNotificationIcon(notification.type)"></i>

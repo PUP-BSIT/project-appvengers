@@ -236,7 +236,19 @@ export class NotificationService implements OnDestroy {
     return this.iconMap.get(type) || 'fas fa-bell';
   }
 
-  getNotificationColor(type: string): string {
+  getNotificationColor(type: string, urgency?: string): string {
+    // For SAVINGS_DEADLINE, use urgency-based coloring
+    if (type === 'SAVINGS_DEADLINE' && urgency) {
+      switch (urgency) {
+        case 'HIGH':
+          return 'alert';    // Red for today/tomorrow
+        case 'MEDIUM':
+          return 'warning';  // Orange for 3 days
+        case 'LOW':
+        default:
+          return 'info';     // Blue for 7 days
+      }
+    }
     return this.colorMap.get(type) || 'info';
   }
 
