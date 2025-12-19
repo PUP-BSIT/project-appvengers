@@ -132,13 +132,21 @@ export class NotificationService implements OnDestroy {
       this.confettiService.playNotificationSound();
     }
     
-    // Trigger confetti for special notifications
+// Trigger confetti for special notifications (if enabled in preferences)
     if (notification.type === 'SAVINGS_COMPLETED') {
-      console.log('🎉 Triggering celebration confetti!');
-      this.confettiService.celebrate();
+      if (this.preferencesService.getPreferencesSync().savingsCompletedEnabled) {
+        console.log('🎉 Triggering celebration confetti!');
+        this.confettiService.celebrate();
+      } else {
+        console.log('🔕 Celebration confetti disabled by preferences');
+      }
     } else if (notification.type === 'SAVINGS_MILESTONE_50' || notification.type === 'SAVINGS_MILESTONE_75') {
-      console.log('⭐ Triggering milestone confetti!');
-      this.confettiService.milestone();
+      if (this.preferencesService.getPreferencesSync().savingsMilestoneEnabled) {
+        console.log('⭐ Triggering milestone confetti!');
+        this.confettiService.milestone();
+      } else {
+        console.log('🔕 Milestone confetti disabled by preferences');
+      }
     }
 
     // Show toast notification (only if enabled and not on notifications page)

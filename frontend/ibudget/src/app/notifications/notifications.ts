@@ -5,6 +5,7 @@ import { Notification } from '../../models/user.model';
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { NotificationService } from '../../services/notification';
 import { ConfettiService } from '../../services/confetti.service';
+import { NotificationPreferencesService } from '../../services/notification-preferences.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ToggleableSidebar } from "../toggleable-sidebar/toggleable-sidebar";
@@ -39,9 +40,10 @@ export class Notifications implements OnInit, OnDestroy {
   itemsPerPage: number = 10; // Increased for grouped view
   totalPages: number = 1;
 
-  constructor(
+constructor(
     public notificationService: NotificationService,
     private confettiService: ConfettiService,
+    private preferencesService: NotificationPreferencesService,
     private router: Router
   ) { }
 
@@ -55,16 +57,24 @@ export class Notifications implements OnInit, OnDestroy {
       // Calculate total pages based on filtered notifications
       this.totalPages = Math.ceil(this.filteredNotifications.length / this.itemsPerPage);
       
-      notifications.forEach(notification => {
+notifications.forEach(notification => {
         // Only trigger confetti for unread notifications we haven't processed yet
         if (!notification.read && !this.processedNotificationIds.has(notification.id)) {
           if (notification.type === 'SAVINGS_COMPLETED') {
-            console.log('🎉 Triggering celebration confetti for:', notification.title);
-            this.confettiService.celebrate();
+            if (this.preferencesService.getPreferencesSync().savingsCompletedEnabled) {
+              console.log('🎉 Triggering celebration confetti for:', notification.title);
+              this.confettiService.celebrate();
+            } else {
+              console.log('🔕 Celebration confetti disabled by preferences');
+            }
             this.processedNotificationIds.add(notification.id);
           } else if (notification.type === 'SAVINGS_MILESTONE_50' || notification.type === 'SAVINGS_MILESTONE_75') {
-            console.log('⭐ Triggering milestone confetti for:', notification.title);
-            this.confettiService.milestone();
+            if (this.preferencesService.getPreferencesSync().savingsMilestoneEnabled) {
+              console.log('⭐ Triggering milestone confetti for:', notification.title);
+              this.confettiService.milestone();
+            } else {
+              console.log('🔕 Milestone confetti disabled by preferences');
+            }
             this.processedNotificationIds.add(notification.id);
           }
         }
