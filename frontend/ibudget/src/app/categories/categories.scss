@@ -1,7 +1,9 @@
 $background-color: #F9FAFB;
 $sidebar-width: 80px;
+$header-height: 70px;
 
 .categories-container {
+  margin-top: $header-height; 
   margin-left: $sidebar-width;
   padding: 10px;
   height: 100%;
