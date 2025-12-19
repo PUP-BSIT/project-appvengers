@@ -1,11 +1,21 @@
 import { Injectable, signal } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SidebarService {
   isOpen = signal(false);
-  sidebarType = signal('expandable');
+  sidebarType = signal(this.getInitialSidebarType());
+
+  private getInitialSidebarType(): string {
+    if (typeof localStorage !== 'undefined') {
+      const storedType = localStorage.getItem('sidebarType');
+      if (storedType) {
+        return storedType;
+      }
+    }
+    return 'expandable'; // Default sidebar type
+  }
 
   toggle() {
     this.isOpen.set(!this.isOpen());
@@ -17,7 +27,9 @@ export class SidebarService {
 
   setSidebarType(type: string) {
     this.sidebarType.set(type);
-    console.log(`Sidebar type set to: ${type}`);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('sidebarType', type);
+    }
   }
 
   getSidebarType(): string {
