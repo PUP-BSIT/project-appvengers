@@ -282,4 +282,13 @@ public class TransactionController {
             )
         );
     }
+
+    @GetMapping
+    public ResponseEntity<List<BudgetListSummaryResponse>> getBudgets(
+        @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity.ok(
+            transactionService.getAllBudgetsSummary(user)
+        );
+    }
 }
