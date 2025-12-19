@@ -48,6 +48,11 @@ export class UpdateBudgetButton implements OnInit {
   deletedBudgetResponse = output<Budget[]>();
   categories = signal(<Category[]>[]);
 
+  // Snackbar signals
+  showNotification = signal(false);
+  isHidingNotification = signal(false);
+  notificationMessage = signal('');
+
   constructor() {
     this.budgetForm = this.formBuilder.group({
       category_id: [],
@@ -101,6 +106,7 @@ export class UpdateBudgetButton implements OnInit {
     this.budgetService.updateBudget(this.budgetId(), this.budgetForm.value)
       .subscribe((updatedBudget: Budget) => {
         this.updatedBudgetResponse.emit(updatedBudget);
+        this.showNotificationMessage("Budget updated successfully!");
         this.budgetForm.reset();
         this.closeModal();
       });
@@ -111,6 +117,7 @@ export class UpdateBudgetButton implements OnInit {
       .subscribe((updatedBudgets: Budget[]) => {
         this.deletedBudgetResponse.emit(updatedBudgets);
         this.budgetForm.reset();
+        this.showNotificationMessage("Budget deleted successfully!");
         this.closeModal();
       });
   }
@@ -138,5 +145,18 @@ export class UpdateBudgetButton implements OnInit {
   onDelete() {
     if (!this.budgetId()) return;
     this.deleteBudget();
+  }
+
+  showNotificationMessage(message: string) {
+    this.notificationMessage.set(message);
+    this.showNotification.set(true);
+    this.isHidingNotification.set(false);
+    setTimeout(() => {
+      this.isHidingNotification.set(true);
+      setTimeout(() => {
+        this.showNotification.set(false);
+        this.isHidingNotification.set(false);
+      }, 300);
+    }, 3000);
   }
 }
