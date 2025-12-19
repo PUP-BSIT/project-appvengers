@@ -8,9 +8,18 @@
           class="nav-logo" />
         <span class="brand-text ms-2">iBudget</span>
       </a>
-      <div class="ms-auto">
-        <a routerLink="/" class="btn btn-outline-primary go-to me-2">
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <a
+          href="#"
+          (click)="scrollToTop($event)"
+          class="btn btn-outline-primary go-to me-2">
           Home
+        </a>
+        <a
+          href="#features"
+          (click)="scrollToFeatures($event)"
+          class="btn btn-outline-primary features">
+          Features
         </a>
         <a
           href="#about"
@@ -19,6 +28,15 @@
           About Us
         </a>
       </div>
+    <script>
+      function scrollToFeatures(event) {
+        event.preventDefault();
+        const section = document.getElementById('features');
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    </script>
     </div>
   </nav>
 
@@ -62,6 +80,118 @@
       </div>
     </div>
   </main>
+
+  <!-- Features Section -->
+  <section id="features" class="features-section py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Features</h2>
+      <div class="features-row">
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-receipt-cutoff feature-icon mb-3"></i>
+          <h5 class="feature-title">Transaction Management</h5>
+          <p class="feature-desc">
+            Easily add, edit, and delete income and expense transactions with a
+            clean, intuitive interface.
+          </p>
+        </div>
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-tags feature-icon mb-3"></i>
+          <h5 class="feature-title">Smart Categorization</h5>
+          <p class="feature-desc">
+            Automatically categorize transactions to understand where your money
+            goes.
+          </p>
+        </div>
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-bullseye feature-icon mb-3"></i>
+          <h5 class="feature-title">Budget & Goal Setting</h5>
+          <p class="feature-desc">
+            Set financial goals and create budgets with progress tracking.
+          </p>
+        </div>
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-bell feature-icon mb-3"></i>
+          <h5 class="feature-title">Smart Notifications</h5>
+          <p class="feature-desc">
+            Stay informed about bills, budget limits, and financial milestones.
+          </p>
+        </div>
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-bar-chart-line feature-icon mb-3"></i>
+          <h5 class="feature-title">Visual Analytics</h5>
+          <p class="feature-desc">
+            Interactive charts and graphs powered by Chart.js for deep insights.
+          </p>
+        </div>
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-stars feature-icon mb-3"></i>
+          <h5 class="feature-title">Personalized Insights</h5>
+          <p class="feature-desc">
+            AI-driven recommendations based on your spending behavior.
+          </p>
+        </div>
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-shield-lock feature-icon mb-3"></i>
+          <h5 class="feature-title">Secure Account Management</h5>
+          <p class="feature-desc">
+            Bank-level security with JWT authentication and rate limiting.
+          </p>
+        </div>
+        <!-- Duplicate for seamless loop -->
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-receipt-cutoff feature-icon mb-3"></i>
+          <h5 class="feature-title">Transaction Management</h5>
+          <p class="feature-desc">
+            Easily add, edit, and delete income and expense transactions with a
+            clean, intuitive interface.
+          </p>
+        </div>
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-tags feature-icon mb-3"></i>
+          <h5 class="feature-title">Smart Categorization</h5>
+          <p class="feature-desc">
+            Automatically categorize transactions to understand where your money
+            goes.
+          </p>
+        </div>
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-bullseye feature-icon mb-3"></i>
+          <h5 class="feature-title">Budget & Goal Setting</h5>
+          <p class="feature-desc">
+            Set financial goals and create budgets with progress tracking.
+          </p>
+        </div>
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-bell feature-icon mb-3"></i>
+          <h5 class="feature-title">Smart Notifications</h5>
+          <p class="feature-desc">
+            Stay informed about bills, budget limits, and financial milestones.
+          </p>
+        </div>
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-bar-chart-line feature-icon mb-3"></i>
+          <h5 class="feature-title">Visual Analytics</h5>
+          <p class="feature-desc">
+            Interactive charts and graphs powered by Chart.js for deep insights.
+          </p>
+        </div>
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-stars feature-icon mb-3"></i>
+          <h5 class="feature-title">Personalized Insights</h5>
+          <p class="feature-desc">
+            AI-driven recommendations based on your spending behavior.
+          </p>
+        </div>
+        <div class="feature-card card h-100 text-center p-3">
+          <i class="bi bi-shield-lock feature-icon mb-3"></i>
+          <h5 class="feature-title">Secure Account Management</h5>
+          <p class="feature-desc">
+            Bank-level security with JWT authentication and rate limiting.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- About Us section -->
   <section id="about" #aboutSection class="about-section py-6">
