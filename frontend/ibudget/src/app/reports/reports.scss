@@ -448,8 +448,8 @@ $header-height: 70px;
 /* Tablet       */
 @media (min-width: 426px) and (max-width: 768px) {
   .reports-container {
-    margin-left: 0;
-    padding: 35px;
+    margin-left: -8px;
+    // padding: 35px;
     // padding-top: 110px;
   }
 
