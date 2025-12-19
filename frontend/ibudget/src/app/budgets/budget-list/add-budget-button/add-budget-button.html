@@ -23,12 +23,18 @@
               formControlName="category_id" 
               class="form-select mb-3"
               id="category_id"
+              [class.is-invalid]="isInvalid('category_id')"
               (change)="afterCategorySelection()">
               <option value="" selected disabled>-- Select Category --</option>
               @for(category of categories(); track $index) {
                 <option [value]="category.id">{{ category.name }}</option>
               }
             </select>
+            
+            <!--Validator Indicator for Category-->
+            @if(isInvalid('category_id')) {
+              <div class="text-danger mb-2">Category is required.</div>
+            }
             
             <label for="limit_amount">Set Budget</label>
             <div class="input-group mb-3">
@@ -38,22 +44,48 @@
                 class="form-control"
                 id="limit_amount"
                 type="number" 
-                min="0"/>
+                min="1"
+                [class.is-invalid]="isInvalid('limit_amount')"/>
             </div>
+
+            <!--Validator Indicator for Budget-->
+            @if(isInvalid('limit_amount')) {
+              @if(budgetForm.get('limit_amount')?.errors?.['required']) {
+                <div class="text-danger mb-2">
+                  Budget is required.
+                </div>
+              } @else if(budgetForm.get('limit_amount')?.errors?.['min']) {
+                <div class="text-danger mb-2">
+                  Budget is required and must be greater than 0.
+                </div>
+              }
+            }
 
             <label for="start_date">Start Date</label>
             <input 
               formControlName="start_date"
               class="form-control mb-3"
               id="start_date"
-              type="date"/>
+              type="date"
+              [class.is-invalid]="isInvalid('start_date')"/>
+
+            <!--Validator Indicator for Start Date-->
+            @if(isInvalid('start_date')) {
+              <div class="text-danger mb-2">Start Date is required.</div>
+            }
 
             <label for="end_date">End Date</label>
             <input 
               formControlName="end_date"
               class="form-control mb-3"
               id="end_date"
-              type="date"/>
+              type="date"
+              [class.is-invalid]="isInvalid('end_date')"/>
+            
+            <!--Validator Indicator for End Date-->
+            @if(isInvalid('end_date')) {
+              <div class="text-danger mb-2">End Date is required.</div>
+            }
 
             <!-- Hidden Current Amount -->
             <input formControlName="current_amount" type="hidden" value="0"/>
