@@ -157,6 +157,50 @@ main {
   }
 }
 
+.card.add-transaction-panel .btn.transaction-button {
+  background-color: peru;
+  font-weight: 500;
+  color: white;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: rgb(165, 107, 49);
+  }
+}
+
+.card.add-budget-panel .btn.budget-button {
+  background-color: teal;
+  font-weight: 500;
+  color: white;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: rgb(0, 100, 100);
+  }
+}
+
+.card.add-saving-panel .btn.saving-button {
+  background-color: rgb(37, 37, 250);
+  font-weight: 500;
+  color: white;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: rgb(31, 31, 130);
+  }
+}
+
+.card.reports-panel .btn.report-button {
+  background-color: rgb(255, 169, 63);
+  font-weight: 500;
+  color: white;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: rgb(180, 90, 0);
+  }
+}
+
 .card.greeting-panel {
   grid-area: greeting-panel;
 }
