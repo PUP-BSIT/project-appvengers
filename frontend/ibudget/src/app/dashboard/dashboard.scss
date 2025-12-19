@@ -10,7 +10,7 @@ main {
   grid-template-areas:
     "greeting-panel greeting-panel"
     "add-transaction-panel add-budget-panel"
-    "add-saving-panel add-saving-panel";
+    "add-saving-panel notifications-panel";
 }
 
 .card.greeting-panel {
@@ -103,6 +103,22 @@ main {
   }
 }
 
+.card.notifications-panel {
+  box-shadow: 0 4px 8px $card-drop-shadow;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  background-image: linear-gradient(-225deg, #DFFFCD 0%, #90F9C4 48%, #39F3BB 100%);
+  border: 1px solid #FFEEBA; // slightly darker yellow border
+
+  h2 {
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    margin-bottom: 15px;
+  }
+}
+
 .card.greeting-panel {
   grid-area: greeting-panel;
 }
@@ -117,6 +133,10 @@ main {
 
 .card.add-saving-panel {
   grid-area: add-saving-panel;
+}
+
+.card.notifications-panel {
+  grid-area: notifications-panel;
 }
 
 // Subtle pop-in animation for dashboard cards (non-distracting)
@@ -150,6 +170,7 @@ main {
   .card:nth-child(2) { animation-delay: 80ms; }
   .card:nth-child(3) { animation-delay: 160ms; }
   .card:nth-child(4) { animation-delay: 240ms; }
+  .card:nth-child(5) { animation-delay: 320ms; }
 }
 
 // Respect users who prefer reduced motion
