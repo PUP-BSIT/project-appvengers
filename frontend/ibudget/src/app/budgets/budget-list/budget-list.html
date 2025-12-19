@@ -12,44 +12,27 @@
     </div>
   </div>
 
-  <div class="budget-cards-container">
-    <div class="card budget-card">
-      <div class="card-body">
-        <div class="category-info-container">
-          <label class="mb-0"> Total Budgets </label>
-          <span class="text-black mb-0">
-            &#8369; {{ totalBudgetsAmount() | number:'1.0-0': 'en-US' }}
-          </span>
-
-          <label>
-            {{ getBudgetsCount() }} active budgets
-          </label>
-        </div>
+  <div class="summary-cards">
+    <div class="card total-budgets-card">
+      <div class="card-content">
+        <h3>Total Budgets</h3>
+        <p class="amount">&#8369; {{ totalBudgetsAmount() | number:'1.0-0': 'en-US' }}</p>
       </div>
+      <i class="bi bi-wallet-fill" style="color: #007bff; font-size: 2rem;"></i>
     </div>
-
-    <div class="card budget-card">
-      <div class="card-body">
-        <div class="category-info-container">
-          <label class="mb-0 text-secondary"> Total Spent </label>
-          <span class="mb-0">
-            &#8369; {{ totalSpentAmount() | number:'1.0-0': 'en-US' }}
-          </span>
-        </div>
+    <div class="card total-spent-card">
+      <div class="card-content">
+        <h3>Total Spent</h3>
+        <p class="amount">&#8369; {{ totalSpentAmount() | number:'1.0-0': 'en-US' }}</p>
       </div>
+      <i class="bi bi-graph-down-arrow" style="color: #dc3545; font-size: 2rem;"></i>
     </div>
-
-    <div class="card budget-card">
-      <div class="card-body">
-        <div class="category-info-container">
-          <label class="mb-0 text-secondary"> Remaining </label>
-          <span class="mb-0 text-success">
-            &#8369; 
-            {{ totalBudgetsAmount() - 
-                totalSpentAmount() | number:'1.0-0': 'en-US' }}
-          </span>
-        </div>
+    <div class="card remaining-card">
+      <div class="card-content">
+        <h3>Remaining</h3>
+        <p class="amount">&#8369; {{ totalBudgetsAmount() - totalSpentAmount() | number:'1.0-0': 'en-US' }}</p>
       </div>
+      <i class="bi bi-cash-stack" style="color: #28a745; font-size: 2rem;"></i>
     </div>
   </div>
   
