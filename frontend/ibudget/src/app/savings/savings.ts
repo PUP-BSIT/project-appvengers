@@ -23,7 +23,7 @@ export class Savings implements OnInit {
   toastMessage = signal('');
   toastType = signal<'success' | 'error'>('success');
   // Pagination state
-  pageSize = signal(4);
+  pageSize = signal(3);
   currentPage = signal(1);
   router = inject(Router);
 
