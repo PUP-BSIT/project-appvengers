@@ -3,10 +3,6 @@
 
 <main class="notifications-container">
   <div class="notifications-header">
-    <button class="btn-mark-all" (click)="markAllAsRead()">
-      <i class="fas fa-check-double"></i>
-        Mark all as read
-    </button>
     <div class="notifications-stats">
       <span>Showing {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ Math.min(currentPage * itemsPerPage, filteredNotifications.length) }} of {{ filteredNotifications.length }}</span>
     </div>
@@ -14,37 +10,47 @@
 
   <!-- Filter Tabs -->
   <div class="filter-tabs">
+    <div class="filter-tabs-left">
+      <button 
+        class="filter-tab" 
+        [class.active]="activeFilter === 'all'"
+        (click)="setFilter('all')">
+        <i class="fas fa-bell"></i>
+        All
+        <span class="tab-count">{{ getFilterCount('all') }}</span>
+      </button>
+      <button 
+        class="filter-tab" 
+        [class.active]="activeFilter === 'budgets'"
+        (click)="setFilter('budgets')">
+        <i class="fas fa-wallet"></i>
+        Budgets
+        <span class="tab-count">{{ getFilterCount('budgets') }}</span>
+      </button>
+      <button 
+        class="filter-tab" 
+        [class.active]="activeFilter === 'savings'"
+        (click)="setFilter('savings')">
+        <i class="fas fa-piggy-bank"></i>
+        Savings
+        <span class="tab-count">{{ getFilterCount('savings') }}</span>
+      </button>
+      <button 
+        class="filter-tab" 
+        [class.active]="activeFilter === 'unread'"
+        (click)="setFilter('unread')">
+        <i class="fas fa-envelope"></i>
+        Unread
+        <span class="tab-count">{{ getFilterCount('unread') }}</span>
+      </button>
+    </div>
+    
     <button 
-      class="filter-tab" 
-      [class.active]="activeFilter === 'all'"
-      (click)="setFilter('all')">
-      <i class="fas fa-bell"></i>
-      All
-      <span class="tab-count">{{ getFilterCount('all') }}</span>
-    </button>
-    <button 
-      class="filter-tab" 
-      [class.active]="activeFilter === 'budgets'"
-      (click)="setFilter('budgets')">
-      <i class="fas fa-wallet"></i>
-      Budgets
-      <span class="tab-count">{{ getFilterCount('budgets') }}</span>
-    </button>
-    <button 
-      class="filter-tab" 
-      [class.active]="activeFilter === 'savings'"
-      (click)="setFilter('savings')">
-      <i class="fas fa-piggy-bank"></i>
-      Savings
-      <span class="tab-count">{{ getFilterCount('savings') }}</span>
-    </button>
-    <button 
-      class="filter-tab" 
-      [class.active]="activeFilter === 'unread'"
-      (click)="setFilter('unread')">
-      <i class="fas fa-envelope"></i>
-      Unread
-      <span class="tab-count">{{ getFilterCount('unread') }}</span>
+      class="filter-tab mark-all-read" 
+      (click)="markAllAsRead()"
+      [disabled]="getFilterCount('unread') === 0">
+      <i class="fas fa-check-double"></i>
+      Mark all as read
     </button>
   </div>
 
