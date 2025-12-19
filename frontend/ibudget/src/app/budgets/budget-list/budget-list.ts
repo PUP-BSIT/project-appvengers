@@ -7,6 +7,7 @@ import { AddBudgetButton } from "./add-budget-button/add-budget-button";
 import { UpdateBudgetButton } from "./update-budget-button/update-budget-button";
 import { BudgetProgressBar } from "./budget-progress-bar/budget-progress-bar";
 import { Router } from '@angular/router';
+import { BudgetTransactionsService } from '../../../services/budget.transactions.service';
 
 @Component({
   selector: 'app-budget-list',
@@ -24,14 +25,25 @@ export class BudgetList implements OnInit {
   budgets = signal<Budget[]>([]);
   budgetService = inject(BudgetService);
   router = inject(Router);
+  budgetTransactionsService = inject(BudgetTransactionsService);
 
   ngOnInit(): void {
     this.getBudgets();
     console.log(this.budgets());
   }
 
+  // Fetch budget summary for each budget and aggregate them
   getBudgets() {
     this.budgetService.getBudgets().subscribe(budgets => {
+      budgets.forEach(b => {
+        this.budgetTransactionsService.getBudgetSummary(b.id).subscribe({
+          next: summary => {
+            b.limit_amount = summary.limitAmount;
+            b.current_amount = summary.totalExpenses;
+          },
+          error: err => console.error('Summary failed for budget', b.id, err)
+        });
+      });
       this.budgets.set(budgets);
     });
   }
