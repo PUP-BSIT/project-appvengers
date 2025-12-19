@@ -26,6 +26,7 @@ export class BudgetList implements OnInit {
   router = inject(Router);
 
   ngOnInit(): void {
+    this.getBudgets();
     this.getBudgetsSummary();
     console.log(this.budgets());
   }
