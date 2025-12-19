@@ -42,11 +42,11 @@ public class NotificationService {
     private final UserRepository userRepository;
     private final NotificationWebSocketController webSocketController;
 
-    /**
+/**
      * Scheduled task to generate notifications for all users.
-     * Runs every 5 minutes.
+     * Runs every 60 seconds (1 minute).
      */
-    @org.springframework.scheduling.annotation.Scheduled(fixedRate = 300000)
+    @org.springframework.scheduling.annotation.Scheduled(fixedRate = 60000)
     public void generateAllNotifications() {
         List<User> users = userRepository.findAll();
         for (User user : users) {
@@ -133,13 +133,15 @@ public class NotificationService {
 
                 double remainingPercent = ((limitAmount - totalSpent) / limitAmount) * 100;
 
-                // Check if budget is exceeded
+// Check if budget is exceeded
                 if (totalSpent >= limitAmount) {
                     createBudgetExceededNotification(userId, budget, categoryName, totalSpent);
                 }
-                // Check if budget is running low (10-20% remaining)
-                else if (remainingPercent >= 10 && remainingPercent <= 20) {
-                    createBudgetWarningNotification(userId, budget, categoryName, totalSpent, remainingPercent);
+                // Check if budget is running low (50% or more spent but not exceeded)
+                // This allows frontend to filter based on user's threshold preference
+                else if (remainingPercent <= 50) {
+                    double spentPercent = 100 - remainingPercent;
+                    createBudgetWarningNotification(userId, budget, categoryName, totalSpent, remainingPercent, spentPercent);
                 }
             }
         }
@@ -272,11 +274,11 @@ public class NotificationService {
         sendWebSocketNotification(userId, savedNotification, categoryName);
     }
 
-    /**
+/**
      * Create a notification for budget running low.
      */
     private void createBudgetWarningNotification(int userId, Budget budget, String categoryName, double totalSpent,
-            double remainingPercent) {
+            double remainingPercent, double spentPercent) {
         // Check if notification already exists
         if (notificationRepository.existsNotification(userId, NotificationType.BUDGET_WARNING,
                 budget.getBudgetId())) {
@@ -289,8 +291,8 @@ public class NotificationService {
         notification.setUrgency(Urgency.MEDIUM); // Warning = medium urgency
         notification.setTitle("Budget Warning");
         notification.setMessage(String.format(
-                "You're close to exceeding your %s budget. Only %.0f%% remaining (₱%.2f of ₱%d).",
-                categoryName, remainingPercent, budget.getLimitAmount() - totalSpent, budget.getLimitAmount()));
+                "You've spent %.0f%% of your %s budget. Only %.0f%% remaining (₱%.2f of ₱%d).",
+                spentPercent, categoryName, remainingPercent, budget.getLimitAmount() - totalSpent, budget.getLimitAmount()));
         notification.setReferenceId(budget.getBudgetId());
         notification.setAmount(budget.getLimitAmount() - totalSpent);
         notification.setCategory(categoryName);
