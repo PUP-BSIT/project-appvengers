@@ -2,39 +2,74 @@
 <app-header></app-header>
 
 <main class="dashboard-container">
-  <div class="content-container">
-    <div class="card">
-      <div class="card-body">
-        <div class="budget-info-container">
-          @if (username) {
-            <h2>Hello, {{ username }}!</h2>
-          } @else {
-            <p class="placeholder-glow">
-              <span class="placeholder col-12"></span>
-            </p>
-          }
-          <p>Your remaining budget is</p>
-        </div>
+  <!-- Greeting Panel -->
+  <div class="card greeting-panel">
+    <div class="card-body">
+      <h1>Welcome to iBudget!</h1>
+      <h2>Let's get you started.</h2>
+    </div>
+  </div>
 
-        <div class="budget-num-container">
-          <h3 class="budget">&#8369;{{ remainingBudget | number:'1.2-2' }}</h3>
-        </div>
+  <!-- Set Transaction Panel -->
+  <div class="card add-transaction-panel">
+    <div class="card-body d-flex justify-content-between align-items-center">
+      <div>
+        <h3>Add your first transaction</h3>
+        <p>
+          Use the "Add Transaction" button to start tracking your 
+          income and expenses.
+        </p>
+
+        <a class="btn btn-primary" routerLink="/transactions">
+          Add Transaction
+        </a>
+      </div>
+
+      <div class="icon-container">
+        <i class="fas fa-plus-circle fa-5x"></i>
       </div>
     </div>
+  </div>
 
-    <div class="expense-chart-panel">
-      <app-expense-chart></app-expense-chart>
+  <!-- Set Budget Panel -->
+  <div class="card add-budget-panel">
+    <div class="card-body d-flex justify-content-between align-items-center">
+      <div>
+        <h3>Set your budget</h3>
+        <p>
+          Define your monthly budget to help manage your spending 
+          effectively.
+        </p>
+
+        <a class="btn btn-success" routerLink="/budgets">
+          Set Budget
+        </a>
+      </div>
+
+      <div class="icon-container">
+        <i class="fas fa-wallet fa-5x"></i>
+      </div>
     </div>
+  </div>
 
-    <div class="income-chart-panel">
-      <app-income-chart></app-income-chart>
-    </div>
+  <!-- Set Saving Panel -->
+  <div class="card add-saving-panel">
+    <div class="card-body d-flex justify-content-between align-items-center">
+      <div>
+        <h3>Start saving</h3>
+        <p>
+          Create a savings goal to help you reach your financial 
+          objectives.
+        </p>
 
-    <!-- TODO: Add chart related to spendings of the user -->
-    <div class="spending-panel">
-      <app-spending-chart></app-spending-chart>
+        <a class="btn btn-warning" routerLink="/savings">
+          Create Saving Goal
+        </a>
+      </div>
+
+      <div class="icon-container">
+        <i class="fas fa-piggy-bank fa-5x"></i>
+      </div>
     </div>
   </div>
 </main>
-
-

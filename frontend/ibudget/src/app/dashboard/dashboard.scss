@@ -1,205 +1,139 @@
 @use '../../styles/mixins' as m;
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
 $card-drop-shadow: #00000040;
 $page-margin-left: 100px;
 
 main {
-  @include m.page-layout(10px, auto);
-}
-
-.content-container {
-  padding: 10px;
-  min-height: 100vh;
+  @include m.page-layout(10px, 100%);
   display: grid;
-  grid-template-areas: 
-  "item1 item1"
-  "item2 item3"
-  "item4 item4";
-  gap: .5em;
+  grid-template-areas:
+    "greeting-panel greeting-panel"
+    "add-transaction-panel add-budget-panel"
+    "add-saving-panel add-saving-panel";
 }
 
-.card {
-  width: 95%;
-  height: 12em;
-  max-height: 12em;
-  box-shadow: 2px 2px 3px $card-drop-shadow;
-  grid-area: item1;
-  margin: 0 auto;
-  align-self: start;
-}
+.card.greeting-panel {
+  box-shadow: 0 4px 8px $card-drop-shadow;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: white;
+  margin-left: 20px;
+  margin-right: 20px;
+  background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
 
-.expense-chart-panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  grid-area: item2;
-}
-
-.income-chart-panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  grid-area: item3;
-}
-
-.spending-panel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  grid-area: item4;
-  width: 100%;
-}
-
-.card-body {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 30px;
-}
-
-.budget-num-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.budget {
-  color: #3498db;
-}
-
-@media (max-width: 768px) {
-  .content-container {
-    margin-left: 0;
-    grid-template-areas: 
-    "item1"
-    "item2"
-    "item3"
-    "item4"; 
-    gap: 3em;
-    height: 100%;
-    width: auto;
-    justify-content: center;
+  h1, h2 {
+    text-shadow: 1px 1px 2px #00000080;
+    font-family: 'Atkinson Hyperlegible', sans-serif;
   }
 
+  h1 {
+    font-size: 3rem;
+  }
+}
+
+.card.add-transaction-panel {
+  box-shadow: 0 4px 8px $card-drop-shadow;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  background-image: linear-gradient(to top, #e6b980 0%, #eacda3 100%);
+
+  h2 {
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    margin-bottom: 15px;
+  }
+}
+
+.card.add-budget-panel {
+  box-shadow: 0 4px 8px $card-drop-shadow;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  background-image: linear-gradient(45deg, #93a5cf 0%, #e4efe9 100%);
+
+  h2 {
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    margin-bottom: 15px;
+  }
+}
+
+.card.add-saving-panel {
+  box-shadow: 0 4px 8px $card-drop-shadow;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  background-image: linear-gradient(to top, #505285 0%, #585e92 12%, #65689f 25%, #7474b0 37%, #7e7ebb 50%, #8389c7 62%, #9795d4 75%, #a2a1dc 87%, #b5aee4 100%);
+
+  h2 {
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    margin-bottom: 15px;
+  }
+}
+
+.card.greeting-panel {
+  grid-area: greeting-panel;
+}
+
+.card.add-transaction-panel {
+  grid-area: add-transaction-panel;
+}
+
+.card.add-budget-panel {
+  grid-area: add-budget-panel;
+}
+
+.card.add-saving-panel {
+  grid-area: add-saving-panel;
+}
+
+// Subtle pop-in animation for dashboard cards (non-distracting)
+@keyframes popIn {
+  0% {
+    transform: translateY(8px) scale(0.98);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-2px) scale(1.02);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.dashboard-container {
   .card {
-    width: 85%;
-    height: 10em;
-    max-height: 10em;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    will-change: transform, opacity;
+    transform-origin: center;
+    opacity: 0;
+    animation: popIn 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    // slight shadow/perf hint
+    backface-visibility: hidden;
   }
 
-  .expense-chart-panel {
-    height: auto;
-    width: auto;
-  }
-
-  .income-chart-panel {
-    height: auto;
-    width: auto;
-  }
-
-  .history-panel {
-    width: auto;
-    height: auto;
-  }
-
-  .budget-info-container {
-    text-align: center;
-    grid-area: header-part;
-  }
-
-  .budget-num-container {
-    text-align: center;
-    grid-area: content-part;
-
-    h3 {
-      margin-bottom: 0;
-    }
-  }
-
-  .card-body {
-    display: grid;
-    grid-template-areas:
-      "header-part"
-      "content-part";
-  }
+  // Gentle stagger so cards don't all pop at once
+  .card:nth-child(1) { animation-delay: 0ms; }
+  .card:nth-child(2) { animation-delay: 80ms; }
+  .card:nth-child(3) { animation-delay: 160ms; }
+  .card:nth-child(4) { animation-delay: 240ms; }
 }
 
-@media (min-width: 769px) and (max-width: 1440px) {
-  main {
-    @include m.page-layout(10px, auto);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .content-container {
-    grid-template-areas: 
-    "item1 item1"
-    "item2 item3"
-    "item4 item4";  
-    height: 100%;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .card {
-    width: 100%;
-    height: 11em;
-    max-height: 11em;
-    margin: auto;
-  }
-
-  .card-body {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .expense-chart-panel {
-    height: auto;
-    width: auto;
-  }
-
-  .income-chart-panel {
-    height: auto;
-    width: auto;
-  }
-
-  .history-panel {
-    width: auto;
-    height: auto;
-  }
-}
-
-@media (max-width: 320px) {
-  main {
-    margin-left: 0;
-    padding: 10px;
-    width: auto !important;
-  }
-
-  .card {
-    width: 300px;
-    height: 10em !important;
-    max-height: 10em !important;
-  }
-}
-
-@media (min-width: 321px) and (max-width: 768px) {
-  main {
-    margin-left: 0;
-    padding: 10px;
-    width: auto !important;
-  }
-
-  .card {
-    width: 100%;
-    height: 10em !important;
-    max-height: 10em !important;
+// Respect users who prefer reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-container .card {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    will-change: auto;
   }
 }
