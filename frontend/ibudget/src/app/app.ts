@@ -4,10 +4,11 @@ import { NgxLoadingBar } from '@ngx-loading-bar/core';
 import { ChatbotSidebar } from './chatbot-sidebar/chatbot-sidebar';
 import { ChatbotService } from './chatbot-sidebar/chatbot.service';
 import { AuthService } from '../services/auth.service';
+import { ToastContainer } from './toast/toast';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NgxLoadingBar, ChatbotSidebar],
+  imports: [RouterOutlet, NgxLoadingBar, ChatbotSidebar, ToastContainer],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
