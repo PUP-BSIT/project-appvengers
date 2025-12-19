@@ -3,8 +3,8 @@ import { Component, signal, inject, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { 
+import { takeUntil, finalize } from 'rxjs/operators';
+import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
@@ -25,7 +25,7 @@ import {
 export class Login implements OnDestroy {
   loginForm: FormGroup;
   hidePassword = signal(true);
-  submitted = signal(false);
+  isSubmitting = signal(false);
   errorMessage = signal('');
 
   private destroy$ = new Subject<void>();
@@ -42,40 +42,45 @@ export class Login implements OnDestroy {
   }
 
   onLogin(): void {
-    this.submitted.set(true);
+    if (this.loginForm.invalid || this.isSubmitting()) {
+      return;
+    }
+
+    this.isSubmitting.set(true);
     this.errorMessage.set('');
 
-    if (this.loginForm.valid) {
-      const loginData = this.loginForm.value;
+    const loginData = this.loginForm.value;
 
-      this.authService.login(loginData)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (response) => {
-            if (response.success) {
-              console.log('Login successful:', response);
-              this.router.navigate(['/dashboard']);
-            } else {
-              this.errorMessage.set(response.message || 'Login failed');
-            }
-          },
-          error: (err) => {
-            console.error('Login failed:', err);
-            if (err.status === 429) {
-              this.errorMessage.set(
-                'Too many login attempts. Please try again later.');
-            } else if(err.status === 401 && err.error?.lockedUntil) {
-              const lockedUntil = new Date(err.error.lockedUntil);
-              const minutesLeft = Math.ceil(
-                (lockedUntil.getTime() - Date.now()) / 60000);
-              this.errorMessage.set(
-                `Account locked. Try again in ${minutesLeft} minutes.`);
-            } else {
-              this.errorMessage.set('Invalid email or password');
-            }
+    this.authService.login(loginData)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.isSubmitting.set(false))
+      )
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            console.log('Login successful:', response);
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.errorMessage.set(response.message || 'Login failed');
           }
-        });
-    }
+        },
+        error: (err) => {
+          console.error('Login failed:', err);
+          if (err.status === 429) {
+            this.errorMessage.set(
+              'Too many login attempts. Please try again later.');
+          } else if(err.status === 401 && err.error?.lockedUntil) {
+            const lockedUntil = new Date(err.error.lockedUntil);
+            const minutesLeft = Math.ceil(
+              (lockedUntil.getTime() - Date.now()) / 60000);
+            this.errorMessage.set(
+              `Account locked. Try again in ${minutesLeft} minutes.`);
+          } else {
+            this.errorMessage.set('Invalid email or password');
+          }
+        }
+      });
   }
 
   ngOnDestroy(): void {

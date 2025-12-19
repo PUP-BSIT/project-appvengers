@@ -79,7 +79,16 @@
           </a>
         </div>
 
-        <button type="submit" class="btn login-button w-100">Login</button>
+        <button type="submit" class="btn login-button w-100" [disabled]="isSubmitting()">
+          @if (isSubmitting()) {
+            <span 
+              class="spinner-border spinner-border-sm" 
+              aria-hidden="true"></span>
+            <span role="status"> Loading...</span>
+          } @else {
+            <span>Login</span>
+          }
+        </button>
       </form>
 
       <!-- Signup Link -->
