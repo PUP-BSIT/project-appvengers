@@ -90,7 +90,7 @@ export class Notifications implements OnInit, OnDestroy {
     switch (this.activeFilter) {
       case 'budgets':
         return allNotifications.filter(n => 
-          n.type === 'BUDGET_WARNING' || n.type === 'BUDGET_EXCEEDED'
+          n.type === 'BUDGET_WARNING' || n.type === 'BUDGET_EXCEEDED' || n.type === 'BUDGET_NEAR_END'
         );
       case 'savings':
         return allNotifications.filter(n => 

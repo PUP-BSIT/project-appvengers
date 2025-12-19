@@ -140,10 +140,16 @@ export const routes: Routes = [
       .then(m => m.Account),
     canActivate: [authGuard]
   },
-  {
+{
     path: 'settings/security/:id',
     loadComponent: () => import('./settings/security/security')
       .then(m => m.Security)
+  },
+  {
+    path: 'settings/notifications',
+    loadComponent: () => import('./settings/notification-preferences/notification-preferences')
+      .then(m => m.NotificationPreferencesComponent),
+    canActivate: [authGuard]
   },
   {
     path: '**', loadComponent: () =>

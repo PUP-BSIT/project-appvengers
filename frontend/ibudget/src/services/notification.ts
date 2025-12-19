@@ -7,6 +7,7 @@ import { environment } from '../environments/environment';
 import { ConfettiService } from './confetti.service';
 import { WebSocketService } from './websocket.service';
 import { ToastService } from './toast.service';
+import { NotificationPreferencesService } from './notification-preferences.service';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,7 @@ export class NotificationService implements OnDestroy {
     ['warning', 'fas fa-exclamation-triangle'],
     ['BUDGET_EXCEEDED', 'fas fa-bell'],
     ['alert', 'fas fa-bell'],
+    ['BUDGET_NEAR_END', 'fas fa-calendar-times'],
     ['SAVINGS_DEADLINE', 'fas fa-info-circle'],
     ['info', 'fas fa-info-circle'],
     ['SAVINGS_COMPLETED', 'fas fa-trophy'],
@@ -50,6 +52,7 @@ export class NotificationService implements OnDestroy {
     ['warning', 'warning'],
     ['BUDGET_EXCEEDED', 'alert'],
     ['alert', 'alert'],
+    ['BUDGET_NEAR_END', 'warning'],
     ['SAVINGS_DEADLINE', 'info'],
     ['info', 'info'],
     ['SAVINGS_COMPLETED', 'success'],
@@ -64,10 +67,12 @@ export class NotificationService implements OnDestroy {
   ) {
     this.router = inject(Router);
     this.toastService = inject(ToastService);
+    this.preferencesService = inject(NotificationPreferencesService);
   }
 
   private router: Router;
   private toastService: ToastService;
+  private preferencesService: NotificationPreferencesService;
 
   /**
    * Initialize WebSocket connection for real-time notifications.
@@ -100,6 +105,12 @@ export class NotificationService implements OnDestroy {
   private handleWebSocketNotification(notification: Notification): void {
     console.log('📬 Processing WebSocket notification:', notification.title);
     
+    // Check if this notification type is enabled in preferences
+    if (!this.preferencesService.isNotificationEnabled(notification.type)) {
+      console.log('🔕 Notification type disabled by preferences:', notification.type);
+      return;
+    }
+    
     // Add to the beginning of the list
     const currentNotifications = this.notificationsSubject.value;
     
@@ -116,8 +127,10 @@ export class NotificationService implements OnDestroy {
     // Track this notification ID
     this.previousNotificationIds.add(notification.id);
     
-    // Play notification sound
-    this.confettiService.playNotificationSound();
+    // Play notification sound (if enabled in preferences)
+    if (this.preferencesService.isSoundEnabled()) {
+      this.confettiService.playNotificationSound();
+    }
     
     // Trigger confetti for special notifications
     if (notification.type === 'SAVINGS_COMPLETED') {
@@ -128,8 +141,8 @@ export class NotificationService implements OnDestroy {
       this.confettiService.milestone();
     }
 
-    // Show toast notification (only if not on notifications page)
-    if (!this.router.url.includes('/notifications')) {
+    // Show toast notification (only if enabled and not on notifications page)
+    if (this.preferencesService.isToastEnabled() && !this.router.url.includes('/notifications')) {
       this.showNotificationToast(notification);
     }
   }
@@ -165,6 +178,7 @@ export class NotificationService implements OnDestroy {
       case 'BUDGET_EXCEEDED':
         return 'error';
       case 'BUDGET_WARNING':
+      case 'BUDGET_NEAR_END':
         return 'warning';
       case 'SAVINGS_COMPLETED':
       case 'SAVINGS_MILESTONE_50':
@@ -197,7 +211,7 @@ export class NotificationService implements OnDestroy {
     return this.webSocketService.isConnected();
   }
 
-  fetchNotifications(): void {
+fetchNotifications(): void {
     this.http.get<Notification[]>(this.apiUrl)
       .subscribe({
         next: (data) => {
@@ -209,7 +223,9 @@ export class NotificationService implements OnDestroy {
           // Play sound if there are new unread notifications (but not on first load)
           // Note: With WebSocket, this should rarely trigger since real-time updates handle new notifications
           if (newNotifications.length > 0 && this.previousNotificationIds.size > 0) {
-            this.confettiService.playNotificationSound();
+            if (this.preferencesService.isSoundEnabled()) {
+              this.confettiService.playNotificationSound();
+            }
             console.log('🔔 New notification(s) from HTTP fetch:', newNotifications.length);
           }
 

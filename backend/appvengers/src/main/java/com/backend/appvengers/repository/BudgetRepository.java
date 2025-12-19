@@ -1,5 +1,6 @@
 package com.backend.appvengers.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,8 @@ public interface BudgetRepository extends JpaRepository<Budget, Integer> {
     "JOIN tbl_category tc ON tb.category_id = tc.category_id WHERE tb.deleted_at " + 
     "IS NULL AND tb.user_id = :userId", nativeQuery = true)
   List<BudgetWithCategoryResponse> findBudgetsWithCategoryByUserId(@Param("userId") int userId);
+
+  // Find budgets ending on a specific date
+  @Query(value = "SELECT * FROM tbl_budget WHERE deleted_at IS NULL AND end_date = :endDate", nativeQuery = true)
+  List<Budget> findByEndDate(@Param("endDate") LocalDate endDate);
 }

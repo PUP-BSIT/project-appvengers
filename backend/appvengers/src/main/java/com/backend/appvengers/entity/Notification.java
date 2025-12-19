@@ -24,6 +24,7 @@ public class Notification {
     public enum NotificationType {
         BUDGET_WARNING,
         BUDGET_EXCEEDED,
+        BUDGET_NEAR_END,
         SAVINGS_DEADLINE,
         SAVINGS_COMPLETED,
         SAVINGS_MILESTONE_50,
