@@ -83,66 +83,45 @@ public class NotificationService {
 
     /**
      * Check all active budgets for the user and generate warnings/alerts.
+     * Uses budget_id to sum transactions, so ALL transactions linked to a budget
+     * are counted regardless of their category.
      */
     private void generateBudgetNotifications(int userId, User user) {
         List<Budget> budgets = budgetRepository.findActiveBudgetsByUserId(userId);
         LocalDate today = LocalDate.now();
 
-        // Group budgets by date range to minimize DB queries
-        java.util.Map<String, java.util.List<Budget>> budgetsByRange = new java.util.HashMap<>();
         for (Budget budget : budgets) {
             // Skip budgets outside their date range
             if (today.isBefore(budget.getStartDate()) || today.isAfter(budget.getEndDate())) {
                 continue;
             }
-            String key = budget.getStartDate().toString() + "|" + budget.getEndDate().toString();
-            budgetsByRange.computeIfAbsent(key, k -> new java.util.ArrayList<>()).add(budget);
-        }
 
-        for (java.util.Map.Entry<String, java.util.List<Budget>> entry : budgetsByRange.entrySet()) {
-            java.util.List<Budget> rangeBudgets = entry.getValue();
-            if (rangeBudgets.isEmpty()) continue;
+            // Get category name for this budget (for display purposes)
+            String categoryName = getCategoryName(budget.getCategoryId());
 
-            LocalDate startDate = rangeBudgets.get(0).getStartDate();
-            LocalDate endDate = rangeBudgets.get(0).getEndDate();
-
-            // Fetch all expenses for this date range in one query
-            List<Object[]> expenses = transactionRepository.findMonthlyExpenseByCategoryAndDateRange(
-                    user, startDate, endDate);
-
-            java.util.Map<String, Double> expenseMap = new java.util.HashMap<>();
-            for (Object[] row : expenses) {
-                String cat = (String) row[0];
-                Double amt = ((Number) row[1]).doubleValue();
-                expenseMap.put(cat, amt);
+            // Get total spent using budget_id - counts ALL transactions linked to this budget
+            Double totalSpent = transactionRepository.sumByBudgetId(budget.getBudgetId());
+            if (totalSpent == null) {
+                totalSpent = 0.0;
             }
 
-            for (Budget budget : rangeBudgets) {
-                // Get category name for this budget
-                String categoryName = getCategoryName(budget.getCategoryId());
+            double limitAmount = budget.getLimitAmount();
 
-                // Get total spent from map
-                Double totalSpent = expenseMap.getOrDefault(categoryName, 0.0);
+            // Guard against division by zero
+            if (limitAmount <= 0) {
+                continue;
+            }
 
-                double limitAmount = budget.getLimitAmount();
+            double remainingPercent = ((limitAmount - totalSpent) / limitAmount) * 100;
 
-                // Guard against division by zero
-                if (limitAmount <= 0) {
-                    continue;
-                }
-
-                double remainingPercent = ((limitAmount - totalSpent) / limitAmount) * 100;
-
-// Check if budget is exceeded
-                if (totalSpent >= limitAmount) {
-                    createBudgetExceededNotification(userId, budget, categoryName, totalSpent);
-                }
-                // Check if budget is running low (50% or more spent but not exceeded)
-                // This allows frontend to filter based on user's threshold preference
-                else if (remainingPercent <= 50) {
-                    double spentPercent = 100 - remainingPercent;
-                    createBudgetWarningNotification(userId, budget, categoryName, totalSpent, remainingPercent, spentPercent);
-                }
+            // Check if budget is exceeded
+            if (totalSpent >= limitAmount) {
+                createBudgetExceededNotification(userId, budget, categoryName, totalSpent);
+            }
+            // Check if budget is running low (50% or more spent but not exceeded)
+            else if (remainingPercent <= 50) {
+                double spentPercent = 100 - remainingPercent;
+                createBudgetWarningNotification(userId, budget, categoryName, totalSpent, remainingPercent, spentPercent);
             }
         }
     }
@@ -150,6 +129,7 @@ public class NotificationService {
     /**
      * Check all active budgets for periods ending in 3 days.
      * Notifies users to review their spending before the budget period ends.
+     * Uses budget_id to sum transactions for accurate spending totals.
      */
     private void generateBudgetNearEndNotifications(int userId) {
         LocalDate today = LocalDate.now();
@@ -169,23 +149,13 @@ public class NotificationService {
                 continue;
             }
 
-            // Get category name
+            // Get category name (for display purposes)
             String categoryName = getCategoryName(budget.getCategoryId());
 
-            // Calculate spent amount for this budget period
-            User user = userRepository.findById((long) userId).orElse(null);
-            if (user == null) continue;
-
-            List<Object[]> expenses = transactionRepository.findMonthlyExpenseByCategoryAndDateRange(
-                    user, budget.getStartDate(), budget.getEndDate());
-
-            double totalSpent = 0.0;
-            for (Object[] row : expenses) {
-                String cat = (String) row[0];
-                if (cat.equals(categoryName)) {
-                    totalSpent = ((Number) row[1]).doubleValue();
-                    break;
-                }
+            // Get total spent using budget_id - counts ALL transactions linked to this budget
+            Double totalSpent = transactionRepository.sumByBudgetId(budget.getBudgetId());
+            if (totalSpent == null) {
+                totalSpent = 0.0;
             }
 
             createBudgetNearEndNotification(userId, budget, categoryName, totalSpent);
