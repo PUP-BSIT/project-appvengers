@@ -26,38 +26,29 @@
            [class.mobile-nav]="menuOpen"
            [class.d-none]="!menuOpen && isMobile()">
         <a
-          href="#"
+          href="#home"
           (click)="scrollToTop($event); menuOpen = false"
           class="btn btn-outline-primary go-to me-2">
-          Home
+            Home
         </a>
         <a
           href="#features"
           (click)="scrollToFeatures($event); menuOpen = false"
           class="btn btn-outline-primary features">
-          Features
+            Features
         </a>
         <a
           href="#about"
           (click)="scrollToAbout($event); menuOpen = false"
           class="btn btn-outline-primary about">
-          About Us
+            About Us
         </a>
       </div>
-    <script>
-      function scrollToFeatures(event) {
-        event.preventDefault();
-        const section = document.getElementById('features');
-        if (section) {
-          section.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
-    </script>
     </div>
   </nav>
 
   <main class="landing-container">
-    <div class="container">
+    <div id="home" class="container">
       <div class="row align-items-center min-vh-75">
         <div class="col-lg-6 col-md-6 hero-right">
           <div class="brand display-3 fw-bold">
