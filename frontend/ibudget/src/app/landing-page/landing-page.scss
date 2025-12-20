@@ -1,3 +1,13 @@
+/* Fade-in animation for features section */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
+}
+.fade-in-section.visible {
+  opacity: 1;
+  transform: none;
+}
 $card-bg: rgba(255, 255, 255, 0.8);
 $text-dark: #1e293b;
 $text-muted: #64748b;
