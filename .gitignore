@@ -7,3 +7,8 @@
 AGENTS.md
 GEMINI.md
 QWEN.md
+
+# OpenCode/OpenAgent related files
+tasks/
+context/
+.tmp/
