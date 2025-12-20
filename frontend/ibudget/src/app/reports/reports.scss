@@ -53,9 +53,9 @@ $header-height: 70px;
   }
 }
 
-.tab-content {
-  padding: 20px 0;
-}
+// .tab-content {
+//   padding: 10px 0;
+// }
 
 .overall-computation {
   background: white;
@@ -98,18 +98,18 @@ $header-height: 70px;
 }
 
 .overall-computation .charts-section {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
   margin-top: 24px;
-  justify-content: center;
-  align-items: flex-start;
+  align-items: stretch;
+  justify-items: stretch;
 }
 
 .overall-computation .chart-card {
-  flex: 1 1 0;
+  width: 100%;
   min-width: 0;
-  max-width: 400px;
+  max-width: none;
 }
 
 .overall-title {
@@ -372,8 +372,10 @@ $header-height: 70px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  padding: 20px;
+  padding: 15px;
   border: 1px solid #f0f0f0;
+  width: 100%;
+  max-width: none;
 }
 
 .chart-title {
