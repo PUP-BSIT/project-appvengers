@@ -12,3 +12,6 @@ QWEN.md
 tasks/
 context/
 .tmp/
+
+# MCP related files
+.memory/
