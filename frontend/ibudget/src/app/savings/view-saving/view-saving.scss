@@ -1,7 +1,7 @@
 @use '../../../styles/mixins' as m;
 
 main {
-  @include m.page-layout(40px, auto);
+  @include m.page-layout(40px, 100%);
 }
 
 .card {
@@ -34,9 +34,15 @@ main {
 
 .header-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: 2em;
   margin-bottom: 20px;
+}
+
+.header-container div:nth-child(2) .form-control {
+  // width: 250px;
+  border: 1px solid grey;
 }
 
 .info {

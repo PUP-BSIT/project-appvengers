@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { Header } from "../../header/header";
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HistoryService } from '../../../services/history';
@@ -23,7 +23,8 @@ import { ToggleableSidebar } from "../../toggleable-sidebar/toggleable-sidebar";
     SavingProgress,
     CommonModule,
     FormsModule,
-    ToggleableSidebar
+    ToggleableSidebar,
+    FormsModule
 ],
   templateUrl: './view-saving.html',
   styleUrls: ['./view-saving.scss'],
@@ -37,14 +38,39 @@ export class ViewSaving implements OnInit{
     deleteSavingTransactionModal!: ElementRef;
   @ViewChild('deleteTransactionBtn') 
     deleteTransactionBtn!: ElementRef<HTMLButtonElement>;
-  transactionHistories = signal(<SavingTransaction[]>[]);
-  filteredTransactions = signal(<SavingTransaction[]>[]);
-  transactionsCount = signal(0);
-  // Pagination state
+  
+  // Master list of transactions
+  private allTransactions = signal<SavingTransaction[]>([]);
+  transactionsCount = computed(() => this.allTransactions().length);
+
+  // Search state
+  searchTransactionQuery = signal('');
+
+  // A computed signal that automatically filters the transaction list
+  filteredTransactions = computed(() => {
+    const query = this.searchTransactionQuery().toLowerCase();
+    if (!query) {
+      return this.allTransactions();
+    }
+    return this.allTransactions().filter(transaction =>  
+      transaction.description.toLowerCase().includes(query)
+    );
+  });
+
+  // Pagination state is now computed from the filtered list
   pageSize = 5;
   currentPage = signal(1);
-  paginatedTransactions = signal(<SavingTransaction[]>[]);
-  pageCount = signal(1);
+  pageCount = computed(() => {
+    return Math.max(1, Math.ceil(this.filteredTransactions()
+      .length / this.pageSize));
+  });
+
+  paginatedTransactions = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return this.filteredTransactions().slice(start, end);
+  });
+
   currentSaving = signal(<Saving>{});
   historyService = inject(HistoryService);
   savingService = inject(SavingsService);
@@ -59,6 +85,13 @@ export class ViewSaving implements OnInit{
   selectedTransactionId = signal(0);
   toastMessage = signal('');
   toastType = signal<'success' | 'error'>('success');
+
+  constructor() {
+    effect(() => {
+      this.filteredTransactions();
+      this.currentPage.set(1);
+    });
+  }
 
   // Initialize component and fetch data
   ngOnInit(): void {
@@ -136,9 +169,7 @@ export class ViewSaving implements OnInit{
     this.savingTransactionService.getSavingTransactionById(this.savingId())
     .subscribe({
       next: (transactionData) => {
-        this.transactionHistories.set(transactionData);
-        this.transactionsCount.set(transactionData.length);
-        this.updatePagination();
+        this.allTransactions.set(transactionData);
       }
     })
   }
@@ -197,21 +228,14 @@ export class ViewSaving implements OnInit{
       this.selectedTransactionId()
     ).subscribe({
       next: () => {
-        this.transactionHistories.update(transactions =>
+        this.allTransactions.update(transactions =>
           transactions.filter(transaction => 
               transaction.id !== this.selectedTransactionId())
         );
         
-        this.transactionsCount.set(this.transactionHistories().length);
-        this.updatePagination();
-
-        // Close modal
         this.closeDeleteTransactionModal();
-
-        // update current amount
         this.refreshCurrentAmount();
 
-        // show success toast
         this.toastMessage.set('Transaction deleted successfully!');
         this.toastType.set('success');
         const toast = Toast.getOrCreateInstance(this.viewSavingToast.nativeElement);
@@ -220,8 +244,6 @@ export class ViewSaving implements OnInit{
       },
       error: (err) => {
         console.error('Failed to delete transaction', err);
-
-        // show error toast
         this.toastMessage.set('Failed to delete transaction. Please try again.');
         this.toastType.set('error');
         const toast = Toast.getOrCreateInstance(this.viewSavingToast.nativeElement);
@@ -232,18 +254,9 @@ export class ViewSaving implements OnInit{
   }
 
   onSavingsTransactionAdded(newTransaction: SavingTransaction) {
-    // append canonical saved record (returned by service)
-    const updated = [...this.transactionHistories(), newTransaction];
-    this.transactionHistories.set(updated); 
-
-    // update current amount
+    this.allTransactions.update(transactions => [...transactions, newTransaction]);
     this.refreshCurrentAmount();
 
-    // update total and filtered list
-    this.transactionsCount.set(updated.length);
-    this.updatePagination();
-
-    // show success toast without navigation
     this.toastMessage.set('Transaction added successfully!');
     this.toastType.set('success');
     const toast = Toast.getOrCreateInstance(this.viewSavingToast.nativeElement);
@@ -252,18 +265,12 @@ export class ViewSaving implements OnInit{
   }
 
   onSavingsTransactionUpdated(updatedTransaction: SavingTransaction) {
-    const updatedTransactions = this.transactionHistories().map(transaction => 
-      transaction.id === updatedTransaction.id ? 
-        updatedTransaction : transaction
+    this.allTransactions.update(transactions => 
+      transactions.map(t => t.id === updatedTransaction.id ? updatedTransaction : t)
     );
 
-    // update current amount
     this.refreshCurrentAmount();
-
-    this.transactionHistories.set(updatedTransactions);
-    this.updatePagination();
-
-    // show success toast without navigation
+    
     this.toastMessage.set('Transaction updated successfully!');
     this.toastType.set('success');
     const toast = Toast.getOrCreateInstance(this.viewSavingToast.nativeElement);
@@ -284,20 +291,9 @@ export class ViewSaving implements OnInit{
   }
 
   // Pagination helpers
-  updatePagination() {
-    const total = this.transactionHistories().length;
-    const pages = Math.max(1, Math.ceil(total / this.pageSize));
-    this.pageCount.set(pages);
-    const page = Math.min(this.currentPage(), pages);
-    const start = (page - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.paginatedTransactions.set(this.transactionHistories().slice(start, end));
-  }
-
   goToPage(page: number) {
     if (page < 1 || page > this.pageCount()) return;
     this.currentPage.set(page);
-    this.updatePagination();
   }
 
   nextPage() { this.goToPage(this.currentPage() + 1); }
