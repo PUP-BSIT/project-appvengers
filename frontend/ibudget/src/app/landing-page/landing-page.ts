@@ -9,7 +9,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './landing-page.scss'
 })
 export class LandingPage implements OnInit, OnDestroy {
-  displayedText = signal('');
+   displayedText = signal('');
+
+  menuOpen = false;
+
+  isMobile(): boolean {
+    return window.innerWidth < 992;
+  }
 
   private fullText: string = 'Simple tracking. Smarter spending.';
   private textIndex: number = 0;
