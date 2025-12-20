@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit,
+  ViewChild, ElementRef, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -8,7 +9,22 @@ import { CommonModule } from '@angular/common';
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.scss'
 })
-export class LandingPage implements OnInit, OnDestroy {
+export class LandingPage implements OnInit, OnDestroy, AfterViewInit {
+    ngAfterViewInit(): void {
+      const fadeSections = document.querySelectorAll('.fade-in-section');
+      if (fadeSections.length > 0) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              (entry.target as HTMLElement).classList.add('visible');
+            } else {
+              (entry.target as HTMLElement).classList.remove('visible');
+            }
+          });
+        }, { threshold: 0.2 });
+        fadeSections.forEach(section => observer.observe(section));
+      }
+    }
    displayedText = signal('');
 
   menuOpen = false;
