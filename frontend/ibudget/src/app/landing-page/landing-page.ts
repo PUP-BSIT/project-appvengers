@@ -93,6 +93,9 @@ export class LandingPage implements OnInit, OnDestroy, AfterViewInit {
     if (event) {
       event.preventDefault();
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const section = document.getElementById('home');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 }
