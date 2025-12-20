@@ -3,7 +3,7 @@ $sidebar-width: 80px;
 $header-height: 70px;
 
 .reports-container {
-  margin-top: $header-height;
+  margin-top: 50px;
   margin-left: $sidebar-width;
   padding: 10px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -53,9 +53,9 @@ $header-height: 70px;
   }
 }
 
-// .tab-content {
-//   padding: 10px 0;
-// }
+.tab-content {
+  padding: 10px 0;
+}
 
 .overall-computation {
   background: white;
@@ -397,200 +397,52 @@ $header-height: 70px;
   width: 100%;
 }
 
-
-// Combined Mobile S/M styles
-@media (max-width: 375px) {
+/* ============================= */
+/* 📱 MOBILE S (≤320px) */
+/* ============================= */
+@media (max-width: 320px) {
   .reports-container {
-    padding: 4px;
-    font-size: 0.95rem;
-    margin-left: -6px;
-    margin-top: 44px;
-  }
-
-  .tabs-container {
-    margin: 17px 0px 8px 12px;
-    padding: 0 10px;
-  }
-  
-  .nav-tabs .nav-link {
-    font-size: 0.8rem;
-    padding: 10px 16px;
-  }
-
-  .tab-content {
-    font-size: 0.95rem;
-  }
-
-  .overall-computation,
-  .report-card,
-  .chart-container {
-    font-size: 0.95rem;
-    padding: 8px;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-size: 1.1rem;
-  }
-
-  label, .form-label {
-    font-size: 0.95rem;
-  }
-
-  .form-control, .form-select, .input-group-text {
-    font-size: 0.95rem;
-    padding: 0.45rem 0.7rem;
-  }
-
-  .btn, button {
-    font-size: 0.95rem;
-    padding: 0.45rem 0.7rem;
-    border-radius: 7px;
-  }
-
-  .overall-title,
-  .report-header-title {
-    font-size: 0.95rem;
-  }
-
-  .report-label,
-  .income-label,
-  .expense-label,
-  .balance-label {
-    font-size: 0.55rem !important;
-  }
-
-  .report-value {
-    font-size: 1.2rem;
-  }
-
-  .reports-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .charts-section {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    justify-items: stretch;
-  }
-
-  .chart-card {
-    border-radius: 8px;
+    margin-left: 0 !important;
+    margin-top: 60px;
     padding: 10px;
-    border: 2px solid transparent;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    display: flex;
-    flex-direction: column;
-    transition: all 0.3s ease;
-  }
-
-  .chart-title {
-    font-size: 1rem;
-    margin-bottom: 10px;
-  }
-
-  .chart-wrapper {
-    height: 180px;
-    min-height: 120px;
-    max-height: 220px;
-  }
-
-  .chart-wrapper {
-    height: 250px;
-  }
-
-  .comparison-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .overall-computation {
-    padding: 20px;
-    margin-top: 20px;
-  }
-}
-
-/* Mobile M  */
-@media (min-width: 321px) and (max-width: 375px) {
-  .reports-container {
-    margin-left: 0;
-    padding: 25px;
-    padding-top: 110px;
+    width: 100% !important;
   }
 
   .tabs-container {
-    padding: 0 10px;
+    margin: 0 !important;
+    padding: 0 5px;
   }
 
   .nav-tabs .nav-link {
-    padding: 10px 18px;
-    font-size: 0.95rem;
+    padding: 8px 10px;
+    font-size: 0.8rem;
   }
 
-  .reports-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .report-value {
-    font-size: 1.6rem;
-  }
-
-  .charts-section {
-    grid-template-columns: 1fr;
-  }
-
-  .chart-wrapper {
-    height: 250px;
-  }
-
-  .toggle-sidebar .reports-container {
-    margin-left: $sidebar-width;
-  }
-}
-
-/* Mobile L   */
-@media (min-width: 376px) and (max-width: 425px) {
-  .reports-container {
-    margin-left: 0;
-    padding: 30px;
-    padding-top: 110px;
-  }
-
-  .tabs-container {
-    padding: 0 10px;
-  }
-
-  .nav-tabs .nav-link {
-    padding: 11px 20px;
+  .overall-title, .report-header-title {
     font-size: 1rem;
   }
 
-  .reports-grid {
-    grid-template-columns: 1fr;
+  .comparison-grid,
+  .reports-grid,
+  .charts-section,
+  .overall-computation
+  .charts-section {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px;
+  }
+
+  .comparison-card, .report-card, .chart-card {
+    padding: 12px;
+    width: 100% !important;
   }
 
   .report-value {
-    font-size: 1.7rem;
-  }
-
-  .charts-section {
-    grid-template-columns: 1fr;
+    font-size: 1.3rem;
   }
 
   .chart-wrapper {
-    height: 250px;
-  }
-
-  .comparison-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .overall-computation {
-    padding: 20px;
-    margin-top: 20px;
-  }
-
-  .toggle-sidebar .reports-container {
-    margin-left: $sidebar-width;
+    height: 200px;
   }
 }
 
@@ -620,24 +472,5 @@ $header-height: 70px;
 
   .overall-computation {
     padding: 20px;
-  }
-}
-
-/* Laptop        */ 
-@media (min-width: 769px) and (max-width: 1024px) {
-  .reports-container {
-    margin-left: $sidebar-width;
-  }
-  
-  .tabs-container {
-    padding: 0 20px;
-  }
-}
-/* Large & Above */ 
-@media (min-width: 1025px) {
-  .reports-container {
-    margin-left: $sidebar-width;
-    padding: 15px;
-    padding-top: 10px;
   }
 }
