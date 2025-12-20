@@ -9,13 +9,17 @@
         <span class="brand-text ms-2">iBudget</span>
       </a>
       <!-- Hamburger Icon (Mobile Only) -->
-      <button class="menu-toggle d-lg-none" (click)="menuOpen = true" *ngIf="!menuOpen">
-        <i class="fas fa-bars"></i>
-      </button>
+      @if (!menuOpen) {
+        <button class="menu-toggle d-lg-none" (click)="menuOpen = true">
+          <i class="fas fa-bars"></i>
+        </button>
+      }
       <!-- X Icon (Mobile Only) -->
-      <button class="menu-toggle d-lg-none" (click)="menuOpen = false" *ngIf="menuOpen">
-        <i class="fas fa-times"></i>
-      </button>
+      @if (menuOpen) {
+        <button class="menu-toggle d-lg-none" (click)="menuOpen = false">
+          <i class="fas fa-times"></i>
+        </button>
+      }
       <!-- Navigation Links -->
       <div class="ms-auto d-flex align-items-center gap-2 nav-links"
            [class.open]="menuOpen"
