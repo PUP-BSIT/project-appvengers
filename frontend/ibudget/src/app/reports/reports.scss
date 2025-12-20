@@ -63,7 +63,53 @@ $header-height: 70px;
   padding: 30px;
   margin-bottom: 30px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+  .comparison-header {
+    font-size: 0.95rem;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+
+  .comparison-card {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .comparison-grid {
+    gap: 10px;
+  }
+
+  .amount {
+    font-size: 1.05rem !important;
+  }
+
+  .total-amount {
+    font-size: 1.15rem !important;
+  }
+
+  .total-label {
+    font-size: 0.95rem !important;
+  }
+  
   border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.overall-computation .charts-section {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  margin-top: 24px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.overall-computation .chart-card {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 400px;
 }
 
 .overall-title {
@@ -312,11 +358,14 @@ $header-height: 70px;
   }
 }
 
+// Align charts with summary cards
 .charts-section {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   margin-top: 30px;
+  align-items: stretch;
+  justify-items: stretch;
 }
 
 .chart-card {
@@ -346,33 +395,102 @@ $header-height: 70px;
   width: 100%;
 }
 
-/* Mobile S   */
-@media (max-width: 320px) {
+
+// Combined Mobile S/M styles
+@media (max-width: 375px) {
   .reports-container {
-    margin-left: 0;
-    padding: 20px;
-    padding-top: 110px;
+    padding: 4px;
+    font-size: 0.95rem;
+    margin-left: -6px;
+    margin-top: 44px;
   }
 
   .tabs-container {
+    margin: 17px 0px 8px 12px;
     padding: 0 10px;
   }
-
+  
   .nav-tabs .nav-link {
+    font-size: 0.8rem;
     padding: 10px 16px;
-    font-size: 0.9rem;
+  }
+
+  .tab-content {
+    font-size: 0.95rem;
+  }
+
+  .overall-computation,
+  .report-card,
+  .chart-container {
+    font-size: 0.95rem;
+    padding: 8px;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-size: 1.1rem;
+  }
+
+  label, .form-label {
+    font-size: 0.95rem;
+  }
+
+  .form-control, .form-select, .input-group-text {
+    font-size: 0.95rem;
+    padding: 0.45rem 0.7rem;
+  }
+
+  .btn, button {
+    font-size: 0.95rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 7px;
+  }
+
+  .overall-title,
+  .report-header-title {
+    font-size: 0.95rem;
+  }
+
+  .report-label,
+  .income-label,
+  .expense-label,
+  .balance-label {
+    font-size: 0.55rem !important;
+  }
+
+  .report-value {
+    font-size: 1.2rem;
   }
 
   .reports-grid {
     grid-template-columns: 1fr;
   }
 
-  .report-value {
-    font-size: 1.5rem;
+  .charts-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    justify-items: stretch;
   }
 
-  .charts-section {
-    grid-template-columns: 1fr;
+  .chart-card {
+    border-radius: 8px;
+    padding: 10px;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+  }
+
+  .chart-title {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .chart-wrapper {
+    height: 180px;
+    min-height: 120px;
+    max-height: 220px;
   }
 
   .chart-wrapper {
@@ -421,6 +539,10 @@ $header-height: 70px;
   .chart-wrapper {
     height: 250px;
   }
+
+  .toggle-sidebar .reports-container {
+    margin-left: $sidebar-width;
+  }
 }
 
 /* Mobile L   */
@@ -442,6 +564,31 @@ $header-height: 70px;
 
   .reports-grid {
     grid-template-columns: 1fr;
+  }
+
+  .report-value {
+    font-size: 1.7rem;
+  }
+
+  .charts-section {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-wrapper {
+    height: 250px;
+  }
+
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .overall-computation {
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .toggle-sidebar .reports-container {
+    margin-left: $sidebar-width;
   }
 }
 
