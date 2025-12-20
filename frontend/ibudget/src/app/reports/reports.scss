@@ -446,6 +446,78 @@ $header-height: 70px;
   }
 }
 
+/* ============================= */
+/* 📱 UNIFIED MOBILE RESPONSIVE (0px - 425px) */
+/* ============================= */
+@media (max-width: 425px) {
+  .reports-container {
+    margin-left: 0 !important;
+    margin-top: 60px;
+    padding: 10px !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden;
+  }
+
+  .tabs-container {
+    margin: 0 !important;
+    padding: 0 5px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .comparison-grid, 
+  .reports-grid, 
+  .charts-section,
+  .overall-computation .charts-section {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+    width: 100% !important;
+  }
+
+  .comparison-card, 
+  .report-card, 
+  .chart-card,
+  .overall-computation {
+    width: 100% !important;
+    margin: 0 0 15px 0 !important;
+    padding: 15px !important;
+    box-sizing: border-box !important;
+  }
+
+  .comparison-item {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+
+    .amount {
+      font-size: 1.1rem !important;
+      text-align: right;
+    }
+  }
+
+  .overall-title,
+  .report-header-title {
+    font-size: 1rem !important;
+    margin-bottom: 20px !important;
+  }
+
+  .nav-tabs {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    
+    .nav-link {
+      padding: 10px 15px !important;
+      font-size: 0.9rem !important;
+      white-space: nowrap;
+    }
+  }
+}
+
 /* Tablet       */
 @media (min-width: 426px) and (max-width: 768px) {
   .reports-container {
