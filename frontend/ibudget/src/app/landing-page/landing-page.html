@@ -8,22 +8,34 @@
           class="nav-logo" />
         <span class="brand-text ms-2">iBudget</span>
       </a>
-      <div class="ms-auto d-flex align-items-center gap-2">
+      <!-- Hamburger Icon (Mobile Only) -->
+      <button class="menu-toggle d-lg-none" (click)="menuOpen = true" *ngIf="!menuOpen">
+        <i class="fas fa-bars"></i>
+      </button>
+      <!-- X Icon (Mobile Only) -->
+      <button class="menu-toggle d-lg-none" (click)="menuOpen = false" *ngIf="menuOpen">
+        <i class="fas fa-times"></i>
+      </button>
+      <!-- Navigation Links -->
+      <div class="ms-auto d-flex align-items-center gap-2 nav-links"
+           [class.open]="menuOpen"
+           [class.mobile-nav]="menuOpen"
+           [class.d-none]="!menuOpen && isMobile()">
         <a
           href="#"
-          (click)="scrollToTop($event)"
+          (click)="scrollToTop($event); menuOpen = false"
           class="btn btn-outline-primary go-to me-2">
           Home
         </a>
         <a
           href="#features"
-          (click)="scrollToFeatures($event)"
+          (click)="scrollToFeatures($event); menuOpen = false"
           class="btn btn-outline-primary features">
           Features
         </a>
         <a
           href="#about"
-          (click)="scrollToAbout($event)"
+          (click)="scrollToAbout($event); menuOpen = false"
           class="btn btn-outline-primary about">
           About Us
         </a>
