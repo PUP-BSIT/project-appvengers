@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class SidebarService implements OnDestroy {
-  private authService = inject(AuthService);
+  private authService: AuthService | null = inject(AuthService, { optional: true });
   private router = inject(Router);
   private routerSub: Subscription;
 
@@ -26,7 +26,12 @@ export class SidebarService implements OnDestroy {
   }
 
   private getUserEmailFromToken(): string | null {
-    const token = this.authService.getToken();
+    // Prefer token from AuthService when available, otherwise read directly
+    // from localStorage. Making AuthService optional prevents tests from
+    // failing when `_HttpClient` (used by AuthService) isn't provided.
+    const token = this.authService ? this.authService.getToken() :
+      (typeof localStorage !== 'undefined' ? 
+          localStorage.getItem('iBudget_authToken') : null);
     if (!token) {
       return null;
     }
