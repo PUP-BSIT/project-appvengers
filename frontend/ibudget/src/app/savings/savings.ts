@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild, computed, effect } from '@angular/core';
 import { Header } from "../header/header";
 import { Saving } from '../../models/user.model';
 import { SavingsService } from '../../services/savings.service';
@@ -8,24 +8,68 @@ import { CommonModule } from '@angular/common';
 import { Toast } from 'bootstrap';
 import { SavingsNavState } from '../../models/user.model';
 import { ToggleableSidebar } from "../toggleable-sidebar/toggleable-sidebar";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-savings',
-  imports: [CommonModule, Header, RouterLink, SavingProgress, ToggleableSidebar],
+  imports: [
+    CommonModule, 
+    Header, 
+    RouterLink, 
+    SavingProgress, 
+    ToggleableSidebar,
+    FormsModule
+  ],
   templateUrl: './savings.html',
   styleUrl: './savings.scss',
 })
 export class Savings implements OnInit {
   @ViewChild('savingsToast', { static: true }) savingsToast!: ElementRef;
-  savings = signal(<Saving[]>[]);
+  
+  private allSavings = signal<Saving[]>([]);
   savingsService = inject(SavingsService);
   isLoading = signal(true);
   toastMessage = signal('');
   toastType = signal<'success' | 'error'>('success');
+  router = inject(Router);
+
+  // Search and filter state
+  searchQuery = signal('');
+  
+  filteredSavings = computed(() => {
+    const query = this.searchQuery().toLowerCase();
+    if (!query) {
+      return this.allSavings();
+    }
+    return this.allSavings().filter(saving =>
+      saving.name.toLowerCase().includes(query) ||
+      (saving.name && saving.name.toLowerCase().includes(query))
+    );
+  });
+
   // Pagination state
   pageSize = signal(3);
   currentPage = signal(1);
-  router = inject(Router);
+
+  constructor() {
+    // When the filtered list changes (e.g., due to a search), reset to page 1.
+    effect(() => {
+      this.filteredSavings();
+      this.currentPage.set(1);
+    });
+  }
+
+  // Pagination is now computed based on the filtered list
+  paginatedSavings = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return this.filteredSavings().slice(start, start + this.pageSize());
+  });
+
+  totalPages = computed(() => {
+    const len = this.filteredSavings().length;
+    const pages = Math.ceil(len / this.pageSize());
+    return pages > 0 ? pages : 1;
+  });
 
   ngOnInit() {
     // Check for toast message in navigation state
@@ -59,7 +103,7 @@ export class Savings implements OnInit {
   getSavings() {
     this.savingsService.getSavings().subscribe({
       next: (savingsData) => {
-        this.savings.set(savingsData as Saving[]);
+        this.allSavings.set(savingsData as Saving[]);
         this.currentPage.set(1);
         this.isLoading.set(false);
       },
@@ -71,17 +115,6 @@ export class Savings implements OnInit {
   }
 
   // Pagination helpers
-  paginatedSavings() {
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return this.savings().slice(start, start + this.pageSize());
-  }
-
-  totalPages() {
-    const len = this.savings().length;
-    const pages = Math.ceil(len / this.pageSize());
-    return pages > 0 ? pages : 1;
-  }
-
   getPageNumbers() {
     return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
   }

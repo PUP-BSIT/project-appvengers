@@ -4,16 +4,25 @@
 <main>
   <div class="inner-wrapper">
     <div class="actions-container">
-      <div>
+      <!-- <div>
         <h3>Savings</h3>
         <p class="text-secondary">
           Manage your savings goals and track your progress.
         </p>
+      </div> -->
+
+      <div>
+        <input 
+          type="text" 
+          class="form-control" 
+          placeholder="Search savings name" 
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"/>
       </div>
 
       <div>
         <button 
-          class="btn btn-success"
+          class="btn btn-primary"
           routerLink="/savings/add-saving">
             <i class="bi bi-plus-circle-fill"></i>
             Add New Saving
@@ -26,7 +35,7 @@
         <div class="loading-spinner-container">
           <div class="spinner-border text-primary" role="status"></div>
         </div>
-      } @else if(savings().length === 0) {
+      } @else if(filteredSavings().length === 0) {
         <p class="no-savings-message">
           No savings goals found. Click "Add New Saving" to create one.
         </p>
