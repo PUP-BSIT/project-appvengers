@@ -10,6 +10,14 @@ describe('Security', () => {
   let fixture: ComponentFixture<Security>;
 
   beforeEach(async () => {
+    // Mock Bootstrap globally for modal functionality
+    (window as any).bootstrap = {
+      Modal: jasmine.createSpy('Modal').and.returnValue({
+        show: jasmine.createSpy('show'),
+        hide: jasmine.createSpy('hide')
+      })
+    };
+
     await TestBed.configureTestingModule({
       imports: [Security],
       providers: [
