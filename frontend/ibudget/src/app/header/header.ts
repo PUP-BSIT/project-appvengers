@@ -16,7 +16,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 })
 export class Header implements OnInit, OnDestroy {
   private notificationService = inject(NotificationService);
-  private sidebarService = inject(SidebarService);
+  public sidebarService = inject(SidebarService);
   private chatbotService = inject(ChatbotService);
   private router = inject(Router);
   private authService = inject(AuthService);
