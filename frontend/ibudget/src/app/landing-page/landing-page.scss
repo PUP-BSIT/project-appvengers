@@ -1,3 +1,137 @@
+/* Tablet: About Us cards 2 per row, flexbox fix */
+@media (min-width: 426px) and (max-width: 768px) {
+  .about-section .row.g-4 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem 0;
+  }
+  .about-section .col-12.col-sm-6.col-md-4.col-lg-3 {
+    flex: 0 0 48%;
+    max-width: 48%;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+  }
+  .team-card {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+}
+/* Tablet: About Us cards 2 per row */
+@media (min-width: 426px) and (max-width: 768px) {
+  .about-section .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem 0;
+  }
+  .about-section .col-12.col-sm-6.col-md-4.col-lg-3 {
+    flex: 0 0 48%;
+    max-width: 48%;
+    margin-bottom: 1.5rem;
+  }
+  .team-card {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+/* --- Mobile First Responsive Breakpoints --- */
+/* Mobile S   */
+@media (max-width: 320px) {
+  .landing-root {
+    padding: 0 2px;
+  }
+  .brand {
+    font-size: 1.5rem !important;
+  }
+  .features-section, .about-section {
+    padding: 2rem 0.2rem !important;
+  }
+  .feature-card, .team-card {
+    min-width: 0;
+    width: 98vw;
+    max-width: 99vw;
+    margin: 0 auto 1rem auto;
+    padding: 1.2rem 0.5rem;
+  }
+  .feature-title, .card-body h5 {
+    font-size: 1.1rem;
+  }
+  .feature-desc, .card-body p {
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile M  */
+@media (min-width: 321px) and (max-width: 375px) {
+  .landing-root {
+    padding: 0 6px;
+  }
+  .features-section, .about-section {
+    padding: 2.5rem 0.5rem !important;
+  }
+  .feature-card, .team-card {
+    min-width: 0;
+    width: 96vw;
+    max-width: 98vw;
+    margin: 0 auto 1.2rem auto;
+    padding: 1.3rem 0.7rem;
+  }
+  .feature-title, .card-body h5 {
+    font-size: 1.15rem;
+  }
+  .feature-desc, .card-body p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile L   */
+@media (min-width: 376px) and (max-width: 425px) {
+  .landing-root {
+    padding: 0 10px;
+  }
+  .features-section, .about-section {
+    padding: 3rem 0.8rem !important;
+  }
+  .feature-card, .team-card {
+    min-width: 0;
+    width: 94vw;
+    max-width: 97vw;
+    margin: 0 auto 1.3rem auto;
+    padding: 1.5rem 1rem;
+  }
+  .feature-title, .card-body h5 {
+    font-size: 1.18rem;
+  }
+  .feature-desc, .card-body p {
+    font-size: 0.95rem;
+  }
+}
+
+/* Tablet       */
+@media (min-width: 426px) and (max-width: 768px) {
+  .landing-root {
+    padding: 0 18px;
+  }
+  .features-section, .about-section {
+    padding: 3.5rem 1.2rem !important;
+  }
+  .feature-card, .team-card {
+    min-width: 0;
+    width: 90vw;
+    max-width: 95vw;
+    margin: 0 auto 1.5rem auto;
+    padding: 2rem 1.2rem;
+  }
+  .feature-title, .card-body h5 {
+    font-size: 1.22rem;
+  }
+  .feature-desc, .card-body p {
+    font-size: 1rem;
+  }
+}
 /* Fade-in animation for features section */
 .fade-in-section {
   opacity: 0;
