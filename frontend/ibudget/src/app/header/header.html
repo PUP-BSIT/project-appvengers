@@ -1,7 +1,12 @@
 <div class="header-container">
   <div class="left-section">
-    <div class="menu-toggle" (click)="toggleSidebar()">
+
+    <!-- Hamburger and X icon for sidebar toggle -->
+    <div class="menu-toggle" *ngIf="!sidebarService.isOpen()" (click)="toggleSidebar()" aria-label="Open menu">
       <i class="bi bi-list"></i>
+    </div>
+    <div class="menu-toggle" *ngIf="sidebarService.isOpen()" (click)="toggleSidebar()" aria-label="Close menu">
+      <i class="bi bi-x-lg"></i>
     </div>
     
     <div class="page-title-section">
