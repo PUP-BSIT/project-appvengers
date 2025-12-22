@@ -5,7 +5,6 @@ main {
 }
 
 .card {
-  
   .card-header {
     padding: 20px;
   }
@@ -120,7 +119,6 @@ main {
     }
   }
 }
-  
 
 .table-container {
   width: 100%;
@@ -220,6 +218,7 @@ th {
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -231,6 +230,7 @@ th {
     transform: translateX(0);
     opacity: 1;
   }
+
   to {
     transform: translateX(100%);
     opacity: 0;
