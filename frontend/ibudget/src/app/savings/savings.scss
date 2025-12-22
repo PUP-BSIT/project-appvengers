@@ -40,16 +40,19 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #f8fafc;
-  border: 1.5px dashed #b6b6b6;
+  background: white;
   border-radius: 16px;
   padding: 48px 24px 32px 24px;
   margin: 40px auto 0 auto;
   width: 100%;
   max-width: 600px;
   min-width: 380px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: max-width 0.2s;
+}
+
+.no-savings-text p {
+  text-align: center;
 }
 
 @media (max-width: 700px) {
@@ -86,15 +89,14 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #f8fafc;
-  border: 1.5px dashed #b6b6b6;
+  background: white;
   border-radius: 16px;
   padding: 95px 24px 95px 24px;
-  margin: 40px 0 0 0;
+  margin: 20px 0 0 0;
   width: 100%;
   max-width: 1500px;
   min-width: 380px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: max-width 0.2s;
 }
 
