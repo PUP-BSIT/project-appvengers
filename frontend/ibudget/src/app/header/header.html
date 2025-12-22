@@ -2,12 +2,22 @@
   <div class="left-section">
 
     <!-- Hamburger and X icon for sidebar toggle -->
-    <div class="menu-toggle" *ngIf="!sidebarService.isOpen()" (click)="toggleSidebar()" aria-label="Open menu">
-      <i class="bi bi-list"></i>
-    </div>
-    <div class="menu-toggle" *ngIf="sidebarService.isOpen()" (click)="toggleSidebar()" aria-label="Close menu">
-      <i class="bi bi-x-lg"></i>
-    </div>
+    @if (!sidebarService.isOpen()) {
+      <div
+        class="menu-toggle"
+        (click)="toggleSidebar()"
+        aria-label="Open menu">
+        <i class="bi bi-list"></i>
+      </div>
+    }
+    @if (sidebarService.isOpen()) {
+      <div
+        class="menu-toggle"
+        (click)="toggleSidebar()"
+        aria-label="Close menu">
+        <i class="bi bi-x-lg"></i>
+      </div>
+    }
     
     <div class="page-title-section">
       <h1 class="page-title">
@@ -32,7 +42,10 @@
     </div>
 
     <div class="chatbot-nav">
-      <button class="chatbot-btn" (click)="toggleChatbot()" [class.active]="isChatbotOpen()">
+      <button
+        class="chatbot-btn"
+        (click)="toggleChatbot()"
+        [class.active]="isChatbotOpen()">
         <i class="bi bi-chat-dots-fill"></i>
         <span>Ask Bonzi</span>
       </button>
