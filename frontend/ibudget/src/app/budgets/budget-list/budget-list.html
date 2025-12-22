@@ -7,6 +7,7 @@
 
     <div class="d-flex justify-content-end">
       <app-add-budget-button 
+        #addBudgetBtn
         (addedBudget)="onBudgetAdded($event)"
         [budgetId]="budgets().length + 1"/>
     </div>
@@ -38,7 +39,15 @@
   
   <div class="budget-list-container">
     @if(!budgets().length) {
-      <span>No budgets available.</span>
+      <div class="no-budgets-ui">
+        <div class="no-budgets-icon-wrapper">
+          <i class="bi bi-journal-x no-budgets-icon"></i>
+        </div>
+        <div class="no-budgets-text">
+          <h3>No Budgets Available</h3>
+          <p>Start managing your finances by adding your first budget!</p>
+        </div>
+      </div>
     }
 
     @for(budget of budgets(); track $index) {
