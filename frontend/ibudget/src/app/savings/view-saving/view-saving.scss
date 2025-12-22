@@ -121,11 +121,40 @@ main {
   }
 }
   
+
+.table-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 32px auto;
+  overflow-x: auto;
+}
+
 .table {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.13);
+  border-radius: 12px;
   overflow: hidden;
   width: 100%;
+  min-width: 900px;
+  background: #fff;
+  font-size: 1.08rem;
+}
+
+th, td {
+  padding: 1.1rem 1.5rem !important;
+}
+
+th {
+  font-size: 1.1rem;
+}
+
+@media (max-width: 1200px) {
+  .table-container {
+    max-width: 100%;
+  }
+  .table {
+    min-width: 700px;
+    font-size: 1rem;
+  }
 
   .actions {
     button {
