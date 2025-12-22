@@ -1,3 +1,73 @@
+.no-budgets-ui {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border: 1.5px dashed #b6b6b6;
+  border-radius: 16px;
+  padding: 70px 24px 70px 24px;
+  margin: 20px auto 40px auto;
+  width: 100%;
+  max-width: 1500px;
+  min-width: 280px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  transition: max-width 0.2s;
+}
+
+@media (max-width: 700px) {
+  .no-budgets-ui {
+    max-width: 95vw;
+    padding: 32px 8px 24px 8px;
+  }
+}
+
+.no-budgets-icon-wrapper {
+  background: #e9f5ee;
+  border-radius: 50%;
+  padding: 24px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-budgets-icon {
+  font-size: 3.5rem;
+  color: #4caf50;
+}
+
+.no-budgets-text h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.no-budgets-text p {
+  color: #666;
+  font-size: 1.05rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.add-budget-btn {
+  font-size: 1.1rem;
+  padding: 10px 28px;
+  border-radius: 24px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(76,175,80,0.08);
+  transition: background 0.2s;
+}
+.add-budget-btn i {
+  font-size: 1.2rem;
+}
+.add-budget-btn:hover {
+  background: #43a047;
+}
 @mixin category-info-container-styles($font-size: 30px) {
   display: flex;
   flex-direction: column;
