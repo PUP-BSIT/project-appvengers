@@ -32,7 +32,7 @@ public class AuthController {
     private final UserService userService;
     private final LoginRateLimiter loginRateLimiter;
     
-    @Value("${app.frontend.url:http://localhost:4200}")
+    @Value("${app.frontend.url:http://i-budget.site}")
     private String frontendUrl;
 
     @PostMapping("/signup")
