@@ -301,115 +301,87 @@
   }
 }
 
-@media (max-width: 768px) {
+// Tablet Specific Adjustments
+@media (min-width: 426px) and (max-width: 768px) {
   .budget-container {
-    height: auto;
-    margin: 8px 4px;
-    width: 100%;
+    .summary-cards {
+      grid-template-columns: repeat(2, 1fr); // Two columns for tablet
+      
+      .remaining-card {
+        grid-column: span 2; // Make remaining card full width on tablet
+      }
+    }
+    
+    .budget-card .budget-card-header {
+      flex-direction: row;
+    }
   }
+}
 
-  .budget-info-container {
-    flex-direction: column;
-    justify-content: center;
+// --- SUMMARY CARDS (Mobile S, M, L Column Layout) ---
+// Desktop / Laptop Styles (Default)
+.summary-cards {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  .card {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
-    gap: 12px;
-    width: 100%;
-    .budget-list-title {
-      text-align: center;
-      width: 100%;
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: none;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    .card-content {
+      h3 {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+      }
+      .amount {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 0;
+      }
     }
   }
 
-  .summary-cards {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-    width: 100%;
-    overflow-x: auto;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-  }
-
-  .card {
-    min-width: 220px;
-    width: 90vw;
-    padding: 1rem;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-right: 1rem;
-  }
-
-  .budget-list-container {
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-  }
-
-  .budget-card {
-    width: 100%;
-    min-width: 220px;
-    margin-bottom: 1rem;
-  }
-
-  .budget-card-header {
-    width: 100%;
-    margin-top: -10px;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-
-  .budget-card-body {
-    width: 100%;
-    padding: 0.5rem;
-    align-items: flex-start;
-  }
-
-  .category-info-container,
-  .category-info-container-budget-list {
-    width: 100%;
-    padding: 0.5rem;
+  // Mobile S, M, and L Styles ONLY (0px to 425px)
+  @media (max-width: 425px) {
+    flex-direction: column !important;
+    
+    .card {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      
+      .card-content .amount {
+        font-size: 1.2rem;
+      }
+    }
   }
 }
 
-@media (max-width: 320px) {
-  .budget-container {
-    height: auto;
-  }
+// Optional: Adjust the budget list header for Mobile L as well
+.budget-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-  .category-info-container {
-    width: 250px;
-  }
-  
-  .budget-card-header {
-    width: 200px !important;
-    justify-content: center !important;
-  }
-
- .budget-card-body{
-    width: 250px !important;
-    justify-content: center !important;
-  }
-}
-
-@media (max-width: 375px) and (min-width: 321px) {
-  .budget-container {
-    height: auto;
-  }
-
-  .category-info-container {
-    width: 280px;
-  }
-
-  .budget-card-header {
-    width: 250px !important;
-    justify-content: center !important;
-  }
-
-  .budget-card-body {
-    width: 300px !important;
-    justify-content: center !important;
+  @media (max-width: 425px) {
+    flex-direction: column; 
+    align-items: flex-start;
+    gap: 0.75rem;
+    
+    .update-btn-container {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+    }
   }
 }
