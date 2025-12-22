@@ -4,7 +4,7 @@
 
 **Production URL**: `https://i-budget.site`  
 **Route**: `/auth-page` (Login tab)  
-**Last Updated**: December 2024  
+**Last Updated**: December 23, 2024  
 **Test Count**: 14
 
 ---
@@ -28,15 +28,15 @@ This test matrix covers the complete user login flow including form validation, 
 
 | Test ID | Test Name | Description | Preconditions | Steps | Expected Result | Priority | Type | Status | Last Tested | Notes |
 |---------|-----------|-------------|---------------|-------|-----------------|----------|------|--------|-------------|-------|
-| AUTH-LOG-001 | Display login form correctly | Verify login form displays all required fields | User not logged in | 1. Navigate to `https://i-budget.site/auth-page` | Form displays: Email field, Password field, Login button, Forgot Password link | P0 | Smoke | ⏳ Pending | - | Default tab is Login |
-| AUTH-LOG-002 | Valid login with correct credentials | Complete successful login with valid credentials | Registered user with verified email | 1. Navigate to `/auth-page`<br>2. Enter valid email<br>3. Enter correct password<br>4. Click "Login" | User logged in, redirected to dashboard | P0 | E2E | ⏳ Pending | - | Core happy path |
+| AUTH-LOG-001 | Display login form correctly | Verify login form displays all required fields | User not logged in | 1. Navigate to `https://i-budget.site/auth-page` | Form displays: Email field, Password field, Login button, Forgot Password link | P0 | Smoke | ✅ Passed | Dec 23, 2024 | All fields and links displayed correctly |
+| AUTH-LOG-002 | Valid login with correct credentials | Complete successful login with valid credentials | Registered user with verified email | 1. Navigate to `/auth-page`<br>2. Enter valid email<br>3. Enter correct password<br>4. Click "Login" | User logged in, redirected to dashboard | P0 | E2E | ✅ Passed | Dec 23, 2024 | Tested with kaelvxd@proton.me - Redirected to /dashboard, WebSocket connected |
 | AUTH-LOG-003 | Invalid email format | Verify email validation for incorrect format | On login form | 1. Enter invalid email (e.g., "test@")<br>2. Move focus to password field | Error: "Please enter a valid email" | P1 | Negative | ⏳ Pending | - | - |
 | AUTH-LOG-004 | Email required validation | Verify email field is required | On login form | 1. Leave email empty<br>2. Touch field and move focus | Error: "Email is required" | P1 | Negative | ⏳ Pending | - | - |
 | AUTH-LOG-005 | Password required validation | Verify password field is required | On login form | 1. Leave password empty<br>2. Touch field and move focus | Error: "Password is required" | P1 | Negative | ⏳ Pending | - | - |
 | AUTH-LOG-006 | Invalid credentials error | Verify error message for wrong password | Registered user exists | 1. Enter valid email<br>2. Enter incorrect password<br>3. Click "Login" | Error alert displayed with authentication failure message | P0 | Negative | ⏳ Pending | - | Should not reveal if email exists |
 | AUTH-LOG-007 | Non-existent user login attempt | Verify error for unregistered email | Email not in system | 1. Enter non-existent email<br>2. Enter any password<br>3. Click "Login" | Error alert displayed (generic auth error) | P1 | Negative | ⏳ Pending | - | Same error as invalid password for security |
 | AUTH-LOG-008 | Password visibility toggle | Verify password can be shown/hidden | On login form with password entered | 1. Enter password<br>2. Click eye icon toggle | Password text visibility toggles between hidden and visible | P2 | Regression | ⏳ Pending | - | Icon changes bi-eye/bi-eye-slash |
-| AUTH-LOG-009 | Navigate to register tab | Verify user can switch to registration form | On login form | 1. Click "Register" tab in header | Registration form is displayed | P1 | Smoke | ⏳ Pending | - | Tab toggle functionality |
+| AUTH-LOG-009 | Navigate to register tab | Verify user can switch to registration form | On login form | 1. Click "Register" tab in header | Registration form is displayed | P1 | Smoke | ✅ Passed | Dec 23, 2024 | Tab toggle works correctly |
 | AUTH-LOG-010 | Forgot password link navigation | Verify forgot password link works | On login form | 1. Click "Forgot Password?" link | Navigates to `/forgot-password` page | P1 | Smoke | ⏳ Pending | - | Link at bottom of form |
 | AUTH-LOG-011 | Loading state during login | Verify loading indicator during authentication | Valid credentials entered | 1. Enter valid credentials<br>2. Click "Login" | Button shows spinner with "Loading..." text | P2 | Regression | ⏳ Pending | - | Prevents double submission |
 | AUTH-LOG-012 | Submit button disabled during loading | Verify button disabled while authenticating | Login in progress | 1. Submit login form | Button is disabled during API call | P2 | Regression | ⏳ Pending | - | [disabled]="isSubmitting()" |

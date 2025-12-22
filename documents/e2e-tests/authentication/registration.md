@@ -4,7 +4,7 @@
 
 **Production URL**: `https://i-budget.site`  
 **Route**: `/auth-page` (Register tab)  
-**Last Updated**: December 2024  
+**Last Updated**: December 23, 2024  
 **Test Count**: 15
 
 ---
@@ -29,8 +29,8 @@ This test matrix covers the complete user registration flow including form valid
 
 | Test ID | Test Name | Description | Preconditions | Steps | Expected Result | Priority | Type | Status | Last Tested | Notes |
 |---------|-----------|-------------|---------------|-------|-----------------|----------|------|--------|-------------|-------|
-| AUTH-REG-001 | Display signup form correctly | Verify registration form displays all required fields | User not logged in | 1. Navigate to `https://i-budget.site/auth-page`<br>2. Click "Register" tab | Form displays: Username, Email, Password, Confirm Password fields, Create Account button | P0 | Smoke | ⏳ Pending | - | Verify all field labels and placeholders |
-| AUTH-REG-002 | Valid registration with all fields | Complete successful registration with valid data | User not logged in, unique email/username | 1. Navigate to `/auth-page`<br>2. Click "Register" tab<br>3. Enter unique username (12+ chars)<br>4. Enter valid unique email<br>5. Enter valid password (12+ chars)<br>6. Confirm password<br>7. Click "Create Account" | Success message displayed, verification email sent | P0 | E2E | ⏳ Pending | - | Core happy path |
+| AUTH-REG-001 | Display signup form correctly | Verify registration form displays all required fields | User not logged in | 1. Navigate to `https://i-budget.site/auth-page`<br>2. Click "Register" tab | Form displays: Username, Email, Password, Confirm Password fields, Create Account button | P0 | Smoke | ✅ Passed | Dec 23, 2024 | All fields displayed correctly with placeholders |
+| AUTH-REG-002 | Valid registration with all fields | Complete successful registration with valid data | User not logged in, unique email/username | 1. Navigate to `/auth-page`<br>2. Click "Register" tab<br>3. Enter unique username (12+ chars)<br>4. Enter valid unique email<br>5. Enter valid password (12+ chars)<br>6. Confirm password<br>7. Click "Create Account" | Success message displayed, verification email sent | P0 | E2E | ✅ Passed | Dec 23, 2024 | Tested with kaelvxd@proton.me - Success message: "Signup successful, Please check your email." |
 | AUTH-REG-003 | Username minimum length validation | Verify username requires minimum 12 characters | On registration form | 1. Enter username with 11 characters<br>2. Move focus to next field | Error: "Username must be at least 12 characters" | P1 | Negative | ⏳ Pending | - | Min length is 12 chars per component |
 | AUTH-REG-004 | Username required validation | Verify username field is required | On registration form | 1. Leave username empty<br>2. Touch field and move focus | Error: "Username is required" | P1 | Negative | ⏳ Pending | - | - |
 | AUTH-REG-005 | Username uniqueness check | Verify duplicate username is rejected | Existing user with same username | 1. Enter username that already exists<br>2. Move focus to next field | Error: "Username is already taken" | P0 | Negative | ⏳ Pending | - | Async validation on blur |
@@ -41,8 +41,8 @@ This test matrix covers the complete user registration flow including form valid
 | AUTH-REG-010 | Password required validation | Verify password field is required | On registration form | 1. Leave password empty<br>2. Touch field and move focus | Error: "Password is required" | P1 | Negative | ⏳ Pending | - | - |
 | AUTH-REG-011 | Confirm password matching | Verify passwords must match | On registration form | 1. Enter password: "TestPassword123"<br>2. Enter confirm password: "DifferentPass123"<br>3. Submit form | Error: "Passwords do not match" | P0 | Negative | ⏳ Pending | - | Validated on form submit |
 | AUTH-REG-012 | Password visibility toggle | Verify password can be shown/hidden | On registration form with password entered | 1. Enter password<br>2. Click eye icon toggle | Password text visibility toggles between hidden (dots) and visible (plain text) | P2 | Regression | ⏳ Pending | - | Toggle icon changes bi-eye/bi-eye-slash |
-| AUTH-REG-013 | Navigate to login tab | Verify user can switch to login form | On registration form | 1. Click "Login" tab in header | Login form is displayed | P1 | Smoke | ⏳ Pending | - | Tab toggle functionality |
-| AUTH-REG-014 | Submit button disabled for invalid form | Verify submit button is disabled when form is invalid | On registration form | 1. Leave all fields empty or invalid | "Create Account" button is disabled | P2 | Regression | ⏳ Pending | - | Button has [disabled] binding |
+| AUTH-REG-013 | Navigate to login tab | Verify user can switch to login form | On registration form | 1. Click "Login" tab in header | Login form is displayed | P1 | Smoke | ✅ Passed | Dec 23, 2024 | Tab toggle works correctly |
+| AUTH-REG-014 | Submit button disabled for invalid form | Verify submit button is disabled when form is invalid | On registration form | 1. Leave all fields empty or invalid | "Create Account" button is disabled | P2 | Regression | ✅ Passed | Dec 23, 2024 | Button was disabled until all fields valid |
 | AUTH-REG-015 | Loading state during submission | Verify loading indicator during form submission | Valid form data entered | 1. Fill all fields with valid data<br>2. Click "Create Account" | Button shows "Creating Account..." with loading state | P2 | Regression | ⏳ Pending | - | Prevents double submission |
 
 ---
