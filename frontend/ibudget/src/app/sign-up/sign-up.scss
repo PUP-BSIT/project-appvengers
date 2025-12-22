@@ -335,7 +335,8 @@ $link-color-hover: #283593;
   }
 }
 
-/* Mobile S   */ @media (max-width: 320px) {
+/* Mobile S   */ 
+@media (max-width: 320px) {
   .login-container {
     padding: 10px;
   }
@@ -373,7 +374,7 @@ $link-color-hover: #283593;
 }
 
 /* Mobile M  */ 
-@media (min-width: 321px) and (max-width: 375px) {
+@media (min-width: 321px) and (max-width: 376px) {
   .login-container {
     padding: 15px;
   }
@@ -406,12 +407,12 @@ $link-color-hover: #283593;
   }
 
   .password-fields {
-    flex-direction: column;
+    flex-direction: column !important;
   }
 }
 
 /* Mobile L   */ 
-@media (min-width: 376px) and (max-width: 425px) {
+@media (min-width: 376px) and (max-width: 426px) {
   .login-container {
     padding: 20px;
   }
@@ -485,9 +486,22 @@ $link-color-hover: #283593;
       width: 160px;
     }
   }
+
+  .password-fields {
+    flex-direction: row;
+  }
+
+  .password-fields, div:first-child {
+    width: 100%
+  }
+
+  .password-fields div:nth-child(1) {
+    width: calc(50% - 0.5rem);
+  }
 }
 
-/* & Above   */ @media (min-width: 1025px) {
+/* & Above   */ 
+@media (min-width: 1025px) {
   .login-card {
     max-width: 500px;
   }
@@ -498,5 +512,9 @@ $link-color-hover: #283593;
     img {
       width: 150px;
     }
+  }
+
+  .password-fields div:nth-child(2) {
+    width: 230px;
   }
 }
