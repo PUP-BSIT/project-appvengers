@@ -92,25 +92,49 @@
 
     <!-- Pagination -->
     @if(totalPages() > 1) {
-      <nav aria-label="Savings pagination" class="d-flex justify-content-center mt-3">
-        <ul class="pagination">
-          <li class="page-item" [class.disabled]="currentPage() === 1">
-            <button class="page-link" (click)="prevPage()" aria-label="Previous" [attr.tabindex]="currentPage() === 1 ? -1 : 0">&laquo;</button>
-          </li>
-          @for(page of getPageNumbers(); track page) {
-            <li class="page-item" [class.active]="currentPage() === page">
-              <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+      <nav
+        aria-label="Savings pagination"
+        class="d-flex justify-content-center mt-3">
+          <ul class="pagination">
+            <li class="page-item" [class.disabled]="currentPage() === 1">
+              <button
+                class="page-link"
+                (click)="prevPage()"
+                aria-label="Previous"
+                [attr.tabindex]="currentPage() === 1 ? -1 : 0">&laquo;
+              </button>
             </li>
-          }
-          <li class="page-item" [class.disabled]="currentPage() === totalPages()">
-            <button class="page-link" (click)="nextPage()" aria-label="Next" [attr.tabindex]="currentPage() === totalPages() ? -1 : 0">&raquo;</button>
-          </li>
-          <li class="page-item ms-2 d-flex align-items-center">
-            <span class="mx-2">Page</span>
-            <input type="number" class="form-control form-control-sm" style="width: 80px;" [value]="currentPage()" (change)="updateCurrentPage($event)" min="1" [attr.max]="totalPages()" />
-            <span class="mx-2">of {{ totalPages() }}</span>
-          </li>
-        </ul>
+            @for(page of getPageNumbers(); track page) {
+              <li class="page-item" [class.active]="currentPage() === page">
+                <button
+                  class="page-link"
+                  (click)="goToPage(page)">{{ page }}
+                </button>
+              </li>
+            }
+            <li
+              class="page-item"
+              [class.disabled]="currentPage() === totalPages()">
+                <button
+                  class="page-link"
+                  (click)="nextPage()"
+                  aria-label="Next"
+                  [attr.tabindex]="currentPage() === totalPages()
+                    ? -1 : 0">&raquo;
+                </button>
+            </li>
+            <li class="page-item ms-2 d-flex align-items-center">
+              <span class="mx-2">Page</span>
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                style="width: 80px;"
+                [value]="currentPage()"
+                (change)="updateCurrentPage($event)"
+                min="1" [attr.max]="totalPages()" />
+              <span class="mx-2">of {{ totalPages() }}</span>
+            </li>
+          </ul>
       </nav>
     }
 
