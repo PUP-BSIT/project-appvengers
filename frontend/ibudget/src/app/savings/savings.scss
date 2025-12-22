@@ -18,14 +18,59 @@ main {
 .actions-container {
   margin-bottom: 20px;
   display: flex;
-  justify-content: flex-start;
+  flex-direction: row;
+  align-items: center;
   gap: 1em;
+  width: 100%;
+  flex-wrap: nowrap;
 
-  div:nth-child(2) {
+  > div {
     display: flex;
     align-items: center;
+    flex-shrink: 0;
+  }
+
+  .savings-search-input {
+    margin-bottom: 0;
+    min-width: 220px;
+    max-width: 320px;
+    flex-shrink: 1;
+  }
+
+  button.btn {
+    white-space: nowrap;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    font-size: 1rem;
+    min-width: 150px;
+    flex-shrink: 0;
+  }
+
+  button.btn i {
+    margin-right: 8px;
+    font-size: 1.2em;
   }
 }
+
+@media (max-width: 700px) {
+  .actions-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75em;
+
+    > div, .savings-search-input, button.btn {
+      width: 100%;
+      justify-content: stretch;
+    }
+    
+    .savings-search-input {
+      margin-bottom: 0.5em;
+    }
+  }
+}
+
 
 .savings-container {
   display: flex;
@@ -53,6 +98,62 @@ main {
 
 .no-savings-text p {
   text-align: center;
+}
+
+// --- Search Input Custom Styles ---
+.savings-search-input {
+  max-width: 320px;
+  width: 100%;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1.5px solid #b6b6b6;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  transition: border 0.2s;
+}
+.savings-search-input:focus {
+  border: 1.5px solid #4caf50;
+  outline: none;
+}
+
+// --- Pagination ---
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 1.5rem;
+}
+
+.page-item {
+  margin: 0 2px;
+}
+
+.page-link {
+  border: 1.5px solid #b6b6b6;
+  color: #333;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.45rem 1rem;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.page-item.active .page-link,
+.page-link:focus,
+.page-link:hover {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+  outline: none;
+}
+
+.page-item.disabled .page-link {
+  color: #b6b6b6;
+  background: #f5f5f5;
+  border-color: #e0e0e0;
+  cursor: not-allowed;
 }
 
 @media (max-width: 700px) {
@@ -103,8 +204,17 @@ main {
 .savings-container {
   width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: stretch;
+  flex-wrap: wrap;
+
+  .card {
+    flex: 1 1 25%;
+    max-width: 32%;
+    min-width: 260px;
+    margin: 0.5rem;
+    box-sizing: border-box;
+  }
 }
 
 @media (max-width: 700px) {
