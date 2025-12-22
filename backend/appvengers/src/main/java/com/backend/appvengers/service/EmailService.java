@@ -39,7 +39,7 @@ public class EmailService {
 
     // build a resend link that leads to a frontend page which will call your resend API
     // frontend resend page (preferred) — browser click opens page which issues POST to backend
-    String resendLink = "http://localhost:4200/resend-verification?email=" +
+    String resendLink = "http://i-budget.site/resend-verification?email=" +
         java.net.URLEncoder.encode(to, java.nio.charset.StandardCharsets.UTF_8);
 
     String htmlContent = htmlTemplate.replace("${name}", username)
