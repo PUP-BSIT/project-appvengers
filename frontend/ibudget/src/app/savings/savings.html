@@ -36,9 +36,15 @@
           <div class="spinner-border text-primary" role="status"></div>
         </div>
       } @else if(filteredSavings().length === 0) {
-        <p class="no-savings-message">
-          No savings goals found. Click "Add New Saving" to create one.
-        </p>
+        <div class="no-savings-ui">
+          <div class="no-savings-icon-wrapper">
+            <i class="bi bi-piggy-bank no-savings-icon"></i>
+          </div>
+          <div class="no-savings-text">
+            <h3>No Savings Goals Yet</h3>
+            <p>Start your savings journey!</p>
+          </div>
+        </div>
       }
       
       @for(saving of paginatedSavings(); track saving.saving_id) {
