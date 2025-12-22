@@ -1,79 +1,10 @@
-.no-budgets-ui {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #f8fafc;
-  border: 1.5px dashed #b6b6b6;
-  border-radius: 16px;
-  padding: 70px 24px 70px 24px;
-  margin: 20px auto 40px auto;
-  width: 100%;
-  max-width: 1500px;
-  min-width: 280px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-  transition: max-width 0.2s;
-}
-
-@media (max-width: 700px) {
-  .no-budgets-ui {
-    max-width: 95vw;
-    padding: 32px 8px 24px 8px;
-  }
-}
-
-.no-budgets-icon-wrapper {
-  background: #e9f5ee;
-  border-radius: 50%;
-  padding: 24px;
-  margin-bottom: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.no-budgets-icon {
-  font-size: 3.5rem;
-  color: #4caf50;
-}
-
-.no-budgets-text h3 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 8px;
-  text-align: center;
-}
-.no-budgets-text p {
-  color: #666;
-  font-size: 1.05rem;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.add-budget-btn {
-  font-size: 1.1rem;
-  padding: 10px 28px;
-  border-radius: 24px;
-  margin-top: 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 8px rgba(76,175,80,0.08);
-  transition: background 0.2s;
-}
-.add-budget-btn i {
-  font-size: 1.2rem;
-}
-.add-budget-btn:hover {
-  background: #43a047;
-}
+// --- Mixins ---
 @mixin category-info-container-styles($font-size: 30px) {
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 10px;
-  width: 313px;
+  width: 100%; // Changed from 313px to 100% to prevent mobile overflow
 
   label {
     font-size: 14px;
@@ -82,14 +13,125 @@
 
   span {
     font-size: $font-size;
-    font-weight: light;
+    font-weight: 400;
   }
 }
 
+// --- Layout Containers ---
 .budget-container {
   margin: 10px 20px;
 }
 
+.budget-info-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  flex-wrap: wrap; // Allows wrapping if title/button are too wide
+}
+
+// --- Summary Cards (The Responsive Part) ---
+.summary-cards {
+  display: grid;
+  // Laptop/Desktop View: 3 Columns
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 1.5rem;
+  width: 100%;
+  margin: 2rem 0;
+
+  .card {
+    padding: 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: row;
+    gap: 1.25rem;
+    border: 2px solid rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+    overflow: hidden;
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      flex: 1;
+
+      h3 {
+        margin: 0 0 0.75rem 0;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        font-weight: 600;
+      }
+
+      .amount {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+    }
+
+    i {
+      flex-shrink: 0;
+      align-self: center;
+      padding: 0.75rem;
+      border-radius: 12px;
+      font-size: 2rem;
+    }
+  }
+
+  // Card Color Themes
+  .total-budgets-card {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #3b82f6;
+    h3 { color: #2563eb; }
+    i { background: rgba(59, 130, 246, 0.15); }
+  }
+
+  .total-spent-card {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #ef4444;
+    h3 { color: #dc2626; }
+    i { background: rgba(239, 68, 68, 0.15); }
+  }
+
+  .remaining-card {
+    background: linear-gradient(135deg, #d4f4dd 0%, #a7f3d0 100%);
+    color: #10b981;
+    h3 { color: #059669; }
+    i { background: rgba(16, 185, 129, 0.15); }
+  }
+
+  // --- RESPONSIVE BREAKPOINTS ---
+
+  // Tablet: 2 Columns
+  @media (min-width: 426px) and (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    .remaining-card {
+      grid-column: span 2; // Last card takes full width on tablet
+    }
+  }
+
+  // Mobile S, M, L: Strict 1 Column
+  @media (max-width: 425px) {
+    display: flex !important;
+    flex-direction: column !important; // Forces vertical stacking
+    gap: 1rem;
+
+    .card {
+      width: 100% !important;
+      padding: 1rem;
+      
+      .card-content .amount {
+        font-size: 1.5rem; // Scale down for Mobile L
+      }
+    }
+  }
+}
+
+// --- Individual Budget List Items ---
 .budget-list-container {
   margin-top: 30px;
   display: flex;
@@ -98,290 +140,69 @@
   flex-wrap: wrap;
 }
 
-.budget-info-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.summary-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  width: 100%;
-  margin-bottom: 2rem;
-  margin-top: 2rem;
-}
-
-.card {
-  background: white;
-  padding: 1.25rem;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: row;
-  gap: 1.25rem;
-  border: 2px solid rgba(0, 0, 0, 0.04);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-
-  .card-content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    flex: 1;
-  }
-
-  i {
-    flex-shrink: 0;
-    align-self: center;
-    margin-left: 0.5rem;
-    padding: 0.75rem;
-    border-radius: 12px;
-  }
-}
-
-.card h3 {
-  margin: 0 0 0.75rem 0;
-  font-size: 0.85rem;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  text-align: left;
-  font-weight: 600;
-}
-
-.card .amount {
-  margin: 0;
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: left;
-  line-height: 1;
-}
-
-.total-budgets-card {
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-  border: 2px solid #3b82f630;
-  color: #3b82f6;
-
-  h3 {
-    color: #2563eb;
-  }
-
-  .amount {
-    color: #3b82f6;
-  }
-
-  i {
-    color: #3b82f6;
-    background: rgba(59, 130, 246, 0.15);
-  }
-}
-
-.total-spent-card {
-  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-  border: 2px solid #ef444430;
-  color: #ef4444;
-
-  h3 {
-    color: #dc2626;
-  }
-
-  .amount {
-    color: #ef4444;
-  }
-
-  i {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.15);
-  }
-}
-
-.remaining-card {
-  background: linear-gradient(135deg, #d4f4dd 0%, #a7f3d0 100%);
-  border: 2px solid #10b98130;
-  color: #10b981;
-
-  h3 {
-    color: #059669;
-  }
-
-  .amount {
-    color: #10b981;
-  }
-
-  i {
-    color: #10b981;
-    background: rgba(16, 185, 129, 0.15);
-  }
-}
-
 .budget-card {
+  background: white;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
+  border-radius: 12px;
+  padding: 1rem;
+  min-width: 300px;
+  flex: 1;
 
-.budget-card-header {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   width: 310px;
-   margin-top: -10px;
- }
+  .budget-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 
-.budget-card-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  width: 325px;
-}
-
-.b-card-height {
-  height: 90%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
-  gap: 10px;
-}
-
-.category-info-container {
-  @include category-info-container-styles;
+    @media (max-width: 425px) {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+    }
+  }
 }
 
 .category-info-container-budget-list {
-  @include category-info-container-styles(13px);
-}
-
-.budget-progress-bar-container {
-  width: 90%;
-  margin-top: 10px;
+  @include category-info-container-styles(16px);
 }
 
 .amount-container {
   display: flex;
-  flex-direction: row;
-  flex-direction: flex-start;
   justify-content: space-between;
-  gap: 4px;
-  width: 86%;
+  width: 100%;
+  margin-bottom: 8px;
 }
 
-.progress {
-  height: 20px
-}
-
-.remaining-amount {
-  color: green;
-  font-weight: 400;
-  margin-top: 10px;
-  text-align: start;
-  width: 86%;
+.budget-progress-bar-container {
+  width: 100%;
+  margin-bottom: 15px;
 }
 
 .budget-card-action {
-  margin-top: 15px;
-  width: 90%;
+  width: 100%;
+  button { width: 100%; }
+}
+
+// --- Empty State UI ---
+.no-budgets-ui {
   display: flex;
-  justify-content: center;
-
-  button {
-    width: 100%;
-  }
-}
-
-.spent-amount {
-  span {
-    color: red;
-    font-weight: 400;
-    font-size: 14px;
-  }
-}
-
-// Tablet Specific Adjustments
-@media (min-width: 426px) and (max-width: 768px) {
-  .budget-container {
-    .summary-cards {
-      grid-template-columns: repeat(2, 1fr); // Two columns for tablet
-      
-      .remaining-card {
-        grid-column: span 2; // Make remaining card full width on tablet
-      }
-    }
-    
-    .budget-card .budget-card-header {
-      flex-direction: row;
-    }
-  }
-}
-
-// --- SUMMARY CARDS (Mobile S, M, L Column Layout) ---
-// Desktop / Laptop Styles (Default)
-.summary-cards {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  margin-bottom: 2rem;
-
-  .card {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.25rem;
-    border-radius: 12px;
-    border: none;
-    background: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-    .card-content {
-      h3 {
-        font-size: 0.9rem;
-        color: #6c757d;
-        margin-bottom: 0.25rem;
-      }
-      .amount {
-        font-size: 1.4rem;
-        font-weight: 700;
-        margin: 0;
-      }
-    }
-  }
-
-  // Mobile S, M, and L Styles ONLY (0px to 425px)
-  @media (max-width: 425px) {
-    flex-direction: column !important;
-    
-    .card {
-      width: 100%;
-      margin-bottom: 0.5rem;
-      
-      .card-content .amount {
-        font-size: 1.2rem;
-      }
-    }
-  }
-}
-
-// Optional: Adjust the budget list header for Mobile L as well
-.budget-card-header {
-  display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  padding: 50px 20px;
+  background: #f8fafc;
+  border: 1.5px dashed #b6b6b6;
+  border-radius: 16px;
+  width: 100%;
+  text-align: center;
 
-  @media (max-width: 425px) {
-    flex-direction: column; 
-    align-items: flex-start;
-    gap: 0.75rem;
-    
-    .update-btn-container {
-      width: 100%;
-      display: flex;
-      justify-content: flex-start;
-    }
+  .no-budgets-icon-wrapper {
+    border-radius: 50%;
+    padding: 24px;
+    margin-bottom: 18px;
+
+    i {
+      font-size: 3.5rem;
+      color: #bdc3c7;
+     }
   }
 }
