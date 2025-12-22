@@ -35,7 +35,6 @@ main {
   flex-wrap: wrap;
 }
 
-
 .no-savings-ui {
   display: flex;
   flex-direction: column;
@@ -82,6 +81,7 @@ main {
   margin-bottom: 8px;
   text-align: center;
 }
+
 .no-savings-ui {
   display: flex;
   flex-direction: column;
@@ -98,21 +98,25 @@ main {
   box-shadow: 0 2px 12px rgba(0,0,0,0.04);
   transition: max-width 0.2s;
 }
+
 .savings-container {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
+
 @media (max-width: 700px) {
   .no-savings-ui {
     max-width: 95vw;
     padding: 32px 8px 24px 8px;
   }
 }
+
 .add-saving-btn i {
   font-size: 1.2rem;
 }
+
 .add-saving-btn:hover {
   background: #43a047;
 }
@@ -200,6 +204,7 @@ main {
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -211,6 +216,7 @@ main {
     transform: translateX(0);
     opacity: 1;
   }
+
   to {
     transform: translateX(100%);
     opacity: 0;
@@ -221,9 +227,11 @@ main {
   main {
     margin-left: 0;
   }
+
   .inner-wrapper {
     padding: 6px;
   }
+
   .actions-container {
     flex-direction: column;
     gap: 6px;
@@ -232,12 +240,14 @@ main {
       justify-content: flex-start;
     }
   }
+
   .savings-container {
     flex-direction: column;
     align-items: center;
     width: 100vw;
     padding: 0;
   }
+
   .no-savings-ui {
     max-width: 100vw;
     min-width: unset;
@@ -245,6 +255,7 @@ main {
     margin: 20px 0 0 0;
     border-radius: 10px;
   }
+
   .card {
     margin: 0 !important;
     width: 98vw;
@@ -252,6 +263,7 @@ main {
     min-width: unset;
     border-radius: 10px;
   }
+
   .toast-container {
     top: auto;
     bottom: 8px;
