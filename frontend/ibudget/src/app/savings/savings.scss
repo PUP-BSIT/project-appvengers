@@ -1,8 +1,38 @@
-@use '../../styles/mixins' as m;
+ @use '../../styles/mixins' as m;
 
 $card-color: #fff;
 $border-color: #ccc;
 $box-shadow-definition: 2px 2px 8px rgba(0, 0, 0, 0.1);
+
+// --- Responsive Pagination ---
+@media (max-width: 768px) {
+  .pagination {
+    gap: 0.15rem;
+    margin-top: 1rem;
+  }
+  .page-link {
+    font-size: 1.1rem;
+    padding: 0.65rem 1.1rem;
+    border-radius: 10px;
+  }
+}
+@media (max-width: 425px) {
+  .pagination {
+    flex-wrap: wrap;
+    gap: 0.1rem;
+    margin-top: 0.5rem;
+  }
+  .page-link {
+    font-size: 1.15rem;
+    padding: 0.75rem 1.2rem;
+    border-radius: 12px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .page-item {
+    margin: 2px 0;
+  }
+}
 
 main {
   @include m.page-layout(10px, 100%);
