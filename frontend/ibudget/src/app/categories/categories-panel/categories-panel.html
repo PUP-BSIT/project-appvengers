@@ -26,7 +26,27 @@
   <div class="row g-3">
     @for (category of filteredCategories(); track category.id) {
       <div class="col-md-3">
-        <div class="card category-card shadow-sm h-100">
+        <div class="card category-card shadow-sm h-100 position-relative">
+          <div class="dropdown position-absolute top-0 end-0 m-2">
+            <button class="btn btn-light btn-sm" type="button"
+              data-bs-toggle="dropdown">
+              <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <button class="dropdown-item" type="button"
+                  (click)="onEditCategory(category)">
+                  Edit
+                </button>
+              </li>
+              <li>
+                <button class="dropdown-item text-danger" type="button"
+                  (click)="onDeleteCategory(category)">
+                  Delete
+                </button>
+              </li>
+            </ul>
+          </div>
           <div class="card-body d-flex align-items-center gap-3">
             <div class="icon-wrapper">
               <i class="{{ getIcon(category) }}"></i>
@@ -43,7 +63,7 @@
     }
   </div>
 
-  <!-- Empty State -->
+  <!-- If no categories found -->
   @if (filteredCategories().length === 0) {
     <div class="text-center text-muted mt-5">
       <i class="fas fa-folder-open fa-2x mb-2"></i>

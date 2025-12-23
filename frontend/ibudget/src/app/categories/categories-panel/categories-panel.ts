@@ -25,17 +25,24 @@ export class CategoriesPanel implements OnInit {
     });
   }
 
+  // Switch between 'expense' and 'income' tabs
   setTab(tab: 'expense' | 'income') {
     this.activeTab.set(tab);
     this.filterCategories();
   }
 
+  // Filter categories based on its type
   filterCategories() {
     const type = this.activeTab();
-    const filtered = this.allCategories().filter(c => c.type?.toLowerCase() === type);
+
+    const filtered = this.allCategories().filter(c => 
+      c.type?.toLowerCase() === type
+    );
+
     this.filteredCategories.set(filtered);
   }
 
+  // Get icon based on category name
   getIcon(category: Category): string {
     const iconMap: Record<string, string> = {
       Bills: 'fas fa-file-invoice',
@@ -45,5 +52,13 @@ export class CategoriesPanel implements OnInit {
       Income: 'fas fa-wallet'
     };
     return iconMap[category.name] || 'fas fa-tag';
+  }
+
+  onEditCategory(category: Category) {
+    console.log('Edit category:', category);
+  }
+
+  onDeleteCategory(category: Category) {
+    console.log('Delete category:', category);
   }
 }
