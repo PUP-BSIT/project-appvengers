@@ -6,6 +6,47 @@ import { Saving } from '../../../models/user.model';
 import { SavingsService } from '../../../services/savings.service';
 import { ToggleableSidebar } from "../../toggleable-sidebar/toggleable-sidebar";
 
+/**
+ * Parses flexible date formats from chatbot deep links.
+ * Handles: YYYY, YYYY-MM, YYYY-MM-DD
+ * 
+ * @param dateStr - The date string from query params
+ * @param defaultToToday - If true, defaults to today for current year; if false, defaults to Jan 1st
+ * @returns Valid YYYY-MM-DD string or empty string if unparseable
+ */
+function parseFlexibleDate(dateStr: string | undefined, defaultToToday = false): string {
+  if (!dateStr) return '';
+  
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  
+  // Already valid YYYY-MM-DD format
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return dateStr;
+  }
+  
+  // Year-month format: YYYY-MM → YYYY-MM-01
+  if (/^\d{4}-\d{2}$/.test(dateStr)) {
+    return `${dateStr}-01`;
+  }
+  
+  // Year only format: YYYY
+  if (/^\d{4}$/.test(dateStr)) {
+    const year = parseInt(dateStr, 10);
+    
+    // If current year and defaultToToday is true, return today's date
+    if (year === currentYear && defaultToToday) {
+      return today.toISOString().split('T')[0];
+    }
+    
+    // Otherwise default to January 1st of that year
+    return `${dateStr}-01-01`;
+  }
+  
+  // Unparseable format - return empty (caller should handle default)
+  return '';
+}
+
 @Component({
   selector: 'app-add-saving',
   imports: [Header, RouterLink, ReactiveFormsModule, ToggleableSidebar],
@@ -84,11 +125,10 @@ export class AddSaving implements OnInit {
     // Parse target amount
     const targetAmount = params['targetAmount'] ? parseFloat(params['targetAmount']) : 0;
 
-    // Parse goal date - only use if valid YYYY-MM-DD format
-    let goalDate = '';
-    if (params['goalDate'] && /^\d{4}-\d{2}-\d{2}$/.test(params['goalDate'])) {
-      goalDate = params['goalDate'];
-    }
+    // Parse goal date - use flexible parsing for chatbot deep links
+    // Handles: YYYY, YYYY-MM, YYYY-MM-DD formats
+    // For savings goals, default to January 1st (not today) for future year targets
+    const goalDate = parseFlexibleDate(params['goalDate'], false);
 
     // Validate frequency value
     const validFrequencies = ['Daily', 'Weekly', 'Monthly'];
