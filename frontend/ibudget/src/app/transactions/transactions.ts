@@ -270,8 +270,11 @@ openAddModal() {
     // Parse amount
     const amount = params['amount'] ? parseFloat(params['amount']) : 0;
 
-    // Parse date (default to today)
-    const date = params['date'] || new Date().toISOString().split('T')[0];
+    // Parse date - only use if valid YYYY-MM-DD format, otherwise default to today
+    let date = new Date().toISOString().split('T')[0];
+    if (params['date'] && /^\d{4}-\d{2}-\d{2}$/.test(params['date'])) {
+      date = params['date'];
+    }
 
     // Find category by name and get its ID
     let categoryId: number | undefined = undefined;
