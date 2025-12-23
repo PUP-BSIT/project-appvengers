@@ -62,9 +62,10 @@ export class Login implements OnDestroy {
             console.log('Login successful:', response);
             this.router.navigate(['/dashboard']);
           } else {
+            console.log('Login failed:', response);
             this.errorMessage.set(response.message || 'Login failed');
           }
-        },
+        }, 
         error: (err) => {
           console.error('Login failed:', err);
           if (err.status === 429) {
@@ -77,7 +78,7 @@ export class Login implements OnDestroy {
             this.errorMessage.set(
               `Account locked. Try again in ${minutesLeft} minutes.`);
           } else {
-            this.errorMessage.set('Invalid email or password');
+            this.errorMessage.set(err.error?.message || 'Invalid email or password');
           }
         }
       });
