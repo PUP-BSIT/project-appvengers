@@ -27,8 +27,10 @@
     @for (category of filteredCategories(); track category.id) {
       <div class="col-md-3">
         <div class="card category-card shadow-sm h-100 position-relative">
+
+          <!-- Dropdown menu -->
           <div class="dropdown position-absolute top-0 end-0 m-2">
-            <button class="btn btn-light btn-sm" type="button"
+            <button class="btn btn-sm" type="button"
               data-bs-toggle="dropdown">
               <i class="fas fa-ellipsis-v"></i>
             </button>
@@ -47,6 +49,8 @@
               </li>
             </ul>
           </div>
+
+          <!-- Card Body -->
           <div class="card-body d-flex align-items-center gap-3">
             <div class="icon-wrapper">
               <i class="{{ getIcon(category) }}"></i>
@@ -58,6 +62,7 @@
               </p>
             </div>
           </div>
+
         </div>
       </div>
     }
