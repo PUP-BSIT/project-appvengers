@@ -53,7 +53,7 @@ public class Saving {
   @Column(name = "description")
   private String description;
 
-  @Column(name = "header_color")
+  @Column(name = "header_color", columnDefinition = "varchar(45) default 'bg-dark'")
   private String headerColor;
 
   @CreationTimestamp

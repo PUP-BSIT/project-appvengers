@@ -84,7 +84,13 @@ public class SavingController {
     saving.setTargetAmount(savingDetails.getTargetAmount());
     saving.setCurrentAmount(savingDetails.getCurrentAmount());
     saving.setDescription(savingDetails.getDescription());
-    saving.setHeaderColor(savingDetails.getHeaderColor());
+    
+    String headerColor = savingDetails.getHeaderColor();
+    if (headerColor == null) {
+      headerColor = "bg-dark";
+    }
+    saving.setHeaderColor(headerColor);
+    
     return savingRepository.save(saving);
   }
 
