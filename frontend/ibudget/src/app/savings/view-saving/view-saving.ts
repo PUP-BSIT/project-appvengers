@@ -148,6 +148,28 @@ export class ViewSaving implements OnInit{
     return Math.ceil(remaining / daysLeft);
   }
 
+  // Get Weekly savings needed
+  getWeeklySavingsNeeded(): number {
+    const saving = this.currentSaving();
+    const remaining = this.remainingAmount();
+    const start = saving.created_at;
+    const goal = saving.goal_date;
+    const daysLeft = this.getDuration(start, goal);
+    if (daysLeft <= 0) return 0;
+    return Math.ceil(remaining / (daysLeft / 7));
+  }
+
+  // Get Monthly savings needed
+  getMonthlySavingsNeeded(): number {
+    const saving = this.currentSaving();
+    const remaining = this.remainingAmount();
+    const start = saving.created_at;
+    const goal = saving.goal_date;
+    const daysLeft = this.getDuration(start, goal);
+    if (daysLeft <= 0) return 0;
+    return Math.ceil(remaining / (daysLeft / 30));
+  }
+
   // Calculate remaining amount to reach the target
   updateRemainingAmount() {
     const saving = this.currentSaving();

@@ -104,15 +104,39 @@
           <p>{{ currentSaving().goal_date | date:'mediumDate' }}</p>
         </div>
 
-        <div class="mb-0 alert alert-warning info-card">
-          <i class="bi bi-cash-coin m-1"></i>
-          <label class="text-warning-emphasis mb-1">Daily Saving Needed</label>
+        <!-- Dynamic savings needed based on frequency -->
+        @if(currentSaving().frequency === 'Monthly') {
+          <div class="mb-0 alert alert-warning info-card">
+            <i class="bi bi-calendar2-check m-1"></i>
+            <label class="text-warning-emphasis mb-1">Monthly Saving Needed</label>
+            @if(getMonthlySavingsNeeded() === 0) {
+              <p>Goal date has passed or no remaining amount.</p>
+            } @else {
+              <p>&#8369; {{ getMonthlySavingsNeeded() | number:'1.0-0' }} per month</p>
+            }
+          </div>
+        } @else if(currentSaving().frequency === "Weekly") {
+          <div class="mb-0 alert alert-warning info-card">
+            <i class="bi bi-calendar2-check m-1"></i>
+            <label class="text-warning-emphasis mb-1">Weekly Saving Needed</label>
+            @if(getWeeklySavingsNeeded() === 0) {
+              <p>Goal date has passed or no remaining amount.</p>
+            } @else {
+              <p>&#8369; {{ getWeeklySavingsNeeded() | number:'1.0-0' }} per week</p>
+            }
+          </div>
+        } @else {
+          <div class="mb-0 alert alert-warning info-card">
+            <i class="bi bi-cash-coin m-1"></i>
+            <label class="text-warning-emphasis mb-1">Daily Saving Needed</label>
           @if(getDailySavingsNeeded() === 0) {
             <p>Goal date has passed or no remaining amount.</p>
           } @else {
             <p>&#8369; {{ getDailySavingsNeeded() | number:'1.0-0' }} per day</p>
           }
         </div>
+        }
+        
       </div>
     </div>
   </div>
