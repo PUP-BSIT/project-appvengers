@@ -35,20 +35,16 @@ public class CategoryController {
     @GetMapping
     public List<CategoryWithCountResponse> getCategories(Authentication auth) {
         int userId = currentUserId(auth);
-        List<Category> categories = categoryRepository.findByUserId(userId);
+        List<Object[]> rows = categoryRepository.findCategoriesWithCounts(userId);
+
         List<CategoryWithCountResponse> resp = new ArrayList<>();
-        for (Category c : categories) {
-            Integer refs = 0;
-            if (c.getId() != null) {
-                refs = categoryRepository.countReferencesByCategoryId(c.getId());
-                if (refs == null) refs = 0;
-            }
+        for (Object[] row : rows) {
             resp.add(new CategoryWithCountResponse(
-                c.getId(), 
-                c.getUserId(), 
-                c.getName(), 
-                c.getType(), 
-                refs
+                (Integer) row[0],   // id
+                (Integer) row[1],   // userId
+                (String) row[2],    // name
+                (String) row[3],    // type
+                ((Number) row[4]).intValue() // referencesCount
             ));
         }
         return resp;
