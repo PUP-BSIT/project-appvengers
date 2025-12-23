@@ -2,10 +2,25 @@
   padding: 1rem;
 }
 
-.card {
-  border-radius: 0.5rem;
+.category-card {
+  border-radius: 0.75rem;
+  transition: box-shadow 0.2s ease;
+  &:hover {
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+  }
 }
 
-.nav-tabs .nav-link {
-  cursor: pointer;
+.icon-wrapper {
+  width: 48px;
+  height: 48px;
+  background-color: #fff3cd;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-wrapper i {
+  font-size: 1.5rem;
+  color: #0d6efd;
 }
