@@ -139,6 +139,12 @@
 		<artifactId>spring-aspects</artifactId>
 	</dependency>
 
+  <!-- Google OAuth2 Client -->
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-oauth2-client</artifactId>
+  </dependency>    
+
 	<!-- WebSocket for real-time notifications -->
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
