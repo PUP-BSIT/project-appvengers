@@ -53,6 +53,9 @@ public class Saving {
   @Column(name = "description")
   private String description;
 
+  @Column(name = "header_color")
+  private String headerColor;
+
   @CreationTimestamp
   @Column(name = "created_at", updatable = false)
   private LocalDateTime createdAt;
