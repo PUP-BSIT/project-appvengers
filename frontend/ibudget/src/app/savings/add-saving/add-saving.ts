@@ -86,8 +86,11 @@ export class AddSaving implements OnInit {
     // Parse target amount
     const targetAmount = params['targetAmount'] ? parseFloat(params['targetAmount']) : 0;
 
-    // Parse goal date (use provided date or leave empty for user to fill)
-    const goalDate = params['goalDate'] || '';
+    // Parse goal date - only use if valid YYYY-MM-DD format
+    let goalDate = '';
+    if (params['goalDate'] && /^\d{4}-\d{2}-\d{2}$/.test(params['goalDate'])) {
+      goalDate = params['goalDate'];
+    }
 
     // Validate frequency value
     const validFrequencies = ['Daily', 'Weekly', 'Monthly'];
