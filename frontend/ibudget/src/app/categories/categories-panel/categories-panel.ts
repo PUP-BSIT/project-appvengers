@@ -22,11 +22,18 @@ export class CategoriesPanel implements OnInit {
   filteredCategories = signal<Category[]>([]);
 
   ngOnInit(): void {
-    this.categoriesService.getCategories().subscribe(data => {
-      this.allCategories.set(data);
-      this.filterCategories();
-      this.initDropdowns(); // initialize Bootstrap dropdowns
-    });
+    this.loadCategories();
+  }
+
+  loadCategories() {
+    this.categoriesService.getCategories().subscribe({
+      next: (data: Category[]) => {
+        this.allCategories.set(data);
+        this.filterCategories();
+        this.initDropdowns();
+      },
+      error: (err) => console.error('Failed to load categories:', err)
+    })
   }
 
   // Switch between 'expense' and 'income' tabs
@@ -68,6 +75,15 @@ export class CategoriesPanel implements OnInit {
       Utilities: 'fas fa-lightbulb',
     };
     return iconMap[category.name] || 'fas fa-tag';
+  }
+
+  onCategoryAdded(newCategory: Category) {
+    this.allCategories.set([...this.allCategories(), newCategory]);
+    this.filterCategories();
+    this.initDropdowns();
+
+    // re-fetch after a short delay for consistency
+    setTimeout(() => this.loadCategories(), 1000);
   }
 
   onEditCategory(category: Category) {

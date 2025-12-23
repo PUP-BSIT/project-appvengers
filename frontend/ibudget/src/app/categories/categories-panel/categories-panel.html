@@ -81,4 +81,6 @@
 </div>
 
 <!-- From add-category-modal component -->
-<app-add-category-modal></app-add-category-modal>
+<app-add-category-modal 
+  (categoryAdded)="onCategoryAdded($event)">
+</app-add-category-modal>
