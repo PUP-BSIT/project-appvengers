@@ -108,6 +108,19 @@
         </div>
       </div>
 
+      <!-- Header Color based on Bootstrap Colors -->
+      <div class="mb-3">
+        <label for="header_color" class="form-label">Header Color</label>
+        <select class="form-select" formControlName="header_color" id="header_color">
+          <option value="" disabled selected>Select a color</option>
+          <option value="bg-dark">Dark (Default)</option>
+          <option value="bg-warning">Yellow</option>
+          <option value="bg-danger">Red</option>
+          <option value="bg-success">Green</option>
+          <option value="bg-primary">Blue</option>
+        </select>
+      </div>
+
       <div>
         <label for="description" class="form-label">Description</label>
         <textarea 
