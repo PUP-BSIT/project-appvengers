@@ -22,13 +22,16 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
      * Count references to this category from transactions and budgets.
      * Only counts non-deleted records (deleted_at IS NULL).
      */
-    @Query(value = 
-        "SELECT (SELECT COALESCE(COUNT(*),0) 
-        FROM tbl_transaction 
-        WHERE category_id = :categoryId 
-        AND deleted_at IS NULL) + (SELECT COALESCE(COUNT(*),0) 
-        FROM tbl_budget WHERE category_id = :categoryId 
-        AND deleted_at IS NULL)", nativeQuery = true)
+    @Query(value =
+        "SELECT (SELECT COALESCE(COUNT(*),0) " +
+        "FROM tbl_transaction " +
+        "WHERE category_id = :categoryId " +
+        "AND deleted_at IS NULL) + " +
+        "(SELECT COALESCE(COUNT(*),0) " +
+        "FROM tbl_budget " +
+        "WHERE category_id = :categoryId " +
+        "AND deleted_at IS NULL)",
+        nativeQuery = true)
     Integer countReferencesByCategoryId(
         @Param("categoryId") Integer categoryId
     );
