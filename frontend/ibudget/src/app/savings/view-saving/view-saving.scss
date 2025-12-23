@@ -145,6 +145,13 @@ th {
   font-size: 1.1rem;
 }
 
+.action-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
 @media (max-width: 1200px) {
   .table-container {
     max-width: 100%;
