@@ -2,12 +2,13 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { Category } from '../../../models/user.model';
 import { CategoriesService } from '../../../services/categories.service';
 import { CommonModule } from '@angular/common';
+import { AddCategoryModal } from '../add-category-modal/add-category-modal';
 import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-categories-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AddCategoryModal],
   templateUrl: './categories-panel.html',
   styleUrl: './categories-panel.scss',
 })
