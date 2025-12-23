@@ -45,7 +45,7 @@ export class SavingsService {
       currentAmount: typeof saving.current_amount === 'string' ? 
         Number(saving.current_amount) : saving.current_amount!,
       description: saving.description!,
-      headerColor: saving.header_color!,
+      headerColor: saving.header_color || 'bg-dark',
     };
   }
 
