@@ -150,6 +150,7 @@ export type Saving = {
   target_amount: number;
   current_amount: number;
   description?: string;
+  header_color?: string;
   created_at: string;
   updated_at: string;
   deleted_at?: string;
@@ -164,6 +165,7 @@ export type BackendSaving = {
   targetAmount: number;
   currentAmount: number;
   description?: string;
+  headerColor?: string;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
