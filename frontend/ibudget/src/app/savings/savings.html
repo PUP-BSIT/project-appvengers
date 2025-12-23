@@ -4,13 +4,6 @@
 <main>
   <div class="inner-wrapper">
     <div class="actions-container">
-      <!-- <div>
-        <h3>Savings</h3>
-        <p class="text-secondary">
-          Manage your savings goals and track your progress.
-        </p>
-      </div> -->
-
       <div>
         <input 
           type="text" 
@@ -49,9 +42,15 @@
       
       @for(saving of paginatedSavings(); track saving.saving_id) {
         <div class="card m-2">
-          <div class="card-header bg-dark text-white">
-            <h5 class="card-title">{{ saving.name }}</h5>
-          </div>
+          @if(saving.header_color == null || saving.header_color === '') {
+            <div class="card-header bg-dark text-white">
+              <h5 class="card-title">{{ saving.name }}</h5>
+            </div>
+          } @else {
+            <div [class]="'card-header ' + saving.header_color + ' text-white'">
+              <h5 class="card-title">{{ saving.name }}</h5>
+            </div>
+          }
 
           <div class="card-body">
             <p class="card-text">
