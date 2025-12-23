@@ -46,10 +46,17 @@ export class CategoriesPanel implements OnInit {
   getIcon(category: Category): string {
     const iconMap: Record<string, string> = {
       Bills: 'fas fa-file-invoice',
+      Bonus: 'fas fa-gift',
       Food: 'fas fa-utensils',
       Shopping: 'fas fa-shopping-bag',
+      Salary: 'fas fa-briefcase',
       Transport: 'fas fa-bus',
-      Income: 'fas fa-wallet'
+      Income: 'fas fa-wallet',
+      Investments: 'fas fa-chart-line',
+      Housing: 'fas fa-home',
+      Healthcare: 'fas fa-heartbeat',
+      Entertainment: 'fas fa-film',
+      Utilities: 'fas fa-lightbulb',
     };
     return iconMap[category.name] || 'fas fa-tag';
   }
