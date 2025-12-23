@@ -23,8 +23,7 @@ import { ToggleableSidebar } from "../../toggleable-sidebar/toggleable-sidebar";
     SavingProgress,
     CommonModule,
     FormsModule,
-    ToggleableSidebar,
-    FormsModule
+    ToggleableSidebar
 ],
   templateUrl: './view-saving.html',
   styleUrls: ['./view-saving.scss'],
@@ -38,6 +37,27 @@ export class ViewSaving implements OnInit{
     deleteSavingTransactionModal!: ElementRef;
   @ViewChild('deleteTransactionBtn') 
     deleteTransactionBtn!: ElementRef<HTMLButtonElement>;
+
+  // Selected Transactions Container (Array)
+  selectedTransactionIds = signal<number[]>([]);
+
+  checkSelectedTransaction(event: Event, transactionId: number) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    const currentSelections = this.selectedTransactionIds();
+
+    if (isChecked) {
+      this.selectedTransactionIds.set([...currentSelections, transactionId]);
+    } else {
+      this.selectedTransactionIds.set(currentSelections
+        .filter(id => id !== transactionId));
+    }
+
+    console.log('Selected Transactions:', this.selectedTransactionIds());
+  }
+
+  deleteSelectedTransactions() {
+    console.log('Deleting Transactions:', this.selectedTransactionIds());
+  }
   
   // Master list of transactions
   private allTransactions = signal<SavingTransaction[]>([]);

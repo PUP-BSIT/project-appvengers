@@ -163,6 +163,14 @@
           <app-add-saving-transaction 
             [transactionsLength]="transactionsCount()"
             (addedTransaction)="onSavingsTransactionAdded($event)"/>
+
+          <button 
+              type="button"
+              class="btn btn-sm btn-danger"
+              [disabled]="selectedTransactionIds().length === 0"
+              (click)="deleteSelectedTransactions()">
+                Delete Selected ({{ selectedTransactionIds().length }})
+            </button>
         </div>
       </div>
       
@@ -191,7 +199,16 @@
                 track transaction.id) 
               {
                 <tr>
-                  <td>{{ transaction.transaction_date | date:'mediumDate' }}</td>
+                  <td>
+                    <input 
+                      type="checkbox" 
+                      class="form-check-input"
+                      [value]="transaction.id"
+                      [checked]="selectedTransactionIds().includes(transaction.id)"
+                      (change)="checkSelectedTransaction($event, transaction.id)"/>
+                    &nbsp;
+                    {{ transaction.transaction_date | date:'mediumDate' }}
+                  </td>
                   @if(transaction.savings_action === 'Deposit') {
                     <td class="text-success">
                       <i class="bi bi-arrow-up-circle-fill"></i>
