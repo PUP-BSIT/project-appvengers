@@ -100,18 +100,15 @@ export class AddSaving implements OnInit {
       }
     }
 
-    // Patch form values (only patch goal_date if provided)
+    // Patch form values - always set goal_date (empty if not provided for chatbot deep links)
     const patchData: any = {
       name: params['name'] || '',
       target_amount: isNaN(targetAmount) ? 0 : targetAmount,
       frequency: frequency,
-      description: params['description'] || ''
+      description: params['description'] || '',
+      // Clear goal_date when not provided (chatbot deep links without deadline)
+      goal_date: goalDate || ''
     };
-    
-    // Only include goal_date if a valid date was provided
-    if (goalDate && goalDate !== '') {
-      patchData.goal_date = goalDate;
-    }
     
     this.addSavingForm.patchValue(patchData);
   }

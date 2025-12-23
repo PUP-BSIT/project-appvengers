@@ -52,10 +52,10 @@ $border-color: #e5e7eb;
 
 .chatbot-sidebar {
     position: fixed;
-    top: 0;
+    top: 70px; // Start below header (header height: 70px)
     right: -400px; // Start off-screen
     width: 400px;
-    height: 100vh;
+    height: calc(100vh - 70px); // Subtract header height
     background-color: $chat-sidebar-bg;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
     z-index: 1001;
@@ -67,6 +67,18 @@ $border-color: #e5e7eb;
 
     &.open {
         right: 0;
+    }
+
+    // Mobile L (376px-425px): header height is 65px
+    @media (min-width: 376px) and (max-width: 425px) {
+        top: 65px;
+        height: calc(100vh - 65px);
+    }
+
+    // Mobile S & M (≤375px): header height is 60px
+    @media (max-width: 375px) {
+        top: 60px;
+        height: calc(100vh - 60px);
     }
 
     @media (max-width: 480px) {
