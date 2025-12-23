@@ -221,7 +221,7 @@ project-appvengers/
 | Document | Description |
 |----------|-------------|
 | [Chatbot Implementation Guide](documents/markdown/CHATBOT_IMPLEMENTATION_GUIDE.md) | Bonzi Buddy context-aware AI system |
-| [Smart Navigation Guide](documents/microservice/SMART_NAVIGATION_N8N_UPDATE.md) | Deep linking from chatbot to app features |
+| [Smart Navigation Guide](#) | Deep linking from chatbot to app features |
 | [AI Agent System Prompt](documents/markdown/iBudget_AI_Agent_System_Prompt.md) | Bonzi Buddy personality and behavior |
 | [AI Knowledge Base](documents/markdown/iBudget_Knowledge_Base.md) | RAG information for AI assistance |
 
