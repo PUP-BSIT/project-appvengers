@@ -40,7 +40,8 @@
   }
 
   <div class="card">
-    <div class="card-header bg-dark text-white d-flex align-items-center gap-3">
+    <div [class]="'card-header ' + (currentSaving().header_color || 'bg-dark') + 
+      ' text-white d-flex align-items-center gap-3'">
       <h5 class="mb-0">{{ currentSaving().name }}</h5>
     </div>
 
