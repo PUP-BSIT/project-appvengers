@@ -1,7 +1,9 @@
 <div class="categories-panel-container">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2 class="fw-bold">Manage Categories</h2>
-    <button class="btn btn-primary btn-sm btn-add-cat">+ Add Category</button>
+    <button class="btn btn-primary btn-sm btn-add-cat" 
+      data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+      + Add Category</button>
   </div>
 
   <!-- State Tab -->
@@ -76,3 +78,6 @@
     </div>
   }
 </div>
+
+<!-- From add-category-modal component -->
+<app-add-category-modal></app-add-category-modal>
