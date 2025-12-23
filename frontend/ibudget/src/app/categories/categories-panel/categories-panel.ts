@@ -12,6 +12,7 @@ import * as bootstrap from 'bootstrap';
   templateUrl: './categories-panel.html',
   styleUrl: './categories-panel.scss',
 })
+
 export class CategoriesPanel implements OnInit {
   @ViewChild(AddCategoryModal) addCategoryModalComponent!: AddCategoryModal;
 
