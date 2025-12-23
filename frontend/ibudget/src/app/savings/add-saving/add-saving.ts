@@ -39,6 +39,7 @@ export class AddSaving implements OnInit {
       }],
       current_amount: [Number(0)],
       description: [''],
+      header_color: [''],
       created_at: [''],
       updated_at: [''],
       deleted_at: ['']
@@ -63,6 +64,7 @@ export class AddSaving implements OnInit {
       }],
       current_amount: [Number(0)],
       description: [''],
+      header_color: [''],
       created_at: [this.dateNow],
       updated_at: [this.dateNow],
       deleted_at: ['']

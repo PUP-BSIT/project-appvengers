@@ -37,6 +37,7 @@ export class UpdateSaving implements OnInit{
       }],
       current_amount: [''],
       description: [''],
+      header_color: [''],
       created_at: [''],
       updated_at: [''],
       deleted_at: ['']
@@ -52,6 +53,7 @@ export class UpdateSaving implements OnInit{
   getSavingsData() {
     this.savingService.getSavingById(+this.savingId())
       .subscribe((savingData) => {
+        console.log('Fetched saving data:', savingData);
         this.updateSavingForm.setValue({
           name: savingData.name,
           goal_date: savingData.goal_date,
@@ -59,6 +61,7 @@ export class UpdateSaving implements OnInit{
           target_amount: Number(savingData.target_amount),
           current_amount: Number(savingData.current_amount),
           description: savingData.description,
+          header_color: savingData.header_color,
           created_at: savingData.created_at,
           updated_at: savingData.updated_at,
           deleted_at: savingData.deleted_at
