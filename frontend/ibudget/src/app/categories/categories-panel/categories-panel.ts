@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, ViewChild } from '@angular/core';
 import { Category } from '../../../models/user.model';
 import { CategoriesService } from '../../../services/categories.service';
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,8 @@ import * as bootstrap from 'bootstrap';
   styleUrl: './categories-panel.scss',
 })
 export class CategoriesPanel implements OnInit {
+  @ViewChild(AddCategoryModal) addCategoryModalComponent!: AddCategoryModal;
+
   categoriesService = inject(CategoriesService);
 
   activeTab = signal<'expense' | 'income'>('expense');
@@ -74,5 +76,9 @@ export class CategoriesPanel implements OnInit {
 
   onDeleteCategory(category: Category) {
     console.log('Delete category:', category);
+  }
+
+  openAddCategoryModal() {
+    this.addCategoryModalComponent.openModal();
   }
 }

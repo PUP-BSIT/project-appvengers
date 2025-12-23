@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-add-category-modal',
@@ -10,10 +11,23 @@ import { FormsModule } from '@angular/forms';
 })
 
 export class AddCategoryModal {
+  @ViewChild('addCategoryModal') addCategoryModal!: ElementRef;
   categoryName = '';
 
   saveCategory() {
     console.log('Saving category:', this.categoryName);
     this.categoryName = '';
+  }
+
+  openModal() {
+    const modal = new Modal(this.addCategoryModal.nativeElement, {
+      backdrop: true
+    });
+    modal.show();
+  }
+
+  closeModal() {
+    const modal = Modal.getInstance(this.addCategoryModal.nativeElement);
+    modal?.hide();
   }
 }
