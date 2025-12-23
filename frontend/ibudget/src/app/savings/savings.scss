@@ -101,7 +101,6 @@ main {
   }
 }
 
-
 .savings-container {
   display: flex;
   justify-content:  flex-start;
@@ -184,6 +183,11 @@ main {
   background: #f5f5f5;
   border-color: #e0e0e0;
   cursor: not-allowed;
+}
+
+// bg-yellow
+.bg-yellow {
+  background-color: #FFC000 !important;
 }
 
 @media (max-width: 700px) {
