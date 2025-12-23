@@ -28,6 +28,7 @@ export class SavingsService {
       target_amount: backendSaving.targetAmount,
       current_amount: backendSaving.currentAmount,
       description: backendSaving.description,
+      header_color: backendSaving.headerColor,
       created_at: backendSaving.createdAt,
       updated_at: backendSaving.updatedAt,
       deleted_at: backendSaving.deletedAt,
@@ -44,6 +45,7 @@ export class SavingsService {
       currentAmount: typeof saving.current_amount === 'string' ? 
         Number(saving.current_amount) : saving.current_amount!,
       description: saving.description!,
+      headerColor: saving.header_color!,
     };
   }
 
