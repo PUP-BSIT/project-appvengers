@@ -12,6 +12,47 @@ import { AuthService } from '../../services/auth.service';
 import { CategoriesService } from '../../services/categories.service';
 import { ToggleableSidebar } from "../toggleable-sidebar/toggleable-sidebar";
 
+/**
+ * Parses flexible date formats from chatbot deep links.
+ * Handles: YYYY, YYYY-MM, YYYY-MM-DD
+ * 
+ * @param dateStr - The date string from query params
+ * @param defaultToToday - If true, defaults to today for current year; if false, defaults to Jan 1st
+ * @returns Valid YYYY-MM-DD string or empty string if unparseable
+ */
+function parseFlexibleDate(dateStr: string | undefined, defaultToToday = false): string {
+  if (!dateStr) return '';
+  
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  
+  // Already valid YYYY-MM-DD format
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return dateStr;
+  }
+  
+  // Year-month format: YYYY-MM → YYYY-MM-01
+  if (/^\d{4}-\d{2}$/.test(dateStr)) {
+    return `${dateStr}-01`;
+  }
+  
+  // Year only format: YYYY
+  if (/^\d{4}$/.test(dateStr)) {
+    const year = parseInt(dateStr, 10);
+    
+    // If current year and defaultToToday is true, return today's date
+    if (year === currentYear && defaultToToday) {
+      return today.toISOString().split('T')[0];
+    }
+    
+    // Otherwise default to January 1st of that year
+    return `${dateStr}-01-01`;
+  }
+  
+  // Unparseable format - return empty (caller should handle default)
+  return '';
+}
+
 @Component({
   selector: 'app-transactions',
   imports: [FormsModule, CurrencyPipe, DatePipe, CommonModule, Header, ToggleableSidebar],
@@ -270,10 +311,12 @@ openAddModal() {
     // Parse amount
     const amount = params['amount'] ? parseFloat(params['amount']) : 0;
 
-    // Parse date - only use if valid YYYY-MM-DD format, otherwise default to today
-    let date = new Date().toISOString().split('T')[0];
-    if (params['date'] && /^\d{4}-\d{2}-\d{2}$/.test(params['date'])) {
-      date = params['date'];
+    // Parse date - use flexible parsing for chatbot deep links
+    // Handles: YYYY, YYYY-MM, YYYY-MM-DD formats
+    // For transactions, default to today if current year is provided
+    let date = parseFlexibleDate(params['date'], true);
+    if (!date) {
+      date = new Date().toISOString().split('T')[0];
     }
 
     // Find category by name and get its ID
