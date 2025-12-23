@@ -1,7 +1,8 @@
-import {Component, OnInit, signal, inject} from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { Category } from '../../../models/user.model';
 import { CategoriesService } from '../../../services/categories.service';
 import { CommonModule } from '@angular/common';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-categories-panel',
@@ -10,7 +11,6 @@ import { CommonModule } from '@angular/common';
   templateUrl: './categories-panel.html',
   styleUrl: './categories-panel.scss',
 })
-
 export class CategoriesPanel implements OnInit {
   categoriesService = inject(CategoriesService);
 
@@ -22,6 +22,7 @@ export class CategoriesPanel implements OnInit {
     this.categoriesService.getCategories().subscribe(data => {
       this.allCategories.set(data);
       this.filterCategories();
+      this.initDropdowns(); // initialize Bootstrap dropdowns
     });
   }
 
@@ -29,17 +30,22 @@ export class CategoriesPanel implements OnInit {
   setTab(tab: 'expense' | 'income') {
     this.activeTab.set(tab);
     this.filterCategories();
+    this.initDropdowns(); // re-init when tab changes
   }
 
   // Filter categories based on its type
   filterCategories() {
     const type = this.activeTab();
-
-    const filtered = this.allCategories().filter(c => 
-      c.type?.toLowerCase() === type
+    const filtered = this.allCategories().filter(
+      c => c.type?.toLowerCase() === type
     );
-
     this.filteredCategories.set(filtered);
+  }
+
+  // Initialize Bootstrap dropdowns
+  private initDropdowns() {
+    const triggers = document.querySelectorAll('[data-bs-toggle="dropdown"]');
+    triggers.forEach(el => new bootstrap.Dropdown(el));
   }
 
   // Get icon based on category name
