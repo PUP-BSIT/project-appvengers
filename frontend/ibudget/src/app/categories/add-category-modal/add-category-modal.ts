@@ -21,7 +21,8 @@ export class AddCategoryModal {
 
   openModal() {
     const modal = new Modal(this.addCategoryModal.nativeElement, {
-      backdrop: true
+      backdrop: 'static',
+      keyboard: false
     });
     modal.show();
   }
