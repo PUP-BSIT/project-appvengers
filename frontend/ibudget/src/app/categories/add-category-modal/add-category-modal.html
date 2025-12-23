@@ -8,17 +8,58 @@
         <h5 class="modal-title">Add Category</h5>
         <button type="button" class="btn-close" (click)="closeModal()"></button>
       </div>
+
       <div class="modal-body">
-        <input type="text" class="form-control mb-2"
-               [(ngModel)]="categoryName"
-               placeholder="Category name">
+        <form [formGroup]="categoryForm">
+          <!-- Name -->
+          <label for="name">Category Name</label>
+          <input id="name" formControlName="name" class="form-control mb-2"
+            [class.is-invalid]="isInvalid('name')" placeholder="Category name">
+
+          @if(isInvalid('name')) {
+            <div class="text-danger mb-2">
+              Name is required (min 4 characters).
+            </div>
+          }
+
+          <!-- Description -->
+          <label for="description">Description</label>
+          <textarea id="description" formControlName="description"
+            class="form-control mb-2" placeholder="Optional description">
+          </textarea>
+
+          <!-- Type -->
+          <label for="type">Type</label>
+          <select id="type" formControlName="type" class="form-select mb-2"
+            [class.is-invalid]="isInvalid('type')">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+
+          @if(isInvalid('type')) {
+            <div class="text-danger mb-2">Type is required.</div>
+          }
+        </form>
       </div>
+
       <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="closeModal()">Close</button>
-        <button class="btn btn-primary" (click)="saveCategory()">
+        <button class="btn btn-secondary" 
+          (click)="closeModal()">
+          Close
+        </button>
+        <button class="btn btn-primary" 
+          (click)="saveCategory()">
           Add Category
         </button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Snackbar -->
+@if (showNotification()) {
+  <div class="snackbar" [class.hide]="isHidingNotification()">
+    <i class="fas fa-check-circle"></i>
+    <span>{{ notificationMessage() }}</span>
+  </div>
+}
