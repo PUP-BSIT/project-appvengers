@@ -156,6 +156,10 @@ public class UserService {
             return new ApiResponse(false, "Account temporarily locked due to failed attempts. Please try again later.");
         }
 
+        if (!user.isEmailVerified()) {
+            return new ApiResponse(false, "Email not verified. Please check your email to verify your account.");
+        }
+
         if (!user.isActive()) {
             return new ApiResponse(false, "Account is not active");
         }
