@@ -42,15 +42,10 @@
       
       @for(saving of paginatedSavings(); track saving.saving_id) {
         <div class="card m-2">
-          @if(saving.header_color == null || saving.header_color === '') {
-            <div class="card-header bg-dark text-white">
-              <h5 class="card-title">{{ saving.name }}</h5>
-            </div>
-          } @else {
-            <div [class]="'card-header ' + saving.header_color + ' text-white'">
-              <h5 class="card-title">{{ saving.name }}</h5>
-            </div>
-          }
+          <div [class]="'card-header ' + (saving.header_color || 'bg-dark') + 
+            ' text-white'">
+            <h5 class="card-title">{{ saving.name }}</h5>
+          </div>
 
           <div class="card-body">
             <p class="card-text">
