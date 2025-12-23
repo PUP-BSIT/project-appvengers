@@ -1,6 +1,7 @@
 package com.backend.appvengers.controller;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -10,6 +11,7 @@ import com.backend.appvengers.entity.Category;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.CategoryRepository;
 import com.backend.appvengers.repository.UserRepository;
+import com.backend.appvengers.dto.CategoryWithCountResponse;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -29,11 +31,27 @@ public class CategoryController {
         return user.getId();
     }
 
-    // Get all categories for current user
+    // Get all categories for current user, including how many times each is referenced
     @GetMapping
-    public List<Category> getCategories(Authentication auth) {
+    public List<CategoryWithCountResponse> getCategories(Authentication auth) {
         int userId = currentUserId(auth);
-        return categoryRepository.findByUserId(userId);
+        List<Category> categories = categoryRepository.findByUserId(userId);
+        List<CategoryWithCountResponse> resp = new ArrayList<>();
+        for (Category c : categories) {
+            Integer refs = 0;
+            if (c.getId() != null) {
+                refs = categoryRepository.countReferencesByCategoryId(c.getId());
+                if (refs == null) refs = 0;
+            }
+            resp.add(new CategoryWithCountResponse(
+                c.getId(), 
+                c.getUserId(), 
+                c.getName(), 
+                c.getType(), 
+                refs
+            ));
+        }
+        return resp;
     }
 
     // Add a new category for current user
