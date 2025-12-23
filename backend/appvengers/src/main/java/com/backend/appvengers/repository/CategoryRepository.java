@@ -23,16 +23,17 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
      * Only counts non-deleted records (deleted_at IS NULL).
      */
     @Query(value =
-        "SELECT (SELECT COALESCE(COUNT(*),0) " +
-        "FROM tbl_transaction " +
-        "WHERE category_id = :categoryId " +
-        "AND deleted_at IS NULL) + " +
-        "(SELECT COALESCE(COUNT(*),0) " +
-        "FROM tbl_budget " +
-        "WHERE category_id = :categoryId " +
-        "AND deleted_at IS NULL)",
-        nativeQuery = true)
-    Integer countReferencesByCategoryId(
-        @Param("categoryId") Integer categoryId
-    );
+        "SELECT c.category_id AS id, " +
+        "       c.user_id AS userId, " +
+        "       c.name AS name, " +
+        "       c.type AS type, " +
+        "       (SELECT COUNT(*) FROM tbl_transaction t " +
+        "        WHERE t.category_id = c.category_id " +
+        "        AND t.deleted_at IS NULL) + " +
+        "       (SELECT COUNT(*) FROM tbl_budget b " +
+        "        WHERE b.category_id = c.category_id " +
+        "        AND b.deleted_at IS NULL) AS referencesCount " +
+        "FROM tbl_category c " +
+        "WHERE c.user_id = :userId", nativeQuery = true)
+    List<Object[]> findCategoriesWithCounts(@Param("userId") Integer userId);
 }
