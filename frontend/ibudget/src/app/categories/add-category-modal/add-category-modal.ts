@@ -1,4 +1,6 @@
-import { Component, ViewChild, ElementRef, inject, signal } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, signal, output } from '@angular/core';
+import { Category } from '../../../models/user.model';
+import { CategoriesService } from '../../../services/categories.service';
 import { Modal } from 'bootstrap';
 import { 
   ReactiveFormsModule, 
@@ -18,8 +20,15 @@ import {
 export class AddCategoryModal {
   @ViewChild('addCategoryModal') addCategoryModal!: ElementRef;
 
+  // Form
   formBuilder = inject(FormBuilder);
   categoryForm: FormGroup;
+
+  // Emit to parent if category is added
+  categoryAdded = output<Category>();
+
+  // Service
+  categoriesService = inject(CategoriesService);
 
   // Snackbar signals
   showNotification = signal(false);
@@ -61,10 +70,17 @@ export class AddCategoryModal {
     }
 
     const newCategory = this.categoryForm.value;
-    console.log('Saving category:', newCategory);
 
-    this.showNotificationMessage('Category added successfully!');
-    this.closeModal();
+    this.categoriesService.addCategory(newCategory).subscribe({
+      next: (created: Category) => {
+        this.categoryAdded.emit(created);
+        this.showNotificationMessage(`Category added successfully!`);
+        this.closeModal();
+      },
+      error: () => {
+        this.showNotificationMessage('Error adding category. Please try again.');
+      }
+    });
   }
 
   showNotificationMessage(message: string) {
