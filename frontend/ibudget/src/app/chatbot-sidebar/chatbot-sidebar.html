@@ -6,6 +6,14 @@
             <h3>Bonzi Buddy Chat</h3>
         </div>
         <div class="header-actions">
+            @if (isTTSSupported()) {
+            <button class="icon-btn" 
+                    (click)="toggleAutoSpeak()" 
+                    [class.active]="autoSpeak()"
+                    [title]="autoSpeak() ? 'Disable auto-read responses' : 'Enable auto-read responses'">
+                <i class="bi" [ngClass]="autoSpeak() ? 'bi-volume-up-fill' : 'bi-volume-mute'"></i>
+            </button>
+            }
             <button class="icon-btn" (click)="clearChat()" title="Clear chat history">
                 <i class="bi bi-trash"></i>
             </button>
@@ -43,8 +51,17 @@
                 </div>
                 }
                 
-                <div class="message-time">
-                    {{ msg.timestamp | date:'shortTime' }}
+                <div class="message-footer">
+                    <div class="message-time">
+                        {{ msg.timestamp | date:'shortTime' }}
+                    </div>
+                    @if (!msg.isUser && isTTSSupported()) {
+                    <button class="speak-btn" 
+                            (click)="speakMessage(msg.text)" 
+                            [title]="isSpeaking() ? 'Stop speaking' : 'Read aloud'">
+                        <i class="bi" [ngClass]="isSpeaking() ? 'bi-stop-fill' : 'bi-volume-up'"></i>
+                    </button>
+                    }
                 </div>
             </div>
         </div>
@@ -91,10 +108,37 @@
     </div>
 
     <div class="input-area">
-        <textarea [ngModel]="userInput()" (ngModelChange)="userInput.set($event)" (keydown)="handleKeydown($event)"
-            placeholder="Type a message..." rows="1" maxlength="1000"></textarea>
-        <button class="send-btn" (click)="sendMessage()" [disabled]="!userInput().trim() || isLoading()">
-            <i class="bi bi-send-fill"></i>
-        </button>
+        @if (speechError()) {
+        <div class="speech-error">
+            <i class="bi bi-exclamation-circle"></i>
+            <span>{{ speechError() }}</span>
+        </div>
+        }
+        
+        @if (isRecording() && liveTranscript()) {
+        <div class="live-transcript">
+            <i class="bi bi-mic-fill recording-icon"></i>
+            <span>{{ liveTranscript() }}</span>
+        </div>
+        }
+        
+        <div class="input-row">
+            <textarea [ngModel]="userInput()" (ngModelChange)="userInput.set($event)" (keydown)="handleKeydown($event)"
+                [placeholder]="isRecording() ? 'Listening...' : 'Type a message...'" rows="1" maxlength="1000"></textarea>
+            
+            @if (isSTTSupported()) {
+            <button class="mic-btn" 
+                    (click)="toggleRecording()" 
+                    [class.recording]="isRecording()"
+                    [title]="isRecording() ? 'Stop recording' : 'Voice input'"
+                    [disabled]="isLoading()">
+                <i class="bi" [ngClass]="isRecording() ? 'bi-mic-fill' : 'bi-mic'"></i>
+            </button>
+            }
+            
+            <button class="send-btn" (click)="sendMessage()" [disabled]="!userInput().trim() || isLoading()">
+                <i class="bi bi-send-fill"></i>
+            </button>
+        </div>
     </div>
 </div>

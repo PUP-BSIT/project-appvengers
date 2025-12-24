@@ -1,9 +1,10 @@
-import { Component, signal, inject, effect, ElementRef, ViewChild, AfterViewChecked, OnInit } from '@angular/core';
+import { Component, signal, inject, effect, ElementRef, ViewChild, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ChatbotService, ChatMessage, ChatbotAction, ChatbotResponse } from './chatbot.service';
-import { finalize } from 'rxjs/operators';
+import { SpeechService, SpeechResult, SpeechError } from '../../services/speech.service';
+import { Subscription } from 'rxjs';
 import { marked } from 'marked';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import DOMPurify from 'dompurify';
@@ -15,10 +16,15 @@ import DOMPurify from 'dompurify';
     templateUrl: './chatbot-sidebar.html',
     styleUrl: './chatbot-sidebar.scss'
 })
-export class ChatbotSidebar implements AfterViewChecked, OnInit {
+export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
     private chatbotService = inject(ChatbotService);
+    private speechService = inject(SpeechService);
     private sanitizer = inject(DomSanitizer);
     private router = inject(Router);
+
+    // Subscriptions for cleanup
+    private speechSubscription: Subscription | null = null;
+    private errorSubscription: Subscription | null = null;
 
     // isOpen = signal(false); // Removed local state
     isOpen = this.chatbotService.isOpen;
@@ -28,6 +34,15 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit {
     loadingWord = signal('Thinking...');
     lastError = signal<string | null>(null);
     showWelcome = signal(true);
+
+    // Speech-related signals
+    isRecording = this.speechService.isListening;
+    isSpeaking = this.speechService.isSpeaking;
+    isSTTSupported = this.speechService.isSTTSupported;
+    isTTSSupported = this.speechService.isTTSSupported;
+    autoSpeak = signal(false); // Auto-read bot responses
+    liveTranscript = signal(''); // Live transcript during recording
+    speechError = signal<string | null>(null);
 
     @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
@@ -63,6 +78,31 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit {
                 this.chatbotService.saveMessages(msgs);
             }
         });
+
+        // Subscribe to speech recognition results
+        this.speechSubscription = this.speechService.transcript$.subscribe(
+            (result: SpeechResult) => {
+                // Update live transcript
+                this.liveTranscript.set(result.transcript);
+                
+                // When speech recognition finalizes, set the input
+                if (result.isFinal) {
+                    this.userInput.set(result.transcript);
+                    this.liveTranscript.set('');
+                }
+            }
+        );
+
+        // Subscribe to speech errors
+        this.errorSubscription = this.speechService.error$.subscribe(
+            (error: SpeechError) => {
+                this.speechError.set(error.message);
+                this.liveTranscript.set('');
+                
+                // Auto-clear error after 5 seconds
+                setTimeout(() => this.speechError.set(null), 5000);
+            }
+        );
     }
 
     ngOnInit() {
@@ -75,6 +115,26 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit {
             // Show welcome message for new sessions
             this.addWelcomeMessage();
         }
+
+        // Load auto-speak preference from localStorage
+        const savedAutoSpeak = localStorage.getItem('bonzi_autoSpeak');
+        if (savedAutoSpeak === 'true') {
+            this.autoSpeak.set(true);
+        }
+    }
+
+    ngOnDestroy() {
+        // Cleanup subscriptions
+        if (this.speechSubscription) {
+            this.speechSubscription.unsubscribe();
+        }
+        if (this.errorSubscription) {
+            this.errorSubscription.unsubscribe();
+        }
+        
+        // Stop any ongoing speech
+        this.speechService.stopListening();
+        this.speechService.stopSpeaking();
     }
 
     private addWelcomeMessage() {
@@ -137,6 +197,11 @@ this.chatbotService.sendMessage(text)
                     
                     this.messages.update(msgs => [...msgs, botMessage]);
                     this.isLoading.set(false);
+
+                    // Auto-speak bot response if enabled
+                    if (this.autoSpeak() && parsed.text) {
+                        this.speakMessage(parsed.text);
+                    }
                 },
                 error: (error) => {
                     // Extract user-friendly error message from error object
@@ -419,5 +484,74 @@ parseMarkdown(text: string): SafeHtml {
             default:
                 console.warn('Unknown action type:', action.type);
         }
+    }
+
+    // ==================== Speech Methods ====================
+
+    /**
+     * Toggle voice recording on/off.
+     * Starts/stops speech recognition.
+     */
+    toggleRecording(): void {
+        if (!this.isSTTSupported()) {
+            this.speechError.set('Speech recognition is not supported in your browser. Try Chrome or Edge.');
+            setTimeout(() => this.speechError.set(null), 5000);
+            return;
+        }
+
+        this.speechError.set(null);
+        
+        if (this.isRecording()) {
+            this.speechService.stopListening();
+            this.liveTranscript.set('');
+        } else {
+            this.speechService.startListening();
+        }
+    }
+
+    /**
+     * Toggle auto-speak feature for bot responses.
+     */
+    toggleAutoSpeak(): void {
+        if (!this.isTTSSupported()) {
+            this.speechError.set('Text-to-speech is not supported in your browser.');
+            setTimeout(() => this.speechError.set(null), 5000);
+            return;
+        }
+
+        const newValue = !this.autoSpeak();
+        this.autoSpeak.set(newValue);
+        
+        // Persist preference
+        localStorage.setItem('bonzi_autoSpeak', String(newValue));
+
+        // Stop any ongoing speech when turning off
+        if (!newValue && this.isSpeaking()) {
+            this.speechService.stopSpeaking();
+        }
+    }
+
+    /**
+     * Speak a message aloud using TTS.
+     * @param text The text to speak
+     */
+    speakMessage(text: string): void {
+        if (!this.isTTSSupported()) {
+            return;
+        }
+
+        // If already speaking the same message, stop it
+        if (this.isSpeaking()) {
+            this.speechService.stopSpeaking();
+        } else {
+            this.speechService.speak(text);
+        }
+    }
+
+    /**
+     * Stop any ongoing speech.
+     */
+    stopSpeaking(): void {
+        this.speechService.stopSpeaking();
     }
 }
