@@ -1138,3 +1138,42 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         box-shadow: 0 3px 12px rgba($primary-color, 0.5);
     }
 }
+
+// ==================== Chart Visualization Styles ====================
+// Styles for the embedded chat charts in bot messages
+
+.message.bot {
+    // Ensure chart container fits properly within message bubble
+    app-chat-chart {
+        display: block;
+        margin-top: 10px;
+        
+        // Override chart container styles for better integration
+        ::ng-deep .chat-chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba($border-color, 0.8);
+            
+            .chart-title {
+                color: $text-color;
+                font-size: 0.85rem;
+            }
+            
+            .chart-wrapper {
+                // Compact height for chat context
+                height: 180px;
+                
+                @media (max-width: 480px) {
+                    height: 160px;
+                }
+            }
+        }
+    }
+    
+    // When both visualization and action are present
+    &:has(app-chat-chart) {
+        .message-action {
+            margin-top: 10px;
+        }
+    }
+}

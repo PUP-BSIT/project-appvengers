@@ -2,7 +2,8 @@ import { Component, signal, inject, effect, ElementRef, ViewChild, AfterViewChec
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ChatbotService, ChatMessage, ChatbotAction, ChatbotResponse } from './chatbot.service';
+import { ChatbotService, ChatMessage, ChatbotAction, ChatbotResponse, ChatVisualization } from './chatbot.service';
+import { ChatChart } from './chat-chart/chat-chart';
 import { SpeechService, SpeechResult, SpeechError } from '../../services/speech.service';
 import { Subscription } from 'rxjs';
 import { marked } from 'marked';
@@ -12,7 +13,7 @@ import DOMPurify from 'dompurify';
 @Component({
     selector: 'app-chatbot-sidebar',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, ChatChart],
     templateUrl: './chatbot-sidebar.html',
     styleUrl: './chatbot-sidebar.scss'
 })
@@ -200,12 +201,13 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
                     // Parse the response to extract text and action
                     const parsed = this.parseResponse(response);
                     
-                    // Create message with optional action
+                    // Create message with optional action and visualization
                     const botMessage: ChatMessage = {
                         text: parsed.text,
                         isUser: false,
                         timestamp: new Date(),
-                        action: parsed.action
+                        action: parsed.action,
+                        visualization: parsed.visualization
                     };
                     
                     this.messages.update(msgs => [...msgs, botMessage]);
@@ -305,10 +307,14 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
     }
 
     /**
-     * Parses the chatbot response to extract text and optional action.
+     * Parses the chatbot response to extract text, optional action, and visualization.
      * Handles both plain text responses and structured JSON responses.
      */
-    private parseResponse(response: ChatbotResponse | any): { text: string; action?: ChatbotAction } {
+    private parseResponse(response: ChatbotResponse | any): { 
+        text: string; 
+        action?: ChatbotAction;
+        visualization?: ChatVisualization;
+    } {
         // If response is a string, return as-is
         if (typeof response === 'string') {
             return { text: response };
@@ -337,7 +343,17 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
             }
         }
 
-        return { text, action };
+        // Extract visualization from response or text
+        let visualization = response.visualization;
+        if (!visualization && typeof text === 'string') {
+            visualization = this.extractVisualizationFromText(text);
+            if (visualization) {
+                // Remove visualization JSON block from displayed text
+                text = this.removeVisualizationFromText(text);
+            }
+        }
+
+        return { text, action, visualization };
     }
 
     /**
@@ -471,6 +487,75 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
         text = text.replace(/\[ACTION:\w+:[^\]]+\]/gi, '');
         // Remove inline JSON objects with action
         text = text.replace(/\{[^{}]*"action"\s*:\s*\{[^{}]*\}[^{}]*\}/gi, '');
+        // Clean up extra whitespace
+        text = text.replace(/\n{3,}/g, '\n\n').trim();
+        return text;
+    }
+
+    /**
+     * Extracts visualization data from text that may contain embedded JSON.
+     * Looks for JSON blocks marked with ```json containing a visualization object.
+     */
+    private extractVisualizationFromText(text: string): ChatVisualization | undefined {
+        // Pattern 1: Look for ```json ... ``` blocks with visualization
+        const jsonBlockRegex = /```json\s*(\{[\s\S]*?"visualization"[\s\S]*?\})\s*```/i;
+        const blockMatch = text.match(jsonBlockRegex);
+        if (blockMatch) {
+            try {
+                const parsed = JSON.parse(blockMatch[1]);
+                if (parsed.visualization && this.isValidVisualization(parsed.visualization)) {
+                    return parsed.visualization as ChatVisualization;
+                }
+            } catch (e) {
+                // Invalid JSON, ignore
+            }
+        }
+
+        // Pattern 2: Look for standalone visualization JSON block
+        const vizBlockRegex = /```json\s*(\{[\s\S]*?"type"\s*:\s*"(?:doughnut|pie|bar|line)"[\s\S]*?\})\s*```/i;
+        const vizMatch = text.match(vizBlockRegex);
+        if (vizMatch) {
+            try {
+                const parsed = JSON.parse(vizMatch[1]);
+                if (this.isValidVisualization(parsed)) {
+                    return parsed as ChatVisualization;
+                }
+            } catch (e) {
+                // Invalid JSON, ignore
+            }
+        }
+
+        return undefined;
+    }
+
+    /**
+     * Validates that an object has the required ChatVisualization structure.
+     */
+    private isValidVisualization(obj: any): boolean {
+        if (!obj || typeof obj !== 'object') return false;
+        
+        const validTypes = ['doughnut', 'pie', 'bar', 'line'];
+        if (!validTypes.includes(obj.type)) return false;
+        
+        if (!obj.data || !Array.isArray(obj.data.labels) || !Array.isArray(obj.data.values)) {
+            return false;
+        }
+        
+        if (obj.data.labels.length === 0 || obj.data.values.length === 0) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
+     * Removes visualization JSON blocks from text for cleaner display.
+     */
+    private removeVisualizationFromText(text: string): string {
+        // Remove ```json ... ``` blocks containing visualization
+        text = text.replace(/```json\s*\{[\s\S]*?"visualization"[\s\S]*?\}\s*```/gi, '');
+        // Remove standalone visualization blocks
+        text = text.replace(/```json\s*\{[\s\S]*?"type"\s*:\s*"(?:doughnut|pie|bar|line)"[\s\S]*?\}\s*```/gi, '');
         // Clean up extra whitespace
         text = text.replace(/\n{3,}/g, '\n\n').trim();
         return text;

@@ -79,6 +79,11 @@
             <div class="message" [class.user]="msg.isUser" [class.bot]="!msg.isUser">
                 <div class="message-content" [innerHTML]="parseMarkdown(msg.text)"></div>
                 
+                <!-- Render visualization chart if present -->
+                @if (msg.visualization && !msg.isUser) {
+                <app-chat-chart [visualization]="msg.visualization"></app-chat-chart>
+                }
+                
                 @if (msg.action && !msg.isUser) {
                 <div class="message-action">
                     <button class="action-btn" (click)="executeAction(msg.action)">
