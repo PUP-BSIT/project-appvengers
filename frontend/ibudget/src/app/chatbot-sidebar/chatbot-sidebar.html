@@ -160,23 +160,35 @@
         </div>
         }
         
-        <div class="input-row">
-            <textarea [ngModel]="userInput()" (ngModelChange)="userInput.set($event)" (keydown)="handleKeydown($event)"
-                [placeholder]="isRecording() ? 'Listening... Click mic to stop' : 'Type a message...'" rows="2" maxlength="1000"></textarea>
+        <div class="input-container">
+            <textarea 
+                #textareaRef
+                [ngModel]="userInput()" 
+                (ngModelChange)="userInput.set($event)" 
+                (keydown)="handleKeydown($event)"
+                (input)="autoResize($event)"
+                [placeholder]="isRecording() ? 'Listening... Click mic to stop' : 'Type a message...'" 
+                rows="1" 
+                maxlength="1000"></textarea>
             
-            @if (isSTTSupported()) {
-            <button class="mic-btn" 
-                    (click)="toggleRecording()" 
-                    [class.recording]="isRecording()"
-                    [title]="isRecording() ? 'Stop recording' : 'Voice input'"
-                    [disabled]="isLoading()">
-                <i class="bi" [ngClass]="isRecording() ? 'bi-mic-fill' : 'bi-mic'"></i>
-            </button>
-            }
-            
-            <button class="send-btn" (click)="sendMessage()" [disabled]="!userInput().trim() || isLoading()">
-                <i class="bi bi-send-fill"></i>
-            </button>
+            <div class="input-actions">
+                @if (isSTTSupported()) {
+                <button class="action-icon-btn mic-btn" 
+                        (click)="toggleRecording()" 
+                        [class.recording]="isRecording()"
+                        [title]="isRecording() ? 'Stop recording' : 'Voice input'"
+                        [disabled]="isLoading()">
+                    <i class="bi" [ngClass]="isRecording() ? 'bi-mic-fill' : 'bi-mic'"></i>
+                </button>
+                }
+                
+                <button class="action-icon-btn send-btn" 
+                        (click)="sendMessage()" 
+                        [disabled]="!userInput().trim() || isLoading()"
+                        [class.active]="userInput().trim() && !isLoading()">
+                    <i class="bi bi-arrow-up"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>

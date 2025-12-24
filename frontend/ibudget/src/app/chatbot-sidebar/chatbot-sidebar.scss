@@ -557,14 +557,10 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
 .input-area {
     // Floating card-like input bar
     margin: 12px;
-    padding: 16px;
-    background: $chat-bg;
-    border-radius: 16px;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 8px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 
     .speech-error {
         display: flex;
@@ -590,7 +586,7 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         padding: 8px 12px;
         background-color: rgba($primary-color, 0.1);
         border: 1px solid rgba($primary-color, 0.2);
-        border-radius: 8px;
+        border-radius: 20px;
         color: $text-color;
         font-size: 0.9rem;
         font-style: italic;
@@ -602,98 +598,120 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         }
     }
 
-    .input-row {
+    // Claude-style input container with embedded buttons
+    .input-container {
         display: flex;
-        gap: 10px;
         align-items: flex-end;
-    }
-
-    textarea {
-        flex: 1;
-        background-color: $input-bg;
+        gap: 8px;
+        background: $input-bg;
         border: 1px solid #d1d5db;
-        border-radius: 8px;
-        padding: 12px 14px;
-        color: $text-color;
-        resize: none;
-        min-height: 48px;
-        max-height: 150px;
-        font-family: inherit;
-        font-size: 0.95rem;
-        line-height: 1.5;
-        outline: none;
+        border-radius: 24px;
+        padding: 8px 8px 8px 16px;
         transition: border-color 0.2s, box-shadow 0.2s;
 
-        &:focus {
+        &:focus-within {
             border-color: $primary-color;
-            box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
+            box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
         }
 
-        &::placeholder {
-            color: #9ca3af;
-        }
-    }
+        textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 6px 0;
+            color: $text-color;
+            resize: none;
+            min-height: 24px;
+            max-height: 150px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            outline: none;
+            overflow-y: auto;
 
-    .mic-btn {
-        width: 45px;
-        height: 45px;
-        background-color: #f3f4f6;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        color: $text-color;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-        flex-shrink: 0;
+            &::placeholder {
+                color: #9ca3af;
+            }
 
-        &:hover:not(:disabled) {
-            background-color: #e5e7eb;
-            border-color: $primary-color;
-            color: $primary-color;
-        }
+            // Custom scrollbar for textarea
+            &::-webkit-scrollbar {
+                width: 4px;
+            }
 
-        &:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
 
-        &.recording {
-            background-color: #dc2626;
-            border-color: #dc2626;
-            color: white;
-            animation: recordingPulse 1.5s ease-in-out infinite;
-
-            &:hover {
-                background-color: #b91c1c;
-                border-color: #b91c1c;
+            &::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 2px;
             }
         }
-    }
 
-    .send-btn {
-        width: 45px;
-        height: 45px;
-        background-color: $primary-color;
-        border: none;
-        border-radius: 8px;
-        color: white;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background-color 0.2s, opacity 0.2s;
-        flex-shrink: 0;
-
-        &:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            background-color: #9ca3af;
+        .input-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
         }
 
-        &:not(:disabled):hover {
-            background-color: color.adjust($primary-color, $lightness: -5%);
+        // Icon buttons inside input (Claude-style)
+        .action-icon-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+
+            &:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+        }
+
+        .mic-btn {
+            background: transparent;
+            color: #6b7280;
+
+            &:hover:not(:disabled) {
+                background: #f3f4f6;
+                color: $primary-color;
+            }
+
+            &.recording {
+                background: #dc2626;
+                color: white;
+                animation: recordingPulse 1.5s ease-in-out infinite;
+
+                &:hover {
+                    background: #b91c1c;
+                }
+            }
+        }
+
+        .send-btn {
+            background: #e5e7eb;
+            color: #9ca3af;
+
+            &.active {
+                background: $primary-color;
+                color: white;
+
+                &:hover {
+                    background: color.adjust($primary-color, $lightness: -5%);
+                    transform: scale(1.05);
+                }
+            }
+
+            &:disabled {
+                background: #e5e7eb;
+                color: #9ca3af;
+            }
         }
     }
 }

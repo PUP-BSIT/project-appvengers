@@ -50,6 +50,7 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
     currentVoiceName = this.speechService.currentVoiceName;
 
     @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
+    @ViewChild('textareaRef') private textareaRef!: ElementRef<HTMLTextAreaElement>;
 
     private readonly funWords = [
         'Thinking...', 'Processing...', 'Analyzing...', 'Computing...',
@@ -183,10 +184,11 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
         // Add user message
         this.messages.update(msgs => [...msgs, { text, isUser: true, timestamp: new Date() }]);
         this.userInput.set('');
+        this.resetTextareaHeight(); // Reset textarea to original size
         this.isLoading.set(true);
         this.lastError.set(null);
 
-this.chatbotService.sendMessage(text)
+        this.chatbotService.sendMessage(text)
             .subscribe({
                 next: (response: ChatbotResponse | any) => {
                     // Handle null/undefined response
@@ -270,7 +272,32 @@ this.chatbotService.sendMessage(text)
         }
     }
 
-parseMarkdown(text: string): SafeHtml {
+    /**
+     * Auto-resize textarea based on content (Claude/ChatGPT style).
+     * Dynamically grows and shrinks with content.
+     */
+    autoResize(event: Event): void {
+        const textarea = event.target as HTMLTextAreaElement;
+        if (!textarea) return;
+        
+        // Reset height to auto to get the correct scrollHeight
+        textarea.style.height = 'auto';
+        
+        // Set height to scrollHeight (content height), capped at max-height via CSS
+        const newHeight = Math.min(textarea.scrollHeight, 150); // 150px max
+        textarea.style.height = `${newHeight}px`;
+    }
+
+    /**
+     * Reset textarea height after sending message.
+     */
+    private resetTextareaHeight(): void {
+        if (this.textareaRef?.nativeElement) {
+            this.textareaRef.nativeElement.style.height = 'auto';
+        }
+    }
+
+    parseMarkdown(text: string): SafeHtml {
         const rawHtml = marked.parse(text) as string;
         // Sanitize HTML to prevent XSS attacks before bypassing Angular's security
         const cleanHtml = DOMPurify.sanitize(rawHtml);
