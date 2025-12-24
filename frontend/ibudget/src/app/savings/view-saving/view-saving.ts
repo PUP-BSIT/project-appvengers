@@ -56,7 +56,44 @@ export class ViewSaving implements OnInit{
   }
 
   deleteSelectedTransactions() {
-    console.log('Deleting Transactions:', this.selectedTransactionIds());
+    if (this.selectedTransactionIds().length === 0) return;
+
+    if (!confirm('Are you sure you want to delete the selected transactions?')) {
+      return;
+    }
+
+    this.savingTransactionService.deleteMultipleSavingTransactions(
+      this.savingId(),
+      this.selectedTransactionIds()
+    ).subscribe({
+      next: () => {
+        // Remove deleted transactions from the list
+        this.allTransactions.update(transactions =>
+          transactions.filter(t => !this.selectedTransactionIds().includes(t.id))
+        );
+
+        // Clear selection
+        this.selectedTransactionIds.set([]);
+
+        // Refresh amounts
+        this.refreshCurrentAmount();
+
+        // Show success toast
+        this.toastMessage.set('Selected transactions deleted successfully!');
+        this.toastType.set('success');
+        const toast = Toast.getOrCreateInstance(this.viewSavingToast.nativeElement);
+        toast.show();
+        setTimeout(() => toast.hide(), 3000);
+      },
+      error: (err) => {
+        console.error('Failed to delete transactions', err);
+        this.toastMessage.set('Failed to delete transactions. Please try again.');
+        this.toastType.set('error');
+        const toast = Toast.getOrCreateInstance(this.viewSavingToast.nativeElement);
+        toast.show();
+        setTimeout(() => toast.hide(), 3000);
+      }
+    });
   }
   
   // Master list of transactions
