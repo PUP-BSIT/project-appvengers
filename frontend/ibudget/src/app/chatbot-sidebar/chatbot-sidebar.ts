@@ -43,6 +43,11 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
     autoSpeak = signal(false); // Auto-read bot responses
     liveTranscript = signal(''); // Live transcript during recording
     speechError = signal<string | null>(null);
+    
+    // Voice settings
+    showSettings = signal(false);
+    availableVoices = this.speechService.availableVoices;
+    currentVoiceName = this.speechService.currentVoiceName;
 
     @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
@@ -559,5 +564,103 @@ parseMarkdown(text: string): SafeHtml {
      */
     stopSpeaking(): void {
         this.speechService.stopSpeaking();
+    }
+
+    // ==================== Settings Methods ====================
+
+    /**
+     * Toggle the settings panel visibility.
+     */
+    toggleSettings(): void {
+        this.showSettings.update(v => !v);
+    }
+
+    /**
+     * Select a voice by name.
+     * @param voiceName The name of the voice to select
+     */
+    selectVoice(voiceName: string): void {
+        this.speechService.setVoiceByName(voiceName);
+    }
+
+    /**
+     * Preview the currently selected voice.
+     */
+    previewVoice(): void {
+        const testText = 'Hello! This is how I will read messages. The price is ₱1,500 pesos.';
+        this.speechService.speak(testText);
+    }
+
+    /**
+     * Get voices grouped by language for the dropdown.
+     */
+    getGroupedVoices(): { lang: string; langName: string; voices: SpeechSynthesisVoice[] }[] {
+        const voices = this.availableVoices();
+        const grouped = new Map<string, SpeechSynthesisVoice[]>();
+        
+        // Group voices by language
+        voices.forEach(voice => {
+            const lang = voice.lang;
+            if (!grouped.has(lang)) {
+                grouped.set(lang, []);
+            }
+            grouped.get(lang)!.push(voice);
+        });
+
+        // Convert to array and sort, prioritizing English and Filipino
+        const result: { lang: string; langName: string; voices: SpeechSynthesisVoice[] }[] = [];
+        const priorityLangs = ['en-PH', 'fil-PH', 'en-US', 'en-GB', 'en-AU'];
+        
+        // Add priority languages first
+        priorityLangs.forEach(lang => {
+            if (grouped.has(lang)) {
+                result.push({
+                    lang,
+                    langName: this.getLanguageName(lang),
+                    voices: grouped.get(lang)!
+                });
+                grouped.delete(lang);
+            }
+        });
+
+        // Add remaining languages sorted alphabetically
+        Array.from(grouped.entries())
+            .sort((a, b) => a[0].localeCompare(b[0]))
+            .forEach(([lang, voiceList]) => {
+                result.push({
+                    lang,
+                    langName: this.getLanguageName(lang),
+                    voices: voiceList
+                });
+            });
+
+        return result;
+    }
+
+    /**
+     * Get human-readable language name from BCP-47 code.
+     */
+    private getLanguageName(langCode: string): string {
+        const langNames: Record<string, string> = {
+            'en-PH': '🇵🇭 English (Philippines)',
+            'fil-PH': '🇵🇭 Filipino',
+            'en-US': '🇺🇸 English (US)',
+            'en-GB': '🇬🇧 English (UK)',
+            'en-AU': '🇦🇺 English (Australia)',
+            'en-IN': '🇮🇳 English (India)',
+            'en-CA': '🇨🇦 English (Canada)',
+            'es-ES': '🇪🇸 Spanish (Spain)',
+            'es-MX': '🇲🇽 Spanish (Mexico)',
+            'fr-FR': '🇫🇷 French',
+            'de-DE': '🇩🇪 German',
+            'it-IT': '🇮🇹 Italian',
+            'ja-JP': '🇯🇵 Japanese',
+            'ko-KR': '🇰🇷 Korean',
+            'zh-CN': '🇨🇳 Chinese (Simplified)',
+            'zh-TW': '🇹🇼 Chinese (Traditional)',
+            'pt-BR': '🇧🇷 Portuguese (Brazil)',
+            'ru-RU': '🇷🇺 Russian',
+        };
+        return langNames[langCode] || langCode;
     }
 }

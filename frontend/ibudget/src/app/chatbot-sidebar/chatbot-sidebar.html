@@ -8,6 +8,12 @@
         <div class="header-actions">
             @if (isTTSSupported()) {
             <button class="icon-btn" 
+                    (click)="toggleSettings()" 
+                    [class.active]="showSettings()"
+                    title="Voice settings">
+                <i class="bi bi-gear"></i>
+            </button>
+            <button class="icon-btn" 
                     (click)="toggleAutoSpeak()" 
                     [class.active]="autoSpeak()"
                     [title]="autoSpeak() ? 'Disable auto-read responses' : 'Enable auto-read responses'">
@@ -22,6 +28,39 @@
             </button>
         </div>
     </div>
+
+    @if (showSettings()) {
+    <div class="settings-panel">
+        <div class="settings-header">
+            <i class="bi bi-volume-up"></i>
+            <span>Voice Settings</span>
+        </div>
+        <div class="settings-content">
+            <label class="settings-label">Select Voice</label>
+            <select class="voice-select" 
+                    [ngModel]="currentVoiceName()" 
+                    (ngModelChange)="selectVoice($event)">
+                @for (group of getGroupedVoices(); track group.lang) {
+                <optgroup [label]="group.langName">
+                    @for (voice of group.voices; track voice.name) {
+                    <option [value]="voice.name">
+                        {{ voice.name }}
+                    </option>
+                    }
+                </optgroup>
+                }
+            </select>
+            <button class="preview-btn" (click)="previewVoice()" [disabled]="isSpeaking()">
+                <i class="bi" [ngClass]="isSpeaking() ? 'bi-stop-fill' : 'bi-play-fill'"></i>
+                {{ isSpeaking() ? 'Stop' : 'Preview Voice' }}
+            </button>
+            <p class="settings-hint">
+                <i class="bi bi-info-circle"></i>
+                Choose a Philippine English voice for correct peso (₱) pronunciation.
+            </p>
+        </div>
+    </div>
+    }
 
     <div class="messages-container" #scrollContainer>
         @if (messages().length === 0) {
@@ -124,7 +163,7 @@
         
         <div class="input-row">
             <textarea [ngModel]="userInput()" (ngModelChange)="userInput.set($event)" (keydown)="handleKeydown($event)"
-                [placeholder]="isRecording() ? 'Listening... Click mic to stop' : 'Type a message...'" rows="1" maxlength="1000"></textarea>
+                [placeholder]="isRecording() ? 'Listening... Click mic to stop' : 'Type a message...'" rows="2" maxlength="1000"></textarea>
             
             @if (isSTTSupported()) {
             <button class="mic-btn" 
