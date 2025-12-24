@@ -276,4 +276,15 @@
       <small>© 2025 iBudget. All rights reserved.</small>
     </div>
   </footer>
+
 </div>
+
+<!-- Scroll to Top Button (always outside main content for floating) -->
+<button
+  class="scroll-to-top"
+  *ngIf="showScrollTop"
+  (click)="scrollToTop()"
+  aria-label="Scroll to top"
+>
+  <i class="bi bi-arrow-up"></i>
+</button>
