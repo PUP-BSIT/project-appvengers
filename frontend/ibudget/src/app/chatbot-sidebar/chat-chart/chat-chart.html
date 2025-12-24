@@ -1,0 +1,12 @@
+<div class="chat-chart-container">
+    @if (visualization.title) {
+    <div class="chart-title">{{ visualization.title }}</div>
+    }
+    <div class="chart-wrapper">
+        <canvas baseChart
+            [data]="chartData"
+            [type]="chartType"
+            [options]="chartOptions">
+        </canvas>
+    </div>
+</div>
