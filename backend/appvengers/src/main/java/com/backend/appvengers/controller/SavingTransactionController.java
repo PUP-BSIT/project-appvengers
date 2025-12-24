@@ -14,6 +14,11 @@ import com.backend.appvengers.service.SavingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -212,5 +217,58 @@ public class SavingTransactionController {
     }
     
     return ResponseEntity.noContent().build();
+  }
+
+  // DONE: Soft delete multiple savings transactions endpoint
+  @DeleteMapping("/savings/transactions")
+  public ResponseEntity<ApiResponse> deleteMultipleSavingTransactions(@RequestBody List<Long> transactionIds, Authentication auth) {
+    int userId = currentUserId(auth);
+    
+    if (transactionIds == null || transactionIds.isEmpty()) {
+       return ResponseEntity.ok(new ApiResponse(true, "No transactions to delete"));
+    }
+
+    List<Transaction> transactions = transactionRepository.findAllById(transactionIds);
+
+    // Validate ownership
+    for (Transaction t : transactions) {
+        if (t.getUser().getId() != userId) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiResponse(false, "Unauthorized access to transaction " + t.getId()));
+        }
+    }
+
+    // Soft delete
+    LocalDate now = LocalDate.now();
+    Set<Integer> savingIdsToRefresh = new HashSet<>();
+    
+    for (Transaction t : transactions) {
+        t.setDeletedAt(now);
+        if (t.getSaving() != null) {
+            savingIdsToRefresh.add(t.getSaving().getSavingId());
+        }
+    }
+    
+    transactionRepository.saveAll(transactions);
+
+    // Refresh amounts
+    for (Integer savingId : savingIdsToRefresh) {
+        try {
+            savingService.refreshCurrentAmount(savingId);
+        } catch (Exception e) {
+            // Log error but don't fail the request
+            log.error("Failed to refresh current amount for saving {}: {}", savingId, e.getMessage());
+        }
+    }
+    
+    // Check notifications once
+    try {
+        notificationService.generateNotifications(userId);
+    } catch (Exception e) {
+         // Log error
+        log.error("Failed to generate savings notifications for user {}: {}", userId, e.getMessage());
+    }
+
+    return ResponseEntity.ok(new ApiResponse(true, "Transactions deleted successfully"));
   }
 }
