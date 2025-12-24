@@ -71,6 +71,7 @@ function parseFlexibleDate(dateStr: string | undefined, defaultToToday = false):
   styleUrl: './transactions.scss',
 })
 export class Transactions implements OnInit, OnDestroy {
+  searchDescription: string = '';
   private unlisten: (() => void) | null = null;
   private route = inject(ActivatedRoute);
 
@@ -189,6 +190,11 @@ export class Transactions implements OnInit, OnDestroy {
 
     filterTransactions() {
       let filtered = [...this.transactions];
+      // Filter by description if searchDescription is not empty
+      const desc = (this.searchDescription || '').toLowerCase().trim();
+      if (desc) {
+        filtered = filtered.filter(t => (t.description || '').toLowerCase().includes(desc));
+      }
 
       const sel = (this.selectedCategory || 'All Categories')
                   .toString().toLowerCase();
@@ -749,17 +755,11 @@ ngOnInit() {
   }
 
   getPaginatedTransactions(): Transaction[] {
-    const sorted = [...this.filteredTransactions].sort((a, b) => {
-      const dateA = new Date(a.date).getTime();
-      const dateB = new Date(b.date).getTime();
-      if (dateB !== dateA) return dateB - dateA;
-      return (b.id || 0) - (a.id || 0);
-    });
-
-    this.totalPages = Math.ceil(sorted.length / this.itemsPerPage);
+    // filteredTransactions is already sorted and filtered by search
+    this.totalPages = Math.ceil(this.filteredTransactions.length / this.itemsPerPage);
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    return sorted.slice(startIndex, endIndex);
+    return this.filteredTransactions.slice(startIndex, endIndex);
   }
 
   nextPage() {
