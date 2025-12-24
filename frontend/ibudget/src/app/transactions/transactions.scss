@@ -1,3 +1,30 @@
+.transaction-search-input {
+  width: 260px;
+  padding: 0.7rem 2.5rem 0.7rem 1.1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 1rem;
+  color: #374151;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.transaction-search-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.10);
+}
+.transaction-search-input::placeholder {
+  color: #9ca3af;
+  font-size: 0.98rem;
+}
+@media (max-width: 600px) {
+  .transaction-search-input {
+    width: 100%;
+    font-size: 0.98rem;
+    padding: 0.65rem 1.1rem;
+  }
+}
 $background-color: #F9FAFB;
 $sidebar-width: 80px;
 $header-height: 70px;
