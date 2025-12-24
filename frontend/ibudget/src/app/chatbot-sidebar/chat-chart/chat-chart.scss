@@ -1,0 +1,52 @@
+// Chat Chart Component Styles
+// Designed to fit within chat message bubbles
+
+$primary-color: #3498db;
+$text-color: #2c3e50;
+$border-color: #e5e7eb;
+
+.chat-chart-container {
+    margin-top: 12px;
+    padding: 12px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid $border-color;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+    .chart-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $text-color;
+        margin-bottom: 10px;
+        text-align: center;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba($border-color, 0.5);
+    }
+
+    .chart-wrapper {
+        height: 200px;
+        width: 100%;
+        position: relative;
+
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+}
+
+// Animation for chart appearance
+@keyframes chartFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.chat-chart-container {
+    animation: chartFadeIn 0.3s ease-out;
+}
