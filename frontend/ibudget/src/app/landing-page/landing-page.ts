@@ -1,16 +1,18 @@
 import { Component, OnInit, OnDestroy, AfterViewInit,
   ViewChild, ElementRef, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-landing-page',
-  imports: [RouterLink, CommonModule],
+  imports: [CommonModule],
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.scss'
 })
 export class LandingPage implements OnInit, OnDestroy, AfterViewInit {
+  showScrollTop = false;
+  private homeObserver?: IntersectionObserver;
     ngAfterViewInit(): void {
+      // Fade-in animation for sections
       const fadeSections = document.querySelectorAll('.fade-in-section');
       if (fadeSections.length > 0) {
         const observer = new IntersectionObserver((entries) => {
@@ -23,6 +25,17 @@ export class LandingPage implements OnInit, OnDestroy, AfterViewInit {
           });
         }, { threshold: 0.2 });
         fadeSections.forEach(section => observer.observe(section));
+      }
+
+      // Show scroll-to-top button when #home is NOT visible
+      const homeSection = document.getElementById('home');
+      if (homeSection) {
+        this.homeObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            this.showScrollTop = !entry.isIntersecting;
+          });
+        }, { threshold: 0.1 });
+        this.homeObserver.observe(homeSection);
       }
     }
    displayedText = signal('');
@@ -64,7 +77,11 @@ export class LandingPage implements OnInit, OnDestroy, AfterViewInit {
       clearTimeout(this.timeoutId);
       this.timeoutId = null;
     }
+    if (this.homeObserver) {
+      this.homeObserver.disconnect();
+    }
   }
+
 
   // Scroll to About section when navbar link is clicked
   scrollToAbout(event?: Event) {
@@ -97,5 +114,8 @@ export class LandingPage implements OnInit, OnDestroy, AfterViewInit {
     if (section) {
       section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+    setTimeout(() => {
+      this.showScrollTop = false;
+    }, 500);
   }
 }
