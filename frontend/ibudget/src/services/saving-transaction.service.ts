@@ -14,7 +14,7 @@ export class SavingTransactionService {
   private toFrontend(backendTransaction: BackendSavingTransaction): SavingTransaction {
     return {
       id: backendTransaction.id,
-      savings_id: backendTransaction.savingId, // backend uses savingId (no 's')
+      savings_id: backendTransaction.savingId,
       user_id: backendTransaction.userId,
       transaction_date: backendTransaction.transactionDate,
       savings_action: backendTransaction.savingsAction,
@@ -28,7 +28,7 @@ export class SavingTransactionService {
 
   private toBackend(transaction: Partial<SavingTransaction>): Partial<BackendSavingTransaction> {
     return {
-      savingId: transaction.savings_id, // send savingId to backend
+      savingId: transaction.savings_id,
       userId: transaction.user_id,
       transactionDate: transaction.transaction_date,
       savingsAction: transaction.savings_action,
