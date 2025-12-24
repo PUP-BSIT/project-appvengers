@@ -1,6 +1,6 @@
 # iBudget Backend API Specification
 
-**Version:** 3.3
+**Version:** 3.4
 **Last Updated:** December 24, 2025
 **Server URL:** `https://i-budget.site` (Production) / `http://localhost:8080` (Local)
 
@@ -23,7 +23,12 @@
 **Success Response:**
 - **Status Code:** 201 Created
 - **Response Type:** JSON
-- **Response Data:** Success message and User ID
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Success message indicating registration was successful. |
+| `userId` | integer | The unique ID of the newly created user. |
+
 - **Sample Response:**
 ```json
 {
@@ -35,7 +40,11 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:** Error message (Validation errors or Email already exists)
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Description of why the request failed (e.g., "Email is already in use"). |
+
 - **Sample Response:**
 ```json
 {
@@ -56,7 +65,15 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** JWT Token, User Details
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `token` | string | JWT Bearer token for authentication. |
+| `user` | object | Object containing user details. |
+| `user.id` | integer | The user's unique ID. |
+| `user.username` | string | The user's username. |
+| `user.email` | string | The user's email address. |
+
 - **Sample Response:**
 ```json
 {
@@ -72,7 +89,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message indicating authentication failure. |
+
 - **Sample Response:**
 ```json
 {
@@ -92,7 +113,12 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Availability status
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `available` | boolean | True if username is available, False otherwise. |
+| `username` | string | The username that was checked. |
+
 - **Sample Response:**
 ```json
 {
@@ -104,7 +130,11 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:** Error message (e.g., Invalid format)
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Reason for invalid request (e.g., length violation). |
+
 - **Sample Response:**
 ```json
 {
@@ -124,7 +154,12 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Availability status
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `available` | boolean | True if email is available, False if already registered. |
+| `email` | string | The email that was checked. |
+
 - **Sample Response:**
 ```json
 {
@@ -136,7 +171,11 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message (e.g., invalid format). |
+
 - **Sample Response:**
 ```json
 {
@@ -156,7 +195,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Success message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Confirmation of successful verification. |
+
 - **Sample Response:**
 ```json
 {
@@ -167,7 +210,11 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Reason for failure (e.g., invalid/expired token). |
+
 - **Sample Response:**
 ```json
 {
@@ -187,7 +234,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Success message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Confirmation that the process has started (masked for security). |
+
 - **Sample Response:**
 ```json
 {
@@ -196,9 +247,13 @@
 ```
 
 **Fail Response:**
-- **Status Code:** 400 Bad Request (Optional security choice) or 200 (to prevent enumeration)
+- **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error details. |
+
 - **Sample Response:**
 ```json
 {
@@ -218,7 +273,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Validation status
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `valid` | boolean | True if the token is valid. |
+
 - **Sample Response:**
 ```json
 {
@@ -229,7 +288,12 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `valid` | boolean | False if the token is invalid. |
+| `error` | string | Reason for invalidity (e.g., expired). |
+
 - **Sample Response:**
 ```json
 {
@@ -252,7 +316,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Success message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Confirmation of successful password reset. |
+
 - **Sample Response:**
 ```json
 {
@@ -263,7 +331,11 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message (e.g., mismatching passwords). |
+
 - **Sample Response:**
 ```json
 {
@@ -286,7 +358,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Success message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Confirmation of success. |
+
 - **Sample Response:**
 ```json
 {
@@ -295,9 +371,13 @@
 ```
 
 **Fail Response:**
-- **Status Code:** 401 Unauthorized or 400 Bad Request
+- **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Reason for failure (e.g., wrong current password). |
+
 - **Sample Response:**
 ```json
 {
@@ -321,7 +401,14 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** User Object
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | integer | User ID. |
+| `username` | string | Username. |
+| `email` | string | Email address. |
+| `joinDate` | string | Date of account creation (YYYY-MM-DD). |
+
 - **Sample Response:**
 ```json
 {
@@ -335,7 +422,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Authentication error. |
+
 - **Sample Response:**
 ```json
 {
@@ -357,7 +448,13 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Updated User Object
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | integer | User ID. |
+| `username` | string | Updated username. |
+| `email` | string | Updated email. |
+
 - **Sample Response:**
 ```json
 {
@@ -370,7 +467,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message (e.g., password mismatch). |
+
 - **Sample Response:**
 ```json
 {
@@ -390,7 +491,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Success message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Success notification. |
+
 - **Sample Response:**
 ```json
 {
@@ -401,7 +506,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Authentication failure. |
+
 - **Sample Response:**
 ```json
 {
@@ -421,7 +530,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Success message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Success notification. |
+
 - **Sample Response:**
 ```json
 {
@@ -432,7 +545,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Authentication failure. |
+
 - **Sample Response:**
 ```json
 {
@@ -455,8 +572,16 @@
 
 **Success Response:**
 - **Status Code:** 200 OK
-- **Response Type:** JSON
-- **Response Data:** List of transactions
+- **Response Type:** JSON Array
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `[].id` | integer | Transaction ID. |
+| `[].amount` | number | Amount of the transaction. |
+| `[].categoryId` | integer | Associated category ID. |
+| `[].description` | string | Transaction description. |
+| `[].date` | string | Date of transaction (YYYY-MM-DD). |
+
 - **Sample Response:**
 ```json
 [
@@ -473,7 +598,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Unauthorized access. |
+
 - **Sample Response:**
 ```json
 {
@@ -487,8 +616,19 @@
 
 **Success Response:**
 - **Status Code:** 200 OK
-- **Response Type:** JSON
-- **Response Data:** List of transactions with category details
+- **Response Type:** JSON Array
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `[].id` | integer | Transaction ID. |
+| `[].amount` | number | Transaction amount. |
+| `[].category` | object | Category details. |
+| `[].category.id` | integer | Category ID. |
+| `[].category.name` | string | Category name. |
+| `[].category.type` | string | Category type (INCOME/EXPENSE). |
+| `[].description` | string | Description. |
+| `[].date` | string | Transaction date. |
+
 - **Sample Response:**
 ```json
 [
@@ -505,7 +645,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Unauthorized access. |
+
 - **Sample Response:**
 ```json
 {
@@ -528,7 +672,15 @@
 **Success Response:**
 - **Status Code:** 201 Created
 - **Response Type:** JSON
-- **Response Data:** Created transaction object
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | integer | New transaction ID. |
+| `amount` | number | Transaction amount. |
+| `categoryId` | integer | Linked category ID. |
+| `description` | string | Description. |
+| `date` | string | Date. |
+
 - **Sample Response:**
 ```json
 {
@@ -543,7 +695,11 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error details (e.g., invalid category). |
+
 - **Sample Response:**
 ```json
 {
@@ -565,7 +721,13 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Updated transaction object
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | integer | Transaction ID. |
+| `amount` | number | Updated amount. |
+| `description` | string | Updated description. |
+
 - **Sample Response:**
 ```json
 {
@@ -578,7 +740,11 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -598,7 +764,11 @@
 **Success Response:**
 - **Status Code:** 200 OK (or 204 No Content)
 - **Response Type:** JSON
-- **Response Data:** Success message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Success confirmation. |
+
 - **Sample Response:**
 ```json
 {
@@ -609,7 +779,11 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -624,7 +798,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Total expense amount
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `totalExpense` | number | The sum of all expenses. |
+
 - **Sample Response:**
 ```json
 {
@@ -635,7 +813,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Unauthorized access. |
+
 - **Sample Response:**
 ```json
 {
@@ -650,7 +832,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Total income amount
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `totalIncome` | number | The sum of all income. |
+
 - **Sample Response:**
 ```json
 {
@@ -661,7 +847,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Unauthorized access. |
+
 - **Sample Response:**
 ```json
 {
@@ -675,8 +865,14 @@
 
 **Success Response:**
 - **Status Code:** 200 OK
-- **Response Type:** JSON
-- **Response Data:** List of monthly summaries
+- **Response Type:** JSON Array
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `[].month` | string | The month (YYYY-MM). |
+| `[].income` | number | Total income for that month. |
+| `[].expense` | number | Total expense for that month. |
+
 - **Sample Response:**
 ```json
 [
@@ -688,7 +884,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Unauthorized access. |
+
 - **Sample Response:**
 ```json
 {
@@ -706,8 +906,16 @@
 
 **Success Response:**
 - **Status Code:** 200 OK
-- **Response Type:** JSON
-- **Response Data:** List of budgets
+- **Response Type:** JSON Array
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `[].id` | integer | Budget ID. |
+| `[].category` | string | Category name. |
+| `[].limitAmount` | number | The spending limit. |
+| `[].spent` | number | Amount already spent. |
+| `[].remaining` | number | Amount remaining. |
+
 - **Sample Response:**
 ```json
 [
@@ -724,7 +932,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Unauthorized access. |
+
 - **Sample Response:**
 ```json
 {
@@ -739,7 +951,15 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Budget object
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | integer | Budget ID. |
+| `categoryId` | integer | Category ID. |
+| `limitAmount` | number | Limit amount. |
+| `startDate` | string | Start date (YYYY-MM-DD). |
+| `endDate` | string | End date (YYYY-MM-DD). |
+
 - **Sample Response:**
 ```json
 {
@@ -754,7 +974,11 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -777,7 +1001,13 @@
 **Success Response:**
 - **Status Code:** 201 Created
 - **Response Type:** JSON
-- **Response Data:** Created budget object
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | integer | Created Budget ID. |
+| `categoryId` | integer | Category ID. |
+| `limitAmount` | number | Set limit. |
+
 - **Sample Response:**
 ```json
 {
@@ -790,7 +1020,11 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -811,7 +1045,12 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Updated budget object
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | integer | Budget ID. |
+| `limitAmount` | number | Updated limit. |
+
 - **Sample Response:**
 ```json
 {
@@ -823,7 +1062,11 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -838,7 +1081,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Success message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Success message. |
+
 - **Sample Response:**
 ```json
 {
@@ -849,7 +1096,11 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -863,8 +1114,15 @@
 
 **Success Response:**
 - **Status Code:** 200 OK
-- **Response Type:** JSON
-- **Response Data:** List of transactions for the budget
+- **Response Type:** JSON Array
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `[].id` | integer | Transaction ID. |
+| `[].amount` | number | Amount. |
+| `[].description` | string | Description. |
+| `[].date` | string | Date. |
+
 - **Sample Response:**
 ```json
 [
@@ -876,7 +1134,11 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -894,8 +1156,16 @@
 
 **Success Response:**
 - **Status Code:** 200 OK
-- **Response Type:** JSON
-- **Response Data:** List of saving goals
+- **Response Type:** JSON Array
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `[].id` | integer | Savings Goal ID. |
+| `[].name` | string | Goal Name. |
+| `[].currentAmount` | number | Current saved amount. |
+| `[].targetAmount` | number | Target amount. |
+| `[].goalDate` | string | Target Date (YYYY-MM-DD). |
+
 - **Sample Response:**
 ```json
 [
@@ -912,7 +1182,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Unauthorized access. |
+
 - **Sample Response:**
 ```json
 {
@@ -927,7 +1201,14 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Saving goal object
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | integer | Savings Goal ID. |
+| `name` | string | Goal Name. |
+| `currentAmount` | number | Current saved amount. |
+| `targetAmount` | number | Target amount. |
+
 - **Sample Response:**
 ```json
 {
@@ -941,7 +1222,11 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -963,7 +1248,14 @@
 **Success Response:**
 - **Status Code:** 201 Created
 - **Response Type:** JSON
-- **Response Data:** Created saving goal object
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | integer | New Goal ID. |
+| `name` | string | Goal Name. |
+| `currentAmount` | number | Initial amount (0). |
+| `targetAmount` | number | Target amount. |
+
 - **Sample Response:**
 ```json
 {
@@ -977,7 +1269,11 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error details. |
+
 - **Sample Response:**
 ```json
 {
@@ -992,7 +1288,12 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Updated saving goal object
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | integer | Goal ID. |
+| `targetAmount` | number | Updated target amount. |
+
 - **Sample Response:**
 ```json
 {
@@ -1004,7 +1305,11 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -1019,7 +1324,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Success message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Success message. |
+
 - **Sample Response:**
 ```json
 {
@@ -1030,7 +1339,11 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -1052,7 +1365,14 @@
 **Success Response:**
 - **Status Code:** 201 Created
 - **Response Type:** JSON
-- **Response Data:** Transaction record and updated balance
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | integer | Transaction ID. |
+| `amount` | number | Amount. |
+| `action` | string | Action taken. |
+| `newBalance` | number | Updated savings balance. |
+
 - **Sample Response:**
 ```json
 {
@@ -1066,7 +1386,11 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:** Error message (e.g., Insufficient funds for withdrawal)
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -1080,8 +1404,15 @@
 
 **Success Response:**
 - **Status Code:** 200 OK
-- **Response Type:** JSON
-- **Response Data:** List of saving transactions
+- **Response Type:** JSON Array
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `[].id` | integer | Transaction ID. |
+| `[].amount` | number | Amount. |
+| `[].action` | string | Action (DEPOSIT/WITHDRAW). |
+| `[].date` | string | Date. |
+
 - **Sample Response:**
 ```json
 [
@@ -1093,7 +1424,11 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -1111,8 +1446,14 @@
 
 **Success Response:**
 - **Status Code:** 200 OK
-- **Response Type:** JSON
-- **Response Data:** List of categories
+- **Response Type:** JSON Array
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `[].id` | integer | Category ID. |
+| `[].name` | string | Category Name. |
+| `[].type` | string | Category Type (INCOME/EXPENSE). |
+
 - **Sample Response:**
 ```json
 [
@@ -1124,7 +1465,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Unauthorized access. |
+
 - **Sample Response:**
 ```json
 {
@@ -1145,7 +1490,13 @@
 **Success Response:**
 - **Status Code:** 201 Created
 - **Response Type:** JSON
-- **Response Data:** Created category object
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | integer | New Category ID. |
+| `name` | string | Category Name. |
+| `type` | string | Category Type. |
+
 - **Sample Response:**
 ```json
 {
@@ -1158,7 +1509,11 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -1173,7 +1528,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Success message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Success message. |
+
 - **Sample Response:**
 ```json
 {
@@ -1184,7 +1543,11 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message (e.g. system category). |
+
 - **Sample Response:**
 ```json
 {
@@ -1202,8 +1565,15 @@
 
 **Success Response:**
 - **Status Code:** 200 OK
-- **Response Type:** JSON
-- **Response Data:** List of notifications
+- **Response Type:** JSON Array
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `[].id` | integer | Notification ID. |
+| `[].message` | string | The alert content. |
+| `[].read` | boolean | Read status. |
+| `[].date` | string | Date. |
+
 - **Sample Response:**
 ```json
 [
@@ -1214,7 +1584,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Unauthorized access. |
+
 - **Sample Response:**
 ```json
 {
@@ -1229,7 +1603,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Count object
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `unreadCount` | integer | The count of unread items. |
+
 - **Sample Response:**
 ```json
 {
@@ -1240,7 +1618,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Unauthorized access. |
+
 - **Sample Response:**
 ```json
 {
@@ -1255,7 +1637,12 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Updated notification
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | integer | Notification ID. |
+| `read` | boolean | Updated read status (true). |
+
 - **Sample Response:**
 ```json
 {
@@ -1267,7 +1654,11 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -1282,7 +1673,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Success message/count
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Success message. |
+
 - **Sample Response:**
 ```json
 {
@@ -1293,7 +1688,11 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Unauthorized access. |
+
 - **Sample Response:**
 ```json
 {
@@ -1308,7 +1707,11 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Success message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Success message. |
+
 - **Sample Response:**
 ```json
 {
@@ -1319,7 +1722,11 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
@@ -1344,7 +1751,12 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:** Bot response message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `response` | string | The bot's reply. |
+| `sessionId` | string | Context UUID. |
+
 - **Sample Response:**
 ```json
 {
@@ -1356,7 +1768,11 @@
 **Fail Response:**
 - **Status Code:** 500 Internal Server Error (or 400)
 - **Response Type:** JSON
-- **Response Data:** Error message
+- **Response Data:**
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
 - **Sample Response:**
 ```json
 {
