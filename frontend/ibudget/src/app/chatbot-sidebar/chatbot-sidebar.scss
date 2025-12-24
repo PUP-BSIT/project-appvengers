@@ -4,6 +4,7 @@
 $chat-bg: #ffffff;
 $chat-sidebar-bg: #ffffff;
 $primary-color: #3498db; // Project blue
+$primary-dark: #2980b9; // Darker blue for gradients
 $text-color: #2c3e50; // Dark slate
 $user-msg-bg: $primary-color;
 $user-msg-text: #ffffff;
@@ -11,6 +12,12 @@ $bot-msg-bg: #f1f0f0;
 $bot-msg-text: $text-color;
 $input-bg: #ffffff;
 $border-color: #e5e7eb;
+
+// Dashboard gradient colors (for quick action chips)
+$gradient-teal: linear-gradient(135deg, #13547a 0%, #80d0c7 100%);
+$gradient-orange: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+$gradient-green: linear-gradient(135deg, #DFFFCD 0%, #39F3BB 100%);
+$gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
 
 .chatbot-toggle {
     position: fixed;
@@ -89,8 +96,11 @@ $border-color: #e5e7eb;
 
 .chatbot-header {
     padding: 20px;
-    background-color: $chat-bg;
-    border-bottom: 1px solid $border-color;
+    // Glass morphism effect
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -378,9 +388,11 @@ $border-color: #e5e7eb;
 
     &.user {
         align-self: flex-end;
-        background-color: $user-msg-bg;
+        // Gradient background matching iBudget dashboard
+        background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
         color: $user-msg-text;
         border-bottom-right-radius: 2px;
+        box-shadow: 0 4px 12px rgba($primary-color, 0.25);
 
         .message-time {
             color: rgba(255, 255, 255, 0.8);
@@ -457,10 +469,11 @@ $border-color: #e5e7eb;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 8px rgba($primary-color, 0.3);
         flex-shrink: 0;
         overflow: hidden;
         border: 2px solid $primary-color;
+        // Pulsing ring animation when typing
+        animation: avatarPulse 2s ease-in-out infinite;
 
         img {
             width: 100%;
@@ -531,10 +544,24 @@ $border-color: #e5e7eb;
     }
 }
 
+// Avatar pulse animation for typing indicator
+@keyframes avatarPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba($primary-color, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba($primary-color, 0);
+    }
+}
+
 .input-area {
-    padding: 20px;
-    background-color: $chat-bg;
-    border-top: 1px solid $border-color;
+    // Floating card-like input bar
+    margin: 12px;
+    padding: 16px;
+    background: $chat-bg;
+    border-radius: 16px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.06);
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -905,7 +932,7 @@ $border-color: #e5e7eb;
         border-radius: 8px;
         padding: 12px;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all 0.25s ease;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -917,6 +944,7 @@ $border-color: #e5e7eb;
         i {
             font-size: 1.2rem;
             color: $primary-color;
+            transition: color 0.25s ease;
         }
 
         span {
@@ -924,16 +952,37 @@ $border-color: #e5e7eb;
             line-height: 1.2;
         }
 
+        // Default hover (fallback)
         &:hover {
-            background-color: $primary-color;
             color: white;
-            border-color: $primary-color;
+            border-color: transparent;
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba($primary-color, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
             i {
                 color: white;
             }
+        }
+
+        // Colorful gradients matching dashboard panels
+        &:nth-child(1):hover {
+            background: $gradient-teal; // Teal
+        }
+
+        &:nth-child(2):hover {
+            background: $gradient-orange; // Orange
+            color: $text-color; // Dark text for light gradient
+            i { color: $text-color; }
+        }
+
+        &:nth-child(3):hover {
+            background: $gradient-green; // Green
+            color: $text-color; // Dark text for light gradient
+            i { color: $text-color; }
+        }
+
+        &:nth-child(4):hover {
+            background: $gradient-pink; // Pink
         }
 
         &:active {
