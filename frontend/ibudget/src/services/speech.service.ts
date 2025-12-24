@@ -171,7 +171,7 @@ export class SpeechService implements OnDestroy {
     if (!this.recognition) return;
 
     // Recognition settings
-    this.recognition.continuous = false; // Stop after user pauses
+    this.recognition.continuous = true; // User controls when to stop by clicking mic again
     this.recognition.interimResults = true; // Show live results
     this.recognition.lang = 'en-US'; // Default language
     this.recognition.maxAlternatives = 1;

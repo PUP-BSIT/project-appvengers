@@ -124,7 +124,7 @@
         
         <div class="input-row">
             <textarea [ngModel]="userInput()" (ngModelChange)="userInput.set($event)" (keydown)="handleKeydown($event)"
-                [placeholder]="isRecording() ? 'Listening...' : 'Type a message...'" rows="1" maxlength="1000"></textarea>
+                [placeholder]="isRecording() ? 'Listening... Click mic to stop' : 'Type a message...'" rows="1" maxlength="1000"></textarea>
             
             @if (isSTTSupported()) {
             <button class="mic-btn" 

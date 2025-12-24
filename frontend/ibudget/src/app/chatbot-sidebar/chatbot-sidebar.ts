@@ -85,9 +85,15 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
                 // Update live transcript
                 this.liveTranscript.set(result.transcript);
                 
-                // When speech recognition finalizes, set the input
+                // When speech recognition finalizes, append to existing input
                 if (result.isFinal) {
-                    this.userInput.set(result.transcript);
+                    const existingText = this.userInput().trim();
+                    const newText = result.transcript.trim();
+                    // Append with space separator if there's existing text
+                    const combined = existingText 
+                        ? `${existingText} ${newText}` 
+                        : newText;
+                    this.userInput.set(combined);
                     this.liveTranscript.set('');
                 }
             }
