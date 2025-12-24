@@ -82,4 +82,11 @@ export class SavingTransactionService {
   deleteSavingTransaction(savingId: number, transactionId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${savingId}/transactions/${transactionId}`);
   }
+
+  // Delete multiple saving transactions
+  deleteMultipleSavingTransactions(savingId: number, transactionIds: number[]): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/transactions`, {
+      body: transactionIds
+    });
+  }
 }
