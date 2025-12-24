@@ -3,11 +3,31 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+/**
+ * Visualization data returned by n8n for rendering charts in chat.
+ * Enables generative UI with dynamic Chart.js visualizations.
+ */
+export interface ChatVisualization {
+    /** Chart type to render */
+    type: 'doughnut' | 'pie' | 'bar' | 'line';
+    /** Optional title displayed above the chart */
+    title?: string;
+    /** Chart data with labels and values */
+    data: {
+        labels: string[];
+        values: number[];
+    };
+    /** Optional custom colors (hex format) */
+    colors?: string[];
+}
+
 export interface ChatMessage {
     text: string;
     isUser: boolean;
     timestamp: Date;
     action?: ChatbotAction;
+    /** Optional visualization data for rendering charts */
+    visualization?: ChatVisualization;
 }
 
 /**
@@ -30,7 +50,7 @@ export interface ChatbotAction {
 }
 
 /**
- * Structured response from the chatbot that may include actions.
+ * Structured response from the chatbot that may include actions and visualizations.
  */
 export interface ChatbotResponse {
     /** The text response to display */
@@ -40,6 +60,8 @@ export interface ChatbotResponse {
     response?: string;
     /** Optional action for the user to take */
     action?: ChatbotAction;
+    /** Optional visualization data for rendering charts */
+    visualization?: ChatVisualization;
     /** Optional error message */
     error?: string;
 }
