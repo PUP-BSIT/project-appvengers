@@ -119,11 +119,18 @@ export class SpeechService implements OnDestroy {
   readonly isSTTSupported = signal(false);
   readonly isTTSSupported = signal(false);
   
+  // Available voices signal (exposed to UI)
+  readonly availableVoices = signal<SpeechSynthesisVoice[]>([]);
+  readonly currentVoiceName = signal<string>('');
+  
   // TTS Settings
   private selectedVoice: SpeechSynthesisVoice | null = null;
   private speechRate = 1.0;
   private speechPitch = 1.0;
   private speechVolume = 1.0;
+  
+  // LocalStorage key for voice preference
+  private readonly VOICE_STORAGE_KEY = 'bonzi_selectedVoice';
 
   /** Observable for speech recognition results */
   readonly transcript$ = this.recognitionSubject.asObservable();
@@ -248,14 +255,34 @@ export class SpeechService implements OnDestroy {
 
   /**
    * Load available TTS voices.
+   * Prioritizes Philippine English for correct currency reading.
    */
   private loadVoices(): void {
     if (!this.synthesis) return;
 
     const voices = this.synthesis.getVoices();
     if (voices.length > 0) {
-      // Prefer English voices, with preference for natural-sounding ones
+      // Update available voices signal
+      this.availableVoices.set(voices);
+      
+      // Check for saved voice preference
+      const savedVoiceName = localStorage.getItem(this.VOICE_STORAGE_KEY);
+      if (savedVoiceName) {
+        const savedVoice = voices.find(v => v.name === savedVoiceName);
+        if (savedVoice) {
+          this.selectedVoice = savedVoice;
+          this.currentVoiceName.set(savedVoice.name);
+          return;
+        }
+      }
+      
+      // Default: Prefer Philippine English voices for correct peso reading
+      // Priority: en-PH > fil-PH > Google English > Local English > Any English
       const preferredVoice = voices.find(v => 
+        v.lang === 'en-PH'
+      ) || voices.find(v => 
+        v.lang === 'fil-PH'
+      ) || voices.find(v => 
         v.lang.startsWith('en') && v.name.includes('Google')
       ) || voices.find(v => 
         v.lang.startsWith('en') && v.localService
@@ -264,6 +291,7 @@ export class SpeechService implements OnDestroy {
       ) || voices[0];
 
       this.selectedVoice = preferredVoice;
+      this.currentVoiceName.set(preferredVoice.name);
     }
   }
 
@@ -414,9 +442,36 @@ export class SpeechService implements OnDestroy {
   /**
    * Set the voice for TTS.
    * @param voice Voice to use
+   * @param persist Whether to save to localStorage (default: true)
    */
-  setVoice(voice: SpeechSynthesisVoice): void {
+  setVoice(voice: SpeechSynthesisVoice, persist = true): void {
     this.selectedVoice = voice;
+    this.currentVoiceName.set(voice.name);
+    
+    if (persist) {
+      localStorage.setItem(this.VOICE_STORAGE_KEY, voice.name);
+    }
+  }
+
+  /**
+   * Set voice by name.
+   * @param voiceName Name of the voice to use
+   * @returns true if voice was found and set, false otherwise
+   */
+  setVoiceByName(voiceName: string): boolean {
+    const voice = this.availableVoices().find(v => v.name === voiceName);
+    if (voice) {
+      this.setVoice(voice);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Get the currently selected voice.
+   */
+  getSelectedVoice(): SpeechSynthesisVoice | null {
+    return this.selectedVoice;
   }
 
   /**
