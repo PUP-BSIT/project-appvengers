@@ -13,6 +13,7 @@
 **Description:** Registers a new user account.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `username` | string | Body | Unique username (3-50 chars). |
@@ -23,7 +24,9 @@
 **Success Response:**
 - **Status Code:** 201 Created
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `message` | string | Success message indicating registration was successful. |
@@ -40,7 +43,9 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Description of why the request failed (e.g., "Email is already in use"). |
@@ -57,6 +62,7 @@
 **Description:** Authenticates a user and returns a JWT token.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `email` | string | Body | Registered email address. |
@@ -65,7 +71,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `token` | string | JWT Bearer token for authentication. |
@@ -89,7 +97,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message indicating authentication failure. |
@@ -106,6 +116,7 @@
 **Description:** Checks if a username is already taken.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `username` | string | Path | The username to check. |
@@ -113,7 +124,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `available` | boolean | True if username is available, False otherwise. |
@@ -130,7 +143,9 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Reason for invalid request (e.g., length violation). |
@@ -147,6 +162,7 @@
 **Description:** Checks if an email is already registered.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `email` | string | Path | The email to check. |
@@ -154,7 +170,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `available` | boolean | True if email is available, False if already registered. |
@@ -171,7 +189,9 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message (e.g., invalid format). |
@@ -188,6 +208,7 @@
 **Description:** Verifies user's email using a token.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `token` | string | Query | The verification token. |
@@ -195,7 +216,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `message` | string | Confirmation of successful verification. |
@@ -210,7 +233,9 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Reason for failure (e.g., invalid/expired token). |
@@ -227,6 +252,7 @@
 **Description:** Initiates password recovery process.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `email` | string | Body | User's registered email. |
@@ -234,7 +260,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `message` | string | Confirmation that the process has started (masked for security). |
@@ -249,7 +277,9 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error details. |
@@ -266,6 +296,7 @@
 **Description:** Checks if a reset token is valid.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `token` | string | Query | The reset token. |
@@ -273,7 +304,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `valid` | boolean | True if the token is valid. |
@@ -288,7 +321,9 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `valid` | boolean | False if the token is invalid. |
@@ -307,6 +342,7 @@
 **Description:** Resets the password using a valid token.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `token` | string | Body | Valid reset token. |
@@ -316,7 +352,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `message` | string | Confirmation of successful password reset. |
@@ -331,7 +369,9 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message (e.g., mismatching passwords). |
@@ -348,6 +388,7 @@
 **Description:** Changes password for logged-in user.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `currentPassword` | string | Body | Old password. |
@@ -358,7 +399,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `message` | string | Confirmation of success. |
@@ -373,7 +416,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Reason for failure (e.g., wrong current password). |
@@ -394,6 +439,7 @@
 **Description:** Fetches current user profile.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `Authorization` | string | Header | Bearer <JWT Token> |
@@ -401,7 +447,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `id` | integer | User ID. |
@@ -422,7 +470,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Authentication error. |
@@ -439,6 +489,7 @@
 **Description:** Updates user account info.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `username` | string | Body | New username. |
@@ -448,7 +499,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `id` | integer | User ID. |
@@ -467,7 +520,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message (e.g., password mismatch). |
@@ -484,6 +539,7 @@
 **Description:** Deactivates account (reversible).
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `password` | string | Body | Password confirmation. |
@@ -491,7 +547,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `message` | string | Success notification. |
@@ -506,7 +564,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Authentication failure. |
@@ -523,6 +583,7 @@
 **Description:** Soft deletes the account.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `password` | string | Body | Password confirmation. |
@@ -530,7 +591,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `message` | string | Success notification. |
@@ -545,7 +608,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Authentication failure. |
@@ -566,6 +631,7 @@
 **Description:** Retrieves all user transactions.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `Authorization` | string | Header | Bearer <JWT Token> |
@@ -573,7 +639,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON Array
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `[].id` | integer | Transaction ID. |
@@ -598,7 +666,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Unauthorized access. |
@@ -617,7 +687,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON Array
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `[].id` | integer | Transaction ID. |
@@ -645,7 +717,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Unauthorized access. |
@@ -662,6 +736,7 @@
 **Description:** Adds a new income or expense.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `amount` | number | Body | The transaction amount. |
@@ -672,7 +747,9 @@
 **Success Response:**
 - **Status Code:** 201 Created
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `id` | integer | New transaction ID. |
@@ -695,7 +772,9 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error details (e.g., invalid category). |
@@ -712,6 +791,7 @@
 **Description:** Updates an existing transaction.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `id` | integer | Path | Transaction ID. |
@@ -721,7 +801,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `id` | integer | Transaction ID. |
@@ -740,7 +822,9 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -757,6 +841,7 @@
 **Description:** Deletes a transaction.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `id` | integer | Path | Transaction ID. |
@@ -764,7 +849,9 @@
 **Success Response:**
 - **Status Code:** 200 OK (or 204 No Content)
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `message` | string | Success confirmation. |
@@ -779,7 +866,9 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -798,7 +887,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `totalExpense` | number | The sum of all expenses. |
@@ -813,7 +904,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Unauthorized access. |
@@ -832,7 +925,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `totalIncome` | number | The sum of all income. |
@@ -847,7 +942,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Unauthorized access. |
@@ -866,7 +963,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON Array
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `[].month` | string | The month (YYYY-MM). |
@@ -884,7 +983,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Unauthorized access. |
@@ -907,7 +1008,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON Array
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `[].id` | integer | Budget ID. |
@@ -932,7 +1035,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Unauthorized access. |
@@ -951,7 +1056,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `id` | integer | Budget ID. |
@@ -974,7 +1081,9 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -991,6 +1100,7 @@
 **Description:** Sets a spending limit.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `categoryId` | integer | Body | Category ID to limit. |
@@ -1001,7 +1111,9 @@
 **Success Response:**
 - **Status Code:** 201 Created
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `id` | integer | Created Budget ID. |
@@ -1020,7 +1132,9 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -1037,6 +1151,7 @@
 **Description:** Updates budget limits or dates.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `id` | integer | Path | Budget ID. |
@@ -1045,7 +1160,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `id` | integer | Budget ID. |
@@ -1062,7 +1179,9 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -1081,7 +1200,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `message` | string | Success message. |
@@ -1096,7 +1217,9 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -1115,7 +1238,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON Array
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `[].id` | integer | Transaction ID. |
@@ -1134,7 +1259,9 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -1157,7 +1284,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON Array
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `[].id` | integer | Savings Goal ID. |
@@ -1182,7 +1311,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Unauthorized access. |
@@ -1201,7 +1332,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `id` | integer | Savings Goal ID. |
@@ -1222,7 +1355,9 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -1239,6 +1374,7 @@
 **Description:** Creates a new savings goal.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `name` | string | Body | Goal name. |
@@ -1248,7 +1384,9 @@
 **Success Response:**
 - **Status Code:** 201 Created
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `id` | integer | New Goal ID. |
@@ -1269,7 +1407,9 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error details. |
@@ -1288,7 +1428,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `id` | integer | Goal ID. |
@@ -1305,7 +1447,9 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -1324,7 +1468,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `message` | string | Success message. |
@@ -1339,7 +1485,9 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -1356,6 +1504,7 @@
 **Description:** Adds deposit/withdrawal to a goal.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `savingId` | integer | Path | ID of the savings goal. |
@@ -1365,7 +1514,9 @@
 **Success Response:**
 - **Status Code:** 201 Created
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `id` | integer | Transaction ID. |
@@ -1386,7 +1537,9 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -1405,7 +1558,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON Array
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `[].id` | integer | Transaction ID. |
@@ -1424,7 +1579,9 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -1447,7 +1604,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON Array
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `[].id` | integer | Category ID. |
@@ -1465,7 +1624,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Unauthorized access. |
@@ -1482,6 +1643,7 @@
 **Description:** Creates a custom category.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `name` | string | Body | Category Name. |
@@ -1490,7 +1652,9 @@
 **Success Response:**
 - **Status Code:** 201 Created
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `id` | integer | New Category ID. |
@@ -1509,7 +1673,9 @@
 **Fail Response:**
 - **Status Code:** 400 Bad Request
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -1528,7 +1694,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `message` | string | Success message. |
@@ -1543,7 +1711,9 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message (e.g. system category). |
@@ -1566,7 +1736,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON Array
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `[].id` | integer | Notification ID. |
@@ -1584,7 +1756,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Unauthorized access. |
@@ -1603,7 +1777,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `unreadCount` | integer | The count of unread items. |
@@ -1618,7 +1794,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Unauthorized access. |
@@ -1637,7 +1815,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `id` | integer | Notification ID. |
@@ -1654,7 +1834,9 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -1673,7 +1855,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `message` | string | Success message. |
@@ -1688,7 +1872,9 @@
 **Fail Response:**
 - **Status Code:** 401 Unauthorized
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Unauthorized access. |
@@ -1707,7 +1893,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `message` | string | Success message. |
@@ -1722,7 +1910,9 @@
 **Fail Response:**
 - **Status Code:** 404 Not Found
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
@@ -1743,6 +1933,7 @@
 **Description:** Interaction with Bonzi Buddy.
 
 **Request Parameters:**
+
 | Parameter | Type | In | Description |
 |---|---|---|---|
 | `message` | string | Body | User input text. |
@@ -1751,7 +1942,9 @@
 **Success Response:**
 - **Status Code:** 200 OK
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `response` | string | The bot's reply. |
@@ -1768,7 +1961,9 @@
 **Fail Response:**
 - **Status Code:** 500 Internal Server Error (or 400)
 - **Response Type:** JSON
-- **Response Data:**
+
+**Response Data:**
+
 | Parameter | Type | Description |
 |---|---|---|
 | `error` | string | Error message. |
