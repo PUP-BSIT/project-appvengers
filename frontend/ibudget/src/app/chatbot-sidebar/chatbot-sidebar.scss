@@ -411,12 +411,17 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         }
 
         .message-footer {
-            .speak-btn {
+            .speak-btn,
+            .copy-btn {
                 color: #9ca3af;
 
                 &:hover {
                     color: $primary-color;
                 }
+            }
+
+            .copy-btn.copied {
+                color: #2ecc71;
             }
         }
     }
@@ -427,6 +432,12 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         justify-content: space-between;
         margin-top: 5px;
         gap: 8px;
+
+        .footer-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
     }
 
     .message-time {
@@ -448,6 +459,28 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         &:hover {
             opacity: 1;
             background-color: rgba(0, 0, 0, 0.05);
+        }
+    }
+
+    .copy-btn {
+        background: none;
+        border: none;
+        padding: 2px 4px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        opacity: 0.7;
+        transition: all 0.2s;
+        border-radius: 4px;
+        position: relative;
+
+        &:hover {
+            opacity: 1;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        &.copied {
+            color: #2ecc71;
+            opacity: 1;
         }
     }
 }
@@ -753,6 +786,10 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
 }
 
 .message-content {
+    // Responsive text handling
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 
     h1,
     h2,
@@ -764,6 +801,8 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         margin-bottom: 5px;
         font-weight: 600;
         line-height: 1.2;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     h1 {
@@ -821,12 +860,17 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         margin: 8px 0;
         font-size: 0.85em;
         line-height: 1.4;
+        max-width: 100%;
+        white-space: pre-wrap;
+        word-wrap: break-word;
 
         code {
             background-color: transparent;
             padding: 0;
             color: inherit;
             font-size: inherit;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
     }
 
@@ -846,12 +890,16 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
     // Enhanced Table Styles
     table {
         width: 100%;
+        max-width: 100%;
         border-collapse: collapse;
         margin: 10px 0;
         font-size: 0.9em;
         border-radius: 8px;
         overflow: hidden;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     thead {
