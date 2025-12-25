@@ -1,4 +1,4 @@
-import { Component, signal, inject, effect, ElementRef, ViewChild, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, inject, effect, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ import DOMPurify from 'dompurify';
     templateUrl: './chatbot-sidebar.html',
     styleUrl: './chatbot-sidebar.scss'
 })
-export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
+export class ChatbotSidebar implements OnInit, OnDestroy {
     private chatbotService = inject(ChatbotService);
     private speechService = inject(SpeechService);
     private sanitizer = inject(DomSanitizer);
@@ -49,6 +49,9 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
     showSettings = signal(false);
     availableVoices = this.speechService.availableVoices;
     currentVoiceName = this.speechService.currentVoiceName;
+
+    // Scroll tracking
+    private shouldScrollToBottom = false;
 
     @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
     @ViewChild('textareaRef') private textareaRef!: ElementRef<HTMLTextAreaElement>;
@@ -158,16 +161,36 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
         };
         this.messages.set([welcomeMsg]);
         this.showWelcome.set(false);
+        this.scrollToBottomSmooth();
     }
 
-    ngAfterViewChecked() {
-        this.scrollToBottom();
+    /**
+     * Check if user is near the bottom of the scroll container.
+     * Returns true if within 100px of the bottom.
+     */
+    private isNearBottom(): boolean {
+        if (!this.scrollContainer?.nativeElement) return true;
+        
+        const el = this.scrollContainer.nativeElement;
+        const threshold = 100; // pixels from bottom
+        return el.scrollHeight - el.scrollTop - el.clientHeight < threshold;
     }
 
-    scrollToBottom(): void {
-        try {
-            this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
-        } catch (err) { }
+    /**
+     * Scroll to bottom with smooth animation.
+     * Only call this when appropriate (new message, user sent message).
+     */
+    private scrollToBottomSmooth(): void {
+        setTimeout(() => {
+            try {
+                if (this.scrollContainer?.nativeElement) {
+                    this.scrollContainer.nativeElement.scrollTo({
+                        top: this.scrollContainer.nativeElement.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            } catch (err) { }
+        }, 50);
     }
 
     toggleSidebar() {
@@ -182,12 +205,18 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
     }
 
     private sendMessageWithText(text: string) {
+        // Check if user is near bottom before adding message (for smart scroll)
+        const wasNearBottom = this.isNearBottom();
+        
         // Add user message
         this.messages.update(msgs => [...msgs, { text, isUser: true, timestamp: new Date() }]);
         this.userInput.set('');
         this.resetTextareaHeight(); // Reset textarea to original size
         this.isLoading.set(true);
         this.lastError.set(null);
+
+        // Always scroll to bottom when user sends a message
+        this.scrollToBottomSmooth();
 
         this.chatbotService.sendMessage(text)
             .subscribe({
@@ -212,6 +241,11 @@ export class ChatbotSidebar implements AfterViewChecked, OnInit, OnDestroy {
                     
                     this.messages.update(msgs => [...msgs, botMessage]);
                     this.isLoading.set(false);
+
+                    // Only auto-scroll if user was near bottom when they sent the message
+                    if (wasNearBottom) {
+                        this.scrollToBottomSmooth();
+                    }
 
                     // Auto-speak bot response if enabled
                     if (this.autoSpeak() && parsed.text) {
