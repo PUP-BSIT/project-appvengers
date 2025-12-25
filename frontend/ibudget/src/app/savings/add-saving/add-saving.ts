@@ -8,6 +8,17 @@ import { ToggleableSidebar } from "../../toggleable-sidebar/toggleable-sidebar";
 import { ToastService } from '../../../services/toast.service';
 
 /**
+ * Formats a Date object to YYYY-MM-DD string in local timezone.
+ * Avoids timezone issues that occur with toISOString() (which uses UTC).
+ */
+function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/**
  * Parses flexible date formats from chatbot deep links.
  * Handles: YYYY, YYYY-MM, YYYY-MM-DD
  * 
@@ -37,7 +48,7 @@ function parseFlexibleDate(dateStr: string | undefined, defaultToToday = false):
     
     // If current year and defaultToToday is true, return today's date
     if (year === currentYear && defaultToToday) {
-      return today.toISOString().split('T')[0];
+      return formatLocalDate(today);
     }
     
     // Otherwise default to January 1st of that year
