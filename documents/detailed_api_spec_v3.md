@@ -1,7 +1,7 @@
 # iBudget Backend API Specification
 
-**Version:** 3.4
-**Last Updated:** December 24, 2025
+**Version:** 2.0
+**Last Updated:** December 25, 2025
 **Server URL:** `https://i-budget.site` (Production) / `http://localhost:8080` (Local)
 
 ---
