@@ -98,12 +98,22 @@
                     <div class="message-time">
                         {{ msg.timestamp | date:'shortTime' }}
                     </div>
-                    @if (!msg.isUser && isTTSSupported()) {
-                    <button class="speak-btn" 
-                            (click)="speakMessage(msg.text)" 
-                            [title]="isSpeaking() ? 'Stop speaking' : 'Read aloud'">
-                        <i class="bi" [ngClass]="isSpeaking() ? 'bi-stop-fill' : 'bi-volume-up'"></i>
-                    </button>
+                    @if (!msg.isUser) {
+                    <div class="footer-actions">
+                        <button class="copy-btn" 
+                                (click)="copyMessage(msg)"
+                                [class.copied]="copiedMessageId() === msg.timestamp.getTime()"
+                                [title]="copiedMessageId() === msg.timestamp.getTime() ? 'Copied!' : 'Copy message'">
+                            <i class="bi" [ngClass]="copiedMessageId() === msg.timestamp.getTime() ? 'bi-check-lg' : 'bi-copy'"></i>
+                        </button>
+                        @if (isTTSSupported()) {
+                        <button class="speak-btn" 
+                                (click)="speakMessage(msg.text)" 
+                                [title]="isSpeaking() ? 'Stop speaking' : 'Read aloud'">
+                            <i class="bi" [ngClass]="isSpeaking() ? 'bi-stop-fill' : 'bi-volume-up'"></i>
+                        </button>
+                        }
+                    </div>
                     }
                 </div>
             </div>

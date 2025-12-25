@@ -50,6 +50,9 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     availableVoices = this.speechService.availableVoices;
     currentVoiceName = this.speechService.currentVoiceName;
 
+    // Copy message tracking
+    copiedMessageId = signal<number | null>(null);
+
     // Scroll tracking
     private shouldScrollToBottom = false;
 
@@ -710,6 +713,86 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
      */
     stopSpeaking(): void {
         this.speechService.stopSpeaking();
+    }
+
+    // ==================== Copy Methods ====================
+
+    /**
+     * Copy message text to clipboard.
+     * Shows visual feedback when copied.
+     * @param msg The message to copy
+     */
+    async copyMessage(msg: ChatMessage): Promise<void> {
+        try {
+            // Strip markdown formatting for cleaner clipboard content
+            const cleanText = this.stripMarkdown(msg.text);
+            await navigator.clipboard.writeText(cleanText);
+            
+            // Show copied feedback using message timestamp as ID
+            const msgId = msg.timestamp.getTime();
+            this.copiedMessageId.set(msgId);
+            
+            // Reset after 2 seconds
+            setTimeout(() => {
+                if (this.copiedMessageId() === msgId) {
+                    this.copiedMessageId.set(null);
+                }
+            }, 2000);
+        } catch (error) {
+            console.error('Failed to copy message:', error);
+            // Fallback for older browsers
+            this.fallbackCopyToClipboard(msg);
+        }
+    }
+
+    /**
+     * Strip markdown formatting from text for cleaner clipboard content.
+     */
+    private stripMarkdown(text: string): string {
+        return text
+            // Remove bold/italic markers
+            .replace(/\*\*([^*]+)\*\*/g, '$1')
+            .replace(/\*([^*]+)\*/g, '$1')
+            .replace(/__([^_]+)__/g, '$1')
+            .replace(/_([^_]+)_/g, '$1')
+            // Remove inline code
+            .replace(/`([^`]+)`/g, '$1')
+            // Remove headers
+            .replace(/^#{1,6}\s+/gm, '')
+            // Remove link markdown but keep text
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+            // Clean up extra whitespace
+            .replace(/\n{3,}/g, '\n\n')
+            .trim();
+    }
+
+    /**
+     * Fallback copy method for older browsers.
+     */
+    private fallbackCopyToClipboard(msg: ChatMessage): void {
+        const textArea = document.createElement('textarea');
+        textArea.value = this.stripMarkdown(msg.text);
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        try {
+            document.execCommand('copy');
+            const msgId = msg.timestamp.getTime();
+            this.copiedMessageId.set(msgId);
+            setTimeout(() => {
+                if (this.copiedMessageId() === msgId) {
+                    this.copiedMessageId.set(null);
+                }
+            }, 2000);
+        } catch (error) {
+            console.error('Fallback copy failed:', error);
+        }
+        
+        document.body.removeChild(textArea);
     }
 
     // ==================== Settings Methods ====================
