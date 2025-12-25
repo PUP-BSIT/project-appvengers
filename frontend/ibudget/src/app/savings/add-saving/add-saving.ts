@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { Saving } from '../../../models/user.model';
 import { SavingsService } from '../../../services/savings.service';
 import { ToggleableSidebar } from "../../toggleable-sidebar/toggleable-sidebar";
+import { ToastService } from '../../../services/toast.service';
 
 /**
  * Parses flexible date formats from chatbot deep links.
@@ -57,6 +58,7 @@ export class AddSaving implements OnInit {
   savingService = inject(SavingsService);
   activatedRoute = inject(ActivatedRoute);
   router = inject(Router);
+  toastService = inject(ToastService);
   addSavingForm: FormGroup;
   formBuilder = inject(FormBuilder);
   currentSaving = signal(<Saving>{});
@@ -115,6 +117,11 @@ export class AddSaving implements OnInit {
     this.activatedRoute.queryParams.subscribe(params => {
       if (params['name'] || params['targetAmount'] || params['description']) {
         this.prefillFormFromParams(params);
+        // Show toast notification when Bonzi pre-fills the form
+        this.toastService.info(
+          'Bonzi Pre-fill',
+          'Please review the form carefully before submitting.'
+        );
       }
     });
   }
