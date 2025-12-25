@@ -147,7 +147,6 @@ Bank-level security with JWT authentication and rate limiting.
 - **E2E Testing:** Playwright for browser automation
 - **AI Workflow:** seperate microservice for Bonzi Buddy chatbot automation
 - **LazyGit** for terminal git TUI
-- **RAG Database:** Pinecone for AI knowledge base
 - **Environment Management:** Angular environment configs
 
 ---
@@ -202,8 +201,6 @@ project-appvengers/
 └── .github/workflows/         # CI/CD pipelines
 ```
 
-
-
 ## 📚 Documentation
 
 ### Core Documentation
@@ -222,7 +219,6 @@ project-appvengers/
 |----------|-------------|
 | [Chatbot Implementation Guide](documents/markdown/CHATBOT_IMPLEMENTATION_GUIDE.md) | Bonzi Buddy context-aware AI system |
 | [Smart Navigation Guide](#) | Deep linking from chatbot to app features |
-| [AI Agent System Prompt](documents/markdown/iBudget_AI_Agent_System_Prompt.md) | Bonzi Buddy personality and behavior |
 | [AI Knowledge Base](documents/markdown/iBudget_Knowledge_Base.md) | RAG information for AI assistance |
 
 ### Testing & Quality
@@ -268,13 +264,7 @@ project-appvengers/
 - **Description:** Groceries at SM
 - **Date:** 2024-12-17
 
-[ACTION:navigate:/transactions?amount=500&category=Groceries&description=Groceries at SM&type=expense&date=2024-12-17&openModal=true]*
-
 #### Technical Architecture
-
-```
-User Browser → iBudget App → Backend Server → microservice AI → Pinecone RAG → AI Response
-```
 
 - **Frontend:** Angular chat widget with microservice integration
 - **Backend:** Spring Boot REST API with UserContextService
@@ -335,12 +325,6 @@ Our notification system has been significantly improved with smart, user-friendl
 - **User Preferences:** Customizable notification settings and thresholds
 - **Context-Aware:** Notifications based on actual user behavior and patterns
 
-### Current Implementation Status
-
-- ✅ **Phase 1-3:** Urgency icons, View Details buttons (completed)
-- 🔄 **Phase 4-5:** Date grouping, filter tabs, preferences (in progress)
-- 📋 **Task Tracking:** See `tasks/subtasks/notification-improvements/` for detailed progress
-
 ---
 
 ## 📊 CI/CD Pipeline
@@ -376,21 +360,6 @@ We use Notion for:
 - Technical documentation
 - Team collaboration
 
-### Task Management
-
-**Task Structure:** `tasks/subtasks/` organized by feature area
-
-- **Notification Improvements:** 9-phase enhancement project
-- **Bug Fixes:** Targeted resolution of specific issues
-- **Feature Development:** New capability implementation
-- **Performance Optimization:** Speed and efficiency improvements
-
-### Current Active Tasks
-
-- **Notification System:** Enhanced urgency-based icons, date grouping, filter tabs
-- **Chatbot Integration:** Smart navigation and context-aware improvements
-- **Performance:** Code coverage optimization and E2E test expansion
-
 ---
 
 ## 👥 The Appvengers Team
@@ -424,14 +393,11 @@ We use Notion for:
 
 </div>
 
-
-
 ## 📜 License
 
 This project is part of an academic program at **Polytechnic University of the Philippines**.
 
 <div align="center">
-
 
 [⬆ Back to Top](#-ibudget)
 
