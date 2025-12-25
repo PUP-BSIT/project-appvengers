@@ -1,4 +1,5 @@
 import { Component, OnInit, signal, inject, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Category } from '../../../models/user.model';
 import { CategoriesService } from '../../../services/categories.service';
 import { CommonModule } from '@angular/common';
@@ -17,6 +18,7 @@ export class CategoriesPanel implements OnInit {
   @ViewChild(AddCategoryModal) addCategoryModalComponent!: AddCategoryModal;
 
   categoriesService = inject(CategoriesService);
+  route = inject(ActivatedRoute);
 
   activeTab = signal<'expense' | 'income'>('expense');
   allCategories = signal<Category[]>([]);
@@ -24,6 +26,16 @@ export class CategoriesPanel implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
+
+    // Handle query params from chatbot deep links
+    this.route.queryParams.subscribe(params => {
+      if (params['openModal'] === 'true' || params['name'] || params['type']) {
+        // Delay slightly to ensure ViewChild is available
+        setTimeout(() => {
+          this.addCategoryModalComponent.openModalWithParams(params);
+        }, 100);
+      }
+    });
   }
 
   loadCategories() {

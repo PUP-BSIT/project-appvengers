@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef, inject, signal, output } from '@angular/core';
 import { Category } from '../../../models/user.model';
 import { CategoriesService } from '../../../services/categories.service';
+import { ToastService } from '../../../services/toast.service';
 import { Modal } from 'bootstrap';
 import { 
   ReactiveFormsModule, 
@@ -27,8 +28,9 @@ export class AddCategoryModal {
   // Emit to parent if category is added
   categoryAdded = output<Category>();
 
-  // Service
+  // Services
   categoriesService = inject(CategoriesService);
+  toastService = inject(ToastService);
 
   // Snackbar signals
   showNotification = signal(false);
@@ -55,6 +57,43 @@ export class AddCategoryModal {
       keyboard: false
     });
     modal.show();
+  }
+
+  /**
+   * Opens the add category modal with pre-filled data from query params (chatbot deep links).
+   * Supports: name, description, type (expense/income)
+   */
+  openModalWithParams(params: Record<string, string>) {
+    // Validate type - must be 'expense' or 'income'
+    let type: 'expense' | 'income' = 'expense';
+    if (params['type']) {
+      const paramType = params['type'].toLowerCase();
+      if (paramType === 'income' || paramType === 'expense') {
+        type = paramType;
+      }
+    }
+
+    // Patch form values
+    this.categoryForm.patchValue({
+      name: params['name'] || '',
+      description: params['description'] || '',
+      type: type
+    });
+
+    // Open the modal
+    const modal = new Modal(this.addCategoryModal.nativeElement, {
+      backdrop: 'static',
+      keyboard: false
+    });
+    modal.show();
+
+    // Show toast notification
+    if (params['name'] || params['description'] || params['type']) {
+      this.toastService.info(
+        'Bonzi Pre-fill',
+        'Please review the form carefully before submitting.'
+      );
+    }
   }
 
   closeModal() {
