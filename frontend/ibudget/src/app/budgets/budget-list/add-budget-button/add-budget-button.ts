@@ -1,6 +1,7 @@
 import { Budget, Category } from '../../../../models/user.model';
 import { BudgetService } from '../../../../services/budget.service';
 import { CategoriesService } from '../../../../services/categories.service';
+import { ToastService } from '../../../../services/toast.service';
 import { Modal } from 'bootstrap';
 import { 
   Component, 
@@ -14,6 +15,7 @@ import {
   SimpleChanges, 
   ViewChild 
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
   
 import { 
   ReactiveFormsModule ,
@@ -40,6 +42,8 @@ export class AddBudgetButton implements OnInit, OnChanges {
   budgetService = inject(BudgetService);
   budgetId = input(<number>(0));
   categoriesService = inject(CategoriesService);
+  toastService = inject(ToastService);
+  route = inject(ActivatedRoute);
   categories = signal<Category[]>([]);
   currentCategoryName = signal('');
   currentCategoryId = signal<number>(0);
@@ -71,6 +75,13 @@ export class AddBudgetButton implements OnInit, OnChanges {
     const budgetId = this.budgetId();
     this.categoriesService.getCategories().subscribe(data => {
       this.categories.set(data);
+      
+      // Handle query params from chatbot deep links after categories are loaded
+      this.route.queryParams.subscribe(params => {
+        if (params['openModal'] === 'true' || params['limitAmount'] || params['categoryId'] || params['category']) {
+          this.openModalWithParams(params);
+        }
+      });
     });
 
     this.budgetForm = this.formBuilder.group({
@@ -103,6 +114,66 @@ export class AddBudgetButton implements OnInit, OnChanges {
   openModal() {
     const modal = new Modal(this.addBudgetModal.nativeElement);
     modal.show();
+  }
+
+  /**
+   * Opens the add budget modal with pre-filled data from query params (chatbot deep links).
+   * Supports: categoryId, category (name), limitAmount, startDate, endDate
+   */
+  openModalWithParams(params: Record<string, string>) {
+    // Parse limit amount
+    const limitAmount = params['limitAmount'] ? parseFloat(params['limitAmount']) : 0;
+
+    // Find category by ID or name
+    let categoryId: number | string = '';
+    if (params['categoryId']) {
+      categoryId = parseInt(params['categoryId'], 10);
+    } else if (params['category']) {
+      const categoryName = params['category'].toLowerCase();
+      const matchedCategory = this.categories().find(
+        c => c.name.toLowerCase() === categoryName && c.type === 'expense'
+      );
+      if (matchedCategory) {
+        categoryId = matchedCategory.id;
+      }
+    }
+
+    // Parse dates - default to today for start, 30 days from now for end
+    const today = new Date();
+    const defaultEndDate = new Date(today);
+    defaultEndDate.setDate(defaultEndDate.getDate() + 30);
+    
+    const startDate = params['startDate'] || today.toISOString().split('T')[0];
+    const endDate = params['endDate'] || defaultEndDate.toISOString().split('T')[0];
+
+    // Patch form values
+    this.budgetForm.patchValue({
+      category_id: categoryId,
+      limit_amount: isNaN(limitAmount) ? 0 : limitAmount,
+      start_date: startDate,
+      end_date: endDate
+    });
+
+    // Update category signals if category was found
+    if (categoryId) {
+      const cat = this.categories().find(c => c.id === categoryId);
+      if (cat) {
+        this.currentCategoryId.set(cat.id);
+        this.currentCategoryName.set(cat.name);
+      }
+    }
+
+    // Open the modal
+    const modal = new Modal(this.addBudgetModal.nativeElement);
+    modal.show();
+
+    // Show toast notification
+    if (params['limitAmount'] || params['categoryId'] || params['category']) {
+      this.toastService.info(
+        'Bonzi Pre-fill',
+        'Please review the form carefully before submitting.'
+      );
+    }
   }
 
   closeModal() {
