@@ -17,11 +17,13 @@ $header-height: 70px;
     padding: 8px;
     min-width: 0;
   }
+
   .category-card {
     margin: 8px 0;
     padding: 10px;
     font-size: 1rem;
   }
+
   .btn-add-cat {
     width: 100%;
     display: block;
@@ -38,19 +40,18 @@ $header-height: 70px;
   }
 }
 
-/* Tablet (≤991px) */
 @media (max-width: 991px) {
   .categories-container {
     padding: 10px 8px;
     margin-left: 0;
   }
+
   .category-card {
     font-size: 1.05rem;
     padding: 12px;
   }
 }
 
-/* Mobile L (≤768px) */
 @media (max-width: 768px) {
   .categories-container {
     height: 100%;
@@ -58,11 +59,13 @@ $header-height: 70px;
     padding: 8px;
     min-width: 0;
   }
+
   .category-card {
     margin: 8px 0;
     padding: 10px;
     font-size: 1rem;
   }
+
   .btn-add-cat {
     width: 100%;
     display: block;
@@ -72,17 +75,18 @@ $header-height: 70px;
   }
 }
 
-/* Mobile M (≤425px) */
 @media (max-width: 425px) {
   .categories-container {
     padding: 4px;
     margin-left: 0;
   }
+
   .category-card {
     font-size: 0.98rem;
     padding: 8px;
     margin: 6px 0;
   }
+
   .btn-add-cat {
     width: 100%;
     display: block;
@@ -92,17 +96,18 @@ $header-height: 70px;
   }
 }
 
-/* Mobile S (≤320px) */
 @media (max-width: 320px) {
   .categories-container {
     padding: 2px;
     margin-left: 0;
   }
+
   .category-card {
     font-size: 0.92rem;
     padding: 5px;
     margin: 4px 0;
   }
+
   .btn-add-cat {
     width: 100%;
     display: block;
