@@ -118,6 +118,7 @@ export type Category = {
   name: string;
   type: string; // "income" or "expense"
   referencesCount?: number;
+  deletedAt?: string | null;
 }
 
 export type Budget = {
