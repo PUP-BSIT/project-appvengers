@@ -100,7 +100,11 @@ export class CategoriesPanel implements OnInit {
   }
 
   onEditCategory(category: Category) {
-    console.log('Edit category:', category);
+    if (category.referencesCount > 0) {
+      console.error('Category is used and cannot be edited.');
+      return;
+    }
+    this.addCategoryModalComponent.openModal(category);
   }
 
   onDeleteCategory(category: Category) {
