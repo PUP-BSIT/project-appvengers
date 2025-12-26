@@ -8,7 +8,9 @@ import org.springframework.data.repository.query.Param;
 import com.backend.appvengers.entity.Category;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
-    List<Category> findByUserId(Integer userId);
+    @Query("SELECT c FROM Category c WHERE c.userId = :userId AND c.deletedAt IS NULL")
+    List<Category> findByUserId(@Param("userId") Integer userId);
+
     boolean existsByUserId(Integer userId);
     
     /**
@@ -34,7 +36,8 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
         "        WHERE b.category_id = c.category_id " +
         "        AND b.deleted_at IS NULL) AS referencesCount " +
         "FROM tbl_category c " +
-        "WHERE c.user_id = :userId", nativeQuery = true)
+        "WHERE c.user_id = :userId " +
+        "AND c.deleted_at IS NULL", nativeQuery = true)
     List<Object[]> findCategoriesWithCounts(@Param("userId") Integer userId);
 
     /**
