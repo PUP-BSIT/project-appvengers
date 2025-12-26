@@ -45,4 +45,9 @@ public class Category {
 
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
+
+    public LocalDateTime getDeletedAt() { return deletedAt; }
+    public void setDeletedAt(LocalDateTime deletedAt) { 
+        this.deletedAt = deletedAt;
+    }
 }
