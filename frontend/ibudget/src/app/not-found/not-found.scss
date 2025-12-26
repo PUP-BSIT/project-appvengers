@@ -4,23 +4,23 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  height: 100vh; /* Full viewport height */
-  background-color: #f8f8f8; /* Light gray background */
+  height: 100vh;
+  background-color: #f8f8f8;
   font-family: Arial, sans-serif;
   color: #333;
 }
 
 .logo-image {
-  width: 150px; /* Adjust size as needed */
+  width: 150px;
   height: auto;
   margin-bottom: 20px;
 }
 
 .status-code {
-  font-size: 8em; /* Large 404 */
+  font-size: 8em;
   font-weight: 900;
   margin: 0;
-  color: #cc0000; /* Red color for error */
+  color: #cc0000;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -40,7 +40,7 @@
 
 .home-link {
   padding: 10px 20px;
-  background-color: #007bff; /* Primary blue color */
+  background-color: #007bff;
   color: white;
   text-decoration: none;
   border-radius: 5px;
