@@ -5,7 +5,9 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Add Category</h5>
+        <h5 class="modal-title">
+          {{ categoryToEdit ? 'Edit Category' : 'Add Category' }}
+        </h5>
         <button type="button" class="btn-close" (click)="closeModal()"></button>
       </div>
 
@@ -49,7 +51,7 @@
         </button>
         <button class="btn btn-primary" 
           (click)="saveCategory()">
-          Add Category
+          {{ categoryToEdit ? 'Update Category' : 'Add Category' }}
         </button>
       </div>
     </div>
