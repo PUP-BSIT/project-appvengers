@@ -113,7 +113,6 @@
   background: #2563eb;
 }
 
-/* Laptop (≤1200px) */
 @media (max-width: 1200px) {
   .resend-verification-container {
     max-width: 400px;
@@ -125,7 +124,6 @@
   }
 }
 
-/* Tablet (≤991px) */
 @media (max-width: 991px) {
   .resend-verification-container {
     max-width: 95vw;
@@ -141,7 +139,6 @@
   }
 }
 
-/* Mobile L (≤768px) */
 @media (max-width: 768px) {
   .resend-verification-container {
     margin-top: 2.2rem;
@@ -157,7 +154,6 @@
   }
 }
 
-/* Mobile M (≤425px) */
 @media (max-width: 425px) {
   .resend-verification-container {
     margin-top: 1.2rem;
@@ -174,7 +170,6 @@
   }
 }
 
-/* Mobile S (≤320px) */
 @media (max-width: 320px) {
   .resend-verification-container {
     margin-top: 0.5rem;
