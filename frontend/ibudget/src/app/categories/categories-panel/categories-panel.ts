@@ -108,7 +108,26 @@ export class CategoriesPanel implements OnInit {
   }
 
   onDeleteCategory(category: Category) {
-    console.log('Delete category:', category);
+    if (category.referencesCount > 0) {
+      console.error('Category is used and cannot be deleted.');
+      return;
+    }
+
+    this.categoriesService.deleteCategory(category.id).subscribe({
+      next: () => {
+        const updatedList = this.allCategories().filter(c => 
+          c.id !== category.id
+        );
+        
+        this.allCategories.set(updatedList);
+        this.filterCategories();
+        this.initDropdowns();
+        setTimeout(() => this.loadCategories(), 1000);
+      },
+      error: (err) => {
+        console.error('Error deleting category:', err);
+      }
+    });
   }
 
   openAddCategoryModal() {
