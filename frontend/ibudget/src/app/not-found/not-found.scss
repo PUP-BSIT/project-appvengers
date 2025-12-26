@@ -4,22 +4,22 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 100vh; // Changed to min-height for better scrolling on small landscape phones
+  min-height: 100vh;
   background-color: #f8f8f8;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
-  padding: 20px; // Padding prevents text from touching screen edges
+  padding: 20px;
 }
 
 .logo-image {
-  width: 120px; // Slightly smaller for mobile
+  width: 120px;
   height: auto;
   margin-bottom: 20px;
   transition: width 0.3s ease;
 }
 
 .status-code {
-  font-size: 5rem; // Scaleable units
+  font-size: 5rem;
   font-weight: 900;
   margin: 0;
   color: #cc0000;
@@ -60,17 +60,11 @@
   }
 }
 
-/* ============================= */
-/* 📱 MOBILE M & L (375px - 425px) */
-/* ============================= */
 @media (min-width: 375px) {
   .status-code { font-size: 6rem; }
   .logo-image { width: 140px; }
 }
 
-/* ============================= */
-/* 📑 TABLET (768px) */
-/* ============================= */
 @media (min-width: 768px) {
   .logo-image {
     width: 180px;
@@ -87,9 +81,6 @@
   }
 }
 
-/* ============================= */
-/* 💻 LAPTOP / DESKTOP (1024px+) */
-/* ============================= */
 @media (min-width: 1024px) {
   .logo-image {
     width: 220px;
