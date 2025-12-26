@@ -39,7 +39,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     /**
      * Count references for a single category (transactions + budgets).
-     * Used to guard edit/delete operations.
+     * Used to check transaction references before edit/delete operations.
      */
     @Query(value =
         "SELECT (SELECT COUNT(*) FROM tbl_transaction t " +
