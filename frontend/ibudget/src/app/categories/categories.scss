@@ -22,6 +22,13 @@ $header-height: 70px;
     padding: 10px;
     font-size: 1rem;
   }
+  .btn-add-cat {
+    width: 100%;
+    display: block;
+    margin-top: 10px;
+    font-size: 0.08rem;
+    padding: 0.7rem 1rem;
+  }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -56,6 +63,13 @@ $header-height: 70px;
     padding: 10px;
     font-size: 1rem;
   }
+  .btn-add-cat {
+    width: 100%;
+    display: block;
+    margin-top: 10px;
+    font-size: 1.08rem;
+    padding: 0.7rem 1rem;
+  }
 }
 
 /* Mobile M (≤425px) */
@@ -69,6 +83,13 @@ $header-height: 70px;
     padding: 8px;
     margin: 6px 0;
   }
+  .btn-add-cat {
+    width: 100%;
+    display: block;
+    margin-top: 10px;
+    font-size: 1.02rem;
+    padding: 0.65rem 0.8rem;
+  }
 }
 
 /* Mobile S (≤320px) */
@@ -81,5 +102,12 @@ $header-height: 70px;
     font-size: 0.92rem;
     padding: 5px;
     margin: 4px 0;
+  }
+  .btn-add-cat {
+    width: 100%;
+    display: block;
+    margin-top: 8px;
+    font-size: 0.98rem;
+    padding: 0.6rem 0.6rem;
   }
 }
