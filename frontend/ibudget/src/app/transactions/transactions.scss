@@ -1148,371 +1148,107 @@ $header-height: 70px;
   }
 }
 
-/* Responsive Design */
-/* Mobile S */
-@media (max-width: 320px) {
+@media (max-width: 992px) {
   .transactions-container {
-    margin-left: 0;
-    padding: 5px;
-  }
-
-  .transactions-content {
-    flex-direction: column;
-    padding: 0.5rem;
-  }
-
-  .filter-add-row {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: stretch;
-  }
-
-  .sidebar {
-    width: 100%;
-    padding: 1rem;
-  }
-
-  .summary-cards {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .transactions-cards-container {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .card {
-    padding: 1rem;
-  }
-
-  .card .amount {
-    font-size: 1.5rem;
-  }
-
-  .transactions-table-container {
-    overflow-x: auto;
-  }
-
-  .transactions-table {
-    font-size: 0.8rem;
-    min-width: 600px;
-  }
-
-  .transactions-table th,
-  .transactions-table td {
-    padding: 0.5rem 0.25rem;
-  }
-
-  .modal-content {
-    width: 95%;
-    max-width: none;
-  }
-
-  .modal-header,
-  .modal-body {
-    padding: 1rem;
-  }
-
-  .notification-modal {
-    padding: 1rem;
-  }
-
-  .success-icon {
-    font-size: 2rem;
-  }
-
-  .btn-add,
-  .btn-submit,
-  .btn-cancel {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-}
-
-/* Mobile M  */
-@media (min-width: 321px) and (max-width: 375px) {
-  .transactions-container {
-    margin-left: 0;
-    padding: 5px;
-  }
-
-  .transactions-content {
-    flex-direction: column;
-    padding: 0.75rem;
-  }
-
-  .filter-add-row {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: stretch;
-  }
-
-  .sidebar {
-    width: 100%;
-    padding: 1rem;
-  }
-
-  .summary-cards {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .transactions-cards-container {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .card {
-    padding: 1rem;
-  }
-
-  .card .amount {
-    font-size: 1.6rem;
-  }
-
-  .transactions-table-container {
-    overflow-x: auto;
-  }
-
-  .transactions-table {
-    font-size: 0.85rem;
-    min-width: 600px;
-  }
-
-  .transactions-table th,
-  .transactions-table td {
-    padding: 0.6rem 0.3rem;
-  }
-
-  .modal-content {
-    width: 95%;
-    max-width: none;
-  }
-
-  .modal-header,
-  .modal-body {
-    padding: 1.25rem;
-  }
-
-  .notification-modal {
-    padding: 1.25rem;
-  }
-
-  .success-icon {
-    font-size: 2.25rem;
-  }
-
-  .btn-add,
-  .btn-submit,
-  .btn-cancel {
-    padding: 0.6rem 1.25rem;
-    font-size: 0.95rem;
-  }
-}
-
-/* Mobile L */
-@media (min-width: 376px) and (max-width: 425px) {
-  .transactions-container {
-    margin-left: 0;
+    margin-left: 0 !important; /* Remove sidebar margin on smaller screens */
     padding: 10px;
   }
-
-  .transactions-content {
-    flex-direction: column;
-    padding: 1rem;
-  }
-
+  
   .filter-add-row {
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: stretch;
-  }
-
-  .sidebar {
-    width: 100%;
-    padding: 1.25rem;
-  }
-
-  .summary-cards {
-    grid-template-columns: repeat(2, 1fr);
+    flex-wrap: wrap; /* Prevent button from getting crushed */
     gap: 1rem;
-  }
-
-  .transactions-cards-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-
-  .card {
-    padding: 1.25rem;
-  }
-
-  .card .amount {
-    font-size: 1.7rem;
-  }
-
-  .transactions-table-container {
-    overflow-x: auto;
-  }
-
-  .transactions-table {
-    font-size: 0.9rem;
-    min-width: 600px;
-  }
-
-  .transactions-table th,
-  .transactions-table td {
-    padding: 0.75rem 0.4rem;
-  }
-
-  .modal-content {
-    width: 90%;
-  }
-
-  .notification-modal {
-    padding: 1.5rem;
-  }
-
-  .success-icon {
-    font-size: 2.5rem;
   }
 }
 
-/* Mobile XL (720px) */
-@media (min-width: 426px) and (max-width: 720px) {
+/* Target everything 425px and below (Mobile L, M, and S) */
+@media screen and (max-width: 425px) {
+  
+  /* 1. Reset the main container to allow full width */
   .transactions-container {
-    margin-left: 0;
-    padding: 10px;
+    margin-left: 0 !important;
+    padding: 0 !important;
   }
 
   .transactions-content {
-    flex-direction: column;
-    padding: 1.25rem;
+    padding: 15px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
-  .filter-add-row {
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: stretch;
-  }
-
-  .sidebar {
-    width: 100%;
-    padding: 1.5rem;
-  }
-
+  /* 2. Stack the Top Summary Cards */
   .summary-cards {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
-  }
-
-  .transactions-cards-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: 1fr !important; /* Overrides grid if used */
+    width: 100% !important;
+    gap: 10px !important;
   }
 
   .card {
-    padding: 1.5rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
   }
 
-  .card .amount {
-    font-size: 1.75rem;
-  }
-
-  .transactions-table-container {
-    overflow-x: auto;
-  }
-
-  .transactions-table {
-    font-size: 0.95rem;
-    min-width: 600px;
-  }
-
-  .transactions-table th,
-  .transactions-table td {
-    padding: 0.8rem 0.5rem;
-  }
-
-  .modal-content {
-    width: 88%;
-  }
-
-  .notification-modal {
-    padding: 1.75rem;
-  }
-
-  .success-icon {
-    font-size: 2.75rem;
-  }
-}
-
-/* Tablet */
-@media (min-width: 721px) and (max-width: 768px) {
-  .transactions-container {
-    margin-left: 0
-  }
-
-  .transactions-content {
-    flex-direction: column;
-    padding: 1.5rem;
-  }
-
+  /* 3. Force Filters and Buttons into ONE Column */
   .filter-add-row {
-    flex-direction: row;
-    gap: 1.5rem;
-    justify-content: space-between;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    gap: 15px !important;
+    margin-bottom: 20px !important;
   }
 
-  .sidebar {
-    width: 100%;
-    padding: 1.5rem;
+  .filters-group {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    gap: 10px !important;
   }
 
-  .summary-cards {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
+  /* 4. Fix Search Input and Selectors width */
+  .transaction-search-input,
+  .category-section,
+  .period-section,
+  .category-select,
+  .period-select {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
-  .card {
-    padding: 1.5rem;
+  /* 5. Fix Add Transaction Button */
+  .button-container {
+    width: 100% !important;
+    margin: 0 !important;
   }
 
-  .card .amount {
-    font-size: 1.8rem;
+  .btn-add {
+    width: 100% !important;
+    margin-left: 0 !important;
+    justify-content: center !important;
+    padding: 12px !important;
   }
 
-  .transactions-table {
-    font-size: 1rem;
-  }
-
-  .transactions-table th,
-  .transactions-table td {
-    padding: 1rem;
-  }
-
-  .modal-content {
-    width: 85%;
-  }
-
-  .notification-modal {
-    padding: 2rem;
-  }
-
-  .success-icon {
-    font-size: 3rem;
-  }
-}
-
-/* Small mobile devices 412px wide */
-@media (min-width: 400px) and (max-height: 425px) {
-  .summary-cards {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
+  /* 6. Fix "No Transactions Found" and Row width */
   .transactions-cards-container {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    width: 100% !important;
+  }
+
+  .no-data-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 40px 20px !important;
+    margin: 0 !important;
+  }
+
+  .transaction-card {
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 }
