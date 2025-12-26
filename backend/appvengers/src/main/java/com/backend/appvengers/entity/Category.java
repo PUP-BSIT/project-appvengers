@@ -1,5 +1,7 @@
 package com.backend.appvengers.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -19,6 +21,9 @@ public class Category {
 
     @Column(name = "type", nullable = false) // "income" or "expense"
     private String type;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     public Category() {}
 
