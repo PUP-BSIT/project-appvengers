@@ -1350,7 +1350,6 @@ $header-height: 70px;
   }
 }
 
-/* Tablet (≤991px) and Mobile (≤768px, ≤425px, ≤320px) - Card style list */
 @media (max-width: 991px) {
   .transactions-cards-container {
     display: flex;
@@ -1358,6 +1357,7 @@ $header-height: 70px;
     gap: 1.2rem;
     width: 100%;
   }
+
   .transaction-card {
     width: 100%;
     min-width: 0;
@@ -1371,6 +1371,7 @@ $header-height: 70px;
     justify-content: space-between;
     background: #fff;
   }
+
   .card-body {
     flex-direction: row;
     align-items: center;
@@ -1378,34 +1379,41 @@ $header-height: 70px;
     width: 100%;
     padding: 0;
   }
+
   .card-left {
     flex: 1;
     min-width: 0;
   }
+
   .card-description h4 {
     font-size: 1.15rem;
     font-weight: 600;
     margin-bottom: 0.2rem;
   }
+
   .card-description p {
     font-size: 1.02rem;
     margin-bottom: 0;
   }
+
   .card-right {
     margin-right: 0;
     flex-shrink: 0;
     text-align: right;
   }
+
   .card-actions {
     position: static;
     margin-left: 0.5rem;
   }
 }
+
 @media (max-width: 768px) {
   .transaction-card {
     padding: 1rem 1.7rem;
     flex-direction: row;
   }
+
   .card-body {
     flex-direction: row;
     gap: 0.7rem;
@@ -1416,23 +1424,29 @@ $header-height: 70px;
   .transaction-card {
     padding: 1rem 0.9rem;
   }
+
   .card-body {
     gap: 0.5rem;
   }
+
   .card-description h4 {
     font-size: 1.05rem;
   }
+
   .card-description p {
     font-size: 0.98rem;
   }
 }
+
 @media (max-width: 320px) {
   .transaction-card {
     padding: 1rem 0.9rem;
   }
+
   .card-description h4 {
     font-size: 0.98rem;
   }
+
   .card-description p {
     font-size: 0.92rem;
   }
@@ -1442,6 +1456,7 @@ $header-height: 70px;
   .transaction-card {
     position: relative;
   }
+
   .card-actions {
     position: absolute;
     top: 1.1rem;
@@ -1450,33 +1465,40 @@ $header-height: 70px;
     margin-right: 0;
     z-index: 2;
   }
+
   .card-right {
-    padding-right: 2.2rem; /* add space for 3-dots */
+    padding-right: 2.2rem;
   }
 }
+
 @media (max-width: 768px) {
   .card-actions {
     top: 0.7rem;
     right: 0.7rem;
   }
+
   .card-right {
     padding-right: 2rem;
   }
 }
+
 @media (max-width: 425px) {
   .card-actions {
     top: 0.5rem;
     right: 0.4rem;
   }
+
   .card-right {
     padding-right: 1.7rem;
   }
 }
+
 @media (max-width: 320px) {
   .card-actions {
     top: 0.3rem;
     right: 0.2rem;
   }
+
   .card-right {
     padding-right: 1.2rem;
   }
