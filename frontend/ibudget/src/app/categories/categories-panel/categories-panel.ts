@@ -4,6 +4,7 @@ import { Category } from '../../../models/user.model';
 import { CategoriesService } from '../../../services/categories.service';
 import { CommonModule } from '@angular/common';
 import { AddCategoryModal } from '../add-category-modal/add-category-modal';
+import { ToastService } from '../../../services/toast.service';
 import * as bootstrap from 'bootstrap';
 
 @Component({
@@ -23,6 +24,8 @@ export class CategoriesPanel implements OnInit {
   activeTab = signal<'expense' | 'income'>('expense');
   allCategories = signal<Category[]>([]);
   filteredCategories = signal<Category[]>([]);
+
+  toastService = inject(ToastService);
 
   ngOnInit(): void {
     this.loadCategories();
@@ -101,20 +104,41 @@ export class CategoriesPanel implements OnInit {
 
   onEditCategory(category: Category) {
     if (category.referencesCount > 0) {
-      console.error('Category is used and cannot be edited.');
+      this.toastService.error(
+        'Edit Failed', 'Category is used and cannot be edited.'
+      );
+
       return;
     }
     this.addCategoryModalComponent.openModal(category);
   }
 
+  onCategoryUpdated(updated: Category) {
+    const updatedList = this.allCategories().map(c =>
+      c.id === updated.id ? updated : c
+    );
+
+    this.allCategories.set(updatedList);
+    this.filterCategories();
+    this.initDropdowns();
+    setTimeout(() => this.loadCategories(), 1000); // optional refresh
+  }
+
   onDeleteCategory(category: Category) {
     if (category.referencesCount > 0) {
-      console.error('Category is used and cannot be deleted.');
+      this.toastService.error(
+        'Delete Failed', 'Category is used and cannot be deleted.'
+      );
+
       return;
     }
 
     this.categoriesService.deleteCategory(category.id).subscribe({
       next: () => {
+        this.toastService.success(
+          'Delete Success', 'Category deleted successfully!'
+        );
+
         const updatedList = this.allCategories().filter(c => 
           c.id !== category.id
         );
@@ -125,7 +149,7 @@ export class CategoriesPanel implements OnInit {
         setTimeout(() => this.loadCategories(), 1000);
       },
       error: (err) => {
-        console.error('Error deleting category:', err);
+        this.toastService.error('Delete Failed', 'Error deleting category.');
       }
     });
   }
