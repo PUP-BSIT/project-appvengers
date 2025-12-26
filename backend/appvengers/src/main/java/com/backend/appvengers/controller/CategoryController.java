@@ -1,6 +1,7 @@
 package com.backend.appvengers.controller;
 
 import java.util.List;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,23 +62,38 @@ public class CategoryController {
         return categoryRepository.save(category);
     }
 
-    // Delete a category for current user
     @DeleteMapping("/{id}")
     public void deleteCategory(
         @PathVariable Integer id,
         Authentication auth
     ) {
         int userId = currentUserId(auth);
+
         Category category = categoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Category not found"));
+            .orElseThrow(() -> new RuntimeException(
+                "Category not found"
+            ));
+
         if (!category.getUserId().equals(userId)) {
             throw new RuntimeException(
                 "Unauthorized to delete this category"
             );
         }
-        categoryRepository.delete(category);
+
+        // Check transaction references before allowing delete
+        int refCount = categoryRepository.countReferences(id);
+        if (refCount > 0) {
+            throw new RuntimeException(
+                "Category is used cannot be deleted"
+            );
+        }
+
+        // Soft delete
+        category.setDeletedAt(LocalDateTime.now());
+        categoryRepository.save(category);
     }
 
+    // Update a category for current user
     @PutMapping("/{id}")
     public Category updateCategory(
         @PathVariable Integer id,
