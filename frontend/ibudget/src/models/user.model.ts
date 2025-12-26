@@ -117,7 +117,7 @@ export type Category = {
   userId: number;
   name: string;
   type: string; // "income" or "expense"
-  referencesCount?: number;
+  referencesCount: number;
   deletedAt?: string | null;
 }
 
