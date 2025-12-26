@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, inject, signal, output } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, signal, output, Input } from '@angular/core';
 import { Category } from '../../../models/user.model';
 import { CategoriesService } from '../../../services/categories.service';
 import { ToastService } from '../../../services/toast.service';
@@ -17,9 +17,10 @@ import {
   templateUrl: './add-category-modal.html',
   styleUrl: './add-category-modal.scss',
 })
-
 export class AddCategoryModal {
   @ViewChild('addCategoryModal') addCategoryModal!: ElementRef;
+  @Input() categoryToEdit?: Category;
+  categoryUpdated = output<Category>();
 
   // Form
   formBuilder = inject(FormBuilder);
@@ -51,11 +52,24 @@ export class AddCategoryModal {
     return !!c && c.invalid && c.touched;
   }
 
-  openModal() {
+  openModal(category?: Category) {
     const modal = new Modal(this.addCategoryModal.nativeElement, {
       backdrop: 'static',
       keyboard: false
     });
+
+    if (category) {
+      this.categoryForm.patchValue({
+        name: category.name,
+        description: (category as any).description || '',
+        type: category.type
+      });
+      this.categoryToEdit = category;
+    } else {
+      this.categoryForm.reset({ type: 'expense' });
+      this.categoryToEdit = undefined;
+    }
+
     modal.show();
   }
 
@@ -100,6 +114,7 @@ export class AddCategoryModal {
     const modal = Modal.getInstance(this.addCategoryModal.nativeElement);
     modal?.hide();
     this.categoryForm.reset({ type: 'expense' });
+    this.categoryToEdit = undefined;
   }
 
   saveCategory() {
@@ -108,18 +123,41 @@ export class AddCategoryModal {
       return;
     }
 
-    const newCategory = this.categoryForm.value;
+    const formValue = this.categoryForm.value;
 
-    this.categoriesService.addCategory(newCategory).subscribe({
-      next: (created: Category) => {
-        this.categoryAdded.emit(created);
-        this.showNotificationMessage(`Category added successfully!`);
-        this.closeModal();
-      },
-      error: () => {
-        this.showNotificationMessage('Error adding category. Please try again.');
-      }
-    });
+    if (this.categoryToEdit) {
+      const updated: Category = {
+        ...this.categoryToEdit,
+        name: formValue.name,
+        type: formValue.type
+      };
+
+      this.categoriesService.updateCategory(updated).subscribe({
+        next: (res: Category) => {
+          this.categoryUpdated.emit(res);
+          this.showNotificationMessage('Category updated successfully!');
+          this.closeModal();
+        },
+        error: () => {
+          this.showNotificationMessage(
+            'Error updating category. Please try again.'
+          );
+        }
+      });
+    } else {
+      this.categoriesService.addCategory(formValue).subscribe({
+        next: (created: Category) => {
+          this.categoryAdded.emit(created);
+          this.showNotificationMessage(`Category added successfully!`);
+          this.closeModal();
+        },
+        error: () => {
+          this.showNotificationMessage(
+            'Error adding category. Please try again.'
+          );
+        }
+      });
+    }
   }
 
   showNotificationMessage(message: string) {
