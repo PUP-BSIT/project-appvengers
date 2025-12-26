@@ -19,8 +19,8 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     Set<Integer> findAllUserIdsWithCategories();
 
     /**
-     * Count references to this category from transactions and budgets.
-     * Only counts non-deleted records (deleted_at IS NULL).
+     * Returns categories for a user with reference counts.
+     * Counts references from transactions and budgets (non-deleted only).
      */
     @Query(value =
         "SELECT c.category_id AS id, " +
@@ -36,4 +36,18 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
         "FROM tbl_category c " +
         "WHERE c.user_id = :userId", nativeQuery = true)
     List<Object[]> findCategoriesWithCounts(@Param("userId") Integer userId);
+
+    /**
+     * Count references for a single category (transactions + budgets).
+     * Used to guard edit/delete operations.
+     */
+    @Query(value =
+        "SELECT (SELECT COUNT(*) FROM tbl_transaction t " +
+        "        WHERE t.category_id = :categoryId " +
+        "        AND t.deleted_at IS NULL) + " +
+        "       (SELECT COUNT(*) FROM tbl_budget b " +
+        "        WHERE b.category_id = :categoryId " +
+        "        AND b.deleted_at IS NULL)",
+        nativeQuery = true)
+    int countReferences(@Param("categoryId") Integer categoryId);
 }
