@@ -77,4 +77,37 @@ public class CategoryController {
         }
         categoryRepository.delete(category);
     }
+
+    @PutMapping("/{id}")
+    public Category updateCategory(
+        @PathVariable Integer id,
+        @RequestBody Category updatedCategory,
+        Authentication auth
+    ) {
+        int userId = currentUserId(auth);
+
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException(
+                "Category not found"
+            ));
+
+        if (!category.getUserId().equals(userId)) {
+            throw new RuntimeException(
+                "Unauthorized to edit this category"
+            );
+        }
+
+        // Check transaction references before allowing edit
+        int refCount = categoryRepository.countReferences(id);
+        if (refCount > 0) {
+            throw new RuntimeException(
+                "Category is used and cannot be edited"
+            );
+        }
+
+        category.setName(updatedCategory.getName());
+        category.setType(updatedCategory.getType());
+
+        return categoryRepository.save(category);
+    }
 }
