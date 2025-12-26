@@ -543,3 +543,43 @@ $header-height: 70px;
     padding: 20px;
   }
 }
+
+@media (min-width: 1024px) {
+  .reports-container {
+    padding: 30px !important;
+    margin-left: $sidebar-width;
+    width: calc(100% - #{$sidebar-width}) !important;
+  }
+
+  .tabs-container {
+    max-width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  .comparison-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important; 
+    gap: 25px !important;
+  }
+
+  .overall-computation {
+    padding: 40px !important;
+    
+    .comparison-card {
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+
+  .charts-section {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 30px !important;
+  }
+
+  .chart-wrapper {
+    height: 350px !important;
+  }
+}
