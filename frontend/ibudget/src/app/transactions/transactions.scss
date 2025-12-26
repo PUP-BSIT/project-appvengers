@@ -1,30 +1,3 @@
-.transaction-search-input {
-  width: 260px;
-  padding: 0.7rem 2.5rem 0.7rem 1.1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  background: #fff;
-  font-size: 1rem;
-  color: #374151;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  transition: border-color 0.2s, box-shadow 0.2s;
-  outline: none;
-}
-.transaction-search-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.10);
-}
-.transaction-search-input::placeholder {
-  color: #9ca3af;
-  font-size: 0.98rem;
-}
-@media (max-width: 600px) {
-  .transaction-search-input {
-    width: 100%;
-    font-size: 0.98rem;
-    padding: 0.65rem 1.1rem;
-  }
-}
 $background-color: #F9FAFB;
 $sidebar-width: 80px;
 $header-height: 70px;
@@ -910,6 +883,37 @@ $header-height: 70px;
   transition: all 0.2s;
 }
 
+.transaction-search-input {
+  width: 260px;
+  padding: 0.7rem 2.5rem 0.7rem 1.1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 1rem;
+  color: #374151;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.transaction-search-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.10);
+}
+
+.transaction-search-input::placeholder {
+  color: #9ca3af;
+  font-size: 0.98rem;
+}
+
+@media (max-width: 600px) {
+  .transaction-search-input {
+    width: 100%;
+    font-size: 0.98rem;
+    padding: 0.65rem 1.1rem;
+  }
+}
+
 // Transaction Type Toggle (Auth-page style)
 .type-toggle-wrapper {
   display: flex;
@@ -1150,20 +1154,17 @@ $header-height: 70px;
 
 @media (max-width: 992px) {
   .transactions-container {
-    margin-left: 0 !important; /* Remove sidebar margin on smaller screens */
+    margin-left: 0 !important;
     padding: 10px;
   }
   
   .filter-add-row {
-    flex-wrap: wrap; /* Prevent button from getting crushed */
+    flex-wrap: wrap;
     gap: 1rem;
   }
 }
 
-/* Target everything 425px and below (Mobile L, M, and S) */
 @media screen and (max-width: 425px) {
-  
-  /* 1. Reset the main container to allow full width */
   .transactions-container {
     margin-left: 0 !important;
     padding: 0 !important;
@@ -1177,11 +1178,10 @@ $header-height: 70px;
     flex-direction: column !important;
   }
 
-  /* 2. Stack the Top Summary Cards */
   .summary-cards {
     display: flex !important;
     flex-direction: column !important;
-    grid-template-columns: 1fr !important; /* Overrides grid if used */
+    grid-template-columns: 1fr !important;
     width: 100% !important;
     gap: 10px !important;
   }
@@ -1193,7 +1193,6 @@ $header-height: 70px;
     box-sizing: border-box !important;
   }
 
-  /* 3. Force Filters and Buttons into ONE Column */
   .filter-add-row {
     flex-direction: column !important;
     align-items: stretch !important;
@@ -1209,7 +1208,6 @@ $header-height: 70px;
     gap: 10px !important;
   }
 
-  /* 4. Fix Search Input and Selectors width */
   .transaction-search-input,
   .category-section,
   .period-section,
@@ -1221,7 +1219,6 @@ $header-height: 70px;
     box-sizing: border-box !important;
   }
 
-  /* 5. Fix Add Transaction Button */
   .button-container {
     width: 100% !important;
     margin: 0 !important;
@@ -1234,7 +1231,6 @@ $header-height: 70px;
     padding: 12px !important;
   }
 
-  /* 6. Fix "No Transactions Found" and Row width */
   .transactions-cards-container {
     width: 100% !important;
   }
@@ -1253,18 +1249,19 @@ $header-height: 70px;
   }
 }
 
-/* Mobile L (≤768px) */
 @media (max-width: 768px) {
   .transactions-container {
     padding: 4px 2px;
     margin-left: 0;
     min-width: 0;
   }
+
   .summary-cards {
     grid-template-columns: 1fr;
     gap: 0.75rem;
     margin-bottom: 1rem;
   }
+
   .transaction-card {
     flex-direction: column;
     align-items: stretch;
@@ -1273,15 +1270,18 @@ $header-height: 70px;
     width: 100%;
     min-width: 0;
   }
+
   .transactions-content {
     padding: 0.5rem 0.2rem;
   }
+
   .filter-add-row, .filters-group {
     flex-direction: column;
     gap: 0.5rem;
     width: 100%;
     align-items: stretch;
   }
+
   .transaction-search-input {
     width: 100%;
     font-size: 0.98rem;
@@ -1289,41 +1289,46 @@ $header-height: 70px;
     margin-bottom: 0.5rem;
     display: block;
   }
+
   .category-select, .period-select {
     width: 100%;
     font-size: 1.08rem;
-    padding: 0.7rem 2.5rem 0.7rem 1.1rem; /* more right padding for icon */
+    padding: 0.7rem 2.5rem 0.7rem 1.1rem;
     margin-bottom: 0.5rem;
     display: block;
     color: #222;
     font-weight: 500;
     background-color: #fff;
-    background-position: right 1.1rem center; /* move icon further right */
-    background-size: 1.5rem;
+    background-position: right 1.1rem center;
     text-indent: 1.7rem;
   }
+
   .category-select option, .period-select option {
     font-size: 1.08rem;
     color: #222;
     font-weight: 500;
     padding-left: 0.7rem;
   }
+
   .header-actions {
     flex-direction: column;
     gap: 0.5rem;
     width: 100%;
   }
+
   .header-actions button {
     width: 100%;
     font-size: 1rem;
     padding: 0.7rem 1rem;
   }
+
   .card-body {
     flex-direction: column;
     gap: 0.5rem;
     padding: 0.4rem 0.3rem;
     width: 100%;
   }
+
   .btn-add {
     width: 100%;
     display: block;
