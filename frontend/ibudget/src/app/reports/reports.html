@@ -158,11 +158,28 @@
                 Income by Category
               </h3>
               <div class="chart-wrapper">
-                <canvas baseChart
-                  [data]="lastMonthIncomeChartData"
-                  [type]="chartType"
-                  [options]="chartOptions">
-                </canvas>
+                @if (!lastMonthIncomeChartData ||
+                     !lastMonthIncomeChartData.datasets ||
+                     !lastMonthIncomeChartData.datasets.length ||
+                     !lastMonthIncomeChartData.datasets[0].data ||
+                     !lastMonthIncomeChartData.datasets[0].data.length) {
+                  <div class="empty-chart-state">
+                    <i 
+                      class="bi bi-graph-up-arrow"
+                      style="font-size:3rem;color:#ff6f61;"></i>
+                    <div
+                      class="empty-chart-label text-primary fw-bold mt-2"
+                      style="font-size:1.2rem;">
+                        NO INCOME YET
+                    </div>
+                  </div>
+                } @else {
+                  <canvas baseChart
+                    [data]="lastMonthIncomeChartData"
+                    [type]="chartType"
+                    [options]="chartOptions">
+                  </canvas>
+                }
               </div>
             </div>
 
@@ -172,11 +189,28 @@
                 Expenses by Category
               </h3>
               <div class="chart-wrapper">
-                <canvas baseChart
-                  [data]="lastMonthExpenseChartData"
-                  [type]="chartType"
-                  [options]="chartOptions">
-                </canvas>
+                @if (!lastMonthExpenseChartData ||
+                     !lastMonthExpenseChartData.datasets ||
+                     !lastMonthExpenseChartData.datasets.length ||
+                     !lastMonthExpenseChartData.datasets[0].data ||
+                     !lastMonthExpenseChartData.datasets[0].data.length) {
+                  <div class="empty-chart-state">
+                    <i
+                      class="bi bi-graph-down-arrow"
+                      style="font-size:3rem;color:#ff6f61;"></i>
+                    <div
+                      class="empty-chart-label text-primary fw-bold mt-2"
+                      style="font-size:1.2rem;">
+                        NO EXPENSES YET
+                    </div>
+                  </div>
+                } @else {
+                  <canvas baseChart
+                    [data]="lastMonthExpenseChartData"
+                    [type]="chartType"
+                    [options]="chartOptions">
+                  </canvas>
+                }
               </div>
             </div>
           </div>
@@ -197,11 +231,28 @@
                 Income by Category
               </h3>
               <div class="chart-wrapper">
-                <canvas baseChart
-                  [data]="thisMonthIncomeChartData"
-                  [type]="chartType"
-                  [options]="chartOptions">
-                </canvas>
+                @if (!thisMonthIncomeChartData ||
+                     !thisMonthIncomeChartData.datasets ||
+                     !thisMonthIncomeChartData.datasets.length ||
+                     !thisMonthIncomeChartData.datasets[0].data ||
+                     !thisMonthIncomeChartData.datasets[0].data.length) {
+                  <div class="empty-chart-state">
+                    <i
+                      class="bi bi-graph-up-arrow"
+                      style="font-size:3rem;color:#ff6f61;"></i>
+                    <div
+                      class="empty-chart-label text-primary fw-bold mt-2"
+                      style="font-size:1.2rem;">
+                        NO INCOME YET
+                    </div>
+                  </div>
+                } @else {
+                  <canvas baseChart
+                    [data]="thisMonthIncomeChartData"
+                    [type]="chartType"
+                    [options]="chartOptions">
+                  </canvas>
+                }
               </div>
             </div>
 
@@ -211,11 +262,28 @@
                 Expenses by Category
               </h3>
               <div class="chart-wrapper">
-                <canvas baseChart
-                  [data]="thisMonthExpenseChartData"
-                  [type]="chartType"
-                  [options]="chartOptions">
-                </canvas>
+                @if (!thisMonthExpenseChartData ||
+                     !thisMonthExpenseChartData.datasets ||
+                     !thisMonthExpenseChartData.datasets.length ||
+                     !thisMonthExpenseChartData.datasets[0].data ||
+                     !thisMonthExpenseChartData.datasets[0].data.length) {
+                  <div class="empty-chart-state">
+                    <i
+                      class="bi bi-graph-down-arrow"
+                      style="font-size:3rem;color:#ff6f61;"></i>
+                    <div
+                      class="empty-chart-label text-primary fw-bold mt-2"
+                      style="font-size:1.2rem;">
+                      NO EXPENSES YET
+                    </div>
+                  </div>
+                } @else {
+                  <canvas baseChart
+                    [data]="thisMonthExpenseChartData"
+                    [type]="chartType"
+                    [options]="chartOptions">
+                  </canvas>
+                }
               </div>
             </div>
           </div>
