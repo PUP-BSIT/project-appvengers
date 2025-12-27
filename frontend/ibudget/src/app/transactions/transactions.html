@@ -168,7 +168,12 @@
   <!-- Snackbar Notification -->
   @if (showNotification()) {
     <div class="snackbar" [class.hide]="isHidingNotification()">
-      <i class="fas fa-check-circle"></i>
+      @if (notificationType() === 'success') {
+        <i class="fas fa-check-circle" style="color: #28a745;"></i>
+      }
+      @if (notificationType() === 'error') {
+        <i class="fas fa-times-circle" style="color: #dc3545;"></i>
+      }
       <span>{{ notificationMessage() }}</span>
     </div>
   }
