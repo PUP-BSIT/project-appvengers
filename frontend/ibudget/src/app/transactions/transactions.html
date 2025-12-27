@@ -180,149 +180,86 @@
 
   <!-- Add/Edit Transaction Modal -->
   @if (showAddModal()) {
-    <div class="modal-overlay">
-      <div
-        class="modal-content"
-        [ngClass]="{'edit-modal': isEditing()}">
-        <div class="modal-header">
-          <h2>
-            <i
-              class="fas"
-              [ngClass]="{'fa-plus': !isEditing(), 'fa-edit': isEditing()}"></i>
-            {{ isEditing() ? 'Edit Transaction' : 'Add New Transaction' }}
-          </h2>
-          <button class="btn-close" (click)="closeAddModal()">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        
-        <div class="modal-body">
-          <form #form="ngForm"
-                (ngSubmit)="isEditing() ? updateTransaction() : addTransaction()">
-            
-            <!-- Expense/Income Toggle (like auth page) -->
-            <div class="type-toggle-wrapper">
-              <div class="header-toggles">
-                <a (click)="setExpenseType()"
-                   [class.active]="newTransaction.type === 'expense'">
-                  Expense
-                </a>
-                <a (click)="setIncomeType()"
-                   [class.active]="newTransaction.type === 'income'">
-                  Income
-                </a>
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5">
+              {{ isEditing() ? 'Edit Transaction' : 'Add New Transaction' }}
+            </h1>
+            <button type="button" class="btn-close" (click)="closeAddModal()" aria-label="Close">
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Transaction Type Toggle -->
+            <div class="mb-3 d-flex justify-content-center">
+              <div class="btn-group w-100" style="max-width: 400px; min-width: 350px;" role="group" aria-label="Transaction type toggle">
+                <button type="button"
+                        class="btn btn-outline-primary flex-fill py-1 fs-6"
+                        [class.active]="newTransaction.type === 'expense'"
+                        (click)="setExpenseType()">
+                  <i class="bi bi-arrow-down-circle me-2"></i> Expense
+                </button>
+                <button type="button"
+                        class="btn btn-outline-success flex-fill py-1 fs-6"
+                        [class.active]="newTransaction.type === 'income'"
+                        (click)="setIncomeType()">
+                  <i class="bi bi-arrow-up-circle me-2"></i> Income
+                </button>
               </div>
             </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="date">Date</label>
-                <input
-                  type="date"
-                  id="date"
-                  [(ngModel)]="newTransaction.date"
-                  name="date"
-                  #date="ngModel"
-                  required>
-                @if (date.touched && date.invalid
-                      && date.errors?.['required']) {
-                  <div class="error-message">Date is required</div>
+            <form #form="ngForm" (ngSubmit)="isEditing() ? updateTransaction() : addTransaction()">
+              <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" id="date" class="form-control" [(ngModel)]="newTransaction.date" name="date" #date="ngModel" required>
+                @if (date.touched && date.invalid && date.errors?.['required']) {
+                  <div class="text-danger">Date is required</div>
                 }
               </div>
-
-              <div class="form-group">
-                <label for="category">Category</label>
-                <select
-                  id="category"
-                  [(ngModel)]="newTransaction.category_id"
-                  name="category_id"
-                  #category="ngModel"
-                  (change)="onCategorySelectChange()"
-                  required>
+              <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select id="category" class="form-select" [(ngModel)]="newTransaction.category_id" name="category_id" #category="ngModel" (change)="onCategorySelectChange()" required>
                   <option value="" disabled selected>Select category</option>
                   @for (cat of getModalCategories(); track cat.id) {
                     <option [value]="cat.id">{{ cat.name }}</option>
                   }
                 </select>
-                
-                @if (category.touched && category.invalid &&
-                     category.errors?.['required']) {
-                  <div class="error-message">Category is required</div>
+                @if (category.touched && category.invalid && category.errors?.['required']) {
+                  <div class="text-danger">Category is required</div>
                 }
               </div>
-            </div>
-
-            @if (showCustomCategoryInput) {
-              <div class="form-group">
-                <label for="customCategory">Custom Category Name</label>
-                <input
-                  type="text"
-                  id="customCategory"
-                  [(ngModel)]="customCategoryName"
-                  name="customCategory"
-                  #customCategory="ngModel"
-                  placeholder="Enter custom category name"
-                  required>
-                @if (customCategory.touched && customCategory.invalid &&
-                     customCategory.errors?.['required']) {
-                  <div class="error-message">
-                    Custom category name is required
-                  </div>
-                }
-              </div>
-            }
-
-            <div class="form-group">
-              <label for="description">Description</label>
-              <input
-                type="text"
-                id="description"
-                [(ngModel)]="newTransaction.description"
-                name="description"
-                #description="ngModel"
-                placeholder="Enter description"
-                required>
-              @if (description.touched && description.invalid &&
-                   description.errors?.['required']) {
-                <div class="error-message">Description is required</div>
-              }
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="amount">Amount</label>
-                <div class="input-with-icon">
-                  <span class="peso-sign">₱</span>
-                  <input
-                    type="number"
-                    id="amount"
-                    [(ngModel)]="newTransaction.amount"
-                    name="amount"
-                    #amount="ngModel"
-                    placeholder="0.00"
-                    min="0.01"
-                    step="0.01"
-                    required>
+              @if (showCustomCategoryInput) {
+                <div class="mb-3">
+                  <label for="customCategory" class="form-label">Custom Category Name</label>
+                  <input type="text" id="customCategory" class="form-control" [(ngModel)]="customCategoryName" name="customCategory" #customCategory="ngModel" placeholder="Enter custom category name" required>
+                  @if (customCategory.touched && customCategory.invalid && customCategory.errors?.['required']) {
+                    <div class="text-danger">Custom category name is required</div>
+                  }
                 </div>
-                @if (amount.touched && amount.invalid &&
-                     amount.errors?.['required']) {
-                  <div class="error-message">Amount is required</div>
+              }
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <input type="text" id="description" class="form-control" [(ngModel)]="newTransaction.description" name="description" #description="ngModel" placeholder="Enter description" required>
+                @if (description.touched && description.invalid && description.errors?.['required']) {
+                  <div class="text-danger">Description is required</div>
                 }
               </div>
-            </div>
-            
-            <div class="form-actions">
-              <button
-                type="button"
-                class="btn-cancel"
-                (click)="closeAddModal()">
-                  Cancel
-              </button>
-              <button type="submit" class="btn-submit">
-                {{ isEditing() ? 'Update Transaction' : 'Add Transaction' }}
-              </button>
-            </div>
-          </form>
+              <div class="mb-3">
+                <label for="amount" class="form-label">Amount</label>
+                <div class="input-group">
+                  <span class="input-group-text">₱</span>
+                  <input type="number" id="amount" class="form-control" [(ngModel)]="newTransaction.amount" name="amount" #amount="ngModel" placeholder="0.00" min="0.01" step="0.01" required>
+                </div>
+                @if (amount.touched && amount.invalid && amount.errors?.['required']) {
+                  <div class="text-danger">Amount is required</div>
+                }
+              </div>
+              <div class="d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-secondary" (click)="closeAddModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">{{ isEditing() ? 'Update Transaction' : 'Add Transaction' }}</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
