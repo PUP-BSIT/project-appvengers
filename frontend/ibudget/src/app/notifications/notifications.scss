@@ -675,70 +675,72 @@ $header-height: 70px;
   font-weight: 600;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+// Responsive Design for Notifications Page
+@media (max-width: 1200px) { // Laptop
   .notifications-container {
     margin-left: 0;
-    padding: 10px;
-    height: auto;
+    padding: 10px 10px 0 10px;
   }
-
   .notifications-content {
+    padding: 0 1rem 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 900px) { // Tablet
+  .notifications-container {
+    margin-left: 0;
+    padding: 5px 5px 0 5px;
+  }
+  .notifications-content {
+    padding: 0 0.5rem 1rem 0.5rem;
+  }
+  .filter-tabs {
+    padding: 0 0.5rem;
     flex-direction: column;
-  }
-
-  .notifications-sidebar {
-    width: 100%;
-    order: -1;
-  }
-
-  .notifications-header {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
-  }
-
-  .header-left {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .notification-item {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .notification-header {
-    flex-direction: column;
+    align-items: stretch;
     gap: 0.5rem;
   }
+}
 
-  .notification-actions {
-    flex-direction: row;
-    justify-content: flex-end;
+@media (max-width: 600px) { // Mobile L/M
+  .notifications-container {
+    margin-left: 0;
+    padding: 0 0 0 0;
   }
-
-  .pagination {
-    flex-wrap: wrap;
-    gap: 0.25rem;
+  .notifications-content {
+    padding: 0 0.25rem 0.5rem 0.25rem;
   }
-
-  .pagination-btn {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.8rem;
-
-    i {
-      font-size: 0.7rem;
-    }
+  .filter-tabs {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0 0.25rem;
   }
-
-  .pagination-number {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.6rem;
-    min-width: 35px;
+  .notification-item {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.7rem 0.5rem;
   }
+  .empty-state {
+    padding: 2rem 0.5rem;
+  }
+}
 
-  .notifications-stats {
-    font-size: 0.8rem;
+@media (max-width: 400px) { // Mobile S
+  .notifications-container {
+    padding: 0 0 0 0;
+  }
+  .notifications-content {
+    padding: 0 0.1rem 0.2rem 0.1rem;
+  }
+  .filter-tabs {
+    padding: 0 0.1rem;
+  }
+  .notification-item {
+    padding: 0.5rem 0.2rem;
+    font-size: 0.85rem;
+  }
+  .empty-state {
+    padding: 1rem 0.1rem;
   }
 }
