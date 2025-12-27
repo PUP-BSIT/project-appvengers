@@ -280,7 +280,7 @@
       </div>
       @if (selectedTransactionId(); as id) {
         <div
-          class="menu-item"
+          class="menu-item text-danger"
           (click)="deleteTransaction(id); showPopup.set(false)">
             Delete
         </div>
