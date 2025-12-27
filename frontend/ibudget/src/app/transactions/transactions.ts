@@ -87,6 +87,7 @@ export class Transactions implements OnInit, OnDestroy {
   showNotification = signal(false);
   isHidingNotification = signal(false);
   notificationMessage = signal('');
+  notificationType = signal<'success' | 'error'>('success');
   selectedTransactionId = signal<number | null>(null);
   popupTop = signal(0);
   popupLeft = signal(0);
@@ -434,9 +435,9 @@ openAddModal() {
         this.transactions.unshift(createdTx);
         this.filterTransactions();
         this.closeAddModal();
-        this.showNotificationMessage('Transaction added successfully!');
+        this.showNotificationMessage('Transaction added successfully!', 'success');
       }, () => {
-        this.showNotificationMessage('Failed to add transaction');
+        this.showNotificationMessage('Failed to add transaction', 'error');
       });
     }
   }
@@ -446,9 +447,9 @@ openAddModal() {
       this.transactions = this.transactions.filter(
           transaction => transaction.id !== id);
       this.filterTransactions();
-      this.showNotificationMessage('Transaction deleted successfully!');
+      this.showNotificationMessage('Transaction deleted successfully!', 'success');
     }, () => {
-      this.showNotificationMessage('Failed to delete transaction');
+      this.showNotificationMessage('Failed to delete transaction', 'error');
     });
   }
 
@@ -519,9 +520,9 @@ openAddModal() {
           }
           this.filterTransactions();
           this.closeAddModal();
-          this.showNotificationMessage('Transaction updated successfully!');
+          this.showNotificationMessage('Transaction updated successfully!', 'success');
         }, () => {
-          this.showNotificationMessage('Failed to update transaction');
+          this.showNotificationMessage('Failed to update transaction', 'error');
         });
       }
   }
@@ -530,8 +531,9 @@ openAddModal() {
     return this.getTotalIncome() - this.getTotalExpenses();
   }
 
-  showNotificationMessage(message: string) {
+  showNotificationMessage(message: string, type: 'success' | 'error' = 'success') {
     this.notificationMessage.set(message);
+    this.notificationType.set(type);
     this.showNotification.set(true);
     this.isHidingNotification.set(false);
     setTimeout(() => {
