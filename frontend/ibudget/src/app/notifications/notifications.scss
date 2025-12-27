@@ -171,12 +171,12 @@ $header-height: 70px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   display: flex;
   gap: 1rem;
-  border-left: 4px solid #ddd; /* Default grey border for read notifications */
+  border-left: 4px solid #ddd;
 }
 
 .notification-item.unread {
   background: #f8fafc;
-  border-left-color: #3498db; /* Default unread color */
+  border-left-color: #3498db;
 
   &.warning {
     border-left-color: #f39c12;
@@ -201,12 +201,12 @@ $header-height: 70px;
   font-size: 1.5rem;
   width: 40px;
   text-align: center;
-  color: #95a5a6; /* Default icon color for read notifications */
+  color: #95a5a6;
 }
 
 /* Only color icons if the notification is UNREAD */
 .notification-item.unread .notification-icon i {
-  color: #3498db; /* Default unread icon color */
+  color: #3498db;
 }
 
 .notification-item.unread.warning .notification-icon i {
@@ -237,7 +237,6 @@ $header-height: 70px;
   }
 }
 
-/* Ensure read notifications always have grey border regardless of type */
 .notification-item:not(.unread) {
   border-left-color: #ddd !important;
 }
@@ -257,10 +256,9 @@ $header-height: 70px;
   font-size: 1.5rem;
   width: 40px;
   text-align: center;
-  color: #95a5a6; /* Default icon color for read notifications */
+  color: #95a5a6;
 }
 
-/* Only color icons if the notification is UNREAD */
 .notification-item.unread.warning .notification-icon i {
   color: #f39c12;
 }
@@ -281,7 +279,6 @@ $header-height: 70px;
   color: #9b59b6;
 }
 
-/* Force grey icon for read notifications */
 .notification-item:not(.unread) .notification-icon i {
   color: #95a5a6 !important;
 }
@@ -570,7 +567,6 @@ $header-height: 70px;
   }
 }
 
-// Legacy fallback (keeping for compatibility)
 .no-notifications {
   text-align: center;
   padding: 4rem 2rem;
@@ -676,7 +672,7 @@ $header-height: 70px;
 }
 
 // Responsive Design for Notifications Page
-@media (max-width: 1200px) { // Laptop
+@media (max-width: 1200px) {
   .notifications-container {
     margin-left: 0;
     padding: 10px 10px 0 10px;
@@ -686,7 +682,7 @@ $header-height: 70px;
   }
 }
 
-@media (max-width: 900px) { // Tablet
+@media (max-width: 900px) {
   .notifications-container {
     margin-left: 0;
     padding: 5px 5px 0 5px;
@@ -702,7 +698,7 @@ $header-height: 70px;
   }
 }
 
-@media (max-width: 600px) { // Mobile L/M
+@media (max-width: 600px) {
   .notifications-container {
     margin-left: 0;
     padding: 0 0 0 0;
@@ -726,7 +722,7 @@ $header-height: 70px;
   }
 }
 
-@media (max-width: 400px) { // Mobile S
+@media (max-width: 400px) {
   .notifications-container {
     padding: 0 0 0 0;
   }
