@@ -114,11 +114,21 @@ else
 fi
 
 echo ""
-echo "Step 5: Reloading Nginx..."
+echo "Step 5: Updating Nginx configuration..."
+if [ -f "config/ibudget-nginx.conf" ]; then
+    echo "✓ Nginx config found, updating..."
+    sudo cp config/ibudget-nginx.conf /etc/nginx/sites-available/ibudget
+    sudo nginx -t && echo "✓ Nginx config test passed" || { echo "✗ Nginx config test failed!"; exit 1; }
+else
+    echo "⚠ No nginx config in repo, keeping existing config"
+fi
+
+echo ""
+echo "Step 6: Reloading Nginx..."
 nginx -t && systemctl reload nginx
 
 echo ""
-echo "Step 6: Cleanup old backups (keeping last 5)..."
+echo "Step 7: Cleanup old backups (keeping last 5)..."
 cd "$BACKUP_DIR"
 ls -t | tail -n +6 | xargs -r rm -rf
 
