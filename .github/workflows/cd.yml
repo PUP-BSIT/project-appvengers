@@ -39,6 +39,47 @@ jobs:
           npm ci
           npm run build --configuration=production
 
+      - name: Verify PWA Build Artifacts
+        working-directory: frontend/ibudget
+        run: |
+          echo "=== Checking PWA Build Artifacts ==="
+          
+          # Check for service worker
+          if [ -f "dist/ibudget/browser/ngsw-worker.js" ]; then
+            echo "✅ ngsw-worker.js found"
+          else
+            echo "❌ ngsw-worker.js missing"
+            exit 1
+          fi
+          
+          # Check for service worker config
+          if [ -f "dist/ibudget/browser/ngsw.json" ]; then
+            echo "✅ ngsw.json found"
+          else
+            echo "❌ ngsw.json missing"
+            exit 1
+          fi
+          
+          # Check for manifest
+          if [ -f "dist/ibudget/browser/manifest.webmanifest" ]; then
+            echo "✅ manifest.webmanifest found"
+          else
+            echo "❌ manifest.webmanifest missing"
+            exit 1
+          fi
+          
+          # Check for icons
+          if [ -d "dist/ibudget/browser/icons" ]; then
+            echo "✅ icons directory found"
+            ls -la dist/ibudget/browser/icons/
+          else
+            echo "❌ icons directory missing"
+            exit 1
+          fi
+          
+          echo ""
+          echo "=== PWA artifacts verified successfully! ==="
+
       - name: Build Backend
         working-directory: backend/appvengers
         run: |
@@ -209,6 +250,13 @@ jobs:
             echo "=== Testing API via Nginx ==="
             API_STATUS=$(curl -k -s -o /dev/null -w "%{http_code}" https://i-budget.site/api/categories/all || echo "000")
             echo "API (via Nginx) Status: $API_STATUS"
+            
+            echo ""
+            echo "=== Testing PWA Assets ==="
+            MANIFEST_STATUS=$(curl -k -s -o /dev/null -w "%{http_code}" https://i-budget.site/manifest.webmanifest || echo "000")
+            echo "Manifest Status: $MANIFEST_STATUS"
+            SW_STATUS=$(curl -k -s -o /dev/null -w "%{http_code}" https://i-budget.site/ngsw-worker.js || echo "000")
+            echo "Service Worker Status: $SW_STATUS"
             
             # Exit with error if critical services are down
             if [ "$BACKEND_STATUS" = "000" ]; then
