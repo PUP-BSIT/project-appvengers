@@ -38,9 +38,10 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @NotBlank(message = "Password is required")
+    // Password is nullable for OAuth users (Google, etc.)
+    // Validation for LOCAL users is handled in SignupRequest DTO
     @Size(min = 6, message = "Password must be at least 6 characters")
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     @Column(name = "email_verified")
@@ -102,4 +103,15 @@ public class User {
 
     @Column(name = "deactivation_reason")
     private String deactivationReason;
+
+    // --- OAuth2 Fields ---
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider", nullable = false)
+    private AuthProvider authProvider = AuthProvider.LOCAL;
+
+    @Column(name = "google_id", unique = true)
+    private String googleId;
+
+    @Column(name = "profile_picture_url", length = 512)
+    private String profilePictureUrl;
 }
