@@ -26,6 +26,12 @@ export const routes: Routes = [
       .then(m => m.AuthPage),
     canActivate: [guestGuard]
   },
+  {
+    // OAuth2 callback route - handles redirect from backend after Google auth
+    path: 'auth/callback',
+    loadComponent: () => import('./auth-callback/auth-callback')
+      .then(m => m.AuthCallback)
+  },
   // {
   //   path: 'login-page', 
   //   loadComponent: () => import('./login/login')
