@@ -1,4 +1,33 @@
 <app-toast-container></app-toast-container>
+
+<!-- PWA Update Notification -->
+@if (updateAvailable()) {
+  <div class="pwa-update-banner">
+    <div class="pwa-update-content">
+      <i class="bi bi-arrow-repeat"></i>
+      <span>A new version of iBudget is available!</span>
+    </div>
+    <div class="pwa-update-actions">
+      <button class="btn btn-sm btn-light" (click)="dismissUpdate()">Later</button>
+      <button class="btn btn-sm btn-primary" (click)="reloadApp()">Update Now</button>
+    </div>
+  </div>
+}
+
+<!-- PWA Install Prompt -->
+@if (isInstallable()) {
+  <div class="pwa-install-banner">
+    <div class="pwa-install-content">
+      <i class="bi bi-download"></i>
+      <span>Install iBudget for a better experience</span>
+    </div>
+    <div class="pwa-install-actions">
+      <button class="btn btn-sm btn-outline-light" (click)="dismissInstall()">Not Now</button>
+      <button class="btn btn-sm btn-light" (click)="installApp()">Install</button>
+    </div>
+  </div>
+}
+
 <div class="main-content" [class.sidebar-open]="isOpen()">
     <ngx-loading-bar color="#4689cb" height="5px" ref="http" />
     <router-outlet></router-outlet>
