@@ -126,7 +126,11 @@ jobs:
             # Application URLs
             APP_VERIFICATION_BASE=https://i-budget.site/api/auth/verify-email?token=
             PASSWORD_RESET_FRONTEND_URL=https://i-budget.site/reset-password?token=
+            FRONTEND_URL=https://i-budget.site
             APP_EMAIL_FROM=${{ secrets.APP_EMAIL_FROM }}
+            
+            # N8N Webhook
+            N8N_WEBHOOK_URL=${{ secrets.N8N_WEBHOOK_URL }}
             
             # Google OAuth2 Configuration
             GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
@@ -184,16 +188,33 @@ jobs:
             systemctl is-active ibudget-backend nginx
             
             echo ""
-            echo "=== Backend Logs (last 20 lines) ==="
-            journalctl -u ibudget-backend -n 20 --no-pager
+            echo "=== Waiting for Spring Boot to start (30 seconds) ==="
+            sleep 30
+            
+            echo ""
+            echo "=== Backend Logs (last 30 lines) ==="
+            journalctl -u ibudget-backend -n 30 --no-pager
             
             echo ""
             echo "=== Testing Frontend ==="
-            curl -s -o /dev/null -w "Frontend Status: %{http_code}\n" https://i-budget.site
+            FRONTEND_STATUS=$(curl -k -s -o /dev/null -w "%{http_code}" https://i-budget.site || echo "000")
+            echo "Frontend Status: $FRONTEND_STATUS"
             
             echo ""
-            echo "=== Testing API ==="
-            curl -s -o /dev/null -w "API Status: %{http_code}\n" https://i-budget.site/api/categories/all
+            echo "=== Testing Backend Health ==="
+            BACKEND_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8081/api/categories/all || echo "000")
+            echo "Backend (localhost:8081) Status: $BACKEND_STATUS"
+            
+            echo ""
+            echo "=== Testing API via Nginx ==="
+            API_STATUS=$(curl -k -s -o /dev/null -w "%{http_code}" https://i-budget.site/api/categories/all || echo "000")
+            echo "API (via Nginx) Status: $API_STATUS"
+            
+            # Exit with error if critical services are down
+            if [ "$BACKEND_STATUS" = "000" ]; then
+              echo "ERROR: Backend is not responding"
+              exit 1
+            fi
 
       - name: Notify on Success
         if: success()
