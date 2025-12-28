@@ -223,9 +223,69 @@ jobs:
           echo "Frontend: https://i-budget.site"
           echo "Deployed at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
+      - name: Rollback on Verification Failure
+        if: failure()
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          script: |
+            echo "=========================================="
+            echo "🔄 INITIATING AUTOMATIC ROLLBACK"
+            echo "=========================================="
+            
+            BACKUP_DIR="/var/www/ibudget-backups"
+            LATEST_BACKUP=$(ls -t "$BACKUP_DIR" | head -n 1)
+            
+            if [ -z "$LATEST_BACKUP" ]; then
+              echo "⚠️ No backup found! Cannot rollback."
+              echo "Manual intervention required on VPS"
+              exit 1
+            fi
+            
+            echo "Rolling back to: $LATEST_BACKUP"
+            
+            # Stop backend
+            systemctl stop ibudget-backend
+            
+            # Restore backend JAR
+            cd /var/www/ibudget
+            if [ -f "$BACKUP_DIR/$LATEST_BACKUP"/*.jar ]; then
+              cp "$BACKUP_DIR/$LATEST_BACKUP"/*.jar backend/appvengers/target/
+              echo "✓ Backend JAR restored"
+            else
+              echo "⚠️ No backend JAR in backup"
+            fi
+            
+            # Restore frontend
+            if [ -d "$BACKUP_DIR/$LATEST_BACKUP/dist" ]; then
+              rm -rf frontend/ibudget/dist
+              cp -r "$BACKUP_DIR/$LATEST_BACKUP/dist" frontend/ibudget/
+              echo "✓ Frontend restored"
+            else
+              echo "⚠️ No frontend build in backup"
+            fi
+            
+            # Start backend
+            systemctl start ibudget-backend
+            sleep 5
+            
+            # Verify rollback
+            if systemctl is-active --quiet ibudget-backend; then
+              echo "✅ Rollback successful! Backend is running."
+            else
+              echo "❌ Rollback failed! Backend did not start."
+              echo "CRITICAL: Manual intervention required immediately!"
+              exit 1
+            fi
+
       - name: Notify on Failure
         if: failure()
         run: |
           echo "❌ Deployment failed!"
-          echo "Check the logs above for details"
+          echo "🔄 Automatic rollback has been attempted"
+          echo "Check the logs above for rollback status"
+          echo "If rollback succeeded, site should be back online with previous version"
           exit 1
