@@ -26,6 +26,7 @@ export class Login implements OnDestroy {
   loginForm: FormGroup;
   hidePassword = signal(true);
   isSubmitting = signal(false);
+  isGoogleLoading = signal(false);
   errorMessage = signal('');
 
   private destroy$ = new Subject<void>();
@@ -82,6 +83,23 @@ export class Login implements OnDestroy {
           }
         }
       });
+  }
+
+  /**
+   * Initiates Google OAuth2 login flow.
+   * Redirects to backend OAuth2 authorization endpoint.
+   */
+  signInWithGoogle(): void {
+    if (this.isGoogleLoading() || this.isSubmitting()) {
+      return;
+    }
+    
+    this.isGoogleLoading.set(true);
+    this.errorMessage.set('');
+    
+    // Redirect to backend OAuth2 endpoint
+    // Spring Security will handle the Google OAuth flow
+    window.location.href = this.authService.getGoogleOAuthUrl();
   }
 
   ngOnDestroy(): void {

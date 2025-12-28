@@ -101,4 +101,24 @@ export class AuthService {
     }): Observable<ApiResponse> {
       return this.http.post<ApiResponse>(`${this.apiUrl}/change-password`, data);
     }
+
+  /**
+   * Handle OAuth2 callback from backend.
+   * Stores the JWT token received after successful Google OAuth.
+   */
+  handleOAuthCallback(token: string, username: string): void {
+    localStorage.setItem('iBudget_authToken', token);
+    if (username) {
+      localStorage.setItem('iBudget_username', username);
+    }
+    console.log('OAuth token stored successfully');
+  }
+
+  /**
+   * Get the OAuth2 authorization URL for Google login.
+   * Redirects to backend which handles the OAuth flow.
+   */
+  getGoogleOAuthUrl(): string {
+    return environment.oauth2GoogleUrl;
+  }
 }
