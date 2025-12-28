@@ -35,8 +35,8 @@
         routerLink="/notifications"
         routerLinkActive="active">
            <i class="bi bi-bell notification-icon"></i>
-           @if (getUnreadCount() > 0) {
-             <span class="notification-count">{{ getUnreadCount() }}</span>
+           @if (unreadCount() > 0) {
+             <span class="notification-count">{{ unreadCount() }}</span>
            }
       </a>
     </div>
