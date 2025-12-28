@@ -23,9 +23,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         // Assign ROLE_USER by default
+        // Handle null/empty passwords for OAuth users (they don't have local passwords)
+        // Use a placeholder that will never match a real password hash
+        String password = (user.getPassword() != null && !user.getPassword().isEmpty()) 
+                ? user.getPassword() 
+                : "{noop}OAUTH_USER_NO_PASSWORD";
+        
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
-                user.getPassword(),
+                password,
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
     }

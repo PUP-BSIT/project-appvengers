@@ -80,10 +80,14 @@ export class AuthCallback implements OnInit {
 
     // Store token and user info
     this.authService.handleOAuthCallback(token, username || '');
+    console.log('OAuth token stored successfully');
 
-    // Navigate to dashboard
-    console.log('OAuth callback successful, navigating to dashboard');
-    this.router.navigate(['/dashboard'], { replaceUrl: true });
+    // Small delay to ensure localStorage is fully committed before navigation
+    // This prevents race condition with auth guard reading token
+    setTimeout(() => {
+      console.log('OAuth callback successful, navigating to dashboard');
+      this.router.navigate(['/dashboard'], { replaceUrl: true });
+    }, 100);
   }
 
   navigateToLogin(): void {
