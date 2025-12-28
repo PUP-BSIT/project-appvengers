@@ -37,4 +37,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Check if username exists including deleted accounts
     @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u WHERE u.username = :username")
     boolean existsByUsernameIncludingDeleted(@Param("username") String username);
+
+    // --- OAuth2 Methods ---
+    Optional<User> findByGoogleId(String googleId);
 }
