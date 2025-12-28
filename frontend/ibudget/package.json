@@ -31,6 +31,7 @@
     "@angular/forms": "^20.3.15",
     "@angular/platform-browser": "^20.3.15",
     "@angular/router": "^20.3.15",
+    "@angular/service-worker": "^20.3.15",
     "@ng-icons/bootstrap-icons": "^32.4.0",
     "@ng-icons/core": "^32.4.0",
     "@ngx-loading-bar/core": "^7.0.0",
