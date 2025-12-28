@@ -26,6 +26,9 @@ export class Header implements OnInit, OnDestroy {
   userId = signal<number>(0);
   showProfileMenu = signal<boolean>(false);
   showLogoutModal = signal<boolean>(false);
+  
+  // Convert observable to signal to prevent NG0100 error
+  unreadCount = toSignal(this.notificationService.unreadCount$, { initialValue: 0 });
 
   currentPageTitle = toSignal(
     this.router.events.pipe(
@@ -76,9 +79,7 @@ export class Header implements OnInit, OnDestroy {
     return 'Dashboard';
   }
 
-  getUnreadCount(): number {
-    return this.notificationService.getUnreadCount();
-  }
+  // getUnreadCount() replaced by unreadCount signal to prevent NG0100 error
 
   toggleSidebar() {
     this.sidebarService.toggle(); 
