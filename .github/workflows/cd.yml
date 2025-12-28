@@ -54,9 +54,11 @@ jobs:
           mkdir -p /tmp/build-artifacts/frontend
           mkdir -p /tmp/build-artifacts/backend
           mkdir -p /tmp/build-artifacts/scripts
+          mkdir -p /tmp/build-artifacts/config
           cp -r frontend/ibudget/dist/ibudget /tmp/build-artifacts/frontend/
           cp backend/appvengers/target/*.jar /tmp/build-artifacts/backend/ 2>/dev/null || true
           cp -r scripts/ /tmp/build-artifacts/
+          cp ibudget-nginx.conf /tmp/build-artifacts/config/ 2>/dev/null || true
           
           # Create or checkout prod branch
           git fetch origin prod || true
@@ -68,14 +70,17 @@ jobs:
           # Copy build artifacts and scripts from temp
           mkdir -p frontend/ibudget/dist
           mkdir -p backend/appvengers/target
+          mkdir -p config
           cp -r /tmp/build-artifacts/frontend/ibudget frontend/ibudget/dist/
           cp /tmp/build-artifacts/backend/*.jar backend/appvengers/target/ 2>/dev/null || true
           cp -r /tmp/build-artifacts/scripts/ .
+          cp /tmp/build-artifacts/config/ibudget-nginx.conf config/ 2>/dev/null || true
           
           # Add build artifacts and scripts
           git add -f frontend/ibudget/dist/
           git add -f backend/appvengers/target/*.jar
           git add -f scripts/
+          git add -f config/ 2>/dev/null || true
           
           # Commit changes
           git commit -m "Deploy: Build from main branch $(git rev-parse --short main) at $(date -u +%Y-%m-%dT%H:%M:%SZ)" || echo "No changes to commit"
@@ -122,6 +127,11 @@ jobs:
             APP_VERIFICATION_BASE=https://i-budget.site/api/auth/verify-email?token=
             PASSWORD_RESET_FRONTEND_URL=https://i-budget.site/reset-password?token=
             APP_EMAIL_FROM=${{ secrets.APP_EMAIL_FROM }}
+            
+            # Google OAuth2 Configuration
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+            OAUTH2_REDIRECT_URI=https://i-budget.site/auth/callback
             EOF
             
             # Secure the file
