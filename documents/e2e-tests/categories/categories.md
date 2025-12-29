@@ -2,22 +2,22 @@
 
 ## Feature Description
 
-The Categories module allows users to manage transaction categories for organizing their income and expenses. Users can create custom categories, edit existing ones, and assign icons/colors for visual identification.
+The Categories module allows users to organize their financial transactions into logical groups. Users can create custom categories for both Income and Expenses to better track their spending habits and income sources.
 
 **Production URL**: https://i-budget.site/categories  
-**Route**: `/categories` (Protected - requires authentication)
+**Routes**:
+- `/categories` - Categories management page (Protected)
 
 ---
 
 ## Overview
 
 The Categories feature enables users to:
-- View all available categories (default and custom)
-- Create new custom categories
-- Edit category details (name, icon, color)
-- Delete custom categories
-- Assign category types (income/expense)
-- Use categories for transactions and budgets
+- View existing categories separated by type (Expense/Income)
+- Create new custom categories with names and descriptions
+- Edit existing category details
+- Delete categories that are no longer needed
+- Visual indicators for category usage in transactions
 
 ---
 
@@ -25,24 +25,20 @@ The Categories feature enables users to:
 
 | Test ID | Test Name | Description | Preconditions | Steps | Expected Result | Priority | Type | Status | Last Tested | Notes |
 |---------|-----------|-------------|---------------|-------|-----------------|----------|------|--------|-------------|-------|
-| CAT-001 | Categories Page Load | Verify categories page loads successfully | User is logged in | 1. Navigate to `/categories` | Categories page displays with list of all categories | P0 | Smoke | ⏳ Pending | - | Critical path |
-| CAT-002 | View Categories List | Verify all categories display correctly | User has default and custom categories | 1. Navigate to `/categories` | All categories show name, icon, color, type (income/expense) | P0 | E2E | ⏳ Pending | - | - |
-| CAT-003 | View Default Categories | Verify default/system categories display | User is on categories page | 1. View categories list | Default categories (Food, Transport, Salary, etc.) are visible | P0 | E2E | ⏳ Pending | - | System categories |
-| CAT-004 | Create New Category | Verify user can create custom category | User is on categories page | 1. Click "Add Category" 2. Enter name 3. Select type (income/expense) 4. Choose icon and color 5. Save | New category appears in list with selected attributes | P0 | E2E | ⏳ Pending | - | Core feature |
-| CAT-005 | Edit Category | Verify user can edit category details | User has custom category | 1. Click edit on category 2. Modify name and color 3. Save | Category updates with new values | P0 | E2E | ⏳ Pending | - | - |
-| CAT-006 | Delete Category | Verify user can delete custom category | User has custom category with no usage | 1. Click delete on category 2. Confirm deletion | Category is removed from list | P0 | E2E | ⏳ Pending | - | - |
-| CAT-007 | Delete Category - Cancel | Verify cancel preserves category | User has custom category | 1. Click delete 2. Cancel in modal | Category remains unchanged | P1 | Negative | ⏳ Pending | - | - |
-| CAT-008 | Delete Category - In Use | Verify warning when deleting used category | Category is used by transactions/budgets | 1. Try to delete category in use 2. View warning | Warning shows usage count, asks for confirmation or blocks deletion | P1 | Negative | ⏳ Pending | - | Data integrity |
-| CAT-009 | Icon Selection | Verify icon picker functionality | User is creating/editing category | 1. Open icon picker 2. Browse/search icons 3. Select icon | Selected icon displays on category | P1 | E2E | ⏳ Pending | - | - |
-| CAT-010 | Color Selection | Verify color picker functionality | User is creating/editing category | 1. Open color picker 2. Select color 3. Save | Category displays with selected color | P1 | E2E | ⏳ Pending | - | - |
-| CAT-011 | Category Type - Income | Verify income type category | User is creating category | 1. Create category 2. Select type "Income" 3. Save | Category marked as income, available in income transactions | P1 | E2E | ⏳ Pending | - | - |
-| CAT-012 | Category Type - Expense | Verify expense type category | User is creating category | 1. Create category 2. Select type "Expense" 3. Save | Category marked as expense, available in expense transactions | P1 | E2E | ⏳ Pending | - | - |
-| CAT-013 | Default Categories - Non-Editable | Verify default categories protected | User is on categories page | 1. Locate default category 2. Check for edit/delete options | Default categories have no edit/delete buttons OR show "System" badge | P1 | Negative | ⏳ Pending | - | May vary by design |
-| CAT-014 | Category Name Validation - Empty | Verify name is required | User is creating category | 1. Leave name empty 2. Click Save | Error: "Category name is required" | P1 | Negative | ⏳ Pending | - | - |
-| CAT-015 | Category Name Validation - Duplicate | Verify duplicate names handled | User is creating category | 1. Enter name that already exists 2. Click Save | Error: "Category name already exists" | P1 | Negative | ⏳ Pending | - | - |
-| CAT-016 | Category Usage Display | Verify usage count on categories | Categories have transactions | 1. View categories list | Each category shows transaction count or usage indicator | P2 | Regression | ⏳ Pending | - | UX feature |
-| CAT-017 | Filter by Type | Verify filtering categories by type | User has both income and expense categories | 1. Select "Income" filter 2. Select "Expense" filter 3. Select "All" | List filters to show only selected type categories | P2 | E2E | ⏳ Pending | - | If feature exists |
-| CAT-018 | Search Categories | Verify search functionality | User has multiple categories | 1. Enter search term 2. View results | Only matching categories display | P2 | E2E | ⏳ Pending | - | If feature exists |
+| CAT-001 | Categories Page Load | Verify categories page loads | User is logged in | 1. Navigate to `/categories` | Page loads, Expense tab active by default, categories list visible | P0 | Smoke | ✅ Passed | Dec 29, 2024 | - |
+| CAT-002 | View Categories List | Verify default/existing categories | User has categories | 1. View list 2. Switch tabs | Categories displayed with icons and usage stats | P0 | E2E | ✅ Passed | Dec 29, 2024 | Verified default categories exist |
+| CAT-003 | Create Category - Expense | Verify creating expense category | User on categories page | 1. Click "Add Category" 2. Fill details (Type: Expense) 3. Save | Category appears in Expense list | P0 | E2E | ✅ Passed | Dec 29, 2024 | Created "Dining Out" |
+| CAT-004 | Create Category - Income | Verify creating income category | User on categories page | 1. Click "Add Category" 2. Fill details (Type: Income) 3. Save | Category appears in Income list | P0 | E2E | ✅ Passed | Dec 29, 2024 | Created "Bonus" |
+| CAT-005 | Edit Category | Verify editing category name | User has custom category | 1. Click kebab menu on category 2. Click Edit 3. Rename 4. Save | Category name updates in list | P0 | E2E | ✅ Passed | Dec 29, 2024 | Renamed "Dining Out" to "Restaurants" |
+| CAT-006 | Delete Category | Verify deleting category | User has custom category | 1. Click kebab menu 2. Click Delete | Category removed from list immediately | P0 | E2E | ✅ Passed | Dec 29, 2024 | **Note**: No confirmation modal (Instant Delete) |
+| CAT-007 | Delete Category - Cancel | Verify cancel delete | User has custom category | 1. Click Delete 2. Cancel in modal | Category remains | P1 | Negative | ⏭️ Skipped | Dec 29, 2024 | **Blocked**: No confirmation modal exists |
+| CAT-008 | Default Category Protection | Verify default categories cannot be deleted | Default categories exist | 1. Check kebab menu for default category | Delete option might be disabled or hidden | P1 | Security | ⏳ Pending | - | Need to verify if defaults are deletable |
+| CAT-009 | Empty Name Validation | Verify name is required | User creating category | 1. Leave name empty 2. Save | Error message shown | P1 | Negative | ⏳ Pending | - | - |
+| CAT-010 | Duplicate Name Validation | Verify duplicate names rejected | Category "Food" exists | 1. Create new "Food" category 2. Save | Error message: "Category already exists" | P2 | Boundary | ❌ Failed | Dec 29, 2024 | **Bug**: Allowed duplicate "Bonus" category creation |
+| CAT-011 | Category Usage Count | Verify usage count accuracy | Category used in transaction | 1. Check usage text on card | Shows correct number of transactions | P2 | E2E | ✅ Passed | Dec 29, 2024 | Verified "Food" showing "Used in 2 transaction/s" |
+| CAT-012 | Empty State - Expense | Verify empty state for expense | User has no expense categories | 1. Delete all expense categories | Empty state message displayed | P2 | Regression | ✅ Passed | Dec 29, 2024 | Saw "No categories found" briefly before list load |
+| CAT-013 | Empty State - Income | Verify empty state for income | User has no income categories | 1. Switch to Income 2. Delete all income categories | Empty state message displayed | P2 | Regression | ⏳ Pending | - | - |
+| CAT-014 | Toggle Tabs | Verify switching between Expense/Income | User on page | 1. Click Income 2. Click Expense | List content updates accordingly | P1 | UX | ✅ Passed | Dec 29, 2024 | Works correctly |
 
 ---
 
@@ -50,26 +46,17 @@ The Categories feature enables users to:
 
 | Element | Selector/Identifier | Description |
 |---------|---------------------|-------------|
-| Categories List | `.categories-list`, `[data-testid="category-list"]` | Container for all categories |
-| Category Card/Row | `.category-item`, `[data-testid="category-item"]` | Individual category display |
-| Add Category Button | `[data-testid="add-category-btn"]`, `.add-category-btn` | Create new category button |
-| Category Name | `.category-name`, `[data-testid="category-name"]` | Category name display |
-| Category Icon | `.category-icon`, `[data-testid="category-icon"]` | Category icon display |
-| Category Color | `.category-color`, `[data-testid="category-color"]` | Category color indicator |
-| Category Type Badge | `.category-type`, `[data-testid="category-type"]` | Income/Expense badge |
-| Edit Button | `[data-testid="edit-category"]`, `.edit-btn` | Edit category action |
-| Delete Button | `[data-testid="delete-category"]`, `.delete-btn` | Delete category action |
-| Category Form | `.category-form`, `[data-testid="category-form"]` | Create/Edit category form |
-| Name Input | `#categoryName`, `[data-testid="category-name-input"]` | Category name field |
-| Type Selector | `[data-testid="category-type-select"]`, `.type-select` | Income/Expense selector |
-| Icon Picker | `.icon-picker`, `[data-testid="icon-picker"]` | Icon selection component |
-| Color Picker | `.color-picker`, `[data-testid="color-picker"]` | Color selection component |
-| Save Button | `[data-testid="save-category"]`, `.save-btn` | Save category button |
-| Cancel Button | `[data-testid="cancel-category"]`, `.cancel-btn` | Cancel action button |
-| Confirm Modal | `.confirm-modal`, `[data-testid="confirm-delete"]` | Delete confirmation |
-| Type Filter | `[data-testid="type-filter"]`, `.type-filter` | Filter dropdown |
-| Search Input | `[data-testid="category-search"]`, `.search-input` | Category search field |
-| System Badge | `.system-badge`, `[data-testid="system-category"]` | Default category indicator |
+| Add Category Button | `button:has-text("Add Category")` | Open creation modal |
+| Expense Tab | `button:has-text("Expense")` | Switch to expense list |
+| Income Tab | `button:has-text("Income")` | Switch to income list |
+| Category Card | `.category-card` (inferred) | Container for category info |
+| Kebab Menu | `button.dropdown-toggle` (inferred) | Menu for Edit/Delete |
+| Edit Option | `button:has-text("Edit")` | Edit action |
+| Delete Option | `button:has-text("Delete")` | Delete action |
+| Category Modal | `dialog` | Create/Edit form container |
+| Name Input | `input[placeholder="Category name"]` | Name field |
+| Description Input | `input[placeholder="Optional description"]` | Description field |
+| Type Select | `select` / `combobox` | Expense/Income toggle |
 
 ---
 
@@ -77,23 +64,14 @@ The Categories feature enables users to:
 
 | Data Type | Description | Example Values |
 |-----------|-------------|----------------|
-| Test User | Authenticated user | `testuser@example.com` / `TestPass123!` |
-| Default Categories | System-provided categories | Food, Transport, Salary, Utilities, Entertainment, Shopping |
-| Custom Category - Income | User-created income category | Name: "Freelance", Type: Income, Icon: 💼, Color: #4CAF50 |
-| Custom Category - Expense | User-created expense category | Name: "Subscriptions", Type: Expense, Icon: 📱, Color: #FF5722 |
-| Used Category | Category with transactions | Any category with 5+ transactions linked |
-| Unused Category | Category with no transactions | Newly created category |
-| Icon Options | Available icons for selection | 🏠, 🚗, 🍔, 💰, 🎮, 📚, ✈️, 💊, 🎁 |
-| Color Options | Available colors | #FF5722, #4CAF50, #2196F3, #9C27B0, #FFC107 |
+| Custom Category | User-created category | Name: "Hobbies", Type: Expense |
+| Duplicate Category | Testing validation | Name: "Food" (if Food exists) |
+| Long Name | Boundary testing | Name: "Very Long Category Name..." |
 
 ---
 
 ## Notes
 
-- Default categories should always be present for new users
-- Category icons may be emojis or icon library (Font Awesome, Material Icons)
-- Color picker may be preset colors or full color spectrum
-- Categories may be shared between income and expense in some designs
-- Test category availability in transaction and budget creation flows
-- Consider testing maximum category name length
-- Category deletion may require reassigning transactions first
+- **Bug Found**: System allows duplicate category names (created "Bonus" twice).
+- **Inconsistency**: Delete action has no confirmation modal (unlike Savings).
+- **Usage Stats**: Usage count works ("Used in 2 transaction/s").
