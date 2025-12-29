@@ -8,6 +8,7 @@ import com.backend.appvengers.dto.ResetPasswordRequest;
 import com.backend.appvengers.dto.ChangePasswordRequest;
 import com.backend.appvengers.dto.DeactivateAccountRequest;
 import com.backend.appvengers.dto.DeleteAccountRequest;
+import com.backend.appvengers.dto.ReactivateAccountRequest;
 import com.backend.appvengers.dto.UpdateAccountRequest;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.UserRepository;
@@ -25,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -161,7 +163,8 @@ public class UserService {
         }
 
         if (!user.isActive()) {
-            return new ApiResponse(false, "Account is not active");
+            Map<String, Object> data = Map.of("accountDeactivated", true, "email", user.getEmail());
+            return new ApiResponse(false, "Account is not active. Would you like to reactivate it?", data);
         }
 
         resetLockout(user);
@@ -411,12 +414,22 @@ public class UserService {
     }
 
     @Transactional
-    public ApiResponse reactivateAccount(String email) {
-        User user = userRepository.findByEmail(email)
+    public ApiResponse reactivateAccount(ReactivateAccountRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Verify password before allowing reactivation
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
 
         if (user.isActive()) {
             return new ApiResponse(true, "Account is already active");
+        }
+
+        // Check if account is soft-deleted (cannot reactivate deleted accounts)
+        if (user.isDeleted()) {
+            throw new IllegalArgumentException("Account has been permanently deleted and cannot be reactivated");
         }
 
         user.setActive(true);
@@ -425,7 +438,17 @@ public class UserService {
 
         userRepository.save(user);
 
-        return new ApiResponse(true, "Account has been reactivated successfully");
+        // Generate token for auto-login after reactivation
+        UserDetails userDetails = org.springframework.security.core.userdetails.User
+                .withUsername(user.getEmail())
+                .password(user.getPassword())
+                .authorities("ROLE_USER")
+                .build();
+
+        String token = jwtService.generateToken(userDetails);
+        AuthResponse authResponse = new AuthResponse(user.getUsername(), user.getEmail(), token);
+
+        return new ApiResponse(true, "Account has been reactivated successfully", authResponse);
     }
 
     // --- Soft Delete Account ---
