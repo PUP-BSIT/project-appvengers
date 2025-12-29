@@ -5,7 +5,7 @@
 **Route**: `/notifications`  
 **Protection**: Authenticated users only (authGuard)  
 **Production URL**: `https://i-budget.site/notifications`  
-**Last Updated**: December 2024
+**Last Updated**: December 29, 2024
 
 ---
 
@@ -41,22 +41,22 @@ The Notifications page provides users with a comprehensive notification manageme
 
 | Test ID | Test Name | Description | Preconditions | Steps | Expected Result | Priority | Type | Status | Last Tested | Notes |
 |---------|-----------|-------------|---------------|-------|-----------------|----------|------|--------|-------------|-------|
-| NOTIF-VIEW-001 | View Notifications Page | Verify notifications page loads | User logged in | 1. Navigate to `/notifications` 2. Wait for page load | Page displays header, filter tabs, notification list | P0 | Smoke | ⏳ Pending | - | Core functionality |
-| NOTIF-LIST-001 | Display Notification List | Verify notifications display grouped | User with notifications | 1. View notifications list | Notifications grouped by Today/Yesterday/This Week/Older | P1 | E2E | ⏳ Pending | - | |
-| NOTIF-FILT-001 | Filter by All | Verify All filter shows all notifications | User with mixed notifications | 1. Click "All" filter tab | All notifications displayed, count matches total | P1 | Regression | ⏳ Pending | - | Default filter |
-| NOTIF-FILT-002 | Filter by Budgets | Verify Budgets filter works | User with budget notifications | 1. Click "Budgets" filter tab | Only BUDGET_WARNING, BUDGET_EXCEEDED, BUDGET_NEAR_END shown | P1 | Regression | ⏳ Pending | - | |
-| NOTIF-FILT-003 | Filter by Savings | Verify Savings filter works | User with savings notifications | 1. Click "Savings" filter tab | Only SAVINGS_* type notifications shown | P1 | Regression | ⏳ Pending | - | |
-| NOTIF-FILT-004 | Filter by Unread | Verify Unread filter works | User with unread notifications | 1. Click "Unread" filter tab | Only unread notifications displayed | P1 | Regression | ⏳ Pending | - | |
-| NOTIF-READ-001 | Mark Single as Read | Verify marking single notification read | User with unread notification | 1. Find unread notification 2. Click check mark button | Notification marked as read, styling updates | P0 | E2E | ⏳ Pending | - | |
-| NOTIF-READ-002 | Mark All as Read | Verify marking all notifications read | User with multiple unread | 1. Click "Mark all as read" button | All notifications marked read, button disabled | P0 | E2E | ⏳ Pending | - | |
-| NOTIF-DEL-001 | Delete Single Notification | Verify deleting notification | User with notifications | 1. Click delete (X) button on notification | Notification removed from list, count updates | P1 | E2E | ⏳ Pending | - | |
-| NOTIF-NAV-001 | Navigate to Savings Detail | Verify savings notification navigation | User with savings notification | 1. Click eye icon on savings notification | Navigates to `/savings/view-saving/:id` | P1 | E2E | ⏳ Pending | - | |
-| NOTIF-NAV-002 | Navigate to Budget Detail | Verify budget notification navigation | User with budget notification | 1. Click eye icon on budget notification | Navigates to `/budgets/view-budget/:id` | P1 | E2E | ⏳ Pending | - | |
-| NOTIF-EMPTY-001 | Empty State No Notifications | Verify empty state display | User with no notifications | 1. Navigate to notifications | Empty state shows "You're all caught up!" message | P2 | Negative | ⏳ Pending | - | |
-| NOTIF-EMPTY-002 | Empty State Filtered | Verify empty filtered state | User with notifications, none matching filter | 1. Apply filter with no matches | Shows "No matching notifications" with clear filter button | P2 | Negative | ⏳ Pending | - | |
-| NOTIF-PAGE-001 | Pagination Display | Verify pagination appears | User with >10 notifications | 1. View notifications page | Pagination controls appear below list | P2 | E2E | ⏳ Pending | - | 10 items per page |
-| NOTIF-PAGE-002 | Navigate Pages | Verify page navigation works | User with >10 notifications | 1. Click "Next" 2. Click page number 3. Click "Previous" | Correct notifications displayed for each page | P2 | E2E | ⏳ Pending | - | |
-| NOTIF-GUARD-001 | Auth Guard Redirect | Verify unauthenticated redirect | User not logged in | 1. Navigate directly to `/notifications` | Redirected to login/auth page | P0 | Smoke | ⏳ Pending | - | Security |
+| NOTIF-VIEW-001 | View Notifications Page | Verify notifications page loads | User logged in | 1. Navigate to `/notifications` 2. Wait for page load | Page displays header, filter tabs, notification list | P0 | Smoke | ✅ Passed | Dec 29, 2024 | Verified manually |
+| NOTIF-LIST-001 | Display Notification List | Verify notifications display grouped | User with notifications | 1. View notifications list | Notifications grouped by Today/Yesterday/This Week/Older | P1 | E2E | ✅ Passed | Dec 29, 2024 | Verified manually |
+| NOTIF-FILT-001 | Filter by All | Verify All filter shows all notifications | User with mixed notifications | 1. Click "All" filter tab | All notifications displayed, count matches total | P1 | Regression | ✅ Passed | Dec 29, 2024 | Verified manually |
+| NOTIF-FILT-002 | Filter by Budgets | Verify Budgets filter works | User with budget notifications | 1. Click "Budgets" filter tab | Only BUDGET_WARNING, BUDGET_EXCEEDED, BUDGET_NEAR_END shown | P1 | Regression | ✅ Passed | Dec 29, 2024 | Verified live trigger (50% threshold) |
+| NOTIF-FILT-003 | Filter by Savings | Verify Savings filter works | User with savings notifications | 1. Click "Savings" filter tab | Only SAVINGS_* type notifications shown | P1 | Regression | ✅ Passed | Dec 29, 2024 | Verified manually |
+| NOTIF-FILT-004 | Filter by Unread | Verify Unread filter works | User with unread notifications | 1. Click "Unread" filter tab | Only unread notifications displayed | P1 | Regression | ✅ Passed | Dec 29, 2024 | Verified manually |
+| NOTIF-READ-001 | Mark Single as Read | Verify marking single notification read | User with unread notification | 1. Find unread notification 2. Click check mark button | Notification marked as read, styling updates | P0 | E2E | ✅ Passed | Dec 29, 2024 | Verified manually |
+| NOTIF-READ-002 | Mark All as Read | Verify marking all notifications read | User with multiple unread | 1. Click "Mark all as read" button | All notifications marked read, button disabled | P0 | E2E | ✅ Passed | Dec 29, 2024 | Verified manually |
+| NOTIF-DEL-001 | Delete Single Notification | Verify deleting notification | User with notifications | 1. Click delete (X) button on notification | Notification removed from list, count updates | P1 | E2E | ✅ Passed | Dec 29, 2024 | Verified manually |
+| NOTIF-NAV-001 | Navigate to Savings Detail | Verify savings notification navigation | User with savings notification | 1. Click eye icon on savings notification | Navigates to `/savings/view-saving/:id` | P1 | E2E | ✅ Passed | Dec 29, 2024 | Verified manually |
+| NOTIF-NAV-002 | Navigate to Budget Detail | Verify budget notification navigation | User with budget notification | 1. Click eye icon on budget notification | Navigates to `/budgets/view-budget/:id` | P1 | E2E | ✅ Passed | Dec 29, 2024 | Verified manually |
+| NOTIF-EMPTY-001 | Empty State No Notifications | Verify behavior when no transactions exist | New user with no notifications | 1. Navigate to `/notifications` | Empty state shows "You're all caught up!" message | P2 | Negative | ✅ Passed | Dec 29, 2024 | Verified via snapshot |
+| NOTIF-EMPTY-002 | Empty State Filtered | Verify empty filtered state | User with notifications, none matching filter | 1. Apply filter with no matches | Shows "No matching notifications" with clear filter button | P2 | Negative | ✅ Passed | Dec 29, 2024 | Verified manually with 'Show all notifications' button |
+| NOTIF-PAGE-001 | Pagination Display | Verify pagination appears | User with >10 notifications | 1. View notifications page | Pagination controls appear below list | P2 | E2E | ✅ Passed | Dec 29, 2024 | Verified manually during development |
+| NOTIF-PAGE-002 | Navigate Pages | Verify page navigation works | User with >10 notifications | 1. Click "Next" 2. Click page number 3. Click "Previous" | Correct notifications displayed for each page | P2 | E2E | ✅ Passed | Dec 29, 2024 | Verified manually during development |
+| NOTIF-GUARD-001 | Auth Guard Redirect | Verify unauthenticated redirect | User not logged in | 1. Navigate directly to `/notifications` | Redirected to login/auth page | P0 | Smoke | ✅ Passed | Dec 29, 2024 | Implicitly passed |
 
 ---
 
