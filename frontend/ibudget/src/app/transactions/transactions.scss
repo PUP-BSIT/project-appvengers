@@ -1,3 +1,20 @@
+.selection-controls .btn-outline-primary.btn-sm {
+  height: 40px;
+  min-width: 120px;
+  padding: 0.65rem 1.75rem;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.selection-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
 $background-color: #F9FAFB;
 $sidebar-width: 80px;
 $header-height: 70px;
@@ -339,6 +356,45 @@ $header-height: 70px;
   grid-template-columns: 1fr;
   gap: 0.75rem;
   width: 100%;
+  .bulk-actions-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #f8d7da;
+    color: #721c24;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #f5c6cb;
+    font-weight: 500;
+  }
+
+  .select-all-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+  }
+
+  .transaction-select-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-right: 1rem;
+    height: 100%;
+  }
+
+  .transaction-card-with-checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    .transaction-select-checkbox {
+      margin-right: 0.5rem;
+      padding-left: 0.5rem;
+      padding-top: 1.2rem;
+    }
+  }
 }
 
 
