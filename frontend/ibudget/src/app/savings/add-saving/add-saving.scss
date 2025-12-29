@@ -35,7 +35,7 @@ main {
   }
 
   select, ::picker(select) {
-    appearance: base-select;
+    appearance: none;
     width: 320px;
     overflow: hidden;
   }
