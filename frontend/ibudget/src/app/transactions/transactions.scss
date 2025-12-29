@@ -341,13 +341,13 @@ $header-height: 70px;
   width: 100%;
 }
 
+
 .transaction-card {
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 0.75rem;
+  border: 1.5px solid #d1d5db !important;
+  background: #fff;
+  transition: box-shadow 0.2s ease;
   overflow: hidden;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-  border: 1px solid rgba(15,23,42,0.04);
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
@@ -355,15 +355,14 @@ $header-height: 70px;
 }
 
 .transaction-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(16,24,40,0.08);
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0; /* header visuals removed to keep a clean list look */
+  padding: 0;
   background: transparent;
   color: #0f172a;
 }
