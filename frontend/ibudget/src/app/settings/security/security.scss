@@ -1,106 +1,786 @@
 @use '../../../styles/mixins' as m;
+@use "sass:color";
+
+// ==============================================
+// SECURITY SETTINGS PAGE - MODERN REDESIGN
+// ==============================================
 
 main {
-  @include m.page-layout(30px, auto);
-  padding-left: 120px;
-  padding-right: 120px;
-  display: grid;
-  grid-template-areas:
-    "third-panel third-panel"
-    "security-settings-panel privacy-panel";
-  gap: 1em;
-  margin-top: 0;
+  @include m.page-layout(0, auto);
+  display: flex;
+  justify-content: center;
+  padding: 40px 24px;
+  min-height: calc(100vh - m.$header-height);
 }
 
-.privacy-panel {
-  grid-area: privacy-panel;
-}
-
-.privacy-panel { 
-
-  .card-body {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-  }
-}
-
-.security-settings-panel {
-  grid-area: security-settings-panel;
-}
-
-.third-panel {
-  grid-area: third-panel;
-  margin-top: 2%;
-}
-
-.security-form-wrapper {
+.settings-container {
+  width: 100%;
+  max-width: 640px;
   display: flex;
   flex-direction: column;
-  padding: 15px;
-  gap: 1em;
+  gap: 24px;
 }
 
-.card {
-  box-sizing: border-box;   
+// ==============================================
+// PAGE HEADER
+// ==============================================
+
+.page-header {
+  @include m.fade-slide-in(0ms);
+  @include m.reduced-motion;
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .header-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: m.$primary-gradient;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.25);
+    
+    i {
+      font-size: 24px;
+      color: white;
+    }
+  }
+  
+  .header-text {
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: m.$text-primary;
+      margin: 0 0 4px 0;
+    }
+    
+    p {
+      font-size: 14px;
+      color: m.$text-muted;
+      margin: 0;
+    }
+  }
+}
+
+// ==============================================
+// GLOBAL ALERTS
+// ==============================================
+
+.alert {
+  @include m.fade-slide-in(50ms);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: m.$input-border-radius;
+  animation: slideDown 300ms ease-out;
+  
+  &.alert-success {
+    background: m.$success-green-light;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    
+    .alert-icon i {
+      color: m.$success-green;
+    }
+  }
+  
+  &.alert-danger {
+    background: m.$danger-red-light;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    
+    .alert-icon i {
+      color: m.$danger-red;
+    }
+  }
+  
+  .alert-icon {
+    flex-shrink: 0;
+    
+    i {
+      font-size: 18px;
+    }
+  }
+  
+  .alert-content {
+    flex: 1;
+    
+    span {
+      font-size: 14px;
+      color: m.$text-primary;
+    }
+  }
+  
+  .alert-close {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color m.$transition-fast;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+    
+    i {
+      font-size: 14px;
+      color: m.$text-secondary;
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ==============================================
+// SETTINGS CARD
+// ==============================================
+
+.settings-card {
+  @include m.card-modern;
+  @include m.fade-slide-in(100ms);
+  @include m.reduced-motion;
+  
+  & {
+    overflow: hidden;
+  }
+  
+  &.danger-zone {
+    border-color: rgba(239, 68, 68, 0.2);
+  }
+  
+  .card-header {
+    padding: 24px 28px;
+    border-bottom: 1px solid m.$border-light;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    
+    &.danger {
+      background: linear-gradient(180deg, #fef2f2 0%, #ffffff 100%);
+      border-bottom-color: rgba(239, 68, 68, 0.15);
+    }
+    
+    .header-icon-small {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: m.$primary-gradient;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      
+      &.danger {
+        background: linear-gradient(135deg, m.$danger-red 0%, #f87171 100%);
+      }
+      
+      i {
+        font-size: 20px;
+        color: white;
+      }
+    }
+    
+    .header-text {
+      h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: m.$text-primary;
+        margin: 0 0 2px 0;
+      }
+      
+      p {
+        font-size: 13px;
+        color: m.$text-muted;
+        margin: 0;
+      }
+    }
+  }
+  
+  .card-body {
+    padding: 28px;
+  }
+}
+
+// ==============================================
+// FORM STYLES
+// ==============================================
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: m.$text-secondary;
+    
+    i {
+      font-size: 16px;
+      color: m.$text-muted;
+    }
+  }
+}
+
+.input-wrapper {
+  position: relative;
+  
+  &.input-with-toggle {
+    display: flex;
+    
+    .form-input {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: none;
+    }
+  }
+}
+
+.form-input {
+  @include m.input-modern;
   width: 100%;
-  max-width: 100%;
-  margin-top: 70px;
 }
 
-.privacy-panel > .card {
-  margin-top: 0px;
+.form-textarea {
+  @include m.input-modern;
+  width: 100%;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
 }
 
-@media (max-width: 320px) {
-  main {
+.toggle-visibility {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  background: m.$background-white;
+  border: 1px solid m.$border-light;
+  border-left: none;
+  border-top-right-radius: m.$input-border-radius;
+  border-bottom-right-radius: m.$input-border-radius;
+  cursor: pointer;
+  transition: background-color m.$transition-fast;
+  
+  &:hover {
+    background: m.$background-color;
+  }
+  
+  i {
+    font-size: 16px;
+    color: m.$text-muted;
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: m.$danger-red;
+  
+  i {
+    font-size: 14px;
+  }
+}
+
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: m.$success-green;
+  
+  i {
+    font-size: 14px;
+  }
+}
+
+// ==============================================
+// PASSWORD STRENGTH INDICATOR
+// ==============================================
+
+.password-strength {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.strength-bar {
+  flex: 1;
+  height: 6px;
+  background: m.$border-light;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width m.$transition-smooth, background-color m.$transition-smooth;
+}
+
+.strength-label {
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 70px;
+}
+
+// ==============================================
+// FORM ACTIONS
+// ==============================================
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+
+.btn-primary-submit {
+  @include m.btn-modern-primary;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 160px;
+  
+  i {
+    font-size: 16px;
+  }
+  
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 600ms linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ==============================================
+// DANGER ZONE - ACTION CARDS
+// ==============================================
+
+.action-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: m.$background-color;
+  border-radius: m.$input-border-radius;
+  transition: background-color m.$transition-fast;
+  
+  &:hover {
+    background: color.adjust(m.$background-color, $lightness: -2%);
+  }
+}
+
+.action-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  
+  &.deactivate {
+    background: m.$warning-amber-light;
+    
+    i {
+      color: m.$warning-amber;
+      font-size: 22px;
+    }
+  }
+  
+  &.delete {
+    background: m.$danger-red-light;
+    
+    i {
+      color: m.$danger-red;
+      font-size: 22px;
+    }
+  }
+}
+
+.action-content {
+  flex: 1;
+  min-width: 0;
+  
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: m.$text-primary;
+    margin: 0 0 4px 0;
+  }
+  
+  p {
+    font-size: 13px;
+    color: m.$text-muted;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+.action-divider {
+  height: 1px;
+  background: m.$border-light;
+  margin: 8px 0;
+}
+
+.btn-action-secondary {
+  @include m.btn-modern-secondary;
+  flex-shrink: 0;
+}
+
+.btn-action-danger {
+  @include m.btn-modern-danger;
+  flex-shrink: 0;
+}
+
+// ==============================================
+// MODAL STYLES
+// ==============================================
+
+.modal-modern {
+  border: none;
+  border-radius: m.$card-border-radius-lg;
+  box-shadow: m.$card-shadow-lg;
+  overflow: hidden;
+}
+
+.modal-header-modern {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid m.$border-light;
+  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+  
+  .modal-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
-    flex-direction: column;
-    padding-left: 10px;
-    padding-right: 10px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    
+    &.warning {
+      background: m.$warning-amber-light;
+      
+      i {
+        color: m.$warning-amber;
+        font-size: 22px;
+      }
+    }
+    
+    &.danger {
+      background: m.$danger-red-light;
+      
+      i {
+        color: m.$danger-red;
+        font-size: 22px;
+      }
+    }
+  }
+  
+  .modal-title-wrapper {
+    flex: 1;
+    
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 4px 0;
+    }
+    
+    .modal-subtitle {
+      font-size: 13px;
+      color: m.$text-muted;
+      margin: 0;
+    }
+  }
+  
+  .modal-close {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color m.$transition-fast;
+    
+    &:hover {
+      background: m.$background-color;
+    }
+    
+    i {
+      font-size: 16px;
+      color: m.$text-muted;
+    }
+  }
+}
+
+.modal-body-modern {
+  padding: 24px;
+  
+  .form-group {
+    margin-bottom: 20px;
+    
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: m.$input-border-radius;
+  margin-bottom: 24px;
+  
+  &.warning {
+    background: m.$warning-amber-light;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    
+    i {
+      color: m.$warning-amber;
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    
+    span {
+      font-size: 13px;
+      color: m.$text-secondary;
+      line-height: 1.5;
+    }
+  }
+  
+  &.danger {
+    background: m.$danger-red-light;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    
+    i {
+      color: m.$danger-red;
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    
+    span {
+      font-size: 13px;
+      color: m.$text-secondary;
+      line-height: 1.5;
+    }
+  }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid m.$border-light;
+}
+
+.btn-modal-secondary {
+  @include m.btn-modern-secondary;
+}
+
+.btn-modal-warning {
+  background: m.$warning-amber;
+  border: none;
+  border-radius: m.$input-border-radius;
+  padding: 10px 20px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color m.$transition-fast, transform m.$transition-fast;
+  
+  &:hover:not(:disabled) {
+    background: color.adjust(m.$warning-amber, $lightness: -8%);
+    transform: translateY(-1px);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 600ms linear infinite;
+  }
+}
+
+.btn-modal-danger {
+  @include m.btn-modern-danger;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  
+  .spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 600ms linear infinite;
+  }
+}
+
+// ==============================================
+// RESPONSIVE STYLES
+// ==============================================
+
+@media (max-width: 768px) {
+  main {
     margin-left: 0;
+    padding: 24px 16px;
   }
-}
-
-@media (min-width: 321px) and (max-width: 768px) {
-  main {
-    display: flex;
+  
+  .settings-container {
+    gap: 20px;
+  }
+  
+  .page-header {
+    .header-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      
+      i {
+        font-size: 20px;
+      }
+    }
+    
+    .header-text {
+      h1 {
+        font-size: 20px;
+      }
+      
+      p {
+        font-size: 13px;
+      }
+    }
+  }
+  
+  .settings-card {
+    .card-header {
+      padding: 20px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+  }
+  
+  .action-card {
     flex-direction: column;
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-left: 0;
+    text-align: center;
+    padding: 24px 16px;
+    
+    .action-content {
+      h3, p {
+        text-align: center;
+      }
+    }
   }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (max-width: 480px) {
   main {
-    padding-left: 50px;
-    padding-right: 50px;
-    grid-template-areas: 
-      "third-panel"
-      "security-settings-panel"
-      "privacy-panel";
+    padding: 16px 12px;
+  }
+  
+  .page-header {
+    .header-content {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+  
+  .settings-card {
+    .card-header,
+    .card-body {
+      padding: 16px;
+    }
+  }
+  
+  .form-actions {
+    justify-content: stretch;
+    
+    .btn-primary-submit {
+      width: 100%;
+    }
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+      justify-content: center;
+    }
   }
 }
 
-@media (max-width: 1025px) {
-  .third-panel {
-    height: 5px !important;
+// Reduced motion preference
+@media (prefers-reduced-motion: reduce) {
+  .alert,
+  .settings-card {
+    animation: none !important;
   }
-
-  .card {
-    margin-top:70px;
-  }
-}
-
-@media (min-width: 1025px) {
-  main {
-    grid-template-areas:
-      "third-panel third-panel"
-      "security-settings-panel privacy-panel";
-  }
-
-  .card {
-    margin-top: 0;
+  
+  .spinner,
+  .strength-fill {
+    animation: none !important;
+    transition: none !important;
   }
 }
