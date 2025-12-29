@@ -34,6 +34,7 @@
     </div>
 
     <!-- Filter and Add Row -->
+
     <div class="filter-add-row">
       <div class="filters-group">
         <!-- Filter by Category -->
@@ -68,6 +69,12 @@
             <option value="monthly">Monthly</option>
           </select>
         </div>
+        <!-- Select button (now next to period selector) -->
+        <div class="selection-controls">
+          <button *ngIf="!selectionMode && !hasSelectedTransactions()" class="btn btn-outline-primary btn-sm" (click)="enterSelectionMode()">
+            <i class="bi bi-check-square"></i> Select
+          </button>
+        </div>
       </div>
 
       <!-- Add Transaction Button -->
@@ -81,28 +88,24 @@
 
     <!-- Transactions Cards -->
     <div class="transactions-cards-container">
-      <!-- Bulk actions bar -->
-      @if (hasSelectedTransactions()) {
+      <!-- Selection mode controls (only one block) -->
+      <div *ngIf="selectionMode || hasSelectedTransactions()">
         <div class="bulk-actions-bar">
           <span>{{ selectedTransactionIds.size }} selected</span>
           <button class="btn btn-danger btn-sm" (click)="showDeleteModal()">
             <i class="bi bi-trash"></i> Delete Selected
           </button>
-          <button class="btn btn-secondary btn-sm" (click)="clearSelectedTransactions()">
-            Clear
+          <button class="btn btn-secondary btn-sm" (click)="exitSelectionMode()">
+            Cancel
           </button>
         </div>
-      }
-
-      <!-- Select All Checkbox -->
-      <div class="select-all-row">
-        <input type="checkbox" [checked]="areAllVisibleSelected()" (change)="selectAllVisible()" id="selectAllCheckbox">
-        <label for="selectAllCheckbox">Select All</label>
+        <!-- Select All Checkbox -->
+        <div class="select-all-row">
+          <input type="checkbox" [checked]="areAllVisibleSelected()" (change)="selectAllVisible()" id="selectAllCheckbox">
+          <label for="selectAllCheckbox">Select All</label>
+        </div>
       </div>
       @for (transaction of getPaginatedTransactions(); track transaction.id) {
-        <div class="transaction-select-checkbox">
-          <input type="checkbox" [checked]="isTransactionSelected(transaction.id)" (change)="toggleTransactionSelection(transaction.id)" id="select-{{transaction.id}}">
-        </div>
         @if ($first || getRelativeDate(transaction.date) !== getRelativeDate(getPaginatedTransactions()[$index - 1]?.date)) {
           <div class="date-group-label">
             @if (getRelativeDate(transaction.date) === 'Today') {
@@ -115,7 +118,10 @@
           </div>
         }
 
-        <div class="transaction-card">
+        <div class="transaction-card transaction-card-with-checkbox">
+          <div *ngIf="selectionMode || hasSelectedTransactions()" class="transaction-select-checkbox">
+            <input type="checkbox" [checked]="isTransactionSelected(transaction.id)" (change)="toggleTransactionSelection(transaction.id)" id="select-{{transaction.id}}">
+          </div>
           <div class="card-header">
             <div class="card-actions">
               <button
