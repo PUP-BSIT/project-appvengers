@@ -231,10 +231,13 @@
                     {{ transaction.description || 'N/A' }}
                   </td>
                   <td class="d-flex gap-1 justify-content-center actions">
-                    <app-update-saving-transaction 
-                      [transactionId]="transaction.id"
-                      (updatedTransaction)="onSavingsTransactionUpdated($event)"
-                    />
+                    <button 
+                      type="button" 
+                      class="btn btn-sm btn-warning"
+                      (click)="openUpdateTransactionModal(transaction.id)"
+                      title="Edit">
+                        Edit
+                    </button>
                     <button 
                       #deleteTransactionBtn
                       type="button"
@@ -290,11 +293,22 @@
               <li class="card">
                 <div class="card-body">
                   <div class="d-flex justify-content-between align-items-center mb-2 w-100">
+                    <div class="d-flex justify-content-center align-items-center">
+                    <input 
+                      type="checkbox" 
+                      class="form-check-input"
+                      [value]="transaction.id"
+                      [checked]="selectedTransactionIds().includes(transaction.id)"
+                      (change)="checkSelectedTransaction($event, transaction.id)"/>
+                    &nbsp;
+
                     <h6 class="card-title mb-0">
                       {{ transaction.transaction_date | date:'mediumDate' }}
                     </h6>
-
-                    <i class="bi bi-three-dots-vertical"></i>
+                    </div>
+                    <i 
+                      class="bi bi-three-dots-vertical" 
+                      (click)="toggleDropdown(transaction.id)"></i>
                   </div>
 
                   <!-- <h6 class="mb-0">Description</h6> -->
@@ -302,11 +316,13 @@
                     {{ transaction.description || 'N/A' }}
                   </p>
 
-                  <div class="actions">
-                    <!-- <app-update-saving-transaction 
-                      [transactionId]="transaction.id"
-                      (updatedTransaction)="onSavingsTransactionUpdated($event)"
-                    />
+                  <div [class]="'actions-dropdown' + (showDropdown() === transaction.id ? '' : ' hide')">
+                    <button 
+                      type="button" 
+                      class="btn btn-sm btn-warning"
+                      (click)="openUpdateTransactionModal(transaction.id)">
+                        Edit
+                    </button>
 
                     <button 
                       #deleteTransactionBtn
@@ -315,8 +331,10 @@
                       (click)="openDeleteTransactionModal(
                           transaction.id)">
                         Delete
-                    </button> -->
+                    </button>
+                  </div>
 
+                  <div class="money-container">
                     @if(transaction.savings_action === 'Deposit') {
                       <p class="text-success fw-bold mb-0">
                         + &#8369; {{ transaction.amount.toFixed(2) }}
@@ -340,6 +358,12 @@
     </div>
   </div>
   
+  <!-- Update Saving modal instance -->
+  <app-update-saving-transaction 
+    #updateTransactionModal 
+    (updatedTransaction)="onSavingsTransactionUpdated($event)"
+  />
+
   <!-- Delete Saving modal -->
    <div #deleteSavingModal class="modal fade">
      <div class="modal-dialog modal-dialog-centered">

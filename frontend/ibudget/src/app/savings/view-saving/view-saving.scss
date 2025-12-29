@@ -1,5 +1,9 @@
 @use '../../../styles/mixins' as m;
 
+.hide {
+  display: none !important;
+}
+
 main {
   @include m.page-layout(40px, 100%);
 }
@@ -40,7 +44,6 @@ main {
 }
 
 .header-container div:nth-child(2) .form-control {
-  // width: 250px;
   border: 1px solid grey;
 }
 
@@ -155,6 +158,18 @@ th {
 // bg-yellow
 .bg-yellow {
   background-color: #FFC000 !important;
+}
+
+// Input type checkbox styling
+.form-check-input {
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 1px solid #2563eb;
+}
+
+.form-check-input:checked {
+  background-color: #2563eb;
+  border-color: #2563eb;
 }
 
 @media (max-width: 1200px) {
@@ -387,7 +402,6 @@ th {
     justify-content: start;
     align-items: start;
     flex-direction: column !important;
-    // gap: 5px !important;
 
     div:nth-child(1) {
       display: flex;
@@ -399,6 +413,7 @@ th {
   li.card {
     margin-top: 10px !important;
     margin-bottom: 10px !important;
+    border-bottom: 1px solid #ddd;
   }
 
   .table-container {
@@ -411,8 +426,8 @@ th {
     list-style: none;
   }
 
-  .actions {
-    display: flex;
+  .money-container {
+    display: flex;  
     flex-direction: row;
     justify-content: flex-end;
     width: 100%;
@@ -438,5 +453,43 @@ th {
 
   .header-container h2 {
     font-size: 1.5rem;
+  }
+
+  .actions-dropdown {
+    width: 25%;
+    height: 95px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid grey;
+    border-radius: 10px;
+    position: absolute;
+    top: 40px;
+    right: 20px;
+    background-color: #fff;
+    z-index: 700;
+
+    button {
+      width: 100%;
+      text-align: start;
+      background-color: transparent;
+      border: none;
+      color: inherit;
+      font: inherit;
+      transition: all 0.3s ease-in-out;
+
+      &:hover {
+        background-color: #f1f1f1;
+      }
+    }
+
+    button:nth-child(2) {
+      color: #f44336;
+
+      &:hover {
+        background-color: #ffe6e6;
+      }
+    }
   }
 }
