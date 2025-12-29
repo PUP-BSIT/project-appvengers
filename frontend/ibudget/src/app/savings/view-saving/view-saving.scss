@@ -8,10 +8,6 @@ main {
   @include m.page-layout(40px, 100%);
 }
 
-main.no-scroll {
-  overflow: hidden;
-}
-
 .card {
   .card-header {
     padding: 20px;
