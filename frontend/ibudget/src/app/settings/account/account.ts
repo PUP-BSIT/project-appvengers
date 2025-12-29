@@ -26,7 +26,6 @@ export class Account implements OnInit {
   userService = inject(UserService);
   usernameFirstLetter = signal("");
   userName = signal("");
-  hidePassword = signal(true);
   isSubmitting = signal(false);
   successMessage = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
@@ -38,10 +37,9 @@ export class Account implements OnInit {
       }],
       username: ['', {
         validators: [Validators.required]
-      }],
-      password: ['', {
-        validators: [Validators.required]
       }]
+      // Password is no longer required for username/email updates
+      // User is already authenticated via JWT
     });
   }
 
@@ -56,10 +54,6 @@ export class Account implements OnInit {
 
   get username() {
     return this.accountSettingsForm.get('username');
-  }
-
-  get password() {
-    return this.accountSettingsForm.get('password');
   }
 
   getFirstLetter() {
@@ -98,8 +92,8 @@ export class Account implements OnInit {
     const formValue = this.accountSettingsForm.value;
     const updateData = {
       username: formValue.username,
-      email: formValue.email,
-      password: formValue.password
+      email: formValue.email
+      // Password is no longer sent for account updates
     };
 
     this.userService.updateAccount(updateData).subscribe({
@@ -107,8 +101,6 @@ export class Account implements OnInit {
         this.isSubmitting.set(false);
         if (response.success) {
           this.successMessage.set(response.message);
-          // Clear password field
-          this.accountSettingsForm.patchValue({ password: '' });
         } else {
           this.errorMessage.set(response.message);
         }

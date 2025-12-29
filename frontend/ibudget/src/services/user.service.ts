@@ -15,7 +15,7 @@ export class UserService {
     updateAccount(data: {
         username: string;
         email: string;
-        password: string;
+        password?: string;  // Password is now optional
     }): Observable<ApiResponse> {
         return this.http.put<ApiResponse>(`${this.apiUrl}/update`, data);
     }

@@ -51,13 +51,15 @@ export type AccountSetupResponse = {
 }
 
 export type DeactivateAccountRequest = {
-  password: string;
+  password?: string;
   reason: string;
+  confirmEmail?: string;
 }
 
 export type DeleteAccountRequest = {
-  password: string;
+  password?: string;
   reason: string;
+  confirmEmail?: string;
 }
 
 export type ReactivateAccountRequest = {
