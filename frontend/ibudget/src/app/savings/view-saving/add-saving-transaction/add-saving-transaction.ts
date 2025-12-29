@@ -42,6 +42,7 @@ export class AddSavingTransaction implements OnInit {
   savingId = signal(1);
   transactionId = signal(0);
   date = signal(new Date().toISOString().split('T')[0]);
+  isDisabled = input<boolean>(false);
 
   constructor() {
     this.transactionForm = this.formBuilder.group({

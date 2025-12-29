@@ -106,7 +106,8 @@
   #openSavingTransactionModalBtn
   type="button" 
   class="btn btn-sm btn-primary"
-  (click)="openModal()">
+  (click)="openModal()"
+  [disabled]="isDisabled()">
     <i class="bi bi-plus"></i>
     Add Saving Transaction
 </button>
