@@ -74,23 +74,44 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
 
     &.open {
         right: 0;
+        // top: 0;
     }
 
     // Mobile L (376px-425px): header height is 65px
     @media (min-width: 376px) and (max-width: 425px) {
         top: 65px;
         height: calc(100vh - 65px);
+
+        &.open {
+            right: 0;
+        }
     }
 
     // Mobile S & M (≤375px): header height is 60px
     @media (max-width: 375px) {
         top: 60px;
-        height: calc(100vh - 60px);
+        height: 100%;
+
+        &.open {
+            right: 0;
+            top: 0;
+        }
     }
 
     @media (max-width: 480px) {
         width: 100%;
         right: -100%;
+        height: 100%;
+
+        &.open {
+            right: 0;
+            top: 0;
+        }
+    }
+
+    @media (min-width: 481px) and (max-width: 768px) {
+        height: 88%;
+        top: 60px;
     }
 }
 
