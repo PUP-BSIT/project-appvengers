@@ -60,6 +60,11 @@ export type DeleteAccountRequest = {
   reason: string;
 }
 
+export type ReactivateAccountRequest = {
+  email: string;
+  password: string;
+}
+
 export type Transaction = {
   id: number;
   date: Date;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../environments/environment';
-import { ApiResponse, AuthData, SignupRequest } from '../models/user.model';
+import { ApiResponse, AuthData, SignupRequest, ReactivateAccountRequest } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -93,7 +93,7 @@ export class AuthService {
     return this.http.post<ApiResponse>(`${this.apiUrl}/reset-password`, data);
   }
 
-  changePassword(
+changePassword(
     data: { 
       currentPassword: string; 
       newPassword: string; 
@@ -101,6 +101,24 @@ export class AuthService {
     }): Observable<ApiResponse> {
       return this.http.post<ApiResponse>(`${this.apiUrl}/change-password`, data);
     }
+
+  /**
+   * Reactivate a deactivated account.
+   * Requires email and password verification.
+   * Returns JWT token on success for auto-login.
+   */
+  reactivateAccount(data: ReactivateAccountRequest): Observable<ApiResponse<AuthData>> {
+    return this.http.post<ApiResponse<AuthData>>(
+      `${this.apiUrl}/reactivate`,
+      data
+    ).pipe(
+      tap((res: ApiResponse<AuthData>) => {
+        if (res.success && res.data?.token) {
+          localStorage.setItem('iBudget_authToken', res.data.token);
+        }
+      })
+    );
+  }
 
   /**
    * Handle OAuth2 callback from backend.
