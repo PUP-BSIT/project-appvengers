@@ -146,7 +146,7 @@ $link-color-hover: #283593;
   gap: 0.6rem;
   overflow: hidden;
   width: 100%;
-  max-width: 400px;
+  max-width: 600px;
   box-sizing: border-box;
 }
 
@@ -529,7 +529,9 @@ $link-color-hover: #283593;
 
   .login-card {
     padding: 1.75rem;
-    max-width: 450px;
+    display: flex;
+    justify-content: center;
+    max-width: 600px;
   }
 
   .custom-title {
@@ -538,6 +540,10 @@ $link-color-hover: #283593;
     img {
       width: 155px;
     }
+  }
+
+  .login-form {
+    width: 500px;
   }
 }
 
@@ -554,12 +560,20 @@ $link-color-hover: #283593;
       width: 160px;
     }
   }
+
+  .login-container {
+    width: 600px;
+  }
 }
 
 /* & Above   */
 @media (min-width: 1025px) {
   .login-card {
     max-width: 500px;
+  }
+
+  .login-container {
+    width: 600px;
   }
 
   .custom-title{
