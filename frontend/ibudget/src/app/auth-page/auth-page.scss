@@ -5,7 +5,8 @@
 $bg-color: #2D5A87;
 
 .auth-page-container {
-  height: 100%;
+  height: auto;
+  padding: 30px;
   background-color: $bg-color;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
@@ -16,7 +17,7 @@ $bg-color: #2D5A87;
 }
 
 .main-panel {
-  height: 580px;
+  height: auto;
   width: 600px;
   display: flex;
   justify-content: center;
@@ -26,7 +27,6 @@ $bg-color: #2D5A87;
   border: 2px solid color.scale($bg-color, $lightness: -10%);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  // margin-left: 90px;
   padding: 60px;
 }
 
@@ -71,7 +71,6 @@ $bg-color: #2D5A87;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-right: 40px;
   position: relative;
 }
 
