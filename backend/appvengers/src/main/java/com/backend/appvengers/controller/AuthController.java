@@ -6,6 +6,7 @@ import com.backend.appvengers.dto.SignupRequest;
 import com.backend.appvengers.dto.ForgotPasswordRequest;
 import com.backend.appvengers.dto.ResetPasswordRequest;
 import com.backend.appvengers.dto.ChangePasswordRequest;
+import com.backend.appvengers.dto.ReactivateAccountRequest;
 import com.backend.appvengers.security.LoginRateLimiter;
 import com.backend.appvengers.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -74,6 +75,29 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/reactivate")
+    public ResponseEntity<ApiResponse> reactivateAccount(
+            @Valid @RequestBody ReactivateAccountRequest request,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, "Validation failed", errors));
+        }
+
+        try {
+            ApiResponse response = userService.reactivateAccount(request);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, e.getMessage()));
+        }
     }
 
     @GetMapping("/check-username/{username}")
