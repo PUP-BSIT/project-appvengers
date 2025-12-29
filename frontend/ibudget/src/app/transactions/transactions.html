@@ -81,7 +81,28 @@
 
     <!-- Transactions Cards -->
     <div class="transactions-cards-container">
+      <!-- Bulk actions bar -->
+      @if (hasSelectedTransactions()) {
+        <div class="bulk-actions-bar">
+          <span>{{ selectedTransactionIds.size }} selected</span>
+          <button class="btn btn-danger btn-sm" (click)="showDeleteModal()">
+            <i class="bi bi-trash"></i> Delete Selected
+          </button>
+          <button class="btn btn-secondary btn-sm" (click)="clearSelectedTransactions()">
+            Clear
+          </button>
+        </div>
+      }
+
+      <!-- Select All Checkbox -->
+      <div class="select-all-row">
+        <input type="checkbox" [checked]="areAllVisibleSelected()" (change)="selectAllVisible()" id="selectAllCheckbox">
+        <label for="selectAllCheckbox">Select All</label>
+      </div>
       @for (transaction of getPaginatedTransactions(); track transaction.id) {
+        <div class="transaction-select-checkbox">
+          <input type="checkbox" [checked]="isTransactionSelected(transaction.id)" (change)="toggleTransactionSelection(transaction.id)" id="select-{{transaction.id}}">
+        </div>
         @if ($first || getRelativeDate(transaction.date) !== getRelativeDate(getPaginatedTransactions()[$index - 1]?.date)) {
           <div class="date-group-label">
             @if (getRelativeDate(transaction.date) === 'Today') {
@@ -166,6 +187,26 @@
   </div>
 
   <!-- Snackbar Notification -->
+    <!-- Bulk Delete Confirmation Modal -->
+    @if (showBulkDeleteModal) {
+      <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Confirm Delete</h5>
+              <button type="button" class="btn-close" (click)="hideDeleteModal()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to delete the selected transactions?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="hideDeleteModal()">Cancel</button>
+              <button type="button" class="btn btn-danger" (click)="confirmBulkDelete()">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
   @if (showNotification()) {
     <div class="snackbar" [class.hide]="isHidingNotification()">
       @if (notificationType() === 'success') {
