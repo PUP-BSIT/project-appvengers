@@ -3,152 +3,244 @@
 <app-sub-header/>
 
 <main>
-  <div class="third-panel">
-    <div class="info-container">
-      <h5 class="fw-semibold">Security</h5>
-      <p class="text-muted">
-        Manage your password and privacy settings.
-      </p>
+  <div class="settings-container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-icon">
+          <i class="bi bi-shield-lock"></i>
+        </div>
+        <div class="header-text">
+          <h1>Security Settings</h1>
+          <p>Manage your password and account privacy</p>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="card security-settings-panel">
-    <div class="card-header p-4">
-      <h6 class="fw-semibold m-0">Password</h6>
-    </div>
-
-    <div class="card-body">
-      @if(successMessage()) {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-          {{ successMessage() }}
-          <button type="button" class="btn-close" (click)="successMessage.set(null)"></button>
+    <!-- Global Alerts -->
+    @if(successMessage()) {
+      <div class="alert alert-success">
+        <div class="alert-icon">
+          <i class="bi bi-check-circle-fill"></i>
         </div>
-      }
-      
-      @if(errorMessage()) {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          {{ errorMessage() }}
-          <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
+        <div class="alert-content">
+          <span>{{ successMessage() }}</span>
         </div>
-      }
-
-      <form [formGroup]="securitySettingsForm" (ngSubmit)="onSubmit()" class="security-form-wrapper">
-        <div>
-          <label>Current Password</label>
-          <div class="input-group">
-            <input 
-            class="form-control" 
-            formControlName="current_password"
-            placeholder="Current Password"
-            [type]="hideCurrentPassword() ? 'password' : 'text'"/>
-            
-            <button 
-              class="btn btn-outline-secondary"
-              (click)="hideCurrentPassword.set(!hideCurrentPassword())">
-                <i
-                class="bi" [class.bi-eye]="!hideCurrentPassword()"
-                [class.bi-eye-slash]="hideCurrentPassword()"></i>
-            </button>
-          </div>
-
-          @if(currentPassword?.errors?.['required'] 
-                && currentPassword?.touched) {
-              <span class="text-danger small mt-1">
-                Current Password is required.
-              </span>
-            } 
-        </div>
-        
-        <div>
-          <label>New Password</label>
-          <div class="input-group">
-            <input 
-              class="form-control"
-              formControlName="new_password"
-              placeholder="New Password"
-              type="password"
-              [type]="hideNewPassword() ? 'password' : 'text'"/>
-
-            <button 
-              class="btn btn-outline-secondary"
-              (click)="hideNewPassword.set(!hideNewPassword())">
-                <i
-                class="bi" [class.bi-eye]="!hideNewPassword()"
-                [class.bi-eye-slash]="hideNewPassword()"></i>
-            </button>
-          </div>
-
-          @if(newPassword?.errors?.['required'] && newPassword?.touched) {
-            <span class="text-danger small mt-1">
-              New Password is required.
-            </span>
-          }
-          @if(newPassword?.errors?.['minlength'] && newPassword?.touched) {
-            <span class="text-danger small mt-1">
-              Password must be at least 8 characters.
-            </span>
-          }
-        </div>
-        
-        <div>
-          <label>Confirm Password</label>
-          <div class="input-group">
-            <input 
-            class="form-control"
-            formControlName="confirm_password"
-            placeholder="Confirm Password"
-            type="password"
-            [type]="hideConfirmPassword() ? 'password' : 'text'"/>
-
-            <button 
-              class="btn btn-outline-secondary"
-              (click)="hideConfirmPassword.set(!hideConfirmPassword())">
-                <i
-                class="bi" [class.bi-eye]="!hideConfirmPassword()"
-                [class.bi-eye-slash]="hideConfirmPassword()"></i>
-            </button>
-          </div>
-
-          @if(confirmPassword?.errors?.['required'] 
-              && confirmPassword?.touched) {
-            <span class="text-danger small mt-1">
-              Confirm Password is required.
-            </span>
-          }
-        </div>
-
-        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting() || securitySettingsForm.invalid">
-          @if(isSubmitting()) {
-            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            Saving...
-          } @else {
-            Save
-          }
+        <button type="button" class="alert-close" (click)="successMessage.set(null)" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
         </button>
-      </form>
-    </div>
-  </div>
+      </div>
+    }
 
-  <div class="privacy-panel">
-    <div class="card">
-      <div class="card-header p-3">
-        <h5>Privacy</h5>
+    @if(errorMessage()) {
+      <div class="alert alert-danger">
+        <div class="alert-icon">
+          <i class="bi bi-exclamation-circle-fill"></i>
+        </div>
+        <div class="alert-content">
+          <span>{{ errorMessage() }}</span>
+        </div>
+        <button type="button" class="alert-close" (click)="errorMessage.set(null)" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+    }
+
+    <!-- Password Change Card -->
+    <div class="settings-card">
+      <div class="card-header">
+        <div class="header-icon-small">
+          <i class="bi bi-key"></i>
+        </div>
+        <div class="header-text">
+          <h2>Change Password</h2>
+          <p>Update your password to keep your account secure</p>
+        </div>
       </div>
 
       <div class="card-body">
-        <button 
-          type="button"
-          class="btn btn-sm btn-secondary me-2"
-          (click)="openDeactivateModal()">
-            Deactivate Account
-        </button>
+        <form [formGroup]="securitySettingsForm" (ngSubmit)="onSubmit()" class="settings-form">
+          <!-- Current Password -->
+          <div class="form-group">
+            <label for="current_password">
+              <i class="bi bi-lock"></i>
+              Current Password
+            </label>
+            <div class="input-wrapper input-with-toggle">
+              <input 
+                id="current_password"
+                class="form-input"
+                formControlName="current_password"
+                placeholder="Enter your current password"
+                [type]="hideCurrentPassword() ? 'password' : 'text'"
+                autocomplete="current-password"/>
+              <button 
+                type="button"
+                class="toggle-visibility"
+                (click)="hideCurrentPassword.set(!hideCurrentPassword())"
+                [attr.aria-label]="hideCurrentPassword() ? 'Show password' : 'Hide password'">
+                <i class="bi" [class.bi-eye]="!hideCurrentPassword()" [class.bi-eye-slash]="hideCurrentPassword()"></i>
+              </button>
+            </div>
+            @if(currentPassword?.errors?.['required'] && currentPassword?.touched) {
+              <span class="error-message">
+                <i class="bi bi-exclamation-triangle"></i>
+                Current password is required
+              </span>
+            }
+          </div>
 
-        <button
-          type="button"
-          class="btn btn-sm btn-danger"
-          (click)="openDeleteModal()">
-            Delete Account
-        </button>
+          <!-- New Password -->
+          <div class="form-group">
+            <label for="new_password">
+              <i class="bi bi-lock-fill"></i>
+              New Password
+            </label>
+            <div class="input-wrapper input-with-toggle">
+              <input 
+                id="new_password"
+                class="form-input"
+                formControlName="new_password"
+                placeholder="Enter your new password"
+                [type]="hideNewPassword() ? 'password' : 'text'"
+                autocomplete="new-password"
+                (input)="onNewPasswordInput($event)"/>
+              <button 
+                type="button"
+                class="toggle-visibility"
+                (click)="hideNewPassword.set(!hideNewPassword())"
+                [attr.aria-label]="hideNewPassword() ? 'Show password' : 'Hide password'">
+                <i class="bi" [class.bi-eye]="!hideNewPassword()" [class.bi-eye-slash]="hideNewPassword()"></i>
+              </button>
+            </div>
+            
+            <!-- Password Strength Indicator -->
+            @if(newPassword?.value) {
+              <div class="password-strength">
+                <div class="strength-bar">
+                  <div 
+                    class="strength-fill" 
+                    [style.width.%]="(passwordStrength().score + 1) * 20"
+                    [style.background-color]="passwordStrength().color">
+                  </div>
+                </div>
+                <span class="strength-label" [style.color]="passwordStrength().color">
+                  {{ passwordStrength().label }}
+                </span>
+              </div>
+            }
+            
+            @if(newPassword?.errors?.['required'] && newPassword?.touched) {
+              <span class="error-message">
+                <i class="bi bi-exclamation-triangle"></i>
+                New password is required
+              </span>
+            }
+            @if(newPassword?.errors?.['minlength'] && newPassword?.touched) {
+              <span class="error-message">
+                <i class="bi bi-exclamation-triangle"></i>
+                Password must be at least 8 characters
+              </span>
+            }
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="form-group">
+            <label for="confirm_password">
+              <i class="bi bi-shield-check"></i>
+              Confirm New Password
+            </label>
+            <div class="input-wrapper input-with-toggle">
+              <input 
+                id="confirm_password"
+                class="form-input"
+                formControlName="confirm_password"
+                placeholder="Confirm your new password"
+                [type]="hideConfirmPassword() ? 'password' : 'text'"
+                autocomplete="new-password"/>
+              <button 
+                type="button"
+                class="toggle-visibility"
+                (click)="hideConfirmPassword.set(!hideConfirmPassword())"
+                [attr.aria-label]="hideConfirmPassword() ? 'Show password' : 'Hide password'">
+                <i class="bi" [class.bi-eye]="!hideConfirmPassword()" [class.bi-eye-slash]="hideConfirmPassword()"></i>
+              </button>
+            </div>
+            @if(confirmPassword?.errors?.['required'] && confirmPassword?.touched) {
+              <span class="error-message">
+                <i class="bi bi-exclamation-triangle"></i>
+                Please confirm your new password
+              </span>
+            }
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button 
+              type="submit" 
+              class="btn-primary-submit" 
+              [disabled]="isSubmitting() || securitySettingsForm.invalid">
+              @if(isSubmitting()) {
+                <span class="spinner"></span>
+                <span>Updating...</span>
+              } @else {
+                <i class="bi bi-check2"></i>
+                <span>Update Password</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Danger Zone Card -->
+    <div class="settings-card danger-zone">
+      <div class="card-header danger">
+        <div class="header-icon-small danger">
+          <i class="bi bi-exclamation-triangle"></i>
+        </div>
+        <div class="header-text">
+          <h2>Danger Zone</h2>
+          <p>Irreversible and destructive actions</p>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <!-- Deactivate Account -->
+        <div class="action-card">
+          <div class="action-icon deactivate">
+            <i class="bi bi-pause-circle"></i>
+          </div>
+          <div class="action-content">
+            <h3>Deactivate Account</h3>
+            <p>Temporarily disable your account. You can reactivate it anytime by logging in again.</p>
+          </div>
+          <button 
+            type="button"
+            class="btn-action-secondary"
+            (click)="openDeactivateModal()">
+            Deactivate
+          </button>
+        </div>
+
+        <div class="action-divider"></div>
+
+        <!-- Delete Account -->
+        <div class="action-card">
+          <div class="action-icon delete">
+            <i class="bi bi-trash3"></i>
+          </div>
+          <div class="action-content">
+            <h3>Delete Account</h3>
+            <p>Permanently delete your account and all associated data. This action cannot be undone.</p>
+          </div>
+          <button 
+            type="button"
+            class="btn-action-danger"
+            (click)="openDeleteModal()">
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -156,82 +248,120 @@
 
 <!-- Deactivate Modal -->
 <div class="modal fade" #deactivateModal tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Deactivate Account</h5>
-        <button type="button" class="btn-close" (click)="closeDeactivateModal()"></button>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-modern">
+      <div class="modal-header-modern">
+        <div class="modal-icon warning">
+          <i class="bi bi-pause-circle"></i>
+        </div>
+        <div class="modal-title-wrapper">
+          <h5 class="modal-title">Deactivate Account</h5>
+          <p class="modal-subtitle">Your account will be temporarily disabled</p>
+        </div>
+        <button type="button" class="modal-close" (click)="closeDeactivateModal()" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
       </div>
-      <div class="modal-body">
-        <p class="text-muted">
-          Deactivating your account will temporarily disable your access. You can reactivate it by logging in again.
-        </p>
+      
+      <div class="modal-body-modern">
+        <div class="info-banner warning">
+          <i class="bi bi-info-circle"></i>
+          <span>You can reactivate your account by logging in again with your credentials.</span>
+        </div>
         
         <form [formGroup]="deactivateForm" (ngSubmit)="onDeactivateSubmit()">
-          <div class="mb-3">
-            <label class="form-label">Reason for deactivation</label>
+          <div class="form-group">
+            <label for="deactivate-reason">
+              <i class="bi bi-chat-text"></i>
+              Reason for deactivation
+            </label>
             <textarea 
-              class="form-control" 
+              id="deactivate-reason"
+              class="form-textarea" 
               formControlName="reason" 
               rows="3"
-              placeholder="Please tell us why you are leaving..."></textarea>
+              placeholder="Please tell us why you're leaving..."></textarea>
             @if(deactivateReason?.invalid && deactivateReason?.touched) {
-              <div class="text-danger small mt-1">Reason is required</div>
+              <span class="error-message">
+                <i class="bi bi-exclamation-triangle"></i>
+                Reason is required
+              </span>
             }
           </div>
           
           @if(!isOAuthUser()) {
-            <!-- Password confirmation for local users -->
-            <div class="mb-3">
-              <label class="form-label">Confirm Password</label>
-              <div class="input-group">
+            <div class="form-group">
+              <label for="deactivate-password">
+                <i class="bi bi-lock"></i>
+                Confirm Password
+              </label>
+              <div class="input-wrapper input-with-toggle">
                 <input 
+                  id="deactivate-password"
                   [type]="hideDeactivatePassword() ? 'password' : 'text'"
-                  class="form-control" 
+                  class="form-input" 
                   formControlName="password"
-                  placeholder="Enter your password">
+                  placeholder="Enter your password to confirm">
                 <button 
                   type="button"
-                  class="btn btn-outline-secondary"
+                  class="toggle-visibility"
                   (click)="hideDeactivatePassword.set(!hideDeactivatePassword())">
                   <i class="bi" [class.bi-eye]="!hideDeactivatePassword()" [class.bi-eye-slash]="hideDeactivatePassword()"></i>
                 </button>
               </div>
               @if(deactivatePassword?.invalid && deactivatePassword?.touched) {
-                <div class="text-danger small mt-1">Password is required</div>
+                <span class="error-message">
+                  <i class="bi bi-exclamation-triangle"></i>
+                  Password is required
+                </span>
               }
             </div>
           } @else {
-            <!-- Email confirmation for OAuth users -->
-            <div class="mb-3">
-              <label class="form-label">Confirm by typing your email address</label>
+            <div class="form-group">
+              <label for="deactivate-email">
+                <i class="bi bi-envelope"></i>
+                Confirm Email Address
+              </label>
               <input 
+                id="deactivate-email"
                 type="email"
-                class="form-control" 
+                class="form-input" 
                 formControlName="confirmEmail"
                 placeholder="Type your email to confirm">
               @if(deactivateConfirmEmail?.invalid && deactivateConfirmEmail?.touched) {
-                <div class="text-danger small mt-1">Please enter a valid email</div>
+                <span class="error-message">
+                  <i class="bi bi-exclamation-triangle"></i>
+                  Please enter a valid email
+                </span>
               }
               @if(deactivateConfirmEmail?.valid && deactivateConfirmEmail?.value && !isDeactivateEmailMatching()) {
-                <div class="text-danger small mt-1">Email does not match your account email</div>
+                <span class="error-message">
+                  <i class="bi bi-exclamation-triangle"></i>
+                  Email does not match your account
+                </span>
               }
               @if(deactivateConfirmEmail?.valid && isDeactivateEmailMatching() && deactivateConfirmEmail?.value) {
-                <div class="text-success small mt-1">Email confirmed</div>
+                <span class="success-message">
+                  <i class="bi bi-check-circle"></i>
+                  Email confirmed
+                </span>
               }
             </div>
           }
           
-          <div class="d-flex justify-content-end gap-2">
-            <button type="button" class="btn btn-secondary" (click)="closeDeactivateModal()">Cancel</button>
+          <div class="modal-actions">
+            <button type="button" class="btn-modal-secondary" (click)="closeDeactivateModal()">
+              Cancel
+            </button>
             <button 
               type="submit" 
-              class="btn btn-warning" 
+              class="btn-modal-warning" 
               [disabled]="deactivateForm.invalid || isSubmitting() || (isOAuthUser() && !isDeactivateEmailMatching())">
               @if(isSubmitting()) {
-                <span class="spinner-border spinner-border-sm me-2"></span>
+                <span class="spinner"></span>
               }
-              Deactivate
+              <i class="bi bi-pause-circle"></i>
+              Deactivate Account
             </button>
           </div>
         </form>
@@ -242,81 +372,119 @@
 
 <!-- Delete Modal -->
 <div class="modal fade" #deleteModal tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title text-danger">Delete Account</h5>
-        <button type="button" class="btn-close" (click)="closeDeleteModal()"></button>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-modern">
+      <div class="modal-header-modern">
+        <div class="modal-icon danger">
+          <i class="bi bi-trash3"></i>
+        </div>
+        <div class="modal-title-wrapper">
+          <h5 class="modal-title text-danger">Delete Account</h5>
+          <p class="modal-subtitle">This action is permanent and cannot be undone</p>
+        </div>
+        <button type="button" class="modal-close" (click)="closeDeleteModal()" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
       </div>
-      <div class="modal-body">
-        <div class="alert alert-danger">
-          <strong>Warning:</strong> This action is permanent. Your data will be soft-deleted and permanently removed after 30 days.
+      
+      <div class="modal-body-modern">
+        <div class="info-banner danger">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span><strong>Warning:</strong> Your data will be permanently removed after 30 days. This cannot be reversed.</span>
         </div>
         
         <form [formGroup]="deleteForm" (ngSubmit)="onDeleteSubmit()">
-          <div class="mb-3">
-            <label class="form-label">Reason for deletion</label>
+          <div class="form-group">
+            <label for="delete-reason">
+              <i class="bi bi-chat-text"></i>
+              Reason for deletion
+            </label>
             <textarea 
-              class="form-control" 
+              id="delete-reason"
+              class="form-textarea" 
               formControlName="reason" 
               rows="3"
-              placeholder="Please tell us why you are deleting your account..."></textarea>
+              placeholder="Please tell us why you're deleting your account..."></textarea>
             @if(deleteReason?.invalid && deleteReason?.touched) {
-              <div class="text-danger small mt-1">Reason is required</div>
+              <span class="error-message">
+                <i class="bi bi-exclamation-triangle"></i>
+                Reason is required
+              </span>
             }
           </div>
           
           @if(!isOAuthUser()) {
-            <!-- Password confirmation for local users -->
-            <div class="mb-3">
-              <label class="form-label">Confirm Password</label>
-              <div class="input-group">
+            <div class="form-group">
+              <label for="delete-password">
+                <i class="bi bi-lock"></i>
+                Confirm Password
+              </label>
+              <div class="input-wrapper input-with-toggle">
                 <input 
+                  id="delete-password"
                   [type]="hideDeletePassword() ? 'password' : 'text'"
-                  class="form-control" 
+                  class="form-input" 
                   formControlName="password"
-                  placeholder="Enter your password">
+                  placeholder="Enter your password to confirm">
                 <button 
                   type="button"
-                  class="btn btn-outline-secondary"
+                  class="toggle-visibility"
                   (click)="hideDeletePassword.set(!hideDeletePassword())">
                   <i class="bi" [class.bi-eye]="!hideDeletePassword()" [class.bi-eye-slash]="hideDeletePassword()"></i>
                 </button>
               </div>
               @if(deletePassword?.invalid && deletePassword?.touched) {
-                <div class="text-danger small mt-1">Password is required</div>
+                <span class="error-message">
+                  <i class="bi bi-exclamation-triangle"></i>
+                  Password is required
+                </span>
               }
             </div>
           } @else {
-            <!-- Email confirmation for OAuth users -->
-            <div class="mb-3">
-              <label class="form-label">Confirm by typing your email address</label>
+            <div class="form-group">
+              <label for="delete-email">
+                <i class="bi bi-envelope"></i>
+                Confirm Email Address
+              </label>
               <input 
+                id="delete-email"
                 type="email"
-                class="form-control" 
+                class="form-input" 
                 formControlName="confirmEmail"
                 placeholder="Type your email to confirm">
               @if(deleteConfirmEmail?.invalid && deleteConfirmEmail?.touched) {
-                <div class="text-danger small mt-1">Please enter a valid email</div>
+                <span class="error-message">
+                  <i class="bi bi-exclamation-triangle"></i>
+                  Please enter a valid email
+                </span>
               }
               @if(deleteConfirmEmail?.valid && deleteConfirmEmail?.value && !isDeleteEmailMatching()) {
-                <div class="text-danger small mt-1">Email does not match your account email</div>
+                <span class="error-message">
+                  <i class="bi bi-exclamation-triangle"></i>
+                  Email does not match your account
+                </span>
               }
               @if(deleteConfirmEmail?.valid && isDeleteEmailMatching() && deleteConfirmEmail?.value) {
-                <div class="text-success small mt-1">Email confirmed</div>
+                <span class="success-message">
+                  <i class="bi bi-check-circle"></i>
+                  Email confirmed
+                </span>
               }
             </div>
           }
           
-          <div class="d-flex justify-content-end gap-2">
-            <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+          <div class="modal-actions">
+            <button type="button" class="btn-modal-secondary" (click)="closeDeleteModal()">
+              Cancel
+            </button>
             <button 
               type="submit" 
-              class="btn btn-danger" 
+              class="btn-modal-danger" 
               [disabled]="deleteForm.invalid || isSubmitting() || (isOAuthUser() && !isDeleteEmailMatching())">
               @if(isSubmitting()) {
-                <span class="spinner-border spinner-border-sm me-2"></span>
+                <span class="spinner"></span>
               }
+              <i class="bi bi-trash3"></i>
               Delete Permanently
             </button>
           </div>
