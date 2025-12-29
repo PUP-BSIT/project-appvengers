@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, inject, signal, ViewChild, ElementRef, OnInit, computed } from '@angular/core';
 import { Header } from "../../header/header";
 import { SubHeader } from "../sub-header/sub-header";
 import { Router } from '@angular/router';
@@ -31,11 +31,18 @@ export class Security implements OnInit {
   userService = inject(UserService);
   router = inject(Router);
   
-  hideCurrentPassword = signal(true);
+hideCurrentPassword = signal(true);
   hideNewPassword = signal(true);
   hideConfirmPassword = signal(true);
   hideDeactivatePassword = signal(true);
   hideDeletePassword = signal(true);
+  
+  // Password strength tracking
+  passwordStrength = signal<{ score: number; label: string; color: string }>({ 
+    score: 0, 
+    label: '', 
+    color: '' 
+  });
   
   // OAuth detection
   isOAuthUser = signal(false);
@@ -294,7 +301,7 @@ export class Security implements OnInit {
       confirmEmail: this.isOAuthUser() ? formValue.confirmEmail : undefined
     };
     
-    this.userService.softDeleteAccount(request).subscribe({
+this.userService.softDeleteAccount(request).subscribe({
       next: (res) => {
         this.isSubmitting.set(false);
         this.closeDeleteModal();
@@ -311,5 +318,54 @@ export class Security implements OnInit {
         this.errorMessage.set(err.error?.message || 'Failed to delete account');
       }
     });
+  }
+  
+  /**
+   * Calculate password strength based on various criteria
+   */
+  calculatePasswordStrength(password: string): void {
+    if (!password) {
+      this.passwordStrength.set({ score: 0, label: '', color: '' });
+      return;
+    }
+    
+    let score = 0;
+    
+    // Length checks
+    if (password.length >= 8) score += 1;
+    if (password.length >= 12) score += 1;
+    if (password.length >= 16) score += 1;
+    
+    // Character type checks
+    if (/[a-z]/.test(password)) score += 1;
+    if (/[A-Z]/.test(password)) score += 1;
+    if (/[0-9]/.test(password)) score += 1;
+    if (/[^a-zA-Z0-9]/.test(password)) score += 1;
+    
+    // Normalize score to 0-4 range
+    const normalizedScore = Math.min(Math.floor(score / 2), 4);
+    
+    const strengthLevels = [
+      { label: 'Very Weak', color: '#ef4444' },
+      { label: 'Weak', color: '#f59e0b' },
+      { label: 'Fair', color: '#eab308' },
+      { label: 'Good', color: '#22c55e' },
+      { label: 'Strong', color: '#10b981' }
+    ];
+    
+    const level = strengthLevels[normalizedScore];
+    this.passwordStrength.set({ 
+      score: normalizedScore, 
+      label: level.label, 
+      color: level.color 
+    });
+  }
+  
+  /**
+   * Track password input changes for strength calculation
+   */
+  onNewPasswordInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.calculatePasswordStrength(input.value);
   }
 }
