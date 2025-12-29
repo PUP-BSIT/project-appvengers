@@ -33,19 +33,32 @@ export class Reports implements OnInit {
     }
   };
 
-  //Chart configuration (bar)
-  barChartOptions: ChartOptions = {
+  // Chart configuration (bar)
+  barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
         display: true,
         position: 'bottom',
+        labels: {
+          generateLabels: (chart) => {
+            const data = chart.data;
+            const bgColors = data.datasets[0].backgroundColor as string[];
+            return (data.labels ?? []).map((label, i) => ({
+              text: String(label),          
+              fillStyle: bgColors[i],
+              strokeStyle: bgColors[i],
+              lineWidth: 1,
+              hidden: false,
+              index: i
+            }));
+          }
+        }
       }
     },
     scales: {
       x: {
-        beginAtZero: true,
         ticks: { color: '#333' },
         grid: { color: 'rgba(0,0,0,0.05)' }
       },
