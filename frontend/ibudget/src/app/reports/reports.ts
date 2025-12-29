@@ -20,7 +20,7 @@ export class Reports implements OnInit {
   thisMonthReport?: MonthlyReport;
   activeTab: 'lastMonth' | 'thisMonth' = 'thisMonth';
 
-  // Chart configuration
+  // Chart configuration (doughnut)
   chartType: ChartType = 'doughnut';
   chartOptions: ChartOptions = {
     responsive: true,
@@ -33,6 +33,30 @@ export class Reports implements OnInit {
     }
   };
 
+  //Chart configuration (bar)
+  barChartOptions: ChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+      }
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        ticks: { color: '#333' },
+        grid: { color: 'rgba(0,0,0,0.05)' }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: { color: '#333' },
+        grid: { color: 'rgba(0,0,0,0.05)' }
+      }
+    }
+  };
+  
   // Income chart data
   thisMonthIncomeChartData!: ChartData<'doughnut'>;
   lastMonthIncomeChartData!: ChartData<'doughnut'>;
@@ -40,6 +64,10 @@ export class Reports implements OnInit {
   // Expense chart data
   thisMonthExpenseChartData!: ChartData<'doughnut'>;
   lastMonthExpenseChartData!: ChartData<'doughnut'>;
+
+  // Expense bar chart data
+  thisMonthExpenseBarChartData!: ChartData<'bar'>;
+  lastMonthExpenseBarChartData!: ChartData<'bar'>;
 
   constructor(private transactionsService: TransactionsService) {}
 
@@ -114,6 +142,26 @@ export class Reports implements OnInit {
         borderWidth: 1
       }]
     };
+
+    this.thisMonthExpenseBarChartData = {
+      labels: [],
+      datasets: [{
+      data: [],
+        backgroundColor: 'rgba(239, 68, 68, 0.8)',
+        borderColor: 'rgba(239, 68, 68, 1)',
+        borderWidth: 1
+      }]
+    };
+
+    this.lastMonthExpenseBarChartData = {
+      labels: [],
+      datasets: [{
+        data: [],
+        backgroundColor: 'rgba(245, 158, 11, 0.8)',
+        borderColor: 'rgba(245, 158, 11, 1)',
+        borderWidth: 1
+      }]
+    };
   }
 
   private populateCharts(): void {
@@ -183,6 +231,40 @@ export class Reports implements OnInit {
           generateColors(lastMonthExpenseCategories.length, 'expense'),
         borderColor: this.
           generateColors(lastMonthExpenseCategories.length, 'expense', true),
+        borderWidth: 1
+      }]
+    };
+
+    // This Month Expense Bar Chart
+    this.thisMonthExpenseBarChartData = {
+      labels: Object.keys(this.thisMonthReport.expenseByCategory),
+      datasets: [{
+        label: 'Expenses',
+        data: Object.values(this.thisMonthReport.expenseByCategory),
+        backgroundColor: this.generateColors(
+          Object.keys(this.thisMonthReport.expenseByCategory).length, 'expense'
+        ),
+        borderColor: this.generateColors(
+          Object.keys(this.thisMonthReport.expenseByCategory).
+          length, 'expense', true
+        ),
+        borderWidth: 1
+      }]
+    };
+
+    // Last Month Expense Bar Chart
+    this.lastMonthExpenseBarChartData = {
+      labels: Object.keys(this.lastMonthReport.expenseByCategory),
+      datasets: [{
+        label: 'Expenses',
+        data: Object.values(this.lastMonthReport.expenseByCategory),
+        backgroundColor: this.generateColors(
+          Object.keys(this.lastMonthReport.expenseByCategory).length, 'expense'
+        ),
+        borderColor: this.generateColors(
+          Object.keys(this.lastMonthReport.expenseByCategory).
+          length, 'expense', true
+        ),
         borderWidth: 1
       }]
     };
