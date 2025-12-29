@@ -418,4 +418,18 @@ export class ViewSaving implements OnInit{
 
     this.deleteTransactionBtn.nativeElement.focus();
   }
+
+  // Check if saving is complete
+  isSavingComplete(): boolean {
+    if (this.isLoading()) return false;
+    
+    const saving = this.currentSaving();
+    const current = Number(saving.current_amount ?? 0);
+    const target = Number(saving.target_amount ?? 0);
+    
+    // Ensure target is valid to avoid false positives (e.g. 0/0)
+    if (target <= 0) return false;
+    
+    return current >= target;
+  }
 }
