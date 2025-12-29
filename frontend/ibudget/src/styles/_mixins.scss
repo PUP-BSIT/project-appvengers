@@ -1,6 +1,66 @@
+// ==============================================
+// IBUDGET DESIGN SYSTEM TOKENS
+// ==============================================
+
+@use "sass:color";
+
+// Layout
 $page-margin-left: 80px;
-$background-color: #F9FAFB;
 $header-height: 70px;
+
+// Background Colors
+$background-color: #F9FAFB;
+$background-white: #ffffff;
+
+// Primary Colors (Purple Theme)
+$primary-purple: #6f42c1;
+$primary-purple-light: #8b5cf6;
+$primary-purple-lighter: #a78bfa;
+$primary-purple-dark: #5b21b6;
+$primary-gradient: linear-gradient(135deg, $primary-purple 0%, $primary-purple-light 100%);
+
+// Semantic Colors
+$success-green: #10b981;
+$success-green-light: #d1fae5;
+$danger-red: #ef4444;
+$danger-red-light: #fee2e2;
+$warning-amber: #f59e0b;
+$warning-amber-light: #fef3c7;
+$info-blue: #3b82f6;
+$info-blue-light: #dbeafe;
+
+// Text Colors
+$text-primary: #1f2937;
+$text-secondary: #4b5563;
+$text-muted: #9ca3af;
+$text-light: #6b7280;
+
+// Border Colors
+$border-light: #e5e7eb;
+$border-medium: #d1d5db;
+$border-focus: $primary-purple-lighter;
+
+// Card Styles
+$card-border-radius: 12px;
+$card-border-radius-lg: 16px;
+$card-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+$card-shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+$card-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+
+// Form Styles
+$input-border-radius: 8px;
+$input-padding: 12px 16px;
+$input-focus-ring: 0 0 0 3px rgba(167, 139, 250, 0.3);
+
+// Transitions
+$transition-fast: 150ms ease-in-out;
+$transition-base: 200ms ease-in-out;
+$transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+// ==============================================
+// MIXINS
+// ==============================================
 
 @mixin page-layout($padding: 10px, $page-height: 100%) {
   margin-left: $page-margin-left;
@@ -8,4 +68,142 @@ $header-height: 70px;
   padding: $padding;
   height: $page-height;
   margin-top: $header-height;
+}
+
+// Modern card mixin
+@mixin card-modern($padding: 24px) {
+  background: $background-white;
+  border: 1px solid $border-light;
+  border-radius: $card-border-radius;
+  box-shadow: $card-shadow;
+  transition: box-shadow $transition-smooth, transform $transition-smooth;
+  
+  &:hover {
+    box-shadow: $card-shadow-hover;
+  }
+}
+
+// Modern form input mixin
+@mixin input-modern {
+  border: 1px solid $border-light;
+  border-radius: $input-border-radius;
+  padding: $input-padding;
+  font-size: 15px;
+  color: $text-primary;
+  background-color: $background-white;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+  
+  &::placeholder {
+    color: $text-muted;
+  }
+  
+  &:focus {
+    border-color: $primary-purple;
+    box-shadow: $input-focus-ring;
+    outline: none;
+  }
+  
+  &:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+    color: $text-muted;
+  }
+}
+
+// Modern button mixin
+@mixin btn-modern-primary {
+  background: $primary-gradient;
+  border: none;
+  border-radius: $input-border-radius;
+  padding: 12px 24px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: transform $transition-fast, box-shadow $transition-fast;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Danger button mixin
+@mixin btn-modern-danger {
+  background: $danger-red;
+  border: none;
+  border-radius: $input-border-radius;
+  padding: 10px 20px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: background-color $transition-fast, transform $transition-fast;
+  
+  &:hover:not(:disabled) {
+    background: color.adjust($danger-red, $lightness: -8%);
+    transform: translateY(-1px);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Secondary/outline button mixin
+@mixin btn-modern-secondary {
+  background: transparent;
+  border: 1px solid $border-medium;
+  border-radius: $input-border-radius;
+  padding: 10px 20px;
+  font-weight: 500;
+  color: $text-secondary;
+  cursor: pointer;
+  transition: background-color $transition-fast, border-color $transition-fast;
+  
+  &:hover:not(:disabled) {
+    background: $background-color;
+    border-color: $border-light;
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Page entry animation
+@mixin fade-slide-in($delay: 0ms) {
+  opacity: 0;
+  animation: fadeSlideIn 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: $delay;
+}
+
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Respect reduced motion preference
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
