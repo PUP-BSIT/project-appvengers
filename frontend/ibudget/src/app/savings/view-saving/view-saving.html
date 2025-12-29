@@ -192,11 +192,12 @@
             [isDisabled]="isSavingComplete()"/>
 
           <button 
+              #deleteSelectedTransactionsBtn
               type="button"
               class="btn btn-sm btn-danger"
               [disabled]="selectedTransactionIds().length === 0 || 
                 isSavingComplete()"
-              (click)="deleteSelectedTransactions()">
+              (click)="openDeleteSelectedModal()">
                 Delete Selected ({{ selectedTransactionIds().length }})
             </button>
         </div>
@@ -456,6 +457,36 @@
               class="btn btn-danger" 
               (click)="deleteSavingsTransaction()">
                 Delete
+              </button>
+         </div>
+       </div>
+     </div>
+   </div>
+
+   <!-- Delete Selected Transactions modal -->
+   <div #deleteSelectedTransactionsModal class="modal fade">
+     <div class="modal-dialog modal-dialog-centered">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title">Confirm Delete Selected</h5>
+           <button 
+            type="button" 
+            class="btn-close"
+            (click)="closeDeleteSelectedModal()"></button>
+         </div>
+         <div class="modal-body">
+           Are you sure you want to delete the selected saving transactions?
+         </div>
+         <div class="modal-footer">
+           <button 
+              type="button" 
+              class="btn btn-secondary" 
+              (click)="closeDeleteSelectedModal()">Cancel</button>
+           <button 
+              type="button" 
+              class="btn btn-danger" 
+              (click)="confirmDeleteSelectedTransactions()">
+                Delete Selected
               </button>
          </div>
        </div>
