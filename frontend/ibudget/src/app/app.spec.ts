@@ -2,16 +2,26 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { SwUpdate } from '@angular/service-worker';
+import { of } from 'rxjs';
 import { App } from './app';
 
 describe('App', () => {
+  // Mock SwUpdate for PwaService dependency
+  const mockSwUpdate = {
+    isEnabled: false,
+    versionUpdates: of(),
+    checkForUpdate: () => Promise.resolve(false)
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [
         provideZonelessChangeDetection(),
         provideHttpClient(),
-        provideHttpClientTesting()
+        provideHttpClientTesting(),
+        { provide: SwUpdate, useValue: mockSwUpdate }
       ]
     }).compileComponents();
   });
