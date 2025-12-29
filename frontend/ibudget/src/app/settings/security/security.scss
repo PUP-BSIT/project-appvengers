@@ -45,6 +45,11 @@ main {
   box-sizing: border-box;   
   width: 100%;
   max-width: 100%;
+  margin-top: 70px;
+}
+
+.privacy-panel > .card {
+  margin-top: 0px;
 }
 
 @media (max-width: 320px) {
@@ -81,5 +86,21 @@ main {
 @media (max-width: 1025px) {
   .third-panel {
     height: 5px !important;
+  }
+
+  .card {
+    margin-top:70px;
+  }
+}
+
+@media (min-width: 1025px) {
+  main {
+    grid-template-areas:
+      "third-panel third-panel"
+      "security-settings-panel privacy-panel";
+  }
+
+  .card {
+    margin-top: 0;
   }
 }
