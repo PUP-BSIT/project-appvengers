@@ -28,6 +28,10 @@ export class Login implements OnDestroy {
   isSubmitting = signal(false);
   isGoogleLoading = signal(false);
   errorMessage = signal('');
+  
+  // Reactivation state
+  showReactivationPrompt = signal(false);
+  deactivatedEmail = signal('');
 
   private destroy$ = new Subject<void>();
 
@@ -69,6 +73,15 @@ export class Login implements OnDestroy {
         }, 
         error: (err) => {
           console.error('Login failed:', err);
+          
+          // Check for deactivated account
+          if (err.error?.data?.accountDeactivated) {
+            this.deactivatedEmail.set(err.error.data.email);
+            this.showReactivationPrompt.set(true);
+            this.errorMessage.set('');
+            return;
+          }
+          
           if (err.status === 429) {
             this.errorMessage.set(
               'Too many login attempts. Please try again later.');
@@ -100,6 +113,60 @@ export class Login implements OnDestroy {
     // Redirect to backend OAuth2 endpoint
     // Spring Security will handle the Google OAuth flow
     window.location.href = this.authService.getGoogleOAuthUrl();
+  }
+
+  /**
+   * Reactivate a deactivated account.
+   * Uses the email from the failed login attempt and password from the form.
+   */
+  onReactivateAccount(): void {
+    if (this.isSubmitting() || !this.deactivatedEmail()) {
+      return;
+    }
+
+    const password = this.loginForm.get('password')?.value;
+    if (!password) {
+      this.errorMessage.set('Please enter your password to reactivate');
+      return;
+    }
+
+    this.isSubmitting.set(true);
+    this.errorMessage.set('');
+
+    const reactivateData = {
+      email: this.deactivatedEmail(),
+      password: password
+    };
+
+    this.authService.reactivateAccount(reactivateData)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.isSubmitting.set(false))
+      )
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            console.log('Account reactivated successfully');
+            this.showReactivationPrompt.set(false);
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.errorMessage.set(response.message || 'Reactivation failed');
+          }
+        },
+        error: (err) => {
+          console.error('Reactivation failed:', err);
+          this.errorMessage.set(err.error?.message || 'Failed to reactivate account');
+        }
+      });
+  }
+
+  /**
+   * Cancel the reactivation prompt and reset state.
+   */
+  cancelReactivation(): void {
+    this.showReactivationPrompt.set(false);
+    this.deactivatedEmail.set('');
+    this.errorMessage.set('');
   }
 
   ngOnDestroy(): void {

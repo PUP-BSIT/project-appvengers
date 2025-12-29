@@ -6,6 +6,42 @@
         @if(errorMessage()) {  
           <div class="alert alert-danger mt-2">{{ errorMessage() }}</div>  
         }
+
+        <!-- Reactivation Prompt -->
+        @if(showReactivationPrompt()) {
+          <div class="alert alert-warning mt-2">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-exclamation-triangle-fill me-2 mt-1"></i>
+              <div class="flex-grow-1">
+                <strong>Account Deactivated</strong>
+                <p class="mb-2 small">
+                  Your account has been deactivated. Enter your password below and click "Reactivate" to restore access.
+                </p>
+                <div class="d-flex gap-2">
+                  <button 
+                    type="button" 
+                    class="btn btn-warning btn-sm"
+                    (click)="onReactivateAccount()"
+                    [disabled]="isSubmitting() || !password?.value">
+                    @if (isSubmitting()) {
+                      <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                      <span> Reactivating...</span>
+                    } @else {
+                      <i class="bi bi-arrow-clockwise me-1"></i>
+                      Reactivate Account
+                    }
+                  </button>
+                  <button 
+                    type="button" 
+                    class="btn btn-outline-secondary btn-sm"
+                    (click)="cancelReactivation()">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
         
         <!-- Email Field -->
         <div class="mb-3">
