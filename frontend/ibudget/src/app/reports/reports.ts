@@ -56,7 +56,7 @@ export class Reports implements OnInit {
       }
     }
   };
-  
+
   // Income chart data
   thisMonthIncomeChartData!: ChartData<'doughnut'>;
   lastMonthIncomeChartData!: ChartData<'doughnut'>;
@@ -147,8 +147,8 @@ export class Reports implements OnInit {
       labels: [],
       datasets: [{
       data: [],
-        backgroundColor: 'rgba(239, 68, 68, 0.8)',
-        borderColor: 'rgba(239, 68, 68, 1)',
+        backgroundColor: [],
+        borderColor: [],
         borderWidth: 1
       }]
     };
@@ -157,8 +157,8 @@ export class Reports implements OnInit {
       labels: [],
       datasets: [{
         data: [],
-        backgroundColor: 'rgba(245, 158, 11, 0.8)',
-        borderColor: 'rgba(245, 158, 11, 1)',
+        backgroundColor: [],
+        borderColor: [],
         borderWidth: 1
       }]
     };
@@ -248,7 +248,9 @@ export class Reports implements OnInit {
           Object.keys(this.thisMonthReport.expenseByCategory).
           length, 'expense', true
         ),
-        borderWidth: 1
+        borderWidth: 1,
+        barPercentage: 0.6,
+        categoryPercentage: 0.4 
       }]
     };
 
