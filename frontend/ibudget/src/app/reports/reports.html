@@ -294,7 +294,7 @@
               </h3>
               <div class="chart-wrapper">
                 @if (!thisMonthExpenseBarChartData ||
-                    !thisMonthExpenseBarChartData.datasets?.[0]?.data?.length) {
+                    !thisMonthExpenseBarChartData.datasets[0]?.data?.length) {
                   <div class="empty-chart-state">
                     <i class="bi bi-bar-chart" 
                       style="font-size:3rem;color:#ff6f61;">
