@@ -14,8 +14,7 @@ import { SavingTransactionService } from '../../../../services/saving-transactio
 })
 export class UpdateSavingTransaction {
   @ViewChild('updateSavingTransactionModal') updateSavingTransactionModal!: ElementRef;
-  @ViewChild('openUpdateSavingTransactionModalBtn') 
-    openUpdateSavingTransactionModalBtn!: ElementRef<HTMLButtonElement>;
+
   transactionForm: FormGroup;
   formBuilder = inject(FormBuilder);
   activatedRoute = inject(ActivatedRoute);
@@ -68,7 +67,7 @@ export class UpdateSavingTransaction {
   }
   
    openModal() {
-      const modal = new Modal(this.updateSavingTransactionModal.nativeElement);
+      const modal = Modal.getOrCreateInstance(this.updateSavingTransactionModal.nativeElement);
       modal.show();
     }
   
@@ -77,15 +76,15 @@ export class UpdateSavingTransaction {
       modal?.hide();
   
       this.transactionForm.reset();
-      this.openUpdateSavingTransactionModalBtn.nativeElement.focus();
     }
 
-    openUpdateModalWithData() {
-      if(!this.transactionId()) return;
+    openUpdateModalWithData(id?: number) {
+      const transactionIdToUse = id ?? this.transactionId();
+      if(!transactionIdToUse) return;
 
       this.openModal();
       this.savingTransactionService.getSavingTransactionByTransactionId
-        (this.savingId(), this.transactionId())
+        (this.savingId(), transactionIdToUse)
           .subscribe({
             next: (transactionData) => {
               this.transactionForm.patchValue({
