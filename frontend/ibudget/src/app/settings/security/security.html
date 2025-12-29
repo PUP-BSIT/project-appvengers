@@ -180,29 +180,54 @@
             }
           </div>
           
-          <div class="mb-3">
-            <label class="form-label">Confirm Password</label>
-            <div class="input-group">
-              <input 
-                [type]="hideDeactivatePassword() ? 'password' : 'text'"
-                class="form-control" 
-                formControlName="password"
-                placeholder="Enter your password">
-              <button 
-                type="button"
-                class="btn btn-outline-secondary"
-                (click)="hideDeactivatePassword.set(!hideDeactivatePassword())">
-                <i class="bi" [class.bi-eye]="!hideDeactivatePassword()" [class.bi-eye-slash]="hideDeactivatePassword()"></i>
-              </button>
+          @if(!isOAuthUser()) {
+            <!-- Password confirmation for local users -->
+            <div class="mb-3">
+              <label class="form-label">Confirm Password</label>
+              <div class="input-group">
+                <input 
+                  [type]="hideDeactivatePassword() ? 'password' : 'text'"
+                  class="form-control" 
+                  formControlName="password"
+                  placeholder="Enter your password">
+                <button 
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  (click)="hideDeactivatePassword.set(!hideDeactivatePassword())">
+                  <i class="bi" [class.bi-eye]="!hideDeactivatePassword()" [class.bi-eye-slash]="hideDeactivatePassword()"></i>
+                </button>
+              </div>
+              @if(deactivatePassword?.invalid && deactivatePassword?.touched) {
+                <div class="text-danger small mt-1">Password is required</div>
+              }
             </div>
-            @if(deactivatePassword?.invalid && deactivatePassword?.touched) {
-              <div class="text-danger small mt-1">Password is required</div>
-            }
-          </div>
+          } @else {
+            <!-- Email confirmation for OAuth users -->
+            <div class="mb-3">
+              <label class="form-label">Confirm by typing your email address</label>
+              <input 
+                type="email"
+                class="form-control" 
+                formControlName="confirmEmail"
+                placeholder="Type your email to confirm">
+              @if(deactivateConfirmEmail?.invalid && deactivateConfirmEmail?.touched) {
+                <div class="text-danger small mt-1">Please enter a valid email</div>
+              }
+              @if(deactivateConfirmEmail?.valid && deactivateConfirmEmail?.value && !isDeactivateEmailMatching()) {
+                <div class="text-danger small mt-1">Email does not match your account email</div>
+              }
+              @if(deactivateConfirmEmail?.valid && isDeactivateEmailMatching() && deactivateConfirmEmail?.value) {
+                <div class="text-success small mt-1">Email confirmed</div>
+              }
+            </div>
+          }
           
           <div class="d-flex justify-content-end gap-2">
             <button type="button" class="btn btn-secondary" (click)="closeDeactivateModal()">Cancel</button>
-            <button type="submit" class="btn btn-warning" [disabled]="deactivateForm.invalid || isSubmitting()">
+            <button 
+              type="submit" 
+              class="btn btn-warning" 
+              [disabled]="deactivateForm.invalid || isSubmitting() || (isOAuthUser() && !isDeactivateEmailMatching())">
               @if(isSubmitting()) {
                 <span class="spinner-border spinner-border-sm me-2"></span>
               }
@@ -241,29 +266,54 @@
             }
           </div>
           
-          <div class="mb-3">
-            <label class="form-label">Confirm Password</label>
-            <div class="input-group">
-              <input 
-                [type]="hideDeletePassword() ? 'password' : 'text'"
-                class="form-control" 
-                formControlName="password"
-                placeholder="Enter your password">
-              <button 
-                type="button"
-                class="btn btn-outline-secondary"
-                (click)="hideDeletePassword.set(!hideDeletePassword())">
-                <i class="bi" [class.bi-eye]="!hideDeletePassword()" [class.bi-eye-slash]="hideDeletePassword()"></i>
-              </button>
+          @if(!isOAuthUser()) {
+            <!-- Password confirmation for local users -->
+            <div class="mb-3">
+              <label class="form-label">Confirm Password</label>
+              <div class="input-group">
+                <input 
+                  [type]="hideDeletePassword() ? 'password' : 'text'"
+                  class="form-control" 
+                  formControlName="password"
+                  placeholder="Enter your password">
+                <button 
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  (click)="hideDeletePassword.set(!hideDeletePassword())">
+                  <i class="bi" [class.bi-eye]="!hideDeletePassword()" [class.bi-eye-slash]="hideDeletePassword()"></i>
+                </button>
+              </div>
+              @if(deletePassword?.invalid && deletePassword?.touched) {
+                <div class="text-danger small mt-1">Password is required</div>
+              }
             </div>
-            @if(deletePassword?.invalid && deletePassword?.touched) {
-              <div class="text-danger small mt-1">Password is required</div>
-            }
-          </div>
+          } @else {
+            <!-- Email confirmation for OAuth users -->
+            <div class="mb-3">
+              <label class="form-label">Confirm by typing your email address</label>
+              <input 
+                type="email"
+                class="form-control" 
+                formControlName="confirmEmail"
+                placeholder="Type your email to confirm">
+              @if(deleteConfirmEmail?.invalid && deleteConfirmEmail?.touched) {
+                <div class="text-danger small mt-1">Please enter a valid email</div>
+              }
+              @if(deleteConfirmEmail?.valid && deleteConfirmEmail?.value && !isDeleteEmailMatching()) {
+                <div class="text-danger small mt-1">Email does not match your account email</div>
+              }
+              @if(deleteConfirmEmail?.valid && isDeleteEmailMatching() && deleteConfirmEmail?.value) {
+                <div class="text-success small mt-1">Email confirmed</div>
+              }
+            </div>
+          }
           
           <div class="d-flex justify-content-end gap-2">
             <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>
-            <button type="submit" class="btn btn-danger" [disabled]="deleteForm.invalid || isSubmitting()">
+            <button 
+              type="submit" 
+              class="btn btn-danger" 
+              [disabled]="deleteForm.invalid || isSubmitting() || (isOAuthUser() && !isDeleteEmailMatching())">
               @if(isSubmitting()) {
                 <span class="spinner-border spinner-border-sm me-2"></span>
               }

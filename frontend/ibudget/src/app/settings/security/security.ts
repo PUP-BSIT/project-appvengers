@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, signal, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Header } from "../../header/header";
 import { SubHeader } from "../sub-header/sub-header";
 import { Router } from '@angular/router';
@@ -21,7 +21,7 @@ declare var bootstrap: any;
   templateUrl: './security.html',
   styleUrl: './security.scss',
 })
-export class Security {
+export class Security implements OnInit {
   securitySettingsForm: FormGroup;
   deactivateForm: FormGroup;
   deleteForm: FormGroup;
@@ -36,6 +36,10 @@ export class Security {
   hideConfirmPassword = signal(true);
   hideDeactivatePassword = signal(true);
   hideDeletePassword = signal(true);
+  
+  // OAuth detection
+  isOAuthUser = signal(false);
+  userEmail = signal('');
   
   // Status flags
   isSubmitting = signal(false);
@@ -62,15 +66,61 @@ export class Security {
       }]
     });
     
+    // Initialize forms - validators will be set dynamically based on user type
     this.deactivateForm = this.formBuilder.group({
-      password: ['', Validators.required],
-      reason: ['', Validators.required]
+      password: [''],
+      reason: ['', Validators.required],
+      confirmEmail: ['']
     });
     
     this.deleteForm = this.formBuilder.group({
-      password: ['', Validators.required],
-      reason: ['', Validators.required]
+      password: [''],
+      reason: ['', Validators.required],
+      confirmEmail: ['']
     });
+  }
+  
+  ngOnInit(): void {
+    this.loadUserProfile();
+  }
+  
+  loadUserProfile(): void {
+    this.authService.getProfile().subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          this.isOAuthUser.set(!res.data.hasPassword);
+          this.userEmail.set(res.data.email);
+          this.updateFormValidators();
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load user profile', err);
+      }
+    });
+  }
+  
+  updateFormValidators(): void {
+    if (this.isOAuthUser()) {
+      // OAuth user: require email confirmation
+      this.deactivateForm.get('password')?.clearValidators();
+      this.deactivateForm.get('confirmEmail')?.setValidators([Validators.required, Validators.email]);
+      
+      this.deleteForm.get('password')?.clearValidators();
+      this.deleteForm.get('confirmEmail')?.setValidators([Validators.required, Validators.email]);
+    } else {
+      // Local user: require password
+      this.deactivateForm.get('password')?.setValidators([Validators.required]);
+      this.deactivateForm.get('confirmEmail')?.clearValidators();
+      
+      this.deleteForm.get('password')?.setValidators([Validators.required]);
+      this.deleteForm.get('confirmEmail')?.clearValidators();
+    }
+    
+    // Update validity
+    this.deactivateForm.get('password')?.updateValueAndValidity();
+    this.deactivateForm.get('confirmEmail')?.updateValueAndValidity();
+    this.deleteForm.get('password')?.updateValueAndValidity();
+    this.deleteForm.get('confirmEmail')?.updateValueAndValidity();
   }
   
   ngAfterViewInit() {
@@ -97,10 +147,23 @@ export class Security {
   // Deactivate Form Getters
   get deactivatePassword() { return this.deactivateForm.get('password'); }
   get deactivateReason() { return this.deactivateForm.get('reason'); }
+  get deactivateConfirmEmail() { return this.deactivateForm.get('confirmEmail'); }
   
   // Delete Form Getters
   get deletePassword() { return this.deleteForm.get('password'); }
   get deleteReason() { return this.deleteForm.get('reason'); }
+  get deleteConfirmEmail() { return this.deleteForm.get('confirmEmail'); }
+  
+  // Email matching validators for OAuth users
+  isDeactivateEmailMatching(): boolean {
+    if (!this.isOAuthUser()) return true;
+    return this.deactivateConfirmEmail?.value?.toLowerCase() === this.userEmail().toLowerCase();
+  }
+  
+  isDeleteEmailMatching(): boolean {
+    if (!this.isOAuthUser()) return true;
+    return this.deleteConfirmEmail?.value?.toLowerCase() === this.userEmail().toLowerCase();
+  }
 
   onSubmit(): void {
     // Clear previous messages
@@ -174,9 +237,23 @@ export class Security {
       return;
     }
     
+    // Additional validation for OAuth users
+    if (this.isOAuthUser() && !this.isDeactivateEmailMatching()) {
+      this.errorMessage.set('Email confirmation does not match your account email');
+      return;
+    }
+    
     this.isSubmitting.set(true);
     
-    this.userService.deactivateAccount(this.deactivateForm.value).subscribe({
+    // Build request based on user type
+    const formValue = this.deactivateForm.value;
+    const request = {
+      reason: formValue.reason,
+      password: this.isOAuthUser() ? undefined : formValue.password,
+      confirmEmail: this.isOAuthUser() ? formValue.confirmEmail : undefined
+    };
+    
+    this.userService.deactivateAccount(request).subscribe({
       next: (res) => {
         this.isSubmitting.set(false);
         this.closeDeactivateModal();
@@ -201,9 +278,23 @@ export class Security {
       return;
     }
     
+    // Additional validation for OAuth users
+    if (this.isOAuthUser() && !this.isDeleteEmailMatching()) {
+      this.errorMessage.set('Email confirmation does not match your account email');
+      return;
+    }
+    
     this.isSubmitting.set(true);
     
-    this.userService.softDeleteAccount(this.deleteForm.value).subscribe({
+    // Build request based on user type
+    const formValue = this.deleteForm.value;
+    const request = {
+      reason: formValue.reason,
+      password: this.isOAuthUser() ? undefined : formValue.password,
+      confirmEmail: this.isOAuthUser() ? formValue.confirmEmail : undefined
+    };
+    
+    this.userService.softDeleteAccount(request).subscribe({
       next: (res) => {
         this.isSubmitting.set(false);
         this.closeDeleteModal();

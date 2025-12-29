@@ -80,33 +80,6 @@
               }
             </div>
 
-            <div>
-              <label for="password">Password (for confirmation)</label>
-              <div class="input-group">
-                <input
-                  formControlName="password"
-                  id="password"
-                  class="form-control"
-                  placeholder="Enter your password to confirm changes"
-                  [type]="hidePassword() ? 'password' : 'text'"/>
-
-                <button
-                  type="button"
-                  class="btn btn-outline-secondary"
-                  (click)="hidePassword.set(!hidePassword())">
-                    <i
-                    class="bi" [class.bi-eye]="!hidePassword()"
-                    [class.bi-eye-slash]="hidePassword()"></i>
-                </button>
-              </div>
-
-              @if(password?.errors?.['required'] && password?.touched) {
-                <span class="text-danger small mt-1">
-                  Password is required to confirm changes.
-                </span>
-              }
-            </div>
-
             <button type="submit" class="btn btn-primary" [disabled]="isSubmitting() || accountSettingsForm.invalid">
               @if(isSubmitting()) {
                 <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
