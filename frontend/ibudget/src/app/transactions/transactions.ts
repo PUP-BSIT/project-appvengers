@@ -75,12 +75,95 @@ export class Transactions implements OnInit, OnDestroy {
   private unlisten: (() => void) | null = null;
   private route = inject(ActivatedRoute);
 
+  // Multi-select state
+  selectedTransactionIds: Set<number> = new Set();
+  showBulkDeleteModal = false;
+  selectionMode = false;
+  enterSelectionMode() {
+    this.selectionMode = true;
+  }
+
+  exitSelectionMode() {
+    this.selectionMode = false;
+    this.clearSelectedTransactions();
+  }
+
   constructor(private renderer: Renderer2,
               private txService: TransactionsService,
               private authService: AuthService,
               private cd: ChangeDetectorRef,
               private categoriesService: CategoriesService) {
     this.filterTransactions();
+  }
+
+  // Multi-select logic
+  toggleTransactionSelection(id: number) {
+    this.selectionMode = true;
+    if (this.selectedTransactionIds.has(id)) {
+      this.selectedTransactionIds.delete(id);
+    } else {
+      this.selectedTransactionIds.add(id);
+    }
+    // If nothing is selected, exit selection mode
+    if (this.selectedTransactionIds.size === 0) {
+      this.selectionMode = false;
+    }
+  }
+
+  isTransactionSelected(id: number): boolean {
+    return this.selectedTransactionIds.has(id);
+  }
+
+
+  selectAllVisible() {
+    const visibleIds = this.getPaginatedTransactions().map(t => t.id);
+    const allSelected = visibleIds.every(id => this.selectedTransactionIds.has(id));
+    if (allSelected) {
+      // Unselect only the visible ones
+      visibleIds.forEach(id => this.selectedTransactionIds.delete(id));
+    } else {
+      // Select all visible, keep others untouched
+      visibleIds.forEach(id => this.selectedTransactionIds.add(id));
+    }
+  }
+
+
+  areAllVisibleSelected(): boolean {
+    const visibleIds = this.getPaginatedTransactions().map(t => t.id);
+    return visibleIds.length > 0 && visibleIds.every(id => this.selectedTransactionIds.has(id));
+  }
+
+  clearSelectedTransactions() {
+    this.selectedTransactionIds.clear();
+    this.selectionMode = false;
+  }
+
+  showDeleteModal() {
+    this.showBulkDeleteModal = true;
+  }
+
+  hideDeleteModal() {
+    this.showBulkDeleteModal = false;
+  }
+
+  confirmBulkDelete() {
+    const idsToDelete = Array.from(this.selectedTransactionIds);
+    if (idsToDelete.length === 0) return;
+    let deletedCount = 0;
+    idsToDelete.forEach(id => {
+      this.txService.delete(id).subscribe(() => {
+        this.transactions = this.transactions.filter(t => t.id !== id);
+        deletedCount++;
+        if (deletedCount === idsToDelete.length) {
+          this.filterTransactions();
+          this.showNotificationMessage('Selected transactions deleted!', 'success');
+          this.clearSelectedTransactions();
+          this.hideDeleteModal();
+        }
+      }, () => {
+        this.showNotificationMessage('Failed to delete some transactions', 'error');
+      });
+    });
   }
 
   showAddModal = signal(false);
@@ -762,6 +845,11 @@ ngOnInit() {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     return this.filteredTransactions.slice(startIndex, endIndex);
+  }
+
+  // Helper for template
+  hasSelectedTransactions(): boolean {
+    return this.selectedTransactionIds.size > 0;
   }
 
   nextPage() {
