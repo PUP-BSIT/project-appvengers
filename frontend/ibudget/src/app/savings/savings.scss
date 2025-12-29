@@ -61,21 +61,35 @@ main {
   }
 
   .savings-search-input {
-    margin-bottom: 0;
-    min-width: 220px;
-    max-width: 320px;
-    flex-shrink: 1;
+    width: 260px;
+    padding: 0.7rem 2.5rem 0.7rem 1.1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 1rem;
+    color: #374151;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    margin: 0;
   }
 
   button.btn {
-    white-space: nowrap;
-    height: 42px;
+    padding: 0.65rem 1.75rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    padding: 0 18px;
-    font-size: 1rem;
-    min-width: 150px;
-    flex-shrink: 0;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+    letter-spacing: 0.3px;
   }
 
   button.btn i {
@@ -381,6 +395,7 @@ main {
     flex-direction: column;
     gap: 6px;
     padding: 0 2px;
+
     div:nth-child(2) {
       justify-content: flex-start;
     }
