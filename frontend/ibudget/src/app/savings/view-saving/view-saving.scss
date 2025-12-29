@@ -153,6 +153,10 @@ th {
   justify-content: flex-end;
   align-items: center;
   gap: 10px;
+  
+  button {
+    font-size: 12px;
+  }
 }
 
 // bg-yellow
@@ -278,7 +282,7 @@ th {
   }
 
   .header-container {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     gap: 10px;
   }
