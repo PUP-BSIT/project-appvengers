@@ -3,95 +3,155 @@
 <app-sub-header/>
 
 <main>
-  <div class="account-settings-panel">
-    <div class="info-container">
-      <h5 class="fw-semibold">Account</h5>
-      <p class="text-muted">
-        Manage your personal information and account settings.
-      </p>
+  <div class="settings-container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-icon">
+          <i class="bi bi-person-gear"></i>
+        </div>
+        <div class="header-text">
+          <h1>Account Settings</h1>
+          <p>Manage your personal information and account details</p>
+        </div>
+      </div>
     </div>
 
-    <div class="outer-card-wrapper">
-      <div class="card">
-        <div class="card-header p-4">
-          <h6 class="fw-semibold m-0">Personal Information</h6>
+    <!-- Main Card -->
+    <div class="settings-card">
+      <div class="card-header">
+        <h2>Personal Information</h2>
+        <p>Update your profile details and contact information</p>
+      </div>
+
+      <div class="card-body">
+        <!-- Profile Section -->
+        <div class="profile-section">
+          <div class="avatar-wrapper">
+            <div class="avatar">
+              <span>{{ usernameFirstLetter() }}</span>
+            </div>
+            <div class="avatar-overlay">
+              <i class="bi bi-camera"></i>
+            </div>
+          </div>
+          <div class="profile-info">
+            <span class="profile-name">{{ userName() }}</span>
+            <span class="profile-role">iBudget Member</span>
+          </div>
         </div>
 
-        <div class="card-body">
-          <div class="profile-container">
-            <img 
-              [src]="'https://placehold.co/600x400/orange/white?text=' + usernameFirstLetter()" 
-              class="image"
-              alt="Profile Picture"/>
+        <!-- Divider -->
+        <div class="divider"></div>
 
-              <span class="fw-semibold mt-2">{{ userName() }}</span>
+        <!-- Alerts -->
+        @if(successMessage()) {
+          <div class="alert alert-success">
+            <div class="alert-icon">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="alert-content">
+              <span>{{ successMessage() }}</span>
+            </div>
+            <button type="button" class="alert-close" (click)="successMessage.set(null)" aria-label="Close">
+              <i class="bi bi-x-lg"></i>
+            </button>
           </div>
+        }
 
-          @if(successMessage()) {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-              {{ successMessage() }}
-              <button type="button" class="btn-close" (click)="successMessage.set(null)"></button>
+        @if(errorMessage()) {
+          <div class="alert alert-danger">
+            <div class="alert-icon">
+              <i class="bi bi-exclamation-circle-fill"></i>
             </div>
-          }
-
-          @if(errorMessage()) {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              {{ errorMessage() }}
-              <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
+            <div class="alert-content">
+              <span>{{ errorMessage() }}</span>
             </div>
-          }
+            <button type="button" class="alert-close" (click)="errorMessage.set(null)" aria-label="Close">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+        }
 
-          <form [formGroup]="accountSettingsForm" (ngSubmit)="onSubmit()" class="account-form-container">
-            <div class="fourth-row">
-              <label for="username">Username</label>
+        <!-- Form -->
+        <form [formGroup]="accountSettingsForm" (ngSubmit)="onSubmit()" class="settings-form">
+          <div class="form-group">
+            <label for="username">
+              <i class="bi bi-person"></i>
+              Username
+            </label>
+            <div class="input-wrapper">
               <input 
                 formControlName="username" 
                 id="username"
-                class="form-control"
-                placeholder="Username"
-                type="text"/>
-
-              @if(username?.errors?.['required'] && username?.touched) {
-                <span class="text-danger small mt-1">
-                  Username is required.
-                </span>
-              }
+                class="form-input"
+                placeholder="Enter your username"
+                type="text"
+                autocomplete="username"/>
             </div>
+            @if(username?.errors?.['required'] && username?.touched) {
+              <span class="error-message">
+                <i class="bi bi-exclamation-triangle"></i>
+                Username is required
+              </span>
+            }
+          </div>
 
-            <div class="third-row">
-              <label for="email">Email</label>
+          <div class="form-group">
+            <label for="email">
+              <i class="bi bi-envelope"></i>
+              Email Address
+            </label>
+            <div class="input-wrapper">
               <input 
                 formControlName="email" 
                 id="email"
-                class="form-control"
-                placeholder="Email"
-                type="text"/>
-              
-              @if(email?.errors?.['required'] && email?.touched) {
-                <span class="text-danger small mt-1">
-                  Email is required.
-                </span>
-              }
-
-              @if(email?.errors?.['email'] && email?.touched) {
-                <span class="text-danger small mt-1">
-                  Please enter a valid email.
-                </span>
-              }
+                class="form-input"
+                placeholder="Enter your email"
+                type="email"
+                autocomplete="email"/>
             </div>
+            @if(email?.errors?.['required'] && email?.touched) {
+              <span class="error-message">
+                <i class="bi bi-exclamation-triangle"></i>
+                Email is required
+              </span>
+            }
+            @if(email?.errors?.['email'] && email?.touched) {
+              <span class="error-message">
+                <i class="bi bi-exclamation-triangle"></i>
+                Please enter a valid email address
+              </span>
+            }
+          </div>
 
-            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting() || accountSettingsForm.invalid">
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button 
+              type="submit" 
+              class="btn-primary-submit" 
+              [disabled]="isSubmitting() || accountSettingsForm.invalid || accountSettingsForm.pristine">
               @if(isSubmitting()) {
-                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Saving...
+                <span class="spinner"></span>
+                <span>Saving...</span>
               } @else {
-                Save
+                <i class="bi bi-check2"></i>
+                <span>Save Changes</span>
               }
             </button>
-          </form>
-        </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="info-card">
+      <div class="info-icon">
+        <i class="bi bi-info-circle"></i>
+      </div>
+      <div class="info-content">
+        <p>Your account is secured with JWT authentication. Changes to your profile are saved automatically upon submission.</p>
       </div>
     </div>
   </div>
 </main>
-
