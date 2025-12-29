@@ -1,12 +1,28 @@
 .selection-controls .btn-outline-primary.btn-sm {
-  height: 40px;
-  min-width: 120px;
-  padding: 0.65rem 1.75rem;
+  height: 48px;
+  min-width: 200px;
+  padding: 0.65rem 2.75rem;
   font-size: 0.95rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
+  box-sizing: border-box;
+  background: white;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin: 0;
+  transition: all 0.2s ease;
+  
+  i {
+    margin-right: 0.5rem;
+  }
+}
+.selection-controls .btn-outline-primary.btn-sm:focus,
+.selection-controls .btn-outline-primary.btn-sm:active {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .selection-controls {
