@@ -60,7 +60,7 @@ export class Reports implements OnInit {
     scales: {
       x: {
         ticks: { color: '#333' },
-        grid: { color: 'rgba(0,0,0,0.05)' }
+        grid: { display: false }
       },
       y: {
         beginAtZero: true,
@@ -280,7 +280,9 @@ export class Reports implements OnInit {
           Object.keys(this.lastMonthReport.expenseByCategory).
           length, 'expense', true
         ),
-        borderWidth: 1
+        borderWidth: 1,
+        barPercentage: 0.6,
+        categoryPercentage: 0.4 
       }]
     };
   }
