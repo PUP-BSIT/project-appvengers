@@ -20,6 +20,7 @@ public class UpdateAccountRequest {
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotBlank(message = "Password is required for confirmation")
+    // Password is no longer required for username updates
+    // Users are already authenticated via JWT
     private String password;
 }
