@@ -376,7 +376,7 @@ $link-color-hover: #283593;
 /* Mobile M  */ 
 @media (min-width: 321px) and (max-width: 376px) {
   .login-container {
-    padding: 15px;
+    padding: 0;
   }
 
   .login-card {
@@ -414,7 +414,7 @@ $link-color-hover: #283593;
 /* Mobile L   */ 
 @media (min-width: 376px) and (max-width: 426px) {
   .login-container {
-    padding: 20px;
+    padding: 0;
   }
 
   .login-card {
