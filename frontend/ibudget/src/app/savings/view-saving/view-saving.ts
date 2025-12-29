@@ -37,6 +37,10 @@ export class ViewSaving implements OnInit{
     deleteSavingTransactionModal!: ElementRef;
   @ViewChild('deleteTransactionBtn') 
     deleteTransactionBtn!: ElementRef<HTMLButtonElement>;
+  @ViewChild('deleteSelectedTransactionsModal') 
+    deleteSelectedTransactionsModal!: ElementRef;
+  @ViewChild('deleteSelectedTransactionsBtn') 
+    deleteSelectedTransactionsBtn!: ElementRef<HTMLButtonElement>;
   @ViewChild('updateTransactionModal') updateTransactionModal!: UpdateSavingTransaction;
   
   showDropdown = signal<number | null>(null);
@@ -70,13 +74,22 @@ export class ViewSaving implements OnInit{
     console.log('Selected Transactions:', this.selectedTransactionIds());
   }
 
-  deleteSelectedTransactions() {
+  // Selected Transactions Modal
+  openDeleteSelectedModal() {
     if (this.selectedTransactionIds().length === 0) return;
+    const modal = new Modal(this.deleteSelectedTransactionsModal.nativeElement);
+    modal.show();
+  }
 
-    if (!confirm('Are you sure you want to delete the selected transactions?')) {
-      return;
-    }
+  // Close Selected Transactions Modal
+  closeDeleteSelectedModal() {
+    const modal = Modal.getInstance(this.deleteSelectedTransactionsModal.nativeElement);
+    modal?.hide();
+    this.deleteSelectedTransactionsBtn.nativeElement.focus();
+  }
 
+  // Confirm Deletion of Selected Transactions
+  confirmDeleteSelectedTransactions() {
     this.savingTransactionService.deleteMultipleSavingTransactions(
       this.savingId(),
       this.selectedTransactionIds()
@@ -93,6 +106,8 @@ export class ViewSaving implements OnInit{
         // Refresh amounts
         this.refreshCurrentAmount();
 
+        this.closeDeleteSelectedModal();
+
         // Show success toast
         this.toastMessage.set('Selected transactions deleted successfully!');
         this.toastType.set('success');
@@ -102,6 +117,7 @@ export class ViewSaving implements OnInit{
       },
       error: (err) => {
         console.error('Failed to delete transactions', err);
+        this.closeDeleteSelectedModal();
         this.toastMessage.set('Failed to delete transactions. Please try again.');
         this.toastType.set('error');
         const toast = Toast.getOrCreateInstance(this.viewSavingToast.nativeElement);
