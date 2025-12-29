@@ -28,10 +28,14 @@ public class UserController {
         User user = userService.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Check if user has a password (local user vs OAuth user)
+        boolean hasPassword = user.getPassword() != null && !user.getPassword().isEmpty();
+
         Map<String, Object> data = Map.of(
                 "id", user.getId(),
                 "username", user.getUsername(),
                 "email", user.getEmail(),
+                "hasPassword", hasPassword,
                 "remainingBudget", 0);
 
         return ResponseEntity.ok(new ApiResponse(true, "Profile fetched", data));

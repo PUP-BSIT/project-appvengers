@@ -383,10 +383,8 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // Verify password
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid password");
-        }
+        // Verify identity based on user type (OAuth vs local)
+        verifyUserIdentity(user, request.getPassword(), request.getConfirmEmail());
 
         // Check if already deactivated
         if (!user.isActive()) {
@@ -458,10 +456,8 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // Verify password
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid password");
-        }
+        // Verify identity based on user type (OAuth vs local)
+        verifyUserIdentity(user, request.getPassword(), request.getConfirmEmail());
 
         // Set deletion metadata before triggering @SQLDelete
         user.setDeletionReason(request.getReason());
@@ -545,6 +541,38 @@ public class UserService {
         return user.getPasswordResetAttempts() >= 3;
     }
 
+    /**
+     * Verifies user identity for destructive account actions (deactivation, deletion).
+     * - For local users (with password): verifies the password
+     * - For OAuth users (no password): verifies that confirmEmail matches user's email
+     * 
+     * @param user The user to verify
+     * @param password Password provided by the user (for local users)
+     * @param confirmEmail Email confirmation provided by the user (for OAuth users)
+     * @throws IllegalArgumentException if verification fails
+     */
+    private void verifyUserIdentity(User user, String password, String confirmEmail) {
+        boolean hasPassword = user.getPassword() != null && !user.getPassword().isEmpty();
+        
+        if (hasPassword) {
+            // Local user: verify password
+            if (password == null || password.isEmpty()) {
+                throw new IllegalArgumentException("Password is required to perform this action");
+            }
+            if (!passwordEncoder.matches(password, user.getPassword())) {
+                throw new IllegalArgumentException("Invalid password");
+            }
+        } else {
+            // OAuth user: verify email confirmation
+            if (confirmEmail == null || confirmEmail.isEmpty()) {
+                throw new IllegalArgumentException("Email confirmation is required to perform this action");
+            }
+            if (!user.getEmail().equalsIgnoreCase(confirmEmail)) {
+                throw new IllegalArgumentException("Email confirmation does not match your account email");
+            }
+        }
+    }
+
     // --- Update Account ---
 
     @Transactional
@@ -553,10 +581,8 @@ public class UserService {
         User user = userRepository.findByEmail(currentEmail)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // Verify password
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid password");
-        }
+        // No password verification required for username updates
+        // User is already authenticated via JWT, which is sufficient proof of identity
 
         boolean emailChanged = !user.getEmail().equals(request.getEmail());
         boolean usernameChanged = !user.getUsername().equals(request.getUsername());
