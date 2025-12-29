@@ -40,6 +40,14 @@
   }
 
   <div class="card">
+    <!-- Notify if saving is completed -->
+    <div [class]="'alert alert-success shadow-sm border-success d-flex align-items-center gap-2' + (isSavingComplete() ? '' : ' d-none')">
+      <i class="bi bi-check-circle-fill fs-5"></i>
+      <div>
+        <strong>Congratulations!</strong> You have reached your saving goal. <span class="badge bg-success ms-1">Completed</span>
+      </div>
+    </div>
+
     <div [class]="'card-header ' + (currentSaving().header_color || 'bg-dark') + 
       ' text-white d-flex align-items-center gap-3'">
       <h5 class="mb-0">{{ currentSaving().name }}</h5>
@@ -47,8 +55,34 @@
 
     <div class="card-body d-flex flex-column">
       @if(isLoading()) {
-        <div class="alert alert-info" role="alert">
-          Loading saving details...
+        <div class="information-container w-100 placeholder-glow row g-3 mb-4">
+           <div class="info col-md-3 col-6">
+             <span class="placeholder col-6 mb-1"></span>
+             <span class="placeholder col-10 btn-lg"></span>
+           </div>
+           <div class="info col-md-3 col-6">
+             <span class="placeholder col-6 mb-1"></span>
+             <span class="placeholder col-10 btn-lg"></span>
+           </div>
+           <div class="info col-md-3 col-6">
+             <span class="placeholder col-6 mb-1"></span>
+             <span class="placeholder col-10 btn-lg"></span>
+           </div>
+           <div class="info col-md-3 col-6">
+             <span class="placeholder col-6 mb-1"></span>
+             <span class="placeholder col-10 btn-lg"></span>
+           </div>
+        </div>
+
+        <div class="placeholder-glow mb-4">
+          <span class="placeholder col-12" style="height: 20px; border-radius: 10px;"></span>
+        </div>
+
+        <div class="info-cards placeholder-glow d-flex flex-wrap gap-3">
+          <div class="placeholder col-md-2 col-12" style="height: 100px; border-radius: 8px;"></div>
+          <div class="placeholder col-md-2 col-12" style="height: 100px; border-radius: 8px;"></div>
+          <div class="placeholder col-md-2 col-12" style="height: 100px; border-radius: 8px;"></div>
+          <div class="placeholder col-md-2 col-12" style="height: 100px; border-radius: 8px;"></div>
         </div>
       } @else {
         <div class="information-container first">
@@ -76,69 +110,68 @@
             </span>
           </div>
         </div>
-      }
-      
-      <div class="app-saving-progress-container">
-        <app-saving-progress 
-          [progressPercentage]="getProgressPercentage(currentSaving())"
-          showType="hide-text"/>
-      </div>
 
-      <div class="info-cards">
-        <div class="mb-0 alert alert-dark info-card">
-          <i class="bi bi-file-earmark-text m-1"></i>
-          <label class="text-dark-emphasis mb-1">Description</label>
-          <p>
-            {{ currentSaving().description || 'No description available.' }}
-          </p>
+        <div class="app-saving-progress-container">
+          <app-saving-progress 
+            [progressPercentage]="getProgressPercentage(currentSaving())"
+            showType="hide-text"/>
         </div>
 
-        <div class="mb-0 alert alert-primary info-card">
-          <i class="bi bi-calendar-week m-1"></i>
-          <label class="text-primary-emphasis mb-1">Started on</label>
-          <p>{{ dateStarted() | date:'mediumDate' }}</p>
-        </div>
-
-        <div class="mb-0 alert alert-info info-card">
-          <i class="bi bi-calendar-week m-1"></i>
-          <label class="text-info-emphasis mb-1">Goal Date</label>
-          <p>{{ currentSaving().goal_date | date:'mediumDate' }}</p>
-        </div>
-
-        <!-- Dynamic savings needed based on frequency -->
-        @if(currentSaving().frequency === 'Monthly') {
-          <div class="mb-0 alert alert-warning info-card">
-            <i class="bi bi-calendar2-check m-1"></i>
-            <label class="text-warning-emphasis mb-1">Monthly Saving Needed</label>
-            @if(getMonthlySavingsNeeded() === 0) {
-              <p>Goal date has passed or no remaining amount.</p>
-            } @else {
-              <p>&#8369; {{ getMonthlySavingsNeeded() | number:'1.0-0' }} per month</p>
-            }
+        <div class="info-cards">
+          <div class="mb-0 alert alert-dark info-card">
+            <i class="bi bi-file-earmark-text m-1"></i>
+            <label class="text-dark-emphasis mb-1">Description</label>
+            <p>
+              {{ currentSaving().description || 'No description available.' }}
+            </p>
           </div>
-        } @else if(currentSaving().frequency === "Weekly") {
-          <div class="mb-0 alert alert-warning info-card">
-            <i class="bi bi-calendar2-check m-1"></i>
-            <label class="text-warning-emphasis mb-1">Weekly Saving Needed</label>
-            @if(getWeeklySavingsNeeded() === 0) {
-              <p>Goal date has passed or no remaining amount.</p>
-            } @else {
-              <p>&#8369; {{ getWeeklySavingsNeeded() | number:'1.0-0' }} per week</p>
-            }
+
+          <div class="mb-0 alert alert-primary info-card">
+            <i class="bi bi-calendar-week m-1"></i>
+            <label class="text-primary-emphasis mb-1">Started on</label>
+            <p>{{ dateStarted() | date:'mediumDate' }}</p>
           </div>
-        } @else {
-          <div class="mb-0 alert alert-warning info-card">
-            <i class="bi bi-cash-coin m-1"></i>
-            <label class="text-warning-emphasis mb-1">Daily Saving Needed</label>
-          @if(getDailySavingsNeeded() === 0) {
-            <p>Goal date has passed or no remaining amount.</p>
+
+          <div class="mb-0 alert alert-info info-card">
+            <i class="bi bi-calendar-week m-1"></i>
+            <label class="text-info-emphasis mb-1">Goal Date</label>
+            <p>{{ currentSaving().goal_date | date:'mediumDate' }}</p>
+          </div>
+
+          <!-- Dynamic savings needed based on frequency -->
+          @if(currentSaving().frequency === 'Monthly') {
+            <div class="mb-0 alert alert-warning info-card">
+              <i class="bi bi-calendar2-check m-1"></i>
+              <label class="text-warning-emphasis mb-1">Monthly Saving Needed</label>
+              @if(getMonthlySavingsNeeded() === 0) {
+                <p>Goal date has passed or no remaining amount.</p>
+              } @else {
+                <p>&#8369; {{ getMonthlySavingsNeeded() | number:'1.0-0' }} per month</p>
+              }
+            </div>
+          } @else if(currentSaving().frequency === "Weekly") {
+            <div class="mb-0 alert alert-warning info-card">
+              <i class="bi bi-calendar2-check m-1"></i>
+              <label class="text-warning-emphasis mb-1">Weekly Saving Needed</label>
+              @if(getWeeklySavingsNeeded() === 0) {
+                <p>Goal date has passed or no remaining amount.</p>
+              } @else {
+                <p>&#8369; {{ getWeeklySavingsNeeded() | number:'1.0-0' }} per week</p>
+              }
+            </div>
           } @else {
-            <p>&#8369; {{ getDailySavingsNeeded() | number:'1.0-0' }} per day</p>
+            <div class="mb-0 alert alert-warning info-card">
+              <i class="bi bi-cash-coin m-1"></i>
+              <label class="text-warning-emphasis mb-1">Daily Saving Needed</label>
+            @if(getDailySavingsNeeded() === 0) {
+              <p>Goal date has passed or no remaining amount.</p>
+            } @else {
+              <p>&#8369; {{ getDailySavingsNeeded() | number:'1.0-0' }} per day</p>
+            }
+          </div>
           }
         </div>
-        }
-        
-      </div>
+      }
     </div>
   </div>
 
@@ -162,12 +195,14 @@
         <div class="action-container">
           <app-add-saving-transaction 
             [transactionsLength]="transactionsCount()"
-            (addedTransaction)="onSavingsTransactionAdded($event)"/>
+            (addedTransaction)="onSavingsTransactionAdded($event)"
+            [isDisabled]="isSavingComplete()"/>
 
           <button 
               type="button"
               class="btn btn-sm btn-danger"
-              [disabled]="selectedTransactionIds().length === 0"
+              [disabled]="selectedTransactionIds().length === 0 || 
+                isSavingComplete()"
               (click)="deleteSelectedTransactions()">
                 Delete Selected ({{ selectedTransactionIds().length }})
             </button>
@@ -188,8 +223,12 @@
           <tbody>
             @if(filteredTransactions().length === 0) {
               <tr>
-                <td colspan="5" class="text-center text-secondary-emphasis">
-                  No transaction history available.
+                <td colspan="5" class="text-center py-5 text-muted">
+                  <div class="d-flex flex-column align-items-center">
+                    <i class="bi bi-receipt fs-1 mb-2 text-secondary-emphasis opacity-50"></i>
+                    <p class="mb-0">No transaction history available yet.</p>
+                    <small>Start adding transactions to track your progress!</small>
+                  </div>
                 </td>
               </tr>
             }
@@ -235,7 +274,8 @@
                       type="button" 
                       class="btn btn-sm btn-warning"
                       (click)="openUpdateTransactionModal(transaction.id)"
-                      title="Edit">
+                      title="Edit"
+                      [disabled]="isSavingComplete()">
                         <i class="bi bi-pencil"></i>
                     </button>
                     <button 
@@ -243,7 +283,8 @@
                       type="button"
                       class="btn btn-sm btn-danger"
                       (click)="openDeleteTransactionModal(transaction.id)"
-                      title="Delete">
+                      title="Delete"
+                      [disabled]="isSavingComplete()">
                         <i class="bi bi-trash-fill"></i>
                     </button>
                   </td>
@@ -320,7 +361,9 @@
                     <button 
                       type="button" 
                       class="btn btn-sm btn-warning"
-                      (click)="openUpdateTransactionModal(transaction.id)">
+                      (click)="openUpdateTransactionModal(transaction.id)"
+                      title="Edit"
+                      [disabled]="isSavingComplete()">
                         Edit
                     </button>
 
@@ -329,7 +372,9 @@
                       type="button"
                       class="btn btn-sm btn-danger"
                       (click)="openDeleteTransactionModal(
-                          transaction.id)">
+                          transaction.id)"
+                      title="Delete"
+                      [disabled]="isSavingComplete()">
                         Delete
                     </button>
                   </div>
