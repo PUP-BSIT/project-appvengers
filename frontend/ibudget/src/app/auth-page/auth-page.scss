@@ -72,6 +72,7 @@ $bg-color: #2D5A87;
   justify-content: center;
   align-items: center;
   position: relative;
+  margin-bottom: 60px;
 }
 
 .left-panel .app-name {
@@ -154,6 +155,15 @@ span.highlight-yellow {
   to   { transform: translateX(-50%); }
 }
 
+.ibudget-logo {
+  margin-top: 20px;
+  
+  img {
+    width: 150px;
+    height: auto;
+  }
+}
+
 @media (max-width: 768px) {
   .auth-page-container {
     flex-direction: column;
@@ -178,7 +188,7 @@ span.highlight-yellow {
 
   .left-panel {
     margin-right: 0;
-    // margin-bottom: 20px;
+    margin-bottom: 0px;
     justify-content: center;
     align-items: center;
   }
@@ -189,5 +199,38 @@ span.highlight-yellow {
 
   .slogan {
     font-size: 16px;
+  }
+
+  .ibudget-logo {
+    img {
+      width: 100px;
+    }
+  }
+}
+
+@media (min-width: 426px) and (max-width: 768px) {
+  .auth-page-container {
+    flex-direction: row;
+    gap: 1.5em;
+  }
+
+  .main-panel {
+    width: 500px;
+  }
+
+  .left-panel, .app-name span {
+    font-size: 22px;
+  }
+
+  .header-toggles {
+    width: 400px;
+    
+    a {
+      font-size: medium;
+    }
+  }
+
+  .slogan {
+    font-size: 14px;
   }
 }
