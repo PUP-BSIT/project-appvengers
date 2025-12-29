@@ -214,6 +214,34 @@
               </div>
             </div>
           </div>
+
+          <!-- Bar Section for Last Month -->
+          <div class="chart-card bar-chart-card">
+            <h3 class="chart-title">
+              <i class="fas fa-chart-bar me-2"></i>
+              Expense Breakdown
+            </h3>
+            <div class="chart-wrapper">
+              @if (!lastMonthExpenseBarChartData ||
+                  !lastMonthExpenseBarChartData.datasets[0]?.data?.length) {
+                <div class="empty-chart-state">
+                  <i class="bi bi-bar-chart"
+                    style="font-size:3rem;color:#ff6f61;">
+                  </i>
+                  <div class="empty-chart-label text-primary fw-bold mt-2"
+                    style="font-size:1.2rem;">
+                    NO EXPENSES YET
+                  </div>
+                </div>
+              } @else {
+                <canvas baseChart
+                  [data]="lastMonthExpenseBarChartData"
+                  [type]="'bar'"
+                  [options]="barChartOptions">
+                </canvas>
+              }
+            </div>
+          </div>
         </div>
       }
 
