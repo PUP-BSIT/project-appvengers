@@ -1,17 +1,7 @@
-@media (max-width: 1024px) {
-  .charts-section {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-  }
-  .chart-card {
-    width: 100%;
-    max-width: 98vw;
-    min-width: 0;
-    margin: 0 auto;
-  }
-}
+$background-color: #F9FAFB;
+$sidebar-width: 80px;
+$header-height: 70px;
+
 .charts-section {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -28,92 +18,6 @@
   margin: 0 auto;
 }
 
-@media (min-width: 1024px) and (max-width: 1440px) {
-  .charts-section {
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    justify-items: center;
-  }
-  .chart-card {
-    max-width: 480px;
-    min-width: 320px;
-    margin: 0 auto;
-  }
-}
-
-/* Mobile L (max-width: 430px) */
-@media (max-width: 430px) {
-  .reports-container {
-    margin-left: 0px !important;
-    padding: 4px 2px;
-    min-width: 0;
-    width: 100vw;
-  }
-
-  .overall-computation .comparison-grid {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-  }
-
-  .tabs-container {
-    margin: 0;
-    padding: 0 2px;
-    max-width: 100vw;
-  }
-
-  .nav-tabs {
-    flex-wrap: nowrap !important;
-    overflow-x: auto;
-    border-bottom-width: 1px;
-    margin-bottom: 10px;
-    .nav-link {
-      padding: 8px 10px !important;
-      font-size: 0.95rem !important;
-    }
-  }
-
-  .overall-computation {
-    padding: 10px 2px;
-    border-radius: 8px;
-    box-shadow: none;
-  }
-
-  .comparison-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .charts-section {
-    display: flex !important;
-    flex-direction: column;
-    gap: 16px !important;
-  }
-
-  .chart-card {
-    min-width: 0;
-    max-width: 100vw;
-    padding: 0 2px;
-  }
-
-  .chart-wrapper {
-    height: 220px !important;
-    min-height: 180px;
-    max-width: 100vw;
-    padding: 0;
-  }
-
-  .empty-chart-state {
-    min-height: 120px;
-    font-size: 1rem;
-  }
-
-  .overall-title, .report-header-title {
-    font-size: 1.1rem !important;
-    margin-bottom: 10px !important;
-  }
-}
-// Center empty chart state icon and text
 .empty-chart-state {
   display: flex;
   flex-direction: column;
@@ -124,9 +28,6 @@
   width: 100%;
   text-align: center;
 }
-$background-color: #F9FAFB;
-$sidebar-width: 80px;
-$header-height: 70px;
 
 .reports-container {
   margin-top: 50px;
@@ -668,6 +569,108 @@ $header-height: 70px;
 
   .overall-computation {
     padding: 20px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .charts-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .chart-card {
+    width: 100%;
+    max-width: 98vw;
+    min-width: 0;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1440px) {
+  .charts-section {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    justify-items: center;
+  }
+  .chart-card {
+    max-width: 480px;
+    min-width: 320px;
+    margin: 0 auto;
+  }
+}
+
+/* Mobile L (max-width: 430px) */
+@media (max-width: 430px) {
+  .reports-container {
+    margin-left: 0px !important;
+    padding: 4px 2px;
+    min-width: 0;
+    width: 100vw;
+  }
+
+  .overall-computation .comparison-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .tabs-container {
+    margin: 0;
+    padding: 0 2px;
+    max-width: 100vw;
+  }
+
+  .nav-tabs {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    border-bottom-width: 1px;
+    margin-bottom: 10px;
+    .nav-link {
+      padding: 8px 10px !important;
+      font-size: 0.95rem !important;
+    }
+  }
+
+  .overall-computation {
+    padding: 10px 2px;
+    border-radius: 8px;
+    box-shadow: none;
+  }
+
+  .comparison-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .charts-section {
+    display: flex !important;
+    flex-direction: column;
+    gap: 16px !important;
+  }
+
+  .chart-card {
+    min-width: 0;
+    max-width: 100vw;
+    padding: 0 2px;
+  }
+
+  .chart-wrapper {
+    height: 220px !important;
+    min-height: 180px;
+    max-width: 100vw;
+    padding: 0;
+  }
+
+  .empty-chart-state {
+    min-height: 120px;
+    font-size: 1rem;
+  }
+
+  .overall-title, .report-header-title {
+    font-size: 1.1rem !important;
+    margin-bottom: 10px !important;
   }
 }
 
