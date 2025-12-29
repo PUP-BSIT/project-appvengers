@@ -288,46 +288,22 @@
               track $index) 
             {
               <li class="card">
-                <div class="card-header bg-dark text-white">
-                  <h6 class="card-title mb-0">
-                    {{ $index + 1 }}.
-                    {{ transaction.transaction_date | date:'mediumDate' }}
-                  </h6>
-                </div>
-
                 <div class="card-body">
-                  <div>
-                    <h6 class="mb-0">Type</h6>
-                    @if(transaction.savings_action === 'Deposit') {
-                      <div class="text-success">
-                        <i class="bi bi-arrow-up-circle-fill"></i>
-                        {{ transaction.savings_action }}
-                      </div>
-                    } @else if(transaction.savings_action === 'Withdrawal') {
-                      <div class="text-danger">
-                        <i class="bi bi-arrow-down-circle-fill"></i>
-                        {{ transaction.savings_action }}
-                      </div>
-                    } @else {
-                      <div>
-                        {{ transaction.savings_action }}
-                      </div>
-                    }
+                  <div class="d-flex justify-content-between align-items-center mb-2 w-100">
+                    <h6 class="card-title mb-0">
+                      {{ transaction.transaction_date | date:'mediumDate' }}
+                    </h6>
+
+                    <i class="bi bi-three-dots-vertical"></i>
                   </div>
-                    
 
-                  <h6 class="mb-0">Amount</h6>
-                  <p class="text-secondary-emphasis mb-0">
-                    &#8369; {{ transaction.amount.toFixed(2) }}
-                  </p>
-
-                  <h6 class="mb-0">Description</h6>
+                  <!-- <h6 class="mb-0">Description</h6> -->
                   <p class="text-secondary-emphasis mb-0">
                     {{ transaction.description || 'N/A' }}
                   </p>
 
                   <div class="actions">
-                    <app-update-saving-transaction 
+                    <!-- <app-update-saving-transaction 
                       [transactionId]="transaction.id"
                       (updatedTransaction)="onSavingsTransactionUpdated($event)"
                     />
@@ -339,7 +315,21 @@
                       (click)="openDeleteTransactionModal(
                           transaction.id)">
                         Delete
-                    </button>
+                    </button> -->
+
+                    @if(transaction.savings_action === 'Deposit') {
+                      <p class="text-success fw-bold mb-0">
+                        + &#8369; {{ transaction.amount.toFixed(2) }}
+                      </p>
+                    } @else if(transaction.savings_action === 'Withdrawal') {
+                      <p class="text-danger fw-bold mb-0">
+                        - &#8369; {{ transaction.amount.toFixed(2) }}
+                      </p>
+                    } @else {
+                      <p class="text-secondary fw-bold mb-0">
+                        &#8369; {{ transaction.amount.toFixed(2) }}
+                      </p>
+                    }
                   </div>
                 </div>
               </li>
