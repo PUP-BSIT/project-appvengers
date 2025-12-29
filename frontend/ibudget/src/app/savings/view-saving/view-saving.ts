@@ -37,6 +37,21 @@ export class ViewSaving implements OnInit{
     deleteSavingTransactionModal!: ElementRef;
   @ViewChild('deleteTransactionBtn') 
     deleteTransactionBtn!: ElementRef<HTMLButtonElement>;
+  @ViewChild('updateTransactionModal') updateTransactionModal!: UpdateSavingTransaction;
+  
+  showDropdown = signal<number | null>(null);
+
+  toggleDropdown(transactionId: number) {
+    if (this.showDropdown() === transactionId) {
+      this.showDropdown.set(null);
+    } else {
+      this.showDropdown.set(transactionId);
+    }
+  }
+
+  openUpdateTransactionModal(transactionId: number) {
+    this.updateTransactionModal.openUpdateModalWithData(transactionId);
+  }
 
   // Selected Transactions Container (Array)
   selectedTransactionIds = signal<number[]>([]);
