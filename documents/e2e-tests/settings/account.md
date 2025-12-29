@@ -27,7 +27,7 @@ The Account Settings page allows users to manage their personal information:
 ### Form Fields
 - Username (required)
 - Email (required, email format)
-- Password (required for confirmation)
+- Password (no longer required - removed in OAuth update)
 
 ---
 
@@ -38,15 +38,14 @@ The Account Settings page allows users to manage their personal information:
 | ACCT-VIEW-001 | View Account Settings | Verify account settings page loads | User logged in | 1. Navigate to `/settings/account/:id` | Page displays with user profile info and form | P0 | Smoke | ✅ Passed | Dec 29, 2024 | Verified manually |
 | ACCT-LOAD-001 | Load User Data | Verify user data pre-fills form | User logged in | 1. Navigate to account settings | Username and email fields populated with current values | P0 | E2E | ✅ Passed | Dec 29, 2024 | Verified manually |
 | ACCT-AVATAR-001 | Display Avatar Letter | Verify profile avatar shows first letter | User logged in | 1. View account settings | Avatar displays first letter of username in uppercase | P2 | Regression | ✅ Passed | Dec 29, 2024 | Verified manually |
-| ACCT-UPD-001 | Update Username | Verify username can be changed | User logged in | 1. Enter new username 2. Enter password 3. Click Save | Username updated, success message shown | P0 | E2E | ✅ Passed | Dec 29, 2024 | Verified manually |
-| ACCT-UPD-002 | Update Email | Verify email can be changed | User logged in | 1. Enter new email 2. Enter password 3. Click Save | Email updated, success message shown | P0 | E2E | ✅ Passed | Dec 29, 2024 | Verified manually |
-| ACCT-UPD-003 | Update Both Fields | Verify username and email update together | User logged in | 1. Change username 2. Change email 3. Enter password 4. Click Save | Both fields updated, success message shown | P1 | E2E | ✅ Passed | Dec 29, 2024 | Verified manually |
+| ACCT-UPD-001 | Update Username | Verify username can be changed | User logged in | 1. Enter new username 2. Click Save | Username updated, success message shown | P0 | E2E | ✅ Passed | Dec 29, 2024 | Password no longer required |
+| ACCT-UPD-002 | Update Email | Verify email can be changed | User logged in | 1. Enter new email 2. Click Save | Email updated, success message shown | P0 | E2E | ✅ Passed | Dec 29, 2024 | Password no longer required |
+| ACCT-UPD-003 | Update Both Fields | Verify username and email update together | User logged in | 1. Change username 2. Change email 3. Click Save | Both fields updated, success message shown | P1 | E2E | ✅ Passed | Dec 29, 2024 | Password no longer required |
 | ACCT-VAL-001 | Username Required | Verify username required validation | User logged in | 1. Clear username field 2. Touch field 3. Try to submit | "Username is required" error, submit disabled | P1 | Negative | ✅ Passed | Dec 29, 2024 | Verified manually |
 | ACCT-VAL-002 | Email Required | Verify email required validation | User logged in | 1. Clear email field 2. Touch field 3. Try to submit | "Email is required" error, submit disabled | P1 | Negative | ✅ Passed | Dec 29, 2024 | Verified manually |
 | ACCT-VAL-003 | Email Format | Verify email format validation | User logged in | 1. Enter invalid email (e.g., "test") 2. Touch field | "Please enter a valid email" error | P1 | Negative | ✅ Passed | Dec 29, 2024 | Verified manually |
-| ACCT-VAL-004 | Password Required | Verify password confirmation required | User logged in | 1. Make changes 2. Leave password empty 3. Try to submit | "Password is required to confirm changes" error | P0 | Negative | ✅ Passed | Dec 29, 2024 | Verified manually |
-| ACCT-PWD-001 | Password Visibility Toggle | Verify password show/hide works | User logged in | 1. Enter password 2. Click eye icon 3. Click again | Password toggles between hidden and visible | P2 | Regression | ✅ Passed | Dec 29, 2024 | Verified manually |
-| ACCT-MSG-001 | Success Message Display | Verify success message appears | User submits valid changes | 1. Update field 2. Enter password 3. Save | Green success alert with message, password field cleared | P1 | E2E | ✅ Passed | Dec 29, 2024 | Verified manually |
+| ACCT-OAUTH-001 | OAuth User No Password Field | Verify OAuth and local users see same simplified form | User logged in | 1. Navigate to account settings | No password field shown for any user | P1 | E2E | ⏳ Pending | - | New: Password field removed for all users |
+| ACCT-MSG-001 | Success Message Display | Verify success message appears | User submits valid changes | 1. Update field 2. Save | Green success alert with message | P1 | E2E | ✅ Passed | Dec 29, 2024 | Password no longer required |
 | ACCT-MSG-002 | Error Message Display | Verify error message appears | Invalid password provided | 1. Update field 2. Enter wrong password 3. Save | Red error alert with error message | P1 | Negative | ✅ Passed | Dec 29, 2024 | Verified manually |
 | ACCT-MSG-003 | Dismiss Messages | Verify messages can be dismissed | Success/error message displayed | 1. Click close button on alert | Message dismissed | P3 | Regression | ✅ Passed | Dec 29, 2024 | Verified manually |
 | ACCT-SUBMIT-001 | Submit Loading State | Verify loading state during submit | User saving changes | 1. Click Save button | Button shows "Saving..." with spinner, disabled | P2 | Regression | ✅ Passed | Dec 29, 2024 | Verified manually |
@@ -149,10 +148,11 @@ Account Settings Page
 ```json
 {
   "username": "newusername",
-  "email": "newemail@example.com",
-  "password": "currentpassword"
+  "email": "newemail@example.com"
 }
 ```
+
+> **Note**: Password is no longer required for account updates. Users are authenticated via JWT.
 
 ### Response Format
 
