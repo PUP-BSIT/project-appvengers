@@ -286,32 +286,33 @@
                 }
               </div>
             </div>
+          </div>
 
-            <div class="chart-card">
-              <h3 class="chart-title">
-                <i class="fas fa-chart-bar me-2"></i>
-                Expense Breakdown (Bar)
-              </h3>
-              <div class="chart-wrapper">
-                @if (!thisMonthExpenseBarChartData ||
-                    !thisMonthExpenseBarChartData.datasets[0]?.data?.length) {
-                  <div class="empty-chart-state">
-                    <i class="bi bi-bar-chart" 
-                      style="font-size:3rem;color:#ff6f61;">
-                    </i>
-                    <div class="empty-chart-label text-primary fw-bold mt-2" 
-                      style="font-size:1.2rem;">
-                      NO EXPENSES YET
-                    </div>
+          <!-- Bar Section for This Month -->
+          <div class="chart-card bar-chart-card">
+            <h3 class="chart-title">
+              <i class="fas fa-chart-bar me-2"></i>
+              Expense Breakdown
+            </h3>
+            <div class="chart-wrapper">
+              @if (!thisMonthExpenseBarChartData ||
+                  !thisMonthExpenseBarChartData.datasets[0]?.data?.length) {
+                <div class="empty-chart-state">
+                  <i class="bi bi-bar-chart" 
+                    style="font-size:3rem;color:#ff6f61;">
+                  </i>
+                  <div class="empty-chart-label text-primary fw-bold mt-2" 
+                    style="font-size:1.2rem;">
+                    NO EXPENSES YET
                   </div>
-                } @else {
-                  <canvas baseChart
-                    [data]="thisMonthExpenseBarChartData"
-                    [type]="'bar'"
-                    [options]="barChartOptions">
-                  </canvas>
-                }
-              </div>
+                </div>
+              } @else {
+                <canvas baseChart
+                  [data]="thisMonthExpenseBarChartData"
+                  [type]="'bar'"
+                  [options]="barChartOptions">
+                </canvas>
+              }
             </div>
           </div>
         </div>
