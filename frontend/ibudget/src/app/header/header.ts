@@ -5,8 +5,11 @@ import { NotificationService } from '../../services/notification';
 import { SidebarService } from '../../services/sidebar.service';
 import { ChatbotService } from '../chatbot-sidebar/chatbot.service';
 import { AuthService } from '../../services/auth.service';
+import { LocalStorageService } from '../../services/local-storage.service';
+import { NotificationPreferencesService } from '../../services/notification-preferences.service';
 import { filter, map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -20,6 +23,8 @@ export class Header implements OnInit, OnDestroy {
   private chatbotService = inject(ChatbotService);
   private router = inject(Router);
   private authService = inject(AuthService);
+  private localStorageService = inject(LocalStorageService);
+  private notificationPrefsService = inject(NotificationPreferencesService);
 
   isChatbotOpen = this.chatbotService.isOpen;
   username = signal<string>('');
@@ -57,6 +62,13 @@ export class Header implements OnInit, OnDestroy {
       if (res.success && res.data) {
         this.username.set(res.data.username || res.data.email || 'User');
         this.userId.set(res.data.id);
+        
+        // Set userId in LocalStorageService for user-scoped data
+        this.localStorageService.setUserId(res.data.id);
+        console.log(`[Header] User logged in: ${res.data.id}`);
+        
+        // Load user-specific preferences
+        this.notificationPrefsService.loadPreferences();
         
         // Initialize WebSocket for real-time notifications
         this.notificationService.initializeWebSocket(res.data.id);
@@ -108,15 +120,29 @@ export class Header implements OnInit, OnDestroy {
   }
 
   confirmLogout() {
-    // Clear all service state before logout
-    this.notificationService.clearState();
+    if (!environment.production) {
+      console.log('[Header] Logout initiated');
+    }
     
-    // Logout (clears localStorage and sessionStorage)
+    // Clear in-memory service states (so next user doesn't see stale data)
+    this.notificationService.clearState();
+    this.notificationPrefsService.clearState();
+    this.chatbotService.clearState();
+    
+    // Clear userId context (but DO NOT clear localStorage - we want data to persist for re-login)
+    // The user-prefixed localStorage data stays intact for when this user logs back in
+    this.localStorageService.clearUserId();
+    
+    // Logout and navigate
     this.authService.logout();
     
     // Navigate to landing page
     this.router.navigate(['/']);
     this.showLogoutModal.set(false);
+    
+    if (!environment.production) {
+      console.log('[Header] Logout complete - in-memory state cleared, localStorage preserved');
+    }
   }
 
   @HostListener('document:click', ['$event'])
