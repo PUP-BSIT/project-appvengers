@@ -40,7 +40,7 @@
             </div>
 
             <div class="saving-progress-container">
-              <div class="placeholder col-12" style="height: 20px;"></div>
+              <div class="placeholder col-12 placeholder-progress"></div>
             </div>
 
             <div class="progress-information  mt-2">
@@ -147,8 +147,7 @@
               <span class="mx-2">Page</span>
               <input
                 type="number"
-                class="form-control form-control-sm"
-                style="width: 80px;"
+                class="form-control form-control-sm pagination-input"
                 [value]="currentPage()"
                 (change)="updateCurrentPage($event)"
                 min="1" [attr.max]="totalPages()" />

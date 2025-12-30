@@ -205,6 +205,16 @@ main {
   background-color: #FFC000 !important;
 }
 
+// Placeholder styles
+.placeholder-progress {
+  height: 20px;
+}
+
+// Pagination Styles
+.pagination-input {
+  width: 80px;
+}
+
 @media (max-width: 700px) {
   .no-savings-ui {
     max-width: 95vw;
