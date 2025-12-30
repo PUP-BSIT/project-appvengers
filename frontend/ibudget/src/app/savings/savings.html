@@ -24,9 +24,35 @@
     </div>
     
     <div class="savings-container">
+      <!-- Placeholder while the data is loading -->
       @if(isLoading()) {
-        <div class="loading-spinner-container">
-          <div class="spinner-border text-primary" role="status"></div>
+        <!-- Card Skeleton -->
+        <div class="card m-2">
+          <div class="card-header bg-dark text-white">
+            <h5 class="card-title placeholder col-6"></h5>
+          </div>
+
+          <div class="card-body">
+            <p class="card-text placeholder col-6"></p>
+            <div class="progress-information">
+              <label class="placeholder col-4"></label>
+              <h6 class="placeholder col-2"></h6>
+            </div>
+
+            <div class="saving-progress-container">
+              <div class="placeholder col-12" style="height: 20px;"></div>
+            </div>
+
+            <div class="progress-information  mt-2">
+              <p class="placeholder col-3"></p>
+              <p class="placeholder col-3"></p>
+            </div>    
+
+            <div class="progress-information">
+              <label class="placeholder col-4"></label>
+              <h6 class="placeholder col-3"></h6>
+            </div>
+          </div>
         </div>
       } @else if(filteredSavings().length === 0) {
         <div class="no-savings-ui">
