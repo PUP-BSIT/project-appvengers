@@ -2,6 +2,7 @@ import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import * as generator from 'generate-password-browser';
 import {
   FormBuilder,
   FormGroup,
@@ -31,6 +32,10 @@ export class SignUp {
   loading = signal(false);
   errorMessage = signal('');
   successMessage = signal('');
+
+  // Password Suggestion Signals
+  suggestedPassword = signal('');
+  showSuggestion = signal(false);
 
   constructor() {
     this.signupForm = this.fb.group({
@@ -124,6 +129,58 @@ export class SignUp {
         }
       });
     }
+  }
+
+  // Generate Strong Password
+  generateStrongPassword(): void {
+    const password = generator.generate({
+      length: 16,
+      numbers: true,
+      symbols: true,
+      uppercase: true,
+      lowercase: true,
+      strict: true
+    });
+    this.signupForm.patchValue({
+      password: password,
+      confirmPassword: password
+    });
+    this.hidePassword.set(false);
+  }
+
+  // Password Suggestion Show on focus
+  onPasswordFocus(): void {
+    if (!this.suggestedPassword()) {
+      const password = generator.generate({
+        length: 16,
+        numbers: true,
+        symbols: true,
+        uppercase: true,
+        lowercase: true,
+        strict: true
+      });
+      this.suggestedPassword.set(password);
+    }
+    this.showSuggestion.set(true);
+  }
+
+  // Hide suggestion when password field loses focus
+  onPasswordBlur(): void {
+    // Delay hiding to allow click event on suggestion to fire
+    setTimeout(() => {
+      this.showSuggestion.set(false);
+    }, 200);
+  }
+
+  // For use button click to use suggested password
+  useSuggestion(): void {
+    const password = this.suggestedPassword();
+    this.signupForm.patchValue({
+      password: password,
+      confirmPassword: password
+    });
+    this.hidePassword.set(false);
+    this.showSuggestion.set(false);
   }
 
   get username() { return this.signupForm.get('username'); }
