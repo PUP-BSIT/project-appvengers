@@ -29,8 +29,52 @@
     </ul>
 
     <div class="tab-content">
-      <!-- Overall Computation Section -->
-      @if (thisMonthReport && lastMonthReport) {
+      <!-- Placeholder skeleton for loading state -->
+      @if(isLoading()) {
+        <div class="reports-container-skeleton">
+          <div class="reports-grid">
+            <div class="report-card skeleton">
+              <div class="report-card-icon skeleton-circle"></div>
+              <div class="report-card-content">
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line long"></div>
+              </div>
+            </div>
+
+            <div class="report-card skeleton">
+              <div class="report-card-icon skeleton-circle"></div>
+              <div class="report-card-content">
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line long"></div>
+              </div>
+            </div>
+
+            <div class="report-card skeleton">
+              <div class="report-card-icon skeleton-circle"></div>
+              <div class="report-card-content">
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line long"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="charts-section">
+            <div class="chart-card">
+              <div class="chart-title"><div class="skeleton-line short"></div></div>
+              <div class="chart-wrapper">
+                <div class="skeleton-chart"></div>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-title"><div class="skeleton-line short"></div></div>
+              <div class="chart-wrapper">
+                <div class="skeleton-chart"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      } @else if (thisMonthReport && lastMonthReport) {
         <div class="overall-computation">
           <h2 class="overall-title">
             <i class="fas fa-chart-line me-2"></i>
