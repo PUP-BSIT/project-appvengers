@@ -260,13 +260,13 @@ hideCurrentPassword = signal(true);
       confirmEmail: this.isOAuthUser() ? formValue.confirmEmail : undefined
     };
     
-    this.userService.deactivateAccount(request).subscribe({
+this.userService.deactivateAccount(request).subscribe({
       next: (res) => {
         this.isSubmitting.set(false);
         this.closeDeactivateModal();
         if (res.success) {
           this.authService.logout();
-          this.router.navigate(['/login']);
+          this.router.navigate(['/auth-page']);
         } else {
           this.errorMessage.set(res.message);
         }
@@ -307,7 +307,7 @@ this.userService.softDeleteAccount(request).subscribe({
         this.closeDeleteModal();
         if (res.success) {
           this.authService.logout();
-          this.router.navigate(['/login']);
+          this.router.navigate(['/auth-page']);
         } else {
           this.errorMessage.set(res.message);
         }
