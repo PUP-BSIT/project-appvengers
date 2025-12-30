@@ -192,17 +192,39 @@
             [isDisabled]="isSavingComplete()"/>
 
           <button 
+              type="button"
+              class="btn btn-sm btn-secondary mx-2"
+              (click)="toggleSelectMode()"
+              [disabled]="isSavingComplete() || transactionsCount() === 0">
+                {{ isSelectMode() ? 'Cancel Select' : 'Select Transactions' }}
+            </button>
+
+          <button 
               #deleteSelectedTransactionsBtn
               type="button"
-              class="btn btn-sm btn-danger"
+              [class]="'btn btn-sm btn-danger ' + 
+                (isSelectMode() ? '' : 'hide')"
               [disabled]="selectedTransactionIds().length === 0 || 
                 isSavingComplete()"
               (click)="openDeleteSelectedModal()">
+                <i class="bi bi-trash"></i>
                 Delete Selected ({{ selectedTransactionIds().length }})
             </button>
         </div>
       </div>
       
+      <!-- Select Mode -->
+      @if(isSelectMode()) {
+        <div class="alert alert-info d-flex align-items-center gap-2">
+          <i class="bi bi-info-circle-fill fs-5"></i>
+          <div>
+            Select the transactions you want to delete by checking the boxes 
+            beside the dates.
+          </div>  
+        </div>
+      } 
+      
+      <!-- Saving Transaction Table -->
       <div class="table-container">
         <table class="table">
           <thead>
@@ -215,6 +237,7 @@
             </tr>
           </thead>
           <tbody>
+            <!-- Transaction List -->
             @if(filteredTransactions().length === 0) {
               <tr>
                 <td colspan="5" class="text-center py-5 text-muted">
@@ -233,13 +256,18 @@
               {
                 <tr>
                   <td>
-                    <input 
-                      type="checkbox" 
-                      class="form-check-input"
-                      [value]="transaction.id"
-                      [checked]="selectedTransactionIds().includes(transaction.id)"
-                      (change)="checkSelectedTransaction($event, transaction.id)"/>
-                    &nbsp;
+                    @if(isSelectMode()) {
+                      <input 
+                        type="checkbox" 
+                        class="form-check-input"
+                        [value]="transaction.id"
+                        [checked]="selectedTransactionIds()
+                          .includes(transaction.id)"
+                        (change)="checkSelectedTransaction($event, 
+                          transaction.id)"/>
+                      &nbsp;
+                    }
+                    
                     {{ transaction.transaction_date | date:'mediumDate' }}
                   </td>
                   @if(transaction.savings_action === 'Deposit') {
