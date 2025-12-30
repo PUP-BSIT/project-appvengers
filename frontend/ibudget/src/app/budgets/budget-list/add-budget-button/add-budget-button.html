@@ -18,6 +18,20 @@
           <form [formGroup]="budgetForm">
             <input type="hidden" formControlName="id" [value]="budgetId()"/>
 
+            <!-- Budget Name -->
+            <label for="name">Budget Name</label>
+            <input
+              formControlName="name"
+              class="form-control mb-3"
+              id="name"
+              type="text"
+              placeholder="Enter budget name"
+              [class.is-invalid]="isInvalid('name')"/>
+
+            @if(isInvalid('name')) {
+              <div class="text-danger mb-2">Budget name is required.</div>
+            }
+
             <label for="category_id">Category</label>
             <select 
               formControlName="category_id" 
