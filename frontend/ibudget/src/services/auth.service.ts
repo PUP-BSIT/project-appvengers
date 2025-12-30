@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../environments/environment';
@@ -10,8 +10,7 @@ import { ApiResponse, AuthData, SignupRequest, ReactivateAccountRequest } from '
 
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   signup(userData: SignupRequest): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${this.apiUrl}/signup`, userData);
@@ -54,7 +53,23 @@ export class AuthService {
   }
 
   logout(): void {
+    // Clear ALL localStorage items to prevent data leakage between accounts
     localStorage.removeItem('iBudget_authToken');
+    localStorage.removeItem('iBudget_username');
+    
+    // Clear ALL iBudget-prefixed items (comprehensive cleanup)
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('iBudget_') || key.startsWith('chatbot_')) {
+        localStorage.removeItem(key);
+      }
+    });
+    
+    // Also clear sessionStorage (if any session data exists)
+    sessionStorage.clear();
+    
+    // Note: Services should be cleared by the header component calling their clearState() methods
+    // This includes: NotificationService.clearState(), WebSocketService.disconnect()
+    console.log('🚪 User logged out - all storage cleared');
   }
 
   getToken(): string | null {

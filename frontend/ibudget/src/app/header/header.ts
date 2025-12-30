@@ -108,9 +108,13 @@ export class Header implements OnInit, OnDestroy {
   }
 
   confirmLogout() {
-    // Disconnect WebSocket before logout
-    this.notificationService.disconnectWebSocket();
+    // Clear all service state before logout
+    this.notificationService.clearState();
+    
+    // Logout (clears localStorage and sessionStorage)
     this.authService.logout();
+    
+    // Navigate to landing page
     this.router.navigate(['/']);
     this.showLogoutModal.set(false);
   }

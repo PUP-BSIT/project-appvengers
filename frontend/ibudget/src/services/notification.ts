@@ -344,6 +344,17 @@ fetchNotifications(): void {
     return this.colorMap.get(type) || 'info';
   }
 
+  /**
+   * Clear all notification state (for logout).
+   * Resets in-memory cache and disconnects WebSocket.
+   */
+  clearState(): void {
+    this.notificationsSubject.next([]);
+    this.previousNotificationIds.clear();
+    this.disconnectWebSocket();
+    console.log('🧹 Notification state cleared');
+  }
+
   ngOnDestroy(): void {
     this.disconnectWebSocket();
   }
