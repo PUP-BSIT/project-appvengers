@@ -77,14 +77,17 @@
 
         <!-- Password Field -->
         <div class="password-fields">
-          <div class="mb-3">
+          <div class="mb-3 position-relative">
             <label for="password" class="form-label">Password</label>
             <div class="input-group">
               <input [type]="hidePassword() ? 'password' : 'text'"
                 class="form-control"
                 id="password"
                 formControlName="password"
-                placeholder="Create a password">
+                placeholder="Create a password"
+                autocomplete="new-password"
+                (focus)="onPasswordFocus()"
+                (blur)="onPasswordBlur()">
               <button class="btn btn-outline-secondary" type="button"
                 (click)="hidePassword.set(!hidePassword())">
                 <i class="bi" [class.bi-eye]="!hidePassword()"
@@ -92,6 +95,20 @@
                 </i>
               </button>
             </div>
+
+            @if(showSuggestion()) {
+              <div class="card shadow-sm mt-1 position-absolute w-100 start-0" style="z-index: 1050; border: 1px solid #ced4da;">
+                <div class="card-body p-2 d-flex align-items-center justify-content-between bg-white rounded">
+                  <div class="d-flex flex-column text-start overflow-hidden me-2">
+                    <small class="text-muted" style="font-size: 0.75rem;">Suggested strong password:</small>
+                    <strong class="font-monospace text-truncate d-block" style="font-size: 0.9rem;">{{ suggestedPassword() }}</strong>
+                  </div>
+                  <button type="button" class="btn btn-sm btn-primary flex-shrink-0" (click)="useSuggestion()">
+                    Use
+                  </button>
+                </div>
+              </div>
+            }
 
             @if(password?.hasError('required') && password?.touched) {
               <div class="text-danger small mt-1">
