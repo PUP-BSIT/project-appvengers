@@ -115,7 +115,7 @@
   }
 
   // Mobile S, M, L: Strict 1 Column
-  @media (max-width: 425px) {
+  @media (max-width: 426px) {
     display: flex !important;
     flex-direction: column !important; // Forces vertical stacking
     gap: 1rem;
