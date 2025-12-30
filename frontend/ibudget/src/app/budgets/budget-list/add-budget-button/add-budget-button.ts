@@ -57,7 +57,7 @@ export class AddBudgetButton implements OnInit, OnChanges {
     this.budgetForm = this.formBuilder.group({
       id: [],
       category_id: ['', { validators: [Validators.required] }],
-      // category_name: [''],
+      name: ['', { validators: [Validators.required] }],
       limit_amount: [0, [Validators.required, Validators.min(1)]],
       current_amount: [0],
       start_date: ['', { validators: [Validators.required] }],

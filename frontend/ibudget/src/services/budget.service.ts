@@ -16,6 +16,7 @@ export class BudgetService {
       id: b.budgetId,
       category_id: b.categoryId,
       category_name: b.categoryName, // filled by UI via CategoriesService if needed
+      name: b.name,
       limit_amount: b.limitAmount,
       start_date: b.startDate,
       end_date: b.endDate,
