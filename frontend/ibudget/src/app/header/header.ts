@@ -65,7 +65,9 @@ export class Header implements OnInit, OnDestroy {
         
         // Set userId in LocalStorageService for user-scoped data
         this.localStorageService.setUserId(res.data.id);
-        console.log(`[Header] User logged in: ${res.data.id}`);
+        if (!environment.production) {
+          console.log(`[Header] User logged in: ${res.data.id}`);
+        }
         
         // Load user-specific preferences
         this.notificationPrefsService.loadPreferences();

@@ -81,7 +81,9 @@ export class NotificationService implements OnDestroy {
   initializeWebSocket(userId: number): void {
     // Check if already initialized to prevent duplicate subscriptions on navigation
     if (this.wsSubscription && this.webSocketService.isConnected()) {
-      console.log('🔌 WebSocket already initialized, skipping');
+      if (!environment.production) {
+        console.log('🔌 WebSocket already initialized, skipping');
+      }
       return;
     }
     
@@ -95,7 +97,9 @@ export class NotificationService implements OnDestroy {
       );
     }
     
-    console.log('🔌 WebSocket initialized for notifications');
+    if (!environment.production) {
+      console.log('🔌 WebSocket initialized for notifications');
+    }
   }
 
   /**
@@ -103,11 +107,15 @@ export class NotificationService implements OnDestroy {
    * Adds notification to the list and triggers appropriate effects.
    */
   private handleWebSocketNotification(notification: Notification): void {
-    console.log('📬 Processing WebSocket notification:', notification.title);
+    if (!environment.production) {
+      console.log('📬 Processing WebSocket notification:', notification.title);
+    }
     
     // Check if this notification type is enabled in preferences
     if (!this.preferencesService.isNotificationEnabled(notification.type)) {
-      console.log('🔕 Notification type disabled by preferences:', notification.type);
+      if (!environment.production) {
+        console.log('🔕 Notification type disabled by preferences:', notification.type);
+      }
       return;
     }
     
@@ -116,7 +124,9 @@ export class NotificationService implements OnDestroy {
     
     // Check if notification already exists (prevent duplicates)
     if (currentNotifications.some(n => n.id === notification.id)) {
-      console.log('⚠️ Notification already exists, skipping:', notification.id);
+      if (!environment.production) {
+        console.log('⚠️ Notification already exists, skipping:', notification.id);
+      }
       return;
     }
     
@@ -135,17 +145,25 @@ export class NotificationService implements OnDestroy {
 // Trigger confetti for special notifications (if enabled in preferences)
     if (notification.type === 'SAVINGS_COMPLETED') {
       if (this.preferencesService.getPreferencesSync().savingsCompletedEnabled) {
-        console.log('🎉 Triggering celebration confetti!');
+        if (!environment.production) {
+          console.log('🎉 Triggering celebration confetti!');
+        }
         this.confettiService.celebrate();
       } else {
-        console.log('🔕 Celebration confetti disabled by preferences');
+        if (!environment.production) {
+          console.log('🔕 Celebration confetti disabled by preferences');
+        }
       }
     } else if (notification.type === 'SAVINGS_MILESTONE_50' || notification.type === 'SAVINGS_MILESTONE_75') {
       if (this.preferencesService.getPreferencesSync().savingsMilestoneEnabled) {
-        console.log('⭐ Triggering milestone confetti!');
+        if (!environment.production) {
+          console.log('⭐ Triggering milestone confetti!');
+        }
         this.confettiService.milestone();
       } else {
-        console.log('🔕 Milestone confetti disabled by preferences');
+        if (!environment.production) {
+          console.log('🔕 Milestone confetti disabled by preferences');
+        }
       }
     }
 
@@ -209,7 +227,9 @@ export class NotificationService implements OnDestroy {
       this.wsSubscription = null;
     }
     this.webSocketService.disconnect();
-    console.log('🔌 WebSocket disconnected');
+    if (!environment.production) {
+      console.log('🔌 WebSocket disconnected');
+    }
   }
 
   /**
@@ -234,7 +254,9 @@ fetchNotifications(): void {
             if (this.preferencesService.isSoundEnabled()) {
               this.confettiService.playNotificationSound();
             }
-            console.log('🔔 New notification(s) from HTTP fetch:', newNotifications.length);
+            if (!environment.production) {
+              console.log('🔔 New notification(s) from HTTP fetch:', newNotifications.length);
+            }
           }
 
           // Update previous IDs tracker (store ALL notification IDs, not just unread)
