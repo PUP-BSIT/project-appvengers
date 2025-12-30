@@ -128,9 +128,13 @@ export class NotificationPreferencesService {
         // Merge with defaults to ensure all keys exist
         const preferences = { ...DEFAULT_PREFERENCES, ...stored };
         this.preferencesSubject.next(preferences);
-        console.log('[NotificationPreferences] Loaded user preferences');
+        if (!environment.production) {
+          console.log('[NotificationPreferences] Loaded user preferences');
+        }
       } else {
-        console.log('[NotificationPreferences] No stored preferences, using defaults');
+        if (!environment.production) {
+          console.log('[NotificationPreferences] No stored preferences, using defaults');
+        }
         this.preferencesSubject.next(DEFAULT_PREFERENCES);
       }
     } catch (e) {
@@ -145,7 +149,9 @@ export class NotificationPreferencesService {
   private saveToStorage(preferences: NotificationPreferences): void {
     try {
       this.localStorageService.setItem(STORAGE_KEY, preferences);
-      console.log('[NotificationPreferences] Saved user preferences');
+      if (!environment.production) {
+        console.log('[NotificationPreferences] Saved user preferences');
+      }
     } catch (e) {
       console.error('[NotificationPreferences] Failed to save preferences:', e);
     }

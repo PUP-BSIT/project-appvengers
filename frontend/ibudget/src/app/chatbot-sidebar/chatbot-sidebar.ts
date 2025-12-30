@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { marked } from 'marked';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import DOMPurify from 'dompurify';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-chatbot-sidebar',
@@ -110,7 +111,9 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
             // Track stateVersion changes - when it changes, reset local state
             const version = this.chatbotService.stateVersion();
             if (version > 0) {
-                console.log('[ChatbotSidebar] State reset triggered (version:', version, ')');
+                if (!environment.production) {
+                    console.log('[ChatbotSidebar] State reset triggered (version:', version, ')');
+                }
                 this.loadedForUserId = null;
                 this.messages.set([]);
             }
@@ -161,7 +164,9 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
         const userId = this.localStorageService.getUserId();
         
         if (userId === null) {
-            console.log('[ChatbotSidebar] userId not set yet, will retry when sidebar opens');
+            if (!environment.production) {
+                console.log('[ChatbotSidebar] userId not set yet, will retry when sidebar opens');
+            }
             // DON'T add welcome message here - wait for userId to be set
             // This prevents overwriting saved messages when effect triggers
             return;
@@ -169,19 +174,27 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
 
         // Check if we already loaded for this user
         if (this.loadedForUserId === userId) {
-            console.log('[ChatbotSidebar] Messages already loaded for user', userId);
+            if (!environment.production) {
+                console.log('[ChatbotSidebar] Messages already loaded for user', userId);
+            }
             return;
         }
 
-        console.log('[ChatbotSidebar] Loading messages for user', userId);
+        if (!environment.production) {
+            console.log('[ChatbotSidebar] Loading messages for user', userId);
+        }
         const savedMessages = this.chatbotService.loadMessages();
         if (savedMessages.length > 0) {
             this.messages.set(savedMessages);
             this.showWelcome.set(false);
-            console.log('[ChatbotSidebar] Loaded', savedMessages.length, 'messages from storage');
+            if (!environment.production) {
+                console.log('[ChatbotSidebar] Loaded', savedMessages.length, 'messages from storage');
+            }
         } else {
             // Show welcome message for new sessions (no saved history)
-            console.log('[ChatbotSidebar] No saved messages, showing welcome');
+            if (!environment.production) {
+                console.log('[ChatbotSidebar] No saved messages, showing welcome');
+            }
             this.addWelcomeMessage();
         }
 
