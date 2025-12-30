@@ -384,14 +384,17 @@
                 <div class="card-body">
                   <div class="d-flex justify-content-between align-items-center mb-2 w-100">
                     <div class="d-flex justify-content-center align-items-center">
-                    <input 
-                      type="checkbox" 
-                      class="form-check-input"
-                      [value]="transaction.id"
-                      [checked]="selectedTransactionIds().includes(transaction.id)"
-                      (change)="checkSelectedTransaction($event, transaction.id)"/>
-                    &nbsp;
-
+                    @if(isSelectMode()) {
+                      <input 
+                        type="checkbox" 
+                        class="form-check-input"
+                        [value]="transaction.id"
+                        [checked]="selectedTransactionIds()
+                          .includes(transaction.id)"
+                        (change)="checkSelectedTransaction($event, transaction.id)"/>
+                      &nbsp;
+                    }
+                  
                     <h6 class="card-title mb-0">
                       {{ transaction.transaction_date | date:'mediumDate' }}
                     </h6>
