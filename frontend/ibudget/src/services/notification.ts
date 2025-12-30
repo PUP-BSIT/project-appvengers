@@ -349,10 +349,12 @@ fetchNotifications(): void {
    * Resets in-memory cache and disconnects WebSocket.
    */
   clearState(): void {
+    if (!environment.production) {
+      console.log('[NotificationService] Clearing state');
+    }
     this.notificationsSubject.next([]);
     this.previousNotificationIds.clear();
     this.disconnectWebSocket();
-    console.log('🧹 Notification state cleared');
   }
 
   ngOnDestroy(): void {

@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 /**
  * Visualization data returned by n8n for rendering charts in chat.
@@ -71,10 +72,11 @@ export interface ChatbotResponse {
 })
 export class ChatbotService {
     private http = inject(HttpClient);
+    private localStorageService = inject(LocalStorageService);
     // Proxy through backend to hide n8n URL and handle CORS
     private readonly apiUrl = `${environment.apiUrl}/chatbot/message`;
 
-    // Session and message persistence keys
+    // Session and message persistence keys (user-scoped)
     private readonly SESSION_STORAGE_KEY = 'bonzi_session_id';
     private readonly MESSAGES_STORAGE_KEY = 'bonzi_chat_history';
     
@@ -82,10 +84,14 @@ export class ChatbotService {
     private _sessionId: string | null = null;
 
     isOpen = signal(false);
+    
+    // Signal to notify components when state is cleared (e.g., on logout)
+    // Increment this value to trigger a reset in subscribers
+    stateVersion = signal(0);
 
     get sessionId(): string {
         try {
-            const stored = localStorage.getItem(this.SESSION_STORAGE_KEY);
+            const stored = this.localStorageService.getItem<string>(this.SESSION_STORAGE_KEY);
             if (stored) {
                 return stored;
             }
@@ -111,17 +117,17 @@ export class ChatbotService {
     }
 
     /**
-     * Loads existing session ID from localStorage or generates a new one.
-     * This ensures conversation continuity across page refreshes.
+     * Loads existing session ID from user-scoped localStorage or generates a new one.
+     * This ensures conversation continuity across page refreshes for the same user.
      */
     private loadOrGenerateSessionId(): string {
         try {
-            const stored = localStorage.getItem(this.SESSION_STORAGE_KEY);
+            const stored = this.localStorageService.getItem<string>(this.SESSION_STORAGE_KEY);
             if (stored) {
                 return stored;
             }
         } catch (error) {
-            console.warn('Failed to load session ID from localStorage:', error);
+            console.warn('[ChatbotService] Failed to load session ID:', error);
         }
         
         const newSessionId = this.generateSessionId();
@@ -130,13 +136,13 @@ export class ChatbotService {
     }
 
     /**
-     * Saves session ID to localStorage for persistence.
+     * Saves session ID to user-scoped localStorage for persistence.
      */
     private saveSessionId(sessionId: string): void {
         try {
-            localStorage.setItem(this.SESSION_STORAGE_KEY, sessionId);
+            this.localStorageService.setItem(this.SESSION_STORAGE_KEY, sessionId);
         } catch (error) {
-            console.warn('Failed to save session ID to localStorage:', error);
+            console.warn('[ChatbotService] Failed to save session ID:', error);
         }
     }
 
@@ -158,7 +164,7 @@ export class ChatbotService {
     }
 
     /**
-     * Saves chat messages to localStorage for persistence.
+     * Saves chat messages to user-scoped localStorage for persistence.
      */
     saveMessages(messages: ChatMessage[]): void {
         try {
@@ -166,27 +172,26 @@ export class ChatbotService {
                 ...msg,
                 timestamp: msg.timestamp.toISOString()
             }));
-            localStorage.setItem(this.MESSAGES_STORAGE_KEY, JSON.stringify(serialized));
+            this.localStorageService.setItem(this.MESSAGES_STORAGE_KEY, serialized);
         } catch (error) {
-            console.warn('Failed to save messages to localStorage:', error);
+            console.warn('[ChatbotService] Failed to save messages:', error);
         }
     }
 
     /**
-     * Loads chat messages from localStorage.
+     * Loads chat messages from user-scoped localStorage.
      */
     loadMessages(): ChatMessage[] {
         try {
-            const stored = localStorage.getItem(this.MESSAGES_STORAGE_KEY);
+            const stored = this.localStorageService.getItem<any[]>(this.MESSAGES_STORAGE_KEY);
             if (stored) {
-                const parsed = JSON.parse(stored);
-                return parsed.map((msg: any) => ({
+                return stored.map((msg: any) => ({
                     ...msg,
                     timestamp: new Date(msg.timestamp)
                 }));
             }
         } catch (error) {
-            console.warn('Failed to load messages from localStorage:', error);
+            console.warn('[ChatbotService] Failed to load messages:', error);
         }
         return [];
     }
@@ -196,10 +201,23 @@ export class ChatbotService {
      */
     clearHistory(): void {
         try {
-            localStorage.removeItem(this.MESSAGES_STORAGE_KEY);
-            localStorage.removeItem(this.SESSION_STORAGE_KEY);
+            this.localStorageService.removeItem(this.MESSAGES_STORAGE_KEY);
+            this.localStorageService.removeItem(this.SESSION_STORAGE_KEY);
+            console.log('[ChatbotService] Chat history cleared');
         } catch (error) {
-            console.warn('Failed to clear chat history:', error);
+            console.warn('[ChatbotService] Failed to clear chat history:', error);
         }
+    }
+
+    /**
+     * Clear state on logout (called by header component)
+     */
+    clearState(): void {
+        console.log('[ChatbotService] Clearing chatbot state');
+        this._sessionId = null;
+        // Close the chatbot sidebar
+        this.isOpen.set(false);
+        // Increment stateVersion to notify subscribers to reset their local state
+        this.stateVersion.update(v => v + 1);
     }
 }

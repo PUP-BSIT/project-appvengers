@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ChatbotService, ChatMessage, ChatbotAction, ChatbotResponse, ChatVisualization } from './chatbot.service';
 import { ChatChart } from './chat-chart/chat-chart';
 import { SpeechService, SpeechResult, SpeechError } from '../../services/speech.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 import { Subscription } from 'rxjs';
 import { marked } from 'marked';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -22,6 +23,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     private speechService = inject(SpeechService);
     private sanitizer = inject(DomSanitizer);
     private router = inject(Router);
+    private localStorageService = inject(LocalStorageService);
 
     // Subscriptions for cleanup
     private speechSubscription: Subscription | null = null;
@@ -55,6 +57,9 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
 
     // Scroll tracking
     private shouldScrollToBottom = false;
+    
+    // Track which user's messages are loaded (to detect user change)
+    private loadedForUserId: number | null = null;
 
     @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
     @ViewChild('textareaRef') private textareaRef!: ElementRef<HTMLTextAreaElement>;
@@ -84,11 +89,30 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
             return undefined;
         });
 
-        // Save messages to localStorage whenever they change
+        // Save messages to localStorage whenever they change (only if userId is set)
         effect(() => {
             const msgs = this.messages();
-            if (msgs.length > 0) {
+            const userId = this.localStorageService.getUserId();
+            if (msgs.length > 0 && userId !== null) {
                 this.chatbotService.saveMessages(msgs);
+            }
+        });
+
+        // Reload messages when sidebar opens (in case userId wasn't set on first load or user changed)
+        effect(() => {
+            if (this.isOpen()) {
+                this.loadMessagesIfReady();
+            }
+        });
+
+        // Reset local state when service state is cleared (logout)
+        effect(() => {
+            // Track stateVersion changes - when it changes, reset local state
+            const version = this.chatbotService.stateVersion();
+            if (version > 0) {
+                console.log('[ChatbotSidebar] State reset triggered (version:', version, ')');
+                this.loadedForUserId = null;
+                this.messages.set([]);
             }
         });
 
@@ -125,21 +149,51 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        // Load persisted messages on component init
+        // Try to load persisted messages (will only work if userId is already set)
+        this.loadMessagesIfReady();
+    }
+
+    /**
+     * Load messages from localStorage if userId is available.
+     * Called on init and when sidebar opens.
+     */
+    private loadMessagesIfReady(): void {
+        const userId = this.localStorageService.getUserId();
+        
+        if (userId === null) {
+            console.log('[ChatbotSidebar] userId not set yet, will retry when sidebar opens');
+            // DON'T add welcome message here - wait for userId to be set
+            // This prevents overwriting saved messages when effect triggers
+            return;
+        }
+
+        // Check if we already loaded for this user
+        if (this.loadedForUserId === userId) {
+            console.log('[ChatbotSidebar] Messages already loaded for user', userId);
+            return;
+        }
+
+        console.log('[ChatbotSidebar] Loading messages for user', userId);
         const savedMessages = this.chatbotService.loadMessages();
         if (savedMessages.length > 0) {
             this.messages.set(savedMessages);
             this.showWelcome.set(false);
+            console.log('[ChatbotSidebar] Loaded', savedMessages.length, 'messages from storage');
         } else {
-            // Show welcome message for new sessions
+            // Show welcome message for new sessions (no saved history)
+            console.log('[ChatbotSidebar] No saved messages, showing welcome');
             this.addWelcomeMessage();
         }
 
-        // Load auto-speak preference from localStorage
-        const savedAutoSpeak = localStorage.getItem('bonzi_autoSpeak');
-        if (savedAutoSpeak === 'true') {
+        // Load auto-speak preference from user-scoped localStorage
+        const savedAutoSpeak = this.localStorageService.getItem<boolean>('bonzi_autoSpeak');
+        if (savedAutoSpeak === true) {
             this.autoSpeak.set(true);
+        } else {
+            this.autoSpeak.set(false);
         }
+        
+        this.loadedForUserId = userId;
     }
 
     ngOnDestroy() {
@@ -682,8 +736,8 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
         const newValue = !this.autoSpeak();
         this.autoSpeak.set(newValue);
         
-        // Persist preference
-        localStorage.setItem('bonzi_autoSpeak', String(newValue));
+        // Persist preference to user-scoped localStorage
+        this.localStorageService.setItem('bonzi_autoSpeak', newValue);
 
         // Stop any ongoing speech when turning off
         if (!newValue && this.isSpeaking()) {
