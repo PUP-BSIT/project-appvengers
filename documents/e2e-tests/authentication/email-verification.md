@@ -7,7 +7,7 @@
 - `/email-verified` - Email verification confirmation page
 - `/resend-verification` - Resend verification email success page
 - `/setup-account` - Account setup after registration  
-**Last Updated**: December 23, 2024  
+**Last Updated**: December 23, 2025  
 **Test Count**: 12
 
 ---
@@ -32,9 +32,9 @@ This test matrix covers the email verification flow including clicking verificat
 
 | Test ID | Test Name | Description | Preconditions | Steps | Expected Result | Priority | Type | Status | Last Tested | Notes |
 |---------|-----------|-------------|---------------|-------|-----------------|----------|------|--------|-------------|-------|
-| AUTH-VER-001 | Email verification link success | Verify email verification with valid token | New user with unverified email | 1. Click verification link from email<br>2. Wait for page load | Navigates to `/email-verified`, shows success message with checkmark icon | P0 | E2E | ✅ Passed | Dec 23, 2024 | Tested with kaelvxd@proton.me - Email verified successfully |
-| AUTH-VER-002 | Display verification success page | Verify success page displays correctly | Valid verification completed | 1. Navigate to `/email-verified` (after successful verification) | Page displays: Checkmark icon, "Email Verified!" heading, welcome message, "Proceed to Login" button | P0 | Smoke | ✅ Passed | Dec 23, 2024 | User confirmed email verification completed |
-| AUTH-VER-003 | Proceed to login after verification | Verify navigation to login after verification | On email verified page | 1. Click "Proceed to Login" button or card container | Navigates to `/auth-page` | P1 | E2E | ✅ Passed | Dec 23, 2024 | User successfully logged in after verification |
+| AUTH-VER-001 | Email verification link success | Verify email verification with valid token | New user with unverified email | 1. Click verification link from email<br>2. Wait for page load | Navigates to `/email-verified`, shows success message with checkmark icon | P0 | E2E | ✅ Passed | Dec 23, 2025 | Tested with kaelvxd@proton.me - Email verified successfully |
+| AUTH-VER-002 | Display verification success page | Verify success page displays correctly | Valid verification completed | 1. Navigate to `/email-verified` (after successful verification) | Page displays: Checkmark icon, "Email Verified!" heading, welcome message, "Proceed to Login" button | P0 | Smoke | ✅ Passed | Dec 23, 2025 | User confirmed email verification completed |
+| AUTH-VER-003 | Proceed to login after verification | Verify navigation to login after verification | On email verified page | 1. Click "Proceed to Login" button or card container | Navigates to `/auth-page` | P1 | E2E | ✅ Passed | Dec 23, 2025 | User successfully logged in after verification |
 | AUTH-VER-004 | Invalid verification token | Verify error handling for invalid token | Invalid/malformed token in URL | 1. Navigate to verification URL with invalid token | Error page displayed indicating invalid verification link | P0 | Negative | ⏳ Pending | - | Should show clear error message |
 | AUTH-VER-005 | Expired verification token | Verify error handling for expired token | Token older than expiry period | 1. Click expired verification link | Error page displayed, option to resend verification email | P1 | Negative | ⏳ Pending | - | Token has time limit |
 | AUTH-VER-006 | Already verified account | Verify behavior when clicking link for verified account | User already verified email | 1. Click verification link again | Appropriate message indicating already verified, redirect to login | P2 | E2E | ⏳ Pending | - | Graceful handling |
