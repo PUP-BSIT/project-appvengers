@@ -225,8 +225,34 @@
       } 
       
       <!-- Saving Transaction Table -->
+
+      <!-- Placeholder while loading -->
       <div class="table-container">
-        <table class="table">
+        @if(isLoading()) {
+          <table class="table placeholder-glow">
+            <thead>
+              <tr class="table-dark">
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for(i of [1,2]; track $index) {
+                <tr>
+                  <td><span class="placeholder col-6"></span></td>
+                  <td><span class="placeholder col-4"></span></td>
+                  <td><span class="placeholder col-5"></span></td>
+                  <td><span class="placeholder col-8"></span></td>
+                  <td><span class="placeholder col-7"></span></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          <table class="table">
           <thead>
             <tr class="table-dark">
               <th>Date</th>
@@ -315,13 +341,14 @@
             }
           </tbody>
         </table>
+        }
       </div>
 
       <!-- Pagination controls -->
       @if(pageCount() > 1) {
         <nav 
           aria-label="pagination" 
-            class="d-flex justify-content-between align-items-center px-2 mt-2">
+            class="d-flex justify-content-between align-items-center px-2 mb-4">
           <button 
             class="btn btn-outline-secondary btn-sm" 
             (click)="prevPage()" 
@@ -357,14 +384,17 @@
                 <div class="card-body">
                   <div class="d-flex justify-content-between align-items-center mb-2 w-100">
                     <div class="d-flex justify-content-center align-items-center">
-                    <input 
-                      type="checkbox" 
-                      class="form-check-input"
-                      [value]="transaction.id"
-                      [checked]="selectedTransactionIds().includes(transaction.id)"
-                      (change)="checkSelectedTransaction($event, transaction.id)"/>
-                    &nbsp;
-
+                    @if(isSelectMode()) {
+                      <input 
+                        type="checkbox" 
+                        class="form-check-input"
+                        [value]="transaction.id"
+                        [checked]="selectedTransactionIds()
+                          .includes(transaction.id)"
+                        (change)="checkSelectedTransaction($event, transaction.id)"/>
+                      &nbsp;
+                    }
+                  
                     <h6 class="card-title mb-0">
                       {{ transaction.transaction_date | date:'mediumDate' }}
                     </h6>

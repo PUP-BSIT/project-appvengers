@@ -30,6 +30,9 @@ export class BudgetList implements OnInit {
   router = inject(Router);
   budgetTransactionsService = inject(BudgetTransactionsService);
 
+  // Loading State
+  isLoading = signal(true);
+
   ngOnInit(): void {
     this.getBudgets();
   }
@@ -58,8 +61,14 @@ export class BudgetList implements OnInit {
     this.budgetService.getBudgets()
       .pipe(switchMap(budgets => this.hydrateBudgets(budgets)))
       .subscribe({
-        next: hydrated => this.budgets.set(hydrated),
-        error: err => console.error('Failed to load budgets', err)
+        next: hydrated => {
+          this.budgets.set(hydrated);
+          this.isLoading.set(false);
+        },
+        error: err => {
+          console.error('Failed to load budgets', err);
+          this.isLoading.set(false);
+        }
       });
   }
 

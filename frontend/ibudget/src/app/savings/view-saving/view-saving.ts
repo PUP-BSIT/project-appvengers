@@ -69,6 +69,7 @@ export class ViewSaving implements OnInit{
 
   openUpdateTransactionModal(transactionId: number) {
     this.updateTransactionModal.openUpdateModalWithData(transactionId);
+    this.showDropdown.set(null);
   }
 
   // Selected Transactions Container (Array)

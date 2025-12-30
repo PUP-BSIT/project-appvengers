@@ -20,6 +20,7 @@ import { ToggleableSidebar } from "../../../toggleable-sidebar/toggleable-sideba
 
 export class ViewBudget implements OnInit, AfterViewInit {
   @ViewChild(KpiPanel) kpiPanel!: KpiPanel; 
+  @ViewChild('updateBudgetModal') updateBudgetModal!: UpdateBudgetExpense;
 
   // Services
   budgetTxService = inject(BudgetTransactionsService);
@@ -36,6 +37,13 @@ export class ViewBudget implements OnInit, AfterViewInit {
   showNotification = signal(false);
   isHidingNotification = signal(false);
   notificationMessage = signal('');
+
+  // Loading State
+  isLoading = signal(true);
+
+  // Dropdown State
+  // store the open dropdown index (null = none open)
+  isDropdownOpen = signal<number | null>(null);
 
   ngOnInit(): void {
     this.initBudgetId();
@@ -58,8 +66,18 @@ export class ViewBudget implements OnInit, AfterViewInit {
     if (!id) return;
 
     this.budgetTxService.getByBudgetId(id).subscribe({
-      next: (transactions) => this.budgetExpenses.set(transactions),
-      error: (err) => console.error('Failed to load budget expenses', err)
+      next: (transactions) => {
+        this.budgetExpenses.set(transactions);
+
+        // Added a timeout for better UX while loading
+        setTimeout(() => {
+          this.isLoading.set(false);
+        }, 2000);
+      },
+      error: (err) => {
+        console.error('Failed to load budget expenses', err);
+        this.isLoading.set(false);
+      }
     });
   }
 
@@ -71,8 +89,12 @@ export class ViewBudget implements OnInit, AfterViewInit {
     next: (summary) => {
       const exceeded = +summary.totalExpenses >= +summary.limitAmount;
       this.isBudgetExceeded.set(exceeded);
+      this.isLoading.set(false);
     },
-    error: (err) => console.error('Failed to load summary', err)
+    error: (err) => {
+      console.error('Failed to load summary', err);
+      this.isLoading.set(false);
+    }
   });
 }
 
@@ -124,5 +146,15 @@ export class ViewBudget implements OnInit, AfterViewInit {
         this.isHidingNotification.set(false);
       }, 300);
     }, 3000);
+  }
+
+  toggleDropdown(index: number) {
+    const current = this.isDropdownOpen();
+    this.isDropdownOpen.set(current === index ? null : index);
+  }
+
+  openUpdateModal(transactionId: number) {
+    this.updateBudgetModal.open(transactionId);
+    this.isDropdownOpen.set(null); // Close dropdown after opening modal
   }
 }

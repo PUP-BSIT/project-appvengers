@@ -103,9 +103,12 @@ export class Savings implements OnInit {
   getSavings() {
     this.savingsService.getSavings().subscribe({
       next: (savingsData) => {
-        this.allSavings.set(savingsData as Saving[]);
-        this.currentPage.set(1);
-        this.isLoading.set(false);
+        // Add a delay for better data loading experience
+        setTimeout(() => {
+          this.allSavings.set(savingsData as Saving[]);
+          this.currentPage.set(1);
+          this.isLoading.set(false);
+        }, 1000);
       },
       error: (error) => {
         this.isLoading.set(false);

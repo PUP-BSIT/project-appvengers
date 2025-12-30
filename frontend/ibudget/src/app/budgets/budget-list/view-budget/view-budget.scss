@@ -51,6 +51,47 @@ main {
   animation: slideOut 0.3s ease-in forwards;
 }
 
+.expenses-table-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 3px auto;
+  overflow-x: auto;
+
+  .table {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.13);
+    border-radius: 12px;
+    overflow: hidden;
+    width: 100%;
+    min-width: 800px;
+    background: #fff;
+    font-size: 1.08rem;
+  }
+
+  th, td {
+    padding: 1rem 1rem !important;
+  }
+
+  th {
+    font-size: 1rem;
+  }
+
+  // base cells transition
+  tbody tr > * {
+    transition: background-color .3s ease-in-out;
+  }
+
+  tbody tr:hover > * {
+    background-color: #e1e1e1 !important;
+    cursor: pointer;
+  }
+}
+
+// Hides elements
+.hide {
+  display: none !important;
+}
+
+// Toast Animation Keyframes
 @keyframes slideIn {
   from {
     transform: translateX(100%);
@@ -70,5 +111,87 @@ main {
   to {
     transform: translateX(100%);
     opacity: 0;
+  }
+}
+
+@media (max-width: 426px) {
+  main {
+    margin: 0;
+    margin-top: 60px;
+    padding: 10px;
+  }
+
+  .expenses-history-container {
+    margin: 20px 10px;
+  }
+
+  .expenses-table-container {
+    display: none !important;
+  }
+
+  // Kebab Dropdown for small screens
+  .kebab-dropdown {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    z-index: 600;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+  }
+}
+
+@media (min-width: 427px) and (max-width: 769px) {
+  main{
+    margin: 0px;
+    margin-top: 60px;
+    padding: 20px;
+  }
+
+  .expenses-history-container {
+    margin: 20px 10px;
+  }
+
+  .expenses-table-container {
+    display: none !important;
+  }
+
+  // Kebab Dropdown for small screens
+  .kebab-dropdown {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    z-index: 600;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+  }
+}
+
+@media (min-width: 770px) and (max-width: 1024px) {
+  .expenses-history-container {
+    margin: 25px 20px;
+  }
+
+  .expenses-table-container {
+    max-width: 800px;
+  }
+
+  .expenses-list {
+    display: none !important  ;
+  }
+}
+
+@media (min-width: 1025px) {
+  .expenses-list {
+    display: none !important;
   }
 }

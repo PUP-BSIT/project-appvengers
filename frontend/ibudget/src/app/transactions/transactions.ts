@@ -2,6 +2,7 @@ import {
   Component,signal, Renderer2, OnInit, OnDestroy, ChangeDetectorRef, inject
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 import { Sidebar } from "../sidebar/sidebar";
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe, DatePipe, CommonModule } from '@angular/common';
@@ -75,6 +76,9 @@ export class Transactions implements OnInit, OnDestroy {
   searchDescription: string = '';
   private unlisten: (() => void) | null = null;
   private route = inject(ActivatedRoute);
+
+  // Loading State
+  isLoading = signal(false);
 
   // Multi-select state
   selectedTransactionIds: Set<number> = new Set();
@@ -173,9 +177,9 @@ export class Transactions implements OnInit, OnDestroy {
   notificationMessage = signal('');
   notificationType = signal<'success' | 'error'>('success');
   selectedTransactionId = signal<number | null>(null);
-  popupTop = signal(0);
-  popupLeft = signal(0);
-  showPopup = signal(false);
+  
+  // Dropdown state
+  activeDropdownId = signal<number | null>(null);
 
   transactions: Transaction[] = [];
 
@@ -652,31 +656,36 @@ ngOnInit() {
     });
 
     // Load transactions with category linkage
-    this.txService.getAllWithCategory().subscribe({
+    // show skeleton
+    this.isLoading.set(true);
+
+    this.txService.getAllWithCategory().pipe(
+      finalize(() => {
+        // small debounce so skeleton doesn't flash for very fast responses
+        setTimeout(() => this.isLoading.set(false), 250);
+      })
+    ).subscribe({
       next: (txs) => {
-      const backendTransactions = txs.map(
-        (t: any): Transaction => ({
-          id: t.id,
-          // Normalize date strings to local midnight to avoid timezone shifts breaking filters
-          date: t.transactionDate ? new Date(`${t.transactionDate}T00:00:00`) : new Date(),
-          description: t.description,
-          category: t.category ?? t.name,
-          category_id: typeof t.category_id === 'number' ? t.category_id : (t.categoryId != null ? Number(t.categoryId) : undefined),
-          amount: t.amount,
-          type: t.type
-      }));
-      this.transactions = [...backendTransactions];
-      this.filterTransactions();
-      try {
-        this.cd.detectChanges();
-      } catch (e) {
-        setTimeout(() => {}, 0);
+        const backendTransactions = txs.map(
+          (t: any): Transaction => ({
+            id: t.id,
+            // Normalize date strings to local midnight to avoid timezone shifts breaking filters
+            date: t.transactionDate ? new Date(`${t.transactionDate}T00:00:00`) : new Date(),
+            description: t.description,
+            category: t.category ?? t.name,
+            category_id: typeof t.category_id === 'number' ? t.category_id : (t.categoryId != null ? Number(t.categoryId) : undefined),
+            amount: t.amount,
+            type: t.type
+        }));
+
+        this.transactions = [...backendTransactions];
+        this.filterTransactions();
+      }, error: (err) => {
+        console.error('Failed to load transactions on init', err);
+        this.filterTransactions();
+        this.showNotificationMessage('Unable to load transactions');
       }
-    }, error: (err) => {
-      console.error('Failed to load transactions on init', err);
-      this.filterTransactions();
-      this.showNotificationMessage('Unable to load transactions');
-    }});
+    });
 
     // Load categories for filters and modal dropdown
     this.categoriesService.getCategories().subscribe({
@@ -694,21 +703,10 @@ ngOnInit() {
 
     this.unlisten = this.renderer.listen('document', 'click', (event: Event) => {
       const target = event.target as HTMLElement;
-      // Close menu if click outside any .transaction-dropdown or .dropdown-menu
-      if (!target.closest('.transaction-dropdown') && !target.closest('.dropdown-menu')) {
-        this.openMenuTransactionId = null;
+      if (!target.closest('.transaction-dropdown')) {
+        this.activeDropdownId.set(null);
       }
     });
-
-  }
-
-  toggleMenu(transactionId: number, event: MouseEvent) {
-    event.stopPropagation();
-    if (this.openMenuTransactionId === transactionId) {
-      this.openMenuTransactionId = null;
-    } else {
-      this.openMenuTransactionId = transactionId;
-    }
   }
 
   ngOnDestroy() {
@@ -717,22 +715,17 @@ ngOnInit() {
     }
   }
 
-  toggleActions(event: MouseEvent, id: number) {
+  toggleDropdown(id: number, event: Event) {
     event.stopPropagation();
-    const button = (event.currentTarget as HTMLElement)
-      .closest('.btn-dots') as HTMLElement;
-    const rect = button.getBoundingClientRect();
-    this.popupTop.set(rect.top + window.scrollY);
-    this.popupLeft.set(rect.left - 80 + window.scrollX);
-    this.selectedTransactionId.set(id);
-    this.showPopup.set(true);
+    const current = this.activeDropdownId();
+    this.activeDropdownId.set(current === id ? null : id);
   }
 
   editSelected() {
     const tx = this.getSelectedTransaction();
     if (!tx) return;
     this.editTransaction(tx);
-    this.showPopup.set(false);
+    this.activeDropdownId.set(null);
   }
 
   getSelectedTransaction(): Transaction | undefined {

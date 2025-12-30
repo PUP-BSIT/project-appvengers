@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
+import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { Header } from "../header/header";
 import { FormsModule } from '@angular/forms';
@@ -19,6 +20,9 @@ export class Reports implements OnInit {
   lastMonthReport?: MonthlyReport;
   thisMonthReport?: MonthlyReport;
   activeTab: 'lastMonth' | 'thisMonth' = 'thisMonth';
+
+  // Loading State
+  isLoading = signal(false);
 
   // Chart configuration (doughnut)
   chartType: ChartType = 'doughnut';
@@ -93,14 +97,21 @@ export class Reports implements OnInit {
   }
 
   private loadMonthlyReports(): void {
-    this.transactionsService.getMonthlyReports().subscribe({
+    // Show loading skeleton
+    this.isLoading.set(true);
+
+    this.transactionsService.getMonthlyReports().pipe(
+      finalize(() => {
+        // small debounce so skeleton doesn't flash for very fast responses
+        setTimeout(() => this.isLoading.set(false), 250);
+      })
+    ).subscribe({
       next: (reports: MonthlyReport[]) => {
         this.monthlyReports = reports;
         // Backend returns [thisMonth, lastMonth]
         if (reports.length >= 2) {
           this.thisMonthReport = reports[0];
           this.lastMonthReport = reports[1];
-          
           // Populate charts with backend data
           this.populateCharts();
         }

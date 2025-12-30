@@ -667,3 +667,38 @@ $header-height: 70px;
     height: 350px !important;
   }
 }
+
+/* Skeleton loading styles */
+.skeleton-line {
+  height: 12px;
+  background: linear-gradient(90deg, #eeeeee 0%, #f5f5f5 50%, #eeeeee 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+  border-radius: 6px;
+}
+.skeleton-line.short { width: 40%; margin-bottom: 8px; }
+.skeleton-line.long { width: 75%; margin-bottom: 8px; }
+.skeleton-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #eeeeee 0%, #f5f5f5 50%, #eeeeee 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+.skeleton-chart {
+  height: 100%;
+  min-height: 220px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #eeeeee 0%, #f5f5f5 50%, #eeeeee 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton { opacity: 0.95; }
+.reports-container-skeleton { padding: 10px 0; }

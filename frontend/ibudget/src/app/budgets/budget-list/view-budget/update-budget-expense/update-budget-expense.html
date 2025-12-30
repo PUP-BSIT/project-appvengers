@@ -5,7 +5,7 @@
   data-bs-backdrop="static" 
   data-bs-keyboard="false" 
   tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5">
@@ -96,15 +96,6 @@
       </div>
     </div>
 </div>
-
-<!-- Button for Opening Add Budget Expense Modal -->
-<button 
-  #openUpdateBudgetExpenseModalBtn
-  type="button" 
-  class="btn btn-sm btn-warning me-2"
-  (click)="openModal()">
-    Edit
-</button>
 
 <!-- Snackbar -->
 @if (showNotification()) {
