@@ -326,6 +326,19 @@ $link-color-hover: #283593;
   gap: 1rem;
 }
 
+.suggested-password {
+  z-index: 1050; 
+  border: 1px solid #ced4da;
+
+  .title {
+    font-size: 0.75rem;
+  }
+
+  .strong-pass {
+    font-size: 0.9rem;
+  }
+}
+
 @keyframes slowBounce {
   0%, 100% {
     transform: translateY(0);
