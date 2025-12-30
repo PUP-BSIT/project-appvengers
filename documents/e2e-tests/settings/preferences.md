@@ -35,27 +35,27 @@ The Notification Preferences page allows users to customize their notification s
 
 | Test ID | Test Name | Description | Preconditions | Steps | Expected Result | Priority | Type | Status | Last Tested | Notes |
 |---------|-----------|-------------|---------------|-------|-----------------|----------|------|--------|-------------|-------|
-| PREF-VIEW-001 | View Preferences Page | Verify preferences page loads | User logged in | 1. Navigate to `/settings/notifications` | Page displays all preference cards with toggles | P0 | Smoke | ⏳ Pending | - | Core functionality |
-| PREF-LOAD-001 | Load Saved Preferences | Verify preferences load from backend | User logged in | 1. Navigate to preferences | Toggles reflect saved preference values | P0 | E2E | ⏳ Pending | - | |
-| PREF-LOAD-002 | Loading State Display | Verify loading spinner while fetching | User navigating to page | 1. Navigate to preferences | Spinner shown until data loads | P2 | Regression | ⏳ Pending | - | |
-| PREF-BUD-001 | Toggle Budget Warning | Verify budget warning toggle works | Preferences loaded | 1. Click Budget Warning toggle | Toggle state changes, Save button enabled | P1 | E2E | ⏳ Pending | - | |
-| PREF-BUD-002 | Toggle Budget Exceeded | Verify budget exceeded toggle works | Preferences loaded | 1. Click Budget Exceeded toggle | Toggle state changes, Save button enabled | P1 | E2E | ⏳ Pending | - | |
-| PREF-BUD-003 | Toggle Budget Near End | Verify budget near end toggle works | Preferences loaded | 1. Click Budget Ending Soon toggle | Toggle state changes, Save button enabled | P1 | E2E | ⏳ Pending | - | |
-| PREF-SAV-001 | Toggle Deadline Reminders | Verify deadline toggle works | Preferences loaded | 1. Click Deadline Reminders toggle | Toggle changes, deadline days dropdown appears/hides | P1 | E2E | ⏳ Pending | - | Conditional display |
-| PREF-SAV-002 | Select Deadline Days | Verify deadline days dropdown works | Deadline reminders enabled | 1. Select different option from dropdown | Value changes to 1/3/7/14 days | P1 | E2E | ⏳ Pending | - | |
-| PREF-SAV-003 | Toggle Milestone Celebrations | Verify milestone toggle works | Preferences loaded | 1. Click Milestone Celebrations toggle | Toggle state changes | P1 | E2E | ⏳ Pending | - | 50%/75% milestones |
-| PREF-SAV-004 | Toggle Goal Completed | Verify completed toggle works | Preferences loaded | 1. Click Goal Completed toggle | Toggle state changes | P1 | E2E | ⏳ Pending | - | |
-| PREF-DEL-001 | Toggle Sound | Verify sound toggle works | Preferences loaded | 1. Click Notification Sound toggle | Toggle state changes | P1 | E2E | ⏳ Pending | - | |
-| PREF-DEL-002 | Toggle Toast Popups | Verify toast toggle works | Preferences loaded | 1. Click Toast Popups toggle | Toggle state changes | P1 | E2E | ⏳ Pending | - | |
-| PREF-SAVE-001 | Save Preferences | Verify save updates backend | Changes made | 1. Toggle some preferences 2. Click Save Changes | Success message, preferences saved | P0 | E2E | ⏳ Pending | - | |
-| PREF-SAVE-002 | Save Button Disabled | Verify save disabled without changes | Preferences loaded, no changes | 1. View preferences | Save Changes button is disabled | P2 | Regression | ⏳ Pending | - | |
-| PREF-SAVE-003 | Save Loading State | Verify loading state during save | User saving changes | 1. Click Save Changes | Button shows "Saving..." with spinner | P2 | Regression | ⏳ Pending | - | |
-| PREF-RESET-001 | Reset to Defaults | Verify reset restores defaults | Changes made | 1. Click Reset to Defaults | All toggles reset to default values, success message | P1 | E2E | ⏳ Pending | - | |
-| PREF-MSG-001 | Success Message Display | Verify success message after save | User saved changes | 1. Save preferences | Green success alert with check icon | P1 | E2E | ⏳ Pending | - | |
-| PREF-MSG-002 | Error Message Display | Verify error message on failure | API error | 1. Save with network error | Red error alert displayed | P1 | Negative | ⏳ Pending | - | |
-| PREF-MSG-003 | Dismiss Messages | Verify messages can be dismissed | Message displayed | 1. Click close button on alert | Alert dismissed | P3 | Regression | ⏳ Pending | - | |
-| PREF-CHG-001 | Change Detection | Verify changes enable save button | Preferences loaded | 1. Toggle any preference | hasChanges() returns true, Save button enabled | P1 | E2E | ⏳ Pending | - | |
-| PREF-GUARD-001 | Auth Guard Redirect | Verify unauthenticated redirect | User not logged in | 1. Navigate directly to `/settings/notifications` | Redirected to login/auth page | P0 | Smoke | ⏳ Pending | - | Security |
+| PREF-VIEW-001 | View Preferences Page | Verify preferences page loads | User logged in | 1. Navigate to `/settings/notifications` | Page displays all preference cards with toggles | P0 | Smoke | ✅ Passed | Dec 31, 2025 | Core functionality |
+| PREF-LOAD-001 | Load Saved Preferences | Verify preferences load from backend | User logged in | 1. Navigate to preferences | Toggles reflect saved preference values | P0 | E2E | ✅ Passed | Dec 31, 2025 | |
+| PREF-LOAD-002 | Loading State Display | Verify loading spinner while fetching | User navigating to page | 1. Navigate to preferences | Spinner shown until data loads | P2 | Regression | ✅ Passed | Dec 31, 2025 | |
+| PREF-BUD-001 | Toggle Budget Warning | Verify budget warning toggle works | Preferences loaded | 1. Click Budget Warning toggle | Toggle state changes, Save button enabled | P1 | E2E | ✅ Passed | Dec 31, 2025 | |
+| PREF-BUD-002 | Toggle Budget Exceeded | Verify budget exceeded toggle works | Preferences loaded | 1. Click Budget Exceeded toggle | Toggle state changes, Save button enabled | P1 | E2E | ✅ Passed | Dec 31, 2025 | |
+| PREF-BUD-003 | Toggle Budget Near End | Verify budget near end toggle works | Preferences loaded | 1. Click Budget Ending Soon toggle | Toggle state changes, Save button enabled | P1 | E2E | ✅ Passed | Dec 31, 2025 | |
+| PREF-SAV-001 | Toggle Deadline Reminders | Verify deadline toggle works | Preferences loaded | 1. Click Deadline Reminders toggle | Toggle changes, deadline days dropdown appears/hides | P1 | E2E | ✅ Passed | Dec 31, 2025 | Conditional display |
+| PREF-SAV-002 | Select Deadline Days | Verify deadline days dropdown works | Deadline reminders enabled | 1. Select different option from dropdown | Value changes to 1/3/7/14 days | P1 | E2E | ✅ Passed | Dec 31, 2025 | |
+| PREF-SAV-003 | Toggle Milestone Celebrations | Verify milestone toggle works | Preferences loaded | 1. Click Milestone Celebrations toggle | Toggle state changes | P1 | E2E | ✅ Passed | Dec 31, 2025 | 50%/75% milestones |
+| PREF-SAV-004 | Toggle Goal Completed | Verify completed toggle works | Preferences loaded | 1. Click Goal Completed toggle | Toggle state changes | P1 | E2E | ✅ Passed | Dec 31, 2025 | |
+| PREF-DEL-001 | Toggle Sound | Verify sound toggle works | Preferences loaded | 1. Click Notification Sound toggle | Toggle state changes | P1 | E2E | ✅ Passed | Dec 31, 2025 | |
+| PREF-DEL-002 | Toggle Toast Popups | Verify toast toggle works | Preferences loaded | 1. Click Toast Popups toggle | Toggle state changes | P1 | E2E | ✅ Passed | Dec 31, 2025 | |
+| PREF-SAVE-001 | Save Preferences | Verify save updates backend | Changes made | 1. Toggle some preferences 2. Click Save Changes | Success message, preferences saved | P0 | E2E | ✅ Passed | Dec 31, 2025 | |
+| PREF-SAVE-002 | Save Button Disabled | Verify save disabled without changes | Preferences loaded, no changes | 1. View preferences | Save Changes button is disabled | P2 | Regression | ✅ Passed | Dec 31, 2025 | |
+| PREF-SAVE-003 | Save Loading State | Verify loading state during save | User saving changes | 1. Click Save Changes | Button shows "Saving..." with spinner | P2 | Regression | ✅ Passed | Dec 31, 2025 | |
+| PREF-RESET-001 | Reset to Defaults | Verify reset restores defaults | Changes made | 1. Click Reset to Defaults | All toggles reset to default values, success message | P1 | E2E | ✅ Passed | Dec 31, 2025 | |
+| PREF-MSG-001 | Success Message Display | Verify success message after save | User saved changes | 1. Save preferences | Green success alert with check icon | P1 | E2E | ✅ Passed | Dec 31, 2025 | |
+| PREF-MSG-002 | Error Message Display | Verify error message on failure | API error | 1. Save with network error | Red error alert displayed | P1 | Negative | ⏭️ Skipped | Dec 31, 2025 | Requires network mock |
+| PREF-MSG-003 | Dismiss Messages | Verify messages can be dismissed | Message displayed | 1. Click close button on alert | Alert dismissed | P3 | Regression | ✅ Passed | Dec 31, 2025 | |
+| PREF-CHG-001 | Change Detection | Verify changes enable save button | Preferences loaded | 1. Toggle any preference | hasChanges() returns true, Save button enabled | P1 | E2E | ✅ Passed | Dec 31, 2025 | |
+| PREF-GUARD-001 | Auth Guard Redirect | Verify unauthenticated redirect | User not logged in | 1. Navigate directly to `/settings/notifications` | Redirected to login/auth page | P0 | Smoke | ✅ Passed | Dec 31, 2025 | Security |
 
 ---
 
