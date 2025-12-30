@@ -19,7 +19,7 @@ public interface BudgetRepository extends JpaRepository<Budget, Integer> {
 
   @Query(value = 
     "SELECT tb.budget_id AS budgetId, tb.user_id AS userId, tb.category_id " +
-    "AS categoryId, tb.limit_amount AS limitAmount, tb.start_date AS startDate, " + 
+    "AS categoryId, tb.name As name, tb.limit_amount AS limitAmount, tb.start_date AS startDate, " + 
     "tb.end_date AS endDate, tc.name AS categoryName FROM tbl_budget tb LEFT " + 
     "JOIN tbl_category tc ON tb.category_id = tc.category_id WHERE tb.deleted_at " + 
     "IS NULL AND tb.user_id = :userId", nativeQuery = true)
