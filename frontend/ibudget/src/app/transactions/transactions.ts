@@ -71,6 +71,7 @@ function parseFlexibleDate(dateStr: string | undefined, defaultToToday = false):
   styleUrl: './transactions.scss',
 })
 export class Transactions implements OnInit, OnDestroy {
+    openMenuTransactionId: number | null = null;
   searchDescription: string = '';
   private unlisten: (() => void) | null = null;
   private route = inject(ActivatedRoute);
@@ -691,13 +692,23 @@ ngOnInit() {
       console.error('Failed to load categories', err);
     }});
 
-    this.unlisten = this.renderer.listen('document', 'click', (event: Event) =>
-    {
+    this.unlisten = this.renderer.listen('document', 'click', (event: Event) => {
       const target = event.target as HTMLElement;
-      if (!target.closest('.btn-dots') && !target.closest('.popup-menu')) {
-        this.showPopup.set(false);
+      // Close menu if click outside any .transaction-dropdown or .dropdown-menu
+      if (!target.closest('.transaction-dropdown') && !target.closest('.dropdown-menu')) {
+        this.openMenuTransactionId = null;
       }
     });
+
+  }
+
+  toggleMenu(transactionId: number, event: MouseEvent) {
+    event.stopPropagation();
+    if (this.openMenuTransactionId === transactionId) {
+      this.openMenuTransactionId = null;
+    } else {
+      this.openMenuTransactionId = transactionId;
+    }
   }
 
   ngOnDestroy() {
