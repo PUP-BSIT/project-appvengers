@@ -405,6 +405,7 @@ public class TransactionService {
             budget.getBudgetId(),
             budget.getCategoryId(),
             categoryName,
+            budget.getName(),
             budget.getLimitAmount(),
             totalExpenses,
             remaining
