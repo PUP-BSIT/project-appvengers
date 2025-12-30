@@ -42,7 +42,21 @@ export class ViewSaving implements OnInit{
   @ViewChild('deleteSelectedTransactionsBtn') 
     deleteSelectedTransactionsBtn!: ElementRef<HTMLButtonElement>;
   @ViewChild('updateTransactionModal') updateTransactionModal!: UpdateSavingTransaction;
+
+  // Select Mode State
+  isSelectMode = signal<boolean>(false);
+  selectMode = computed(() => this.isSelectMode());
+
+  toggleSelectMode() {
+    this.isSelectMode.set(!this.isSelectMode());
+    
+    // Clear selected transactions when exiting select mode
+    if (!this.isSelectMode()) {
+      this.selectedTransactionIds.set([]);
+    }
+  }
   
+  // Dropdown State for Mobile Devices
   showDropdown = signal<number | null>(null);
 
   toggleDropdown(transactionId: number) {
@@ -109,7 +123,7 @@ export class ViewSaving implements OnInit{
         this.closeDeleteSelectedModal();
 
         // Show success toast
-        this.toastMessage.set('Selected transactions deleted successfully!');
+        this.toastMessage.set('Transactions deleted successfully!');
         this.toastType.set('success');
         const toast = Toast.getOrCreateInstance(this.viewSavingToast.nativeElement);
         toast.show();
