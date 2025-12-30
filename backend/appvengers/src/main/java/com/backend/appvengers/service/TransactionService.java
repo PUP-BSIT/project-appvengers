@@ -390,6 +390,7 @@ public class TransactionService {
     public BudgetSummaryResponse getBudgetSummary(Integer budgetId) {
 
         Budget budget = budgetRepository.findById(budgetId)
+            .filter(b -> b.getDeletedAt() == null)
             .orElseThrow(() -> 
                 new RuntimeException("Budget not found"
             ));
