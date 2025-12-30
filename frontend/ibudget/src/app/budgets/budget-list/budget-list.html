@@ -103,7 +103,9 @@
           <div class="card-body budget-card-body">
             <div class="budget-card-header">
               <div class="category-info-container-budget-list">
-                <label class="mb-0 text-black"> {{ budget.category_name }} </label>
+                <h5 class="mb-0 text-black"> 
+                  {{ budget.name }} ({{ budget.category_name }})
+                </h5>
                 <span class="text-secondary">
                   From {{ budget.start_date | date: 'MMM d, y' }} to
                   {{ budget.end_date | date: 'MMM d, y' }}
