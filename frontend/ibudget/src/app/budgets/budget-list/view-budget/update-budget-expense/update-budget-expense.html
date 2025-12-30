@@ -97,15 +97,6 @@
     </div>
 </div>
 
-<!-- Button for Opening Add Budget Expense Modal -->
-<button 
-  #openUpdateBudgetExpenseModalBtn
-  type="button" 
-  class="btn btn-sm btn-warning me-2"
-  (click)="openModal()">
-    Edit
-</button>
-
 <!-- Snackbar -->
 @if (showNotification()) {
   <div class="snackbar" [class.hide]="isHidingNotification()">

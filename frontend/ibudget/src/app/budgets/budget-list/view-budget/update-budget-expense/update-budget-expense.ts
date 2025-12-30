@@ -18,7 +18,6 @@ import { Validators } from '@angular/forms';
 export class UpdateBudgetExpense implements OnInit {
 
   @ViewChild('updateBudgetExpenseModal') updateBudgetExpenseModal!: ElementRef;
-  @ViewChild('openUpdateBudgetExpenseModalBtn') openUpdateBudgetExpenseModalBtn!: ElementRef;
 
   // Categories passed from parent
   categories = input<Category[]>([]);
@@ -27,9 +26,6 @@ export class UpdateBudgetExpense implements OnInit {
   expenseCategories = computed(() => 
     this.categories().filter(c => c.type?.toLowerCase() === 'expense')
   );
-
-  // Input from parent
-  transactionId = input<number>(0);
 
   // Output to parent
   updateBudgetExpenseResponse = output<BudgetTransaction>();
@@ -43,6 +39,7 @@ export class UpdateBudgetExpense implements OnInit {
   updateBudgetExpenseForm: FormGroup;
   currentBudgetId = signal<number>(0);
   date = signal(new Date().toISOString().split('T')[0]);
+  currentTransactionId = signal<number>(0);
 
   // Snackbar
   showNotification = signal(false);
@@ -76,19 +73,9 @@ export class UpdateBudgetExpense implements OnInit {
     });
   }
 
-  ngOnChanges(): void {
-    // Load existing transaction data
-    const id = this.transactionId();
-    if (id && id > 0) {
-      this.loadTransaction();
-    }
-  }
-
-  openModal() {
-    const id = this.transactionId();
-    if (id) {
-      this.loadTransaction();
-    }
+  open(id: number) {
+    this.currentTransactionId.set(id);
+    this.loadTransaction();
 
     const modal = new Modal(this.updateBudgetExpenseModal.nativeElement);
     modal.show();
@@ -98,12 +85,11 @@ export class UpdateBudgetExpense implements OnInit {
     const modal = Modal.getInstance(this.updateBudgetExpenseModal.nativeElement);
     modal?.hide();
     this.updateBudgetExpenseForm.markAsUntouched();
-    this.openUpdateBudgetExpenseModalBtn.nativeElement.focus();
   }
 
   // Load transaction from backend
   loadTransaction() {
-    const id = this.transactionId();
+    const id = this.currentTransactionId();
     if (!id) return;
 
     this.budgetTxService.getById(id).subscribe((tx: BudgetTransaction) => {
@@ -128,7 +114,7 @@ export class UpdateBudgetExpense implements OnInit {
     }
 
     const payload = this.updateBudgetExpenseForm.value as Partial<BudgetTransaction>;
-    const id = this.transactionId();
+    const id = this.currentTransactionId();
 
     // Set Description to N/A if no user input
     if(!payload.description || payload.description.trim() === '') {
