@@ -203,7 +203,9 @@ export class ChatbotService {
         try {
             this.localStorageService.removeItem(this.MESSAGES_STORAGE_KEY);
             this.localStorageService.removeItem(this.SESSION_STORAGE_KEY);
-            console.log('[ChatbotService] Chat history cleared');
+            if (!environment.production) {
+                console.log('[ChatbotService] Chat history cleared');
+            }
         } catch (error) {
             console.warn('[ChatbotService] Failed to clear chat history:', error);
         }
@@ -213,7 +215,9 @@ export class ChatbotService {
      * Clear state on logout (called by header component)
      */
     clearState(): void {
-        console.log('[ChatbotService] Clearing chatbot state');
+        if (!environment.production) {
+            console.log('[ChatbotService] Clearing chatbot state');
+        }
         this._sessionId = null;
         // Close the chatbot sidebar
         this.isOpen.set(false);

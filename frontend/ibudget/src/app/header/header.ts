@@ -9,6 +9,7 @@ import { LocalStorageService } from '../../services/local-storage.service';
 import { NotificationPreferencesService } from '../../services/notification-preferences.service';
 import { filter, map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -64,7 +65,9 @@ export class Header implements OnInit, OnDestroy {
         
         // Set userId in LocalStorageService for user-scoped data
         this.localStorageService.setUserId(res.data.id);
-        console.log(`[Header] User logged in: ${res.data.id}`);
+        if (!environment.production) {
+          console.log(`[Header] User logged in: ${res.data.id}`);
+        }
         
         // Load user-specific preferences
         this.notificationPrefsService.loadPreferences();
@@ -119,7 +122,9 @@ export class Header implements OnInit, OnDestroy {
   }
 
   confirmLogout() {
-    console.log('[Header] Logout initiated');
+    if (!environment.production) {
+      console.log('[Header] Logout initiated');
+    }
     
     // Clear in-memory service states (so next user doesn't see stale data)
     this.notificationService.clearState();
@@ -138,7 +143,9 @@ export class Header implements OnInit, OnDestroy {
     this.router.navigate(['/']);
     this.showLogoutModal.set(false);
     
-    console.log('[Header] Logout complete - in-memory state cleared, localStorage preserved');
+    if (!environment.production) {
+      console.log('[Header] Logout complete - in-memory state cleared, localStorage preserved');
+    }
   }
 
   @HostListener('document:click', ['$event'])

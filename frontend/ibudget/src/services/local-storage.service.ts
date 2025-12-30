@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { environment } from '../environments/environment';
 
 /**
  * LocalStorageService - User-scoped localStorage wrapper
@@ -24,7 +25,9 @@ export class LocalStorageService {
    */
   setUserId(userId: number): void {
     this.userIdSignal.set(userId);
-    console.log(`[LocalStorageService] User context set: ${userId}`);
+    if (!environment.production) {
+      console.log(`[LocalStorageService] User context set: ${userId}`);
+    }
   }
 
   /**
@@ -39,7 +42,9 @@ export class LocalStorageService {
    */
   clearUserId(): void {
     this.userIdSignal.set(null);
-    console.log('[LocalStorageService] User context cleared');
+    if (!environment.production) {
+      console.log('[LocalStorageService] User context cleared');
+    }
   }
 
   /**
@@ -60,7 +65,9 @@ export class LocalStorageService {
     const prefixedKey = `user_${userId}_${key}`;
     try {
       localStorage.setItem(prefixedKey, JSON.stringify(value));
-      console.log(`[LocalStorageService] Stored: ${prefixedKey}`);
+      if (!environment.production) {
+        console.log(`[LocalStorageService] Stored: ${prefixedKey}`);
+      }
     } catch (error) {
       console.error(
         `[LocalStorageService] Failed to store ${prefixedKey}:`,
@@ -89,7 +96,9 @@ export class LocalStorageService {
     try {
       const item = localStorage.getItem(prefixedKey);
       if (item === null) {
-        console.log(`[LocalStorageService] Key not found: ${prefixedKey}`);
+        if (!environment.production) {
+          console.log(`[LocalStorageService] Key not found: ${prefixedKey}`);
+        }
         return null;
       }
       return JSON.parse(item) as T;
@@ -117,7 +126,9 @@ export class LocalStorageService {
 
     const prefixedKey = `user_${userId}_${key}`;
     localStorage.removeItem(prefixedKey);
-    console.log(`[LocalStorageService] Removed: ${prefixedKey}`);
+    if (!environment.production) {
+      console.log(`[LocalStorageService] Removed: ${prefixedKey}`);
+    }
   }
 
   /**
@@ -146,12 +157,16 @@ export class LocalStorageService {
     // Remove all user-specific keys
     keysToRemove.forEach((key) => {
       localStorage.removeItem(key);
-      console.log(`[LocalStorageService] Cleared user data: ${key}`);
+      if (!environment.production) {
+        console.log(`[LocalStorageService] Cleared user data: ${key}`);
+      }
     });
 
-    console.log(
-      `[LocalStorageService] Cleared ${keysToRemove.length} items for user ${userId}`
-    );
+    if (!environment.production) {
+      console.log(
+        `[LocalStorageService] Cleared ${keysToRemove.length} items for user ${userId}`
+      );
+    }
   }
 
   /**
@@ -163,7 +178,9 @@ export class LocalStorageService {
     const prefixedKey = `app_${key}`;
     try {
       localStorage.setItem(prefixedKey, JSON.stringify(value));
-      console.log(`[LocalStorageService] Stored global: ${prefixedKey}`);
+      if (!environment.production) {
+        console.log(`[LocalStorageService] Stored global: ${prefixedKey}`);
+      }
     } catch (error) {
       console.error(
         `[LocalStorageService] Failed to store global ${prefixedKey}:`,
@@ -202,7 +219,9 @@ export class LocalStorageService {
   removeGlobalItem(key: string): void {
     const prefixedKey = `app_${key}`;
     localStorage.removeItem(prefixedKey);
-    console.log(`[LocalStorageService] Removed global: ${prefixedKey}`);
+    if (!environment.production) {
+      console.log(`[LocalStorageService] Removed global: ${prefixedKey}`);
+    }
   }
 
   /**
