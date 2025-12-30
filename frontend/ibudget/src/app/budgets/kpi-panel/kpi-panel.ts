@@ -51,7 +51,8 @@ export class KpiPanel implements OnInit {
           : 0;
 
         this.currentBudget.set({
-          category_name: summary.categoryName
+          category_name: summary.categoryName,
+          name: summary.name
         } as any);
 
         this.isLoading.set(false);
