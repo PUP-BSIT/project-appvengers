@@ -51,6 +51,43 @@ main {
   animation: slideOut 0.3s ease-in forwards;
 }
 
+.expenses-table-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 3px auto;
+  overflow-x: auto;
+
+  .table {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.13);
+    border-radius: 12px;
+    overflow: hidden;
+    width: 100%;
+    min-width: 900px;
+    background: #fff;
+    font-size: 1.08rem;
+  }
+
+  th, td {
+    padding: 1.1rem 1.5rem !important;
+  }
+
+  th {
+    font-size: 1.1rem;
+  }
+
+  // base cells transition
+  tbody tr > * {
+    transition: background-color .3s ease-in-out;
+  }
+
+  tbody tr:hover > * {
+    background-color: #e1e1e1 !important;
+    cursor: pointer;
+  }
+}
+
+
+// Toast Animation Keyframes
 @keyframes slideIn {
   from {
     transform: translateX(100%);
