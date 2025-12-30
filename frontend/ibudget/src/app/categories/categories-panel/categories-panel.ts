@@ -27,6 +27,9 @@ export class CategoriesPanel implements OnInit {
 
   toastService = inject(ToastService);
 
+  // Loading State
+  isLoading = signal(true);
+
   ngOnInit(): void {
     this.loadCategories();
 
@@ -44,9 +47,12 @@ export class CategoriesPanel implements OnInit {
   loadCategories() {
     this.categoriesService.getCategories().subscribe({
       next: (data: Category[]) => {
-        this.allCategories.set(data);
-        this.filterCategories();
-        this.initDropdowns();
+        setTimeout(() => {
+          this.allCategories.set(data);
+          this.filterCategories();
+          this.initDropdowns();
+          this.isLoading.set(false);
+        }, 1000); // simulate loading delay
       },
       error: (err) => console.error('Failed to load categories:', err)
     })

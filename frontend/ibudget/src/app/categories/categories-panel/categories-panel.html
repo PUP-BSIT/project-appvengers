@@ -27,57 +27,68 @@
 
   <!-- Category Cards -->
   <div class="row g-3">
-    @for (category of filteredCategories(); track category.id) {
-      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-        <div class="card category-card shadow-sm h-100 position-relative">
-
-          <!-- Dropdown menu -->
-          <div class="dropdown position-absolute top-0 end-0 m-2">
-            <button class="btn btn-sm" type="button"
-              data-bs-toggle="dropdown">
-              <i class="fas fa-ellipsis-v"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-                <button class="dropdown-item" type="button"
-                  (click)="onEditCategory(category)">
-                  Edit
-                </button>
-              </li>
-              <li>
-                <button class="dropdown-item text-danger" type="button"
-                  (click)="onDeleteCategory(category)">
-                  Delete
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Card Body -->
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="icon-wrapper">
-              <i class="{{ getIcon(category) }}"></i>
-            </div>
-            <div>
-              <h5 class="mb-1 fw-semibold">{{ category.name }}</h5>
-              <p class="text-muted small mb-0">
-                Used in {{ category.referencesCount || 0 }} transaction/s
-              </p>
+    @if(isLoading()) {
+      @for(i of [1,2,3,4,5,6,7]; track $index) {
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="card category-card shadow-sm h-100 position-relative">
+            <div class="card-body">
+              <div class="placeholder col-12 placeholder-style-sm mb-2"></div>
+              <div class="placeholder col-8 placeholder-style-sm"></div>
             </div>
           </div>
-
         </div>
+      }
+    } @else if (filteredCategories().length === 0) {
+      <!-- If no categories found -->
+      <div class="text-center text-muted mt-5">
+        <i class="fas fa-folder-open fa-2x mb-2"></i>
+        <p>No categories found for {{ activeTab() }}.</p>
       </div>
+    } @else {
+      @for (category of filteredCategories(); track category.id) {
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="card category-card shadow-sm h-100 position-relative">
+
+            <!-- Dropdown menu -->
+            <div class="dropdown position-absolute top-0 end-0 m-2">
+              <button class="btn btn-sm" type="button"
+                data-bs-toggle="dropdown">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <button class="dropdown-item" type="button"
+                    (click)="onEditCategory(category)">
+                    Edit
+                  </button>
+                </li>
+                <li>
+                  <button class="dropdown-item text-danger" type="button"
+                    (click)="onDeleteCategory(category)">
+                    Delete
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body d-flex align-items-center gap-3">
+              <div class="icon-wrapper">
+                <i class="{{ getIcon(category) }}"></i>
+              </div>
+              <div>
+                <h5 class="mb-1 fw-semibold">{{ category.name }}</h5>
+                <p class="text-muted small mb-0">
+                  Used in {{ category.referencesCount || 0 }} transaction/s
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      }
     }
   </div>
-
-  <!-- If no categories found -->
-  @if (filteredCategories().length === 0) {
-    <div class="text-center text-muted mt-5">
-      <i class="fas fa-folder-open fa-2x mb-2"></i>
-      <p>No categories found for {{ activeTab() }}.</p>
-    </div>
-  }
 </div>
 
 <!-- From add-category-modal component -->
