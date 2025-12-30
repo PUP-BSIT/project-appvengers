@@ -33,7 +33,7 @@ public class Budget {
   @Column(name = "user_id", nullable = false)
   private int userId;
 
-  @Column(name= "category_id", nullable = false)
+  @Column(name= "name", nullable = false)
   private String name;
 
   @Column(name = "category_id", nullable = false)
