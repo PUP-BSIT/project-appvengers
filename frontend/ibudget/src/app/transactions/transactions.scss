@@ -428,11 +428,11 @@ $header-height: 70px;
 
 
 .transaction-card {
-  border-radius: 0.75rem;
+  border-radius: .75rem;
   border: 1.5px solid #d1d5db;
   background: #fff;
   transition: box-shadow 0.2s ease;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
@@ -1610,3 +1610,39 @@ $header-height: 70px;
     box-sizing: border-box;
   }
 }
+
+/* Skeleton loading styles */
+.skeleton-line {
+  height: 12px;
+  background: linear-gradient(90deg, #eeeeee 0%, #f5f5f5 50%, #eeeeee 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+  border-radius: 6px;
+}
+.skeleton-line.short { width: 40%; margin-bottom: 8px; }
+.skeleton-line.long { width: 75%; margin-bottom: 8px; }
+.skeleton-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #eeeeee 0%, #f5f5f5 50%, #eeeeee 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+.skeleton-chart {
+  height: 100%;
+  min-height: 220px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #eeeeee 0%, #f5f5f5 50%, #eeeeee 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton { opacity: 0.95; }
+.skeleton-transaction { padding: 0.6rem 0.75rem; border-radius: .5rem; background: white; border: 1px solid #eee; margin-bottom: 0.75rem; }
+.transactions-cards-skeleton { padding: 8px 0; }
