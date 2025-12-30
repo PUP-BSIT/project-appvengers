@@ -9,4 +9,5 @@ public interface BudgetWithCategoryResponse {
   String getStartDate();
   String getEndDate();
   String getCategoryName();
+  String getName();
 }
