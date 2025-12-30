@@ -44,7 +44,9 @@
                 <td>{{ transaction.transactionDate }}</td>
                 <td>{{ transaction.description }}</td>
                 <td>{{ getCategoryName(transaction.categoryId) }}</td>
-                <td>&#8369; {{ transaction.amount }}</td>
+                <td class="text-danger fw-bold">
+                  - &#8369; {{ transaction.amount }}
+                </td>
                 <td>
                   <app-update-budget-expense
                   [transactionId]="transaction.transactionId"
