@@ -344,6 +344,16 @@ fetchNotifications(): void {
     return this.colorMap.get(type) || 'info';
   }
 
+  /**
+   * Clear in-memory state on logout.
+   * Prevents data from persisting across user sessions.
+   */
+  clearState(): void {
+    console.log('[NotificationService] Clearing state');
+    this.notificationsSubject.next([]);
+    this.previousNotificationIds.clear();
+  }
+
   ngOnDestroy(): void {
     this.disconnectWebSocket();
   }

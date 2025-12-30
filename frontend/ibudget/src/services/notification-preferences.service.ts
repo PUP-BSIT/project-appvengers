@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { LocalStorageService } from './local-storage.service';
 
 export interface NotificationPreferences {
   // Budget notifications
@@ -36,10 +37,14 @@ const STORAGE_KEY = 'ibudget_notification_preferences';
   providedIn: 'root'
 })
 export class NotificationPreferencesService {
-  private preferencesSubject = new BehaviorSubject<NotificationPreferences>(this.loadFromStorage());
+  private localStorageService = inject(LocalStorageService);
+  private preferencesSubject = new BehaviorSubject<NotificationPreferences>(DEFAULT_PREFERENCES);
   public preferences$ = this.preferencesSubject.asObservable();
 
-  constructor() {}
+  constructor() {
+    // Load preferences after userId is set
+    this.loadPreferences();
+  }
 
   /**
    * Get current preferences
@@ -113,30 +118,43 @@ export class NotificationPreferencesService {
   }
 
   /**
-   * Load preferences from localStorage
+   * Load preferences from user-scoped localStorage
    */
-  private loadFromStorage(): NotificationPreferences {
+  loadPreferences(): void {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      const stored = this.localStorageService.getItem<NotificationPreferences>(STORAGE_KEY);
       if (stored) {
-        const parsed = JSON.parse(stored);
         // Merge with defaults to ensure all keys exist
-        return { ...DEFAULT_PREFERENCES, ...parsed };
+        const preferences = { ...DEFAULT_PREFERENCES, ...stored };
+        this.preferencesSubject.next(preferences);
+        console.log('[NotificationPreferences] Loaded user preferences');
+      } else {
+        console.log('[NotificationPreferences] No stored preferences, using defaults');
+        this.preferencesSubject.next(DEFAULT_PREFERENCES);
       }
     } catch (e) {
-      console.error('Failed to load notification preferences:', e);
+      console.error('[NotificationPreferences] Failed to load preferences:', e);
+      this.preferencesSubject.next(DEFAULT_PREFERENCES);
     }
-    return { ...DEFAULT_PREFERENCES };
   }
 
   /**
-   * Save preferences to localStorage
+   * Save preferences to user-scoped localStorage
    */
   private saveToStorage(preferences: NotificationPreferences): void {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
+      this.localStorageService.setItem(STORAGE_KEY, preferences);
+      console.log('[NotificationPreferences] Saved user preferences');
     } catch (e) {
-      console.error('Failed to save notification preferences:', e);
+      console.error('[NotificationPreferences] Failed to save preferences:', e);
     }
+  }
+
+  /**
+   * Clear state on logout
+   */
+  clearState(): void {
+    console.log('[NotificationPreferences] Clearing state');
+    this.preferencesSubject.next(DEFAULT_PREFERENCES);
   }
 }
