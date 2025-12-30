@@ -73,12 +73,13 @@
         </div>
         <!-- Select button (now next to period selector) -->
         <div class="selection-controls">
-          <button
-            *ngIf="!selectionMode && !hasSelectedTransactions()"
-            class="btn btn-outline-primary btn-sm"
-            (click)="enterSelectionMode()">
-            <i class="bi bi-check-square"></i> Select
-          </button>
+          @if (!selectionMode && !hasSelectedTransactions()) {
+            <button
+              class="btn btn-outline-primary btn-sm"
+              (click)="enterSelectionMode()">
+              <i class="bi bi-check-square"></i> Select
+            </button>
+          }
         </div>
       </div>
 
@@ -94,27 +95,29 @@
     <!-- Transactions Cards -->
     <div class="transactions-cards-container">
       <!-- Selection mode controls (only one block) -->
-      <div *ngIf="selectionMode || hasSelectedTransactions()">
-        <div class="bulk-actions-bar">
-          <span>{{ selectedTransactionIds.size }} selected</span>
-          <button class="btn btn-danger btn-sm" (click)="showDeleteModal()">
-            <i class="bi bi-trash"></i> Delete Selected
-          </button>
-          <button
-            class="btn btn-secondary btn-sm"
-            (click)="exitSelectionMode()">
-            Cancel
-          </button>
+      @if (selectionMode || hasSelectedTransactions()) {
+        <div>
+          <div class="bulk-actions-bar">
+            <span>{{ selectedTransactionIds.size }} selected</span>
+            <button class="btn btn-danger btn-sm" (click)="showDeleteModal()">
+              <i class="bi bi-trash"></i> Delete Selected
+            </button>
+            <button
+              class="btn btn-secondary btn-sm"
+              (click)="exitSelectionMode()">
+              Cancel
+            </button>
+          </div>
+          <!-- Select All Checkbox -->
+          <div class="select-all-row">
+            <input
+              type="checkbox"
+              [checked]="areAllVisibleSelected()"
+              (change)="selectAllVisible()" id="selectAllCheckbox">
+            <label for="selectAllCheckbox">Select All</label>
+          </div>
         </div>
-        <!-- Select All Checkbox -->
-        <div class="select-all-row">
-          <input
-            type="checkbox"
-            [checked]="areAllVisibleSelected()"
-            (change)="selectAllVisible()" id="selectAllCheckbox">
-          <label for="selectAllCheckbox">Select All</label>
-        </div>
-      </div>
+      }
       @for (transaction of getPaginatedTransactions(); track transaction.id) {
         @if ($first || getRelativeDate(transaction.date) !==
               getRelativeDate(getPaginatedTransactions()[$index - 1]?.date)) {
