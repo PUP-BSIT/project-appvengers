@@ -538,7 +538,7 @@ $primary-blue: #2563eb;
 .hero-card {
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  // box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   border: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   background: transparent;
@@ -546,10 +546,10 @@ $primary-blue: #2563eb;
   position: relative;
 }
 
-.hero-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-}
+// .hero-card:hover {
+//   transform: translateY(-8px);
+//   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+// }
 
 .hero-card .card-img-top {
   width: 100%;
