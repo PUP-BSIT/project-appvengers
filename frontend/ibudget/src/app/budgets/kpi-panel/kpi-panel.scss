@@ -34,6 +34,16 @@
   height: 40px;
 }
 
+.placeholder-style-sm {
+  height: 20px;
+  border-radius: 8px;
+}
+
+.placeholder-style {
+  height: 100px;
+  border-radius: 10px;
+}
+
 @media (min-width: 320px) and (max-width: 424px) {
   .card-footer {
     gap: 18px;

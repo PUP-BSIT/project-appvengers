@@ -1,10 +1,19 @@
 <div class="kpi-panel-container">
   <div class="card">
-    <div class="card-header p-4">
-      <h4 class="mb-0">{{ currentBudget().category_name }} Budget Overview</h4>
-    </div>
+    @if(isLoading()) {
+      <div class="card-body">
+        <div class="placeholder col-4 placeholder-style-sm"></div>
+      </div>
+    } @else {
+      <div class="card-header p-4">
+        <h4 class="mb-0">{{ currentBudget().category_name }} Budget Overview</h4>
+      </div>
+    }
 
     <div class="card-body">
+      @if(isLoading()) {
+        <div class="placeholder col-12 placeholder-style"></div>
+      } @else {
       <div class="budget-info-wrapper">
         <div>
           <div>
@@ -46,6 +55,7 @@
           <span class="progress-text">{{budgetPercent}}%</span>
         </div>
       </div>
+      }
     </div>
 
     <div class="card-footer d-flex justify-content-center"></div>

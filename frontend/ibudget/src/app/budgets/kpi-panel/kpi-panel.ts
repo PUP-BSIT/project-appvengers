@@ -24,6 +24,9 @@ export class KpiPanel implements OnInit {
   budgetId = signal(Number(this.activatedRoute.snapshot.paramMap.get('id') ?? 1));
   budgetTransactionsService = inject(BudgetTransactionsService);
 
+  // Loading state
+  isLoading = signal(true);
+
   ngOnInit(): void {
     this.getBudgetData();
   }
@@ -50,8 +53,13 @@ export class KpiPanel implements OnInit {
         this.currentBudget.set({
           category_name: summary.categoryName
         } as any);
+
+        this.isLoading.set(false);
       },
-      error: (err) => console.error('Failed to load budget summary', err)
+      error: (err) => {
+        console.error('Failed to load budget summary', err);
+        this.isLoading.set(false);
+      }
     });
   }
 }
