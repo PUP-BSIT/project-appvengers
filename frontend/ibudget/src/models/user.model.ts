@@ -146,6 +146,7 @@ export type BackendBudget = {
   userId: number;
   categoryId: number;
   categoryName: string;
+  name: string;
   limitAmount: number;
   startDate: string; // ISO yyyy-MM-dd
   endDate: string;   // ISO yyyy-MM-dd

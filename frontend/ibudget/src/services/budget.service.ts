@@ -27,6 +27,7 @@ export class BudgetService {
   private toBackend(b: Partial<Budget>): Partial<BackendBudget> {
     return {
       categoryId: Number(b.category_id),
+      name: String(b.name),
       limitAmount: Number(b.limit_amount),
       startDate: String(b.start_date),
       endDate: String(b.end_date),
