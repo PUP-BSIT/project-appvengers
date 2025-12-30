@@ -5,7 +5,7 @@
 **Route**: `/settings/notifications`  
 **Protection**: Authenticated users only (authGuard)  
 **Production URL**: `https://i-budget.site/settings/notifications`  
-**Last Updated**: December 2024
+**Last Updated**: December 2025
 
 ---
 
