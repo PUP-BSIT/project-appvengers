@@ -97,14 +97,30 @@
             </div>
 
             @if(showSuggestion()) {
-              <div class="card shadow-sm mt-1 position-absolute w-100 start-0" style="z-index: 1050; border: 1px solid #ced4da;">
-                <div class="card-body p-2 d-flex align-items-center justify-content-between bg-white rounded">
-                  <div class="d-flex flex-column text-start overflow-hidden me-2">
-                    <small class="text-muted" style="font-size: 0.75rem;">Suggested strong password:</small>
-                    <strong class="font-monospace text-truncate d-block" style="font-size: 0.9rem;">{{ suggestedPassword() }}</strong>
+              <div 
+                class="card shadow-sm 
+                  mt-1 position-absolute w-100 start-0 suggested-password">
+                <div 
+                  class="card-body p-2 d-flex align-items-center 
+                    justify-content-between bg-white rounded">
+                  <div 
+                    class="d-flex flex-column text-start overflow-hidden me-2">
+                    <small 
+                      class="text-muted title">
+                        Suggested strong password:
+                    </small>
+
+                    <strong 
+                      class="font-monospace text-truncate d-block strong-pass">
+                        {{ suggestedPassword() }}
+                    </strong>
                   </div>
-                  <button type="button" class="btn btn-sm btn-primary flex-shrink-0" (click)="useSuggestion()">
-                    Use
+
+                  <button 
+                    type="button" 
+                    class="btn btn-sm btn-primary flex-shrink-0" 
+                    (click)="useSuggestion()">
+                      Use
                   </button>
                 </div>
               </div>
