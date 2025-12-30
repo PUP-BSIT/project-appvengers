@@ -1,3 +1,7 @@
+.modal-overlay ~ .dropdown-menu {
+  display: none !important;
+}
+
 .selection-controls .btn-outline-primary.btn-sm {
   height: 45px;
   min-width: 150px;
@@ -19,6 +23,7 @@
   }
   color: #222;
 }
+
 .selection-controls .btn-outline-primary.btn-sm:focus,
 .selection-controls .btn-outline-primary.btn-sm:active {
   outline: none;
@@ -41,6 +46,7 @@
   height: 100%;
   margin-bottom: 0;
 }
+
 $background-color: #F9FAFB;
 $sidebar-width: 80px;
 $header-height: 70px;

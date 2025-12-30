@@ -72,6 +72,7 @@ function parseFlexibleDate(dateStr: string | undefined, defaultToToday = false):
   styleUrl: './transactions.scss',
 })
 export class Transactions implements OnInit, OnDestroy {
+    openMenuTransactionId: number | null = null;
   searchDescription: string = '';
   private unlisten: (() => void) | null = null;
   private route = inject(ActivatedRoute);
@@ -700,8 +701,7 @@ ngOnInit() {
       console.error('Failed to load categories', err);
     }});
 
-    this.unlisten = this.renderer.listen('document', 'click', (event: Event) =>
-    {
+    this.unlisten = this.renderer.listen('document', 'click', (event: Event) => {
       const target = event.target as HTMLElement;
       if (!target.closest('.transaction-dropdown')) {
         this.activeDropdownId.set(null);

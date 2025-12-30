@@ -96,9 +96,13 @@
         </div>
         <!-- Select button (now next to period selector) -->
         <div class="selection-controls">
-          <button *ngIf="!selectionMode && !hasSelectedTransactions()" class="btn btn-outline-primary btn-sm" (click)="enterSelectionMode()">
-            <i class="bi bi-check-square"></i> Select
-          </button>
+          @if (!selectionMode && !hasSelectedTransactions()) {
+            <button
+              class="btn btn-outline-primary btn-sm"
+              (click)="enterSelectionMode()">
+              <i class="bi bi-check-square"></i> Select
+            </button>
+          }
         </div>
       </div>
 
@@ -185,24 +189,21 @@
               <input type="checkbox" [checked]="isTransactionSelected(transaction.id)" (change)="toggleTransactionSelection(transaction.id)" id="select-{{transaction.id}}">
             </div>
 
-            <!-- Dropdown moved outside card-body for proper overlay -->
-            <div class="dropdown transaction-dropdown position-absolute top-0 end-0 m-2">
-              <button 
-                class="btn btn-sm p-0 d-flex align-items-center justify-content-center" 
-                type="button" 
-                (click)="toggleDropdown(transaction.id, $event)"
-                aria-label="Show actions">
-                <i class="bi bi-three-dots-vertical" style="font-size: 1.1rem;" aria-hidden="true"></i>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end" [class.show]="activeDropdownId() === transaction.id">
-                <li>
-                  <button class="dropdown-item" type="button" (click)="editTransaction(transaction)">Edit</button>
-                </li>
-                <li>
-                  <button class="dropdown-item text-danger" type="button" (click)="deleteTransaction(transaction.id)">Delete</button>
-                </li>
-              </ul>
-            </div>
+          <!-- Dropdown moved outside card-body for proper overlay -->
+          <div class="dropdown transaction-dropdown position-absolute top-0 end-0 m-2">
+            <button class="btn btn-sm p-0 d-flex align-items-center justify-content-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Show actions">
+              <i class="bi bi-three-dots-vertical" style="font-size: 1.1rem;" aria-hidden="true"></i>
+              <span class="visually-hidden">Actions</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <button class="dropdown-item" type="button" (click)="editTransaction(transaction)">Edit</button>
+              </li>
+              <li>
+                <button class="dropdown-item text-danger" type="button" (click)="deleteTransaction(transaction.id)">Delete</button>
+              </li>
+            </ul>
+          </div>
 
             <div class="card-body">
               <div class="card-left">
@@ -210,14 +211,14 @@
                   <h4>{{ transaction.description }}</h4>
                 </div>
 
-                <div class="card-bottom">
-                  <div class="category-section">
-                    <span class="category-tag" [ngClass]="[(getCategoryName(transaction.category_id, transaction.category) || '').toLowerCase()]">
-                      {{ getCategoryName(transaction.category_id, transaction.category) }}
-                    </span>
-                  </div>
+              <div class="card-bottom">
+                <div class="category-section">
+                  <span class="category-tag" [ngClass]="[(getCategoryName(transaction.category_id, transaction.category) || '').toLowerCase()]">
+                    {{ getCategoryName(transaction.category_id, transaction.category) }}
+                  </span>
                 </div>
               </div>
+            </div>
 
               <div class="card-right">
                 <div class="amount-section">
@@ -243,19 +244,28 @@
     <!-- Pagination Controls (all periods) -->
     @if (totalPages > 1) {
       <div class="pagination-container">
-        <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+        <button
+          class="pagination-btn"
+          (click)="previousPage()"
+          [disabled]="currentPage === 1">
           <i class="fas fa-chevron-left"></i> Previous
         </button>
 
         <div class="pagination-numbers">
           @for (pageNum of getPageNumbers(); track pageNum) {
-            <button class="pagination-number" [class.active]="currentPage === pageNum" (click)="goToPage(pageNum)">
-              {{ pageNum }}
+            <button
+              class="pagination-number"
+              [class.active]="currentPage === pageNum"
+              (click)="goToPage(pageNum)">
+                {{ pageNum }}
             </button>
           }
         </div>
 
-        <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+        <button
+          class="pagination-btn"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages">
           Next <i class="fas fa-chevron-right"></i>
         </button>
       </div>
@@ -265,19 +275,26 @@
   <!-- Snackbar Notification -->
     <!-- Bulk Delete Confirmation Modal -->
     @if (showBulkDeleteModal) {
-      <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+      <div class="modal fade show d-block" tabindex="-1"
+        style="background: rgba(0,0,0,0.5);">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Confirm Delete</h5>
-              <button type="button" class="btn-close" (click)="hideDeleteModal()" aria-label="Close"></button>
+              <button
+                type="button"
+                class="btn-close"
+                (click)="hideDeleteModal()"
+                aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <p>Are you sure you want to delete the selected transactions?</p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" (click)="hideDeleteModal()">Cancel</button>
-              <button type="button" class="btn btn-danger" (click)="confirmBulkDelete()">Delete</button>
+              <button type="button" class="btn btn-secondary"
+                (click)="hideDeleteModal()">Cancel</button>
+              <button type="button" class="btn btn-danger"
+                (click)="confirmBulkDelete()">Delete</button>
             </div>
           </div>
         </div>
@@ -297,20 +314,27 @@
 
   <!-- Add/Edit Transaction Modal -->
   @if (showAddModal()) {
-    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal fade show d-block" tabindex="-1"
+      style="background: rgba(0,0,0,0.5);">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5">
               {{ isEditing() ? 'Edit Transaction' : 'Add New Transaction' }}
             </h1>
-            <button type="button" class="btn-close" (click)="closeAddModal()" aria-label="Close">
+            <button type="button" class="btn-close"
+              (click)="closeAddModal()" aria-label="Close">
             </button>
           </div>
           <div class="modal-body">
             <!-- Transaction Type Toggle -->
             <div class="mb-3 d-flex justify-content-center">
-              <div class="btn-group w-100" style="max-width: 400px; min-width: 350px;" role="group" aria-label="Transaction type toggle">
+              <div
+                class="btn-group w-100"
+                style="max-width: 400px;
+                min-width: 350px;"
+                role="group"
+                aria-label="Transaction type toggle">
                 <button type="button"
                         class="btn btn-outline-primary flex-fill py-1 fs-6"
                         [class.active]="newTransaction.type === 'expense'"
@@ -325,39 +349,71 @@
                 </button>
               </div>
             </div>
-            <form #form="ngForm" (ngSubmit)="isEditing() ? updateTransaction() : addTransaction()">
+            <form #form="ngForm" (ngSubmit)="isEditing() ? updateTransaction() :
+              addTransaction()">
               <div class="mb-3">
                 <label for="date" class="form-label">Date</label>
-                <input type="date" id="date" class="form-control" [(ngModel)]="newTransaction.date" name="date" #date="ngModel" required>
-                @if (date.touched && date.invalid && date.errors?.['required']) {
+                <input
+                  type="date"
+                  id="date"
+                  class="form-control"
+                  [(ngModel)]="newTransaction.date" name="date"
+                  #date="ngModel" required>
+                @if (date.touched && date.invalid &&
+                     date.errors?.['required']) {
                   <div class="text-danger">Date is required</div>
                 }
               </div>
               <div class="mb-3">
                 <label for="category" class="form-label">Category</label>
-                <select id="category" class="form-select" [(ngModel)]="newTransaction.category_id" name="category_id" #category="ngModel" (change)="onCategorySelectChange()" required>
+                <select
+                  id="category"
+                  class="form-select"
+                  [(ngModel)]="newTransaction.category_id"
+                  name="category_id" #category="ngModel"
+                  (change)="onCategorySelectChange()" required>
                   <option value="" disabled selected>Select category</option>
                   @for (cat of getModalCategories(); track cat.id) {
                     <option [value]="cat.id">{{ cat.name }}</option>
                   }
                 </select>
-                @if (category.touched && category.invalid && category.errors?.['required']) {
+                @if (category.touched && category.invalid &&
+                  category.errors?.['required']) {
                   <div class="text-danger">Category is required</div>
                 }
               </div>
               @if (showCustomCategoryInput) {
                 <div class="mb-3">
-                  <label for="customCategory" class="form-label">Custom Category Name</label>
-                  <input type="text" id="customCategory" class="form-control" [(ngModel)]="customCategoryName" name="customCategory" #customCategory="ngModel" placeholder="Enter custom category name" required>
-                  @if (customCategory.touched && customCategory.invalid && customCategory.errors?.['required']) {
-                    <div class="text-danger">Custom category name is required</div>
+                  <label for="customCategory" class="form-label">
+                    Custom Category Name
+                  </label>
+                  <input type="text" id="customCategory"
+                    class="form-control"
+                    [(ngModel)]="customCategoryName"
+                    name="customCategory"
+                    #customCategory="ngModel"
+                    placeholder="Enter custom category name" required>
+                  @if (customCategory.touched &&
+                       customCategory.invalid &&
+                       customCategory.errors?.['required']) {
+                    <div class="text-danger">
+                      Custom category name is required
+                    </div>
                   }
                 </div>
               }
               <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
-                <input type="text" id="description" class="form-control" [(ngModel)]="newTransaction.description" name="description" #description="ngModel" placeholder="Enter description" required>
-                @if (description.touched && description.invalid && description.errors?.['required']) {
+                <input
+                  type="text"
+                  id="description"
+                  class="form-control"
+                  [(ngModel)]="newTransaction.description"
+                  name="description"
+                  #description="ngModel"
+                  placeholder="Enter description" required>
+                @if (description.touched && description.invalid &&
+                     description.errors?.['required']) {
                   <div class="text-danger">Description is required</div>
                 }
               </div>
@@ -365,15 +421,34 @@
                 <label for="amount" class="form-label">Amount</label>
                 <div class="input-group">
                   <span class="input-group-text">₱</span>
-                  <input type="number" id="amount" class="form-control" [(ngModel)]="newTransaction.amount" name="amount" #amount="ngModel" placeholder="0.00" min="0.01" step="0.01" required>
+                  <input
+                    type="number"
+                    id="amount"
+                    class="form-control"
+                    [(ngModel)]="newTransaction.amount"
+                    name="amount"
+                    #amount="ngModel"
+                    placeholder="0.00"
+                    min="0.01"
+                    step="0.01" required>
                 </div>
-                @if (amount.touched && amount.invalid && amount.errors?.['required']) {
+                @if (amount.touched && amount.invalid &&
+                  amount.errors?.['required']) {
                   <div class="text-danger">Amount is required</div>
                 }
               </div>
               <div class="d-flex justify-content-end gap-2">
-                <button type="button" class="btn btn-secondary" (click)="closeAddModal()">Cancel</button>
-                <button type="submit" class="btn btn-primary">{{ isEditing() ? 'Update Transaction' : 'Add Transaction' }}</button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="closeAddModal()">
+                    Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn-primary">
+                  {{ isEditing() ? 'Update Transaction' : 'Add Transaction' }}
+                </button>
               </div>
             </form>
           </div>
