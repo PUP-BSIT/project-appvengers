@@ -86,6 +86,10 @@ main {
   }
 }
 
+// Hides elements
+.hide {
+  display: none !important;
+}
 
 // Toast Animation Keyframes
 @keyframes slideIn {
@@ -107,5 +111,36 @@ main {
   to {
     transform: translateX(100%);
     opacity: 0;
+  }
+}
+
+@media (max-width: 320px) {
+  main {
+    margin: 0;
+    margin-top: 60px;
+    padding: 10px;
+  }
+
+  .expenses-history-container {
+    margin: 20px 10px;
+  }
+
+  .expenses-table-container {
+    display: none !important;
+  }
+
+  // Kebab Dropdown for small screens
+  .kebab-dropdown {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    z-index: 600;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
   }
 }

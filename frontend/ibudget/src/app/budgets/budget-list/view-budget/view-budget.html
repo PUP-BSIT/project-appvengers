@@ -60,24 +60,82 @@
                   - &#8369; {{ transaction.amount }}
                 </td>
                 <td>
-                  <app-update-budget-expense
-                  [transactionId]="transaction.transactionId"
-                  [categories] ="categories()"
-                  (updateBudgetExpenseResponse)="onBudgetExpenseUpdated($event)"/>
+                  <button 
+                    class="btn btn-sm btn-warning me-2"
+                    (click)="openUpdateModal(transaction.transactionId)">
+                    Edit
+                  </button>
 
                   <button 
                     class="btn btn-sm btn-danger" 
                     (click)="deleteBudgetExpense(transaction.transactionId)">
                     Delete
                   </button>
+                </td>
               </tr>
             }
           }
         </tbody>
       </table>
     </div>
+
+    <!-- Appears only on mobile devices -->
+    <div class="expenses-list">
+      <ol class="d-flex flex-column justify-content-center list-unstyled">
+        @for(transaction of budgetExpenses(); track $index) {
+          <li 
+            class="card p-3 d-flex justify-content-between 
+            flex-column align-items-center mb-3">
+            <div class="d-flex flex-row justify-content-between 
+              w-100 align-items-center mb-2">
+              <div class="mb-0">
+                <span>{{ $index + 1 }}. </span>
+                <strong>{{ transaction.transactionDate }}</strong>
+              </div>
+
+              <!-- Kebab Icon -->
+              <div class="kebab-menu">
+                <i 
+                  class="fas fa-ellipsis-v"
+                  (click)="toggleDropdown($index)"></i>
+
+                <div class="kebab-dropdown" [class.hide]="isDropdownOpen() !== $index">
+                  <button 
+                    class="btn text-black me-2"
+                    (click)="openUpdateModal(transaction.transactionId)">
+                    Edit
+                  </button>
+
+                  <button 
+                    class="btn text-danger" 
+                    (click)="deleteBudgetExpense(transaction.transactionId)">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-row justify-content-between w-100
+              align-items-center">
+              <div class="text-muted mb-0"> 
+                {{ getCategoryName(transaction.categoryId) }}
+              </div>
+
+              <div class="text-danger fw-bold mb-0 align-bottom h-100">
+               - &#8369; {{ transaction.amount }}
+              </div>
+            </div>
+          </li>
+        }
+      </ol>
+    </div>
   </div>
 </main>
+
+<app-update-budget-expense
+  #updateBudgetModal
+  [categories] ="categories()"
+  (updateBudgetExpenseResponse)="onBudgetExpenseUpdated($event)"/>
 
 <!-- Snackbar -->
 @if (showNotification()) {
