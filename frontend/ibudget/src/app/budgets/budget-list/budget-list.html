@@ -14,31 +14,80 @@
   </div>
 
   <div class="summary-cards">
-    <div class="card total-budgets-card">
-      <div class="card-content">
-        <h3>Total Budgets</h3>
-        <p class="amount">&#8369; {{ totalBudgetsAmount() | number:'1.0-0': 'en-US' }}</p>
+    @if(isLoading()) {
+      <div class="card-placeholder placeholder col-12 placeholder-style"></div>
+      <div class="card-placeholder placeholder col-12 placeholder-style"></div>
+      <div class="card-placeholder placeholder col-12 placeholder-style"></div>
+    } @else {
+      <div class="card total-budgets-card">
+        <div class="card-content">
+          <h3>Total Budgets</h3>
+          <p class="amount">&#8369; {{ totalBudgetsAmount() | number:'1.0-0': 'en-US' }}</p>
+        </div>
+        <i class="bi bi-wallet-fill" style="color: #007bff; font-size: 2rem;"></i>
       </div>
-      <i class="bi bi-wallet-fill" style="color: #007bff; font-size: 2rem;"></i>
-    </div>
-    <div class="card total-spent-card">
-      <div class="card-content">
-        <h3>Total Spent</h3>
-        <p class="amount">&#8369; {{ totalSpentAmount() | number:'1.0-0': 'en-US' }}</p>
+      <div class="card total-spent-card">
+        <div class="card-content">
+          <h3>Total Spent</h3>
+          <p class="amount">&#8369; {{ totalSpentAmount() | number:'1.0-0': 'en-US' }}</p>
+        </div>
+        <i class="bi bi-graph-down-arrow" style="color: #dc3545; font-size: 2rem;"></i>
       </div>
-      <i class="bi bi-graph-down-arrow" style="color: #dc3545; font-size: 2rem;"></i>
-    </div>
-    <div class="card remaining-card">
-      <div class="card-content">
-        <h3>Remaining</h3>
-        <p class="amount">&#8369; {{ totalBudgetsAmount() - totalSpentAmount() | number:'1.0-0': 'en-US' }}</p>
+      <div class="card remaining-card">
+        <div class="card-content">
+          <h3>Remaining</h3>
+          <p class="amount">&#8369; {{ totalBudgetsAmount() - totalSpentAmount() | number:'1.0-0': 'en-US' }}</p>
+        </div>
+        <i class="bi bi-cash-stack" style="color: #28a745; font-size: 2rem;"></i>
       </div>
-      <i class="bi bi-cash-stack" style="color: #28a745; font-size: 2rem;"></i>
-    </div>
+    }
   </div>
   
   <div class="budget-list-container">
-    @if(!budgets().length) {
+    <!-- Placeholder while data is loading -->
+    @if(isLoading()) {
+      <div class="card budget-card b-card-height mb-2">
+          <div class="card-body budget-card-body">
+            <div class="budget-card-header">
+              <div class="category-info-container-budget-list">
+                <label 
+                  class="mb-0 placeholder col-6 placeholder-style-sm mb-2"></label>
+                <span class="placeholder col-4 placeholder-style-sm"></span>
+              </div>
+
+              <div class="update-btn-container">
+                <div class="placeholder col-3 placeholder-style-sm"></div>
+              </div>
+            </div>
+
+            <div class="budget-card-body">
+              <div class="amount-container">
+                <div class="spent-amount">
+                  <span class="placeholder col-4 placeholder-style-sm"></span>
+                  <span class="placeholder col-6 placeholder-style-sm"></span>
+                </div>
+
+                <div class="progress-percentage">
+                  <span class="placeholder col-3 placeholder-style-sm"></span>
+                </div>
+              </div>
+              
+              <div class="budget-progress-bar-container">
+                <div class="placeholder col-12 placeholder-style-sm"></div>
+              </div>
+
+              <div class="remaining-amount">
+                <span class="placeholder col-5 placeholder-style-sm"></span>
+              </div>
+            </div>
+
+            <div class="budget-card-action">
+              <div class="placeholder col-4 placeholder-style-sm">
+            </div>
+          </div>
+        </div>
+      </div>
+    } @else if(!budgets().length) {
       <div class="no-budgets-ui">
         <div class="no-budgets-icon-wrapper">
           <i class="bi bi-journal-x no-budgets-icon"></i>
@@ -48,74 +97,74 @@
           <p>Start managing your finances by adding your first budget!</p>
         </div>
       </div>
-    }
+    } @else {
+        @for(budget of budgets(); track $index) {
+        <div class="card budget-card b-card-height mb-2">
+          <div class="card-body budget-card-body">
+            <div class="budget-card-header">
+              <div class="category-info-container-budget-list">
+                <label class="mb-0 text-black"> {{ budget.category_name }} </label>
+                <span class="text-secondary">
+                  From {{ budget.start_date | date: 'MMM d, y' }} to
+                  {{ budget.end_date | date: 'MMM d, y' }}
+                </span>
+              </div>
 
-    @for(budget of budgets(); track $index) {
-      <div class="card budget-card b-card-height mb-2">
-        <div class="card-body budget-card-body">
-          <div class="budget-card-header">
-            <div class="category-info-container-budget-list">
-              <label class="mb-0 text-black"> {{ budget.category_name }} </label>
-              <span class="text-secondary">
-                From {{ budget.start_date | date: 'MMM d, y' }} to
-                {{ budget.end_date | date: 'MMM d, y' }}
-              </span>
+              <div class="update-btn-container">
+                <app-update-budget-button 
+                  (updatedBudgetResponse)="onBudgetUpdated($event)"
+                  (deletedBudgetResponse)="onBudgetDeleted($event)"
+                  [budgetId]="budget.id"/>
+              </div>
             </div>
 
-            <div class="update-btn-container">
-              <app-update-budget-button 
-                (updatedBudgetResponse)="onBudgetUpdated($event)"
-                (deletedBudgetResponse)="onBudgetDeleted($event)"
-                [budgetId]="budget.id"/>
-            </div>
-          </div>
+            <div class="budget-card-body">
+              <div class="amount-container">
+                <div class="spent-amount">
+                  <span>
+                    &#8369; {{ budget.current_amount | number:'1.0-0': 'en-US' }} 
+                  </span>
 
-          <div class="budget-card-body">
-            <div class="amount-container">
-              <div class="spent-amount">
+                  <span class="text-secondary mb-0">
+                    of &#8369; {{ budget.limit_amount | number:'1.0-0': 'en-US' }}
+                  </span>
+                </div>
+
+                <div class="progress-percentage">
+                  <span class="text-success">
+                    {{
+                      getBudgetPercent(budget) 
+                    }}% Spent
+                  </span>
+                </div>
+              </div>
+              
+              <div class="budget-progress-bar-container">
+                <app-budget-progress-bar 
+                  [progressPercentage]="getBudgetPercent(budget)"/>
+              </div>
+
+              <div class="remaining-amount">
                 <span>
-                  &#8369; {{ budget.current_amount | number:'1.0-0': 'en-US' }} 
-                </span>
-
-                <span class="text-secondary mb-0">
-                  of &#8369; {{ budget.limit_amount | number:'1.0-0': 'en-US' }}
-                </span>
-              </div>
-
-              <div class="progress-percentage">
-                <span class="text-success">
-                  {{
-                    getBudgetPercent(budget) 
-                  }}% Spent
+                  &#8369; {{
+                    ((budget.limit_amount) - (budget.current_amount ?? 0))
+                      | number:'1.0-0':'en-US'
+                  }} remaining
                 </span>
               </div>
             </div>
-            
-            <div class="budget-progress-bar-container">
-              <app-budget-progress-bar 
-                [progressPercentage]="getBudgetPercent(budget)"/>
-            </div>
 
-            <div class="remaining-amount">
-              <span>
-                &#8369; {{
-                  ((budget.limit_amount) - (budget.current_amount ?? 0))
-                    | number:'1.0-0':'en-US'
-                }} remaining
-              </span>
+            <div class="budget-card-action">
+              <button
+              type="button"
+              class="btn btn-primary"
+              (click)="viewBudgetDetails(budget.id)">
+                View Budget
+              </button>
             </div>
-          </div>
-
-          <div class="budget-card-action">
-            <button
-            type="button"
-            class="btn btn-primary"
-            (click)="viewBudgetDetails(budget.id)">
-              View Budget
-            </button>
           </div>
         </div>
-      </div>
+      }
     }
   </div>
 </div>
