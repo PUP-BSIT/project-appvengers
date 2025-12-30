@@ -45,6 +45,7 @@
     "canvas-confetti": "^1.9.4",
     "chart.js": "^4.5.1",
     "dompurify": "^3.3.0",
+    "generate-password-browser": "^1.1.0",
     "jspdf": "^3.0.3",
     "jspdf-autotable": "^5.0.2",
     "marked": "^17.0.1",
