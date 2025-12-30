@@ -4,7 +4,7 @@
 
 **Production URL**: `https://i-budget.site`  
 **Testing Framework**: Playwright MCP  
-**Last Updated**: December 2024
+**Last Updated**: December 2025
 
 ---
 
