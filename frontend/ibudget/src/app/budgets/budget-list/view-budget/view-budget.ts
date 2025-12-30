@@ -37,6 +37,9 @@ export class ViewBudget implements OnInit, AfterViewInit {
   isHidingNotification = signal(false);
   notificationMessage = signal('');
 
+  // Loading State
+  isLoading = signal(true);
+
   ngOnInit(): void {
     this.initBudgetId();
     this.getCategories();
@@ -58,8 +61,18 @@ export class ViewBudget implements OnInit, AfterViewInit {
     if (!id) return;
 
     this.budgetTxService.getByBudgetId(id).subscribe({
-      next: (transactions) => this.budgetExpenses.set(transactions),
-      error: (err) => console.error('Failed to load budget expenses', err)
+      next: (transactions) => {
+        this.budgetExpenses.set(transactions);
+
+        setTimeout(() => {
+          this.isLoading.set(false);
+        }, 2000); // Simulate loading delay for better UX
+  
+      },
+      error: (err) => {
+        console.error('Failed to load budget expenses', err);
+        this.isLoading.set(false);
+      }
     });
   }
 
@@ -67,12 +80,17 @@ export class ViewBudget implements OnInit, AfterViewInit {
   const id = this.budgetId();
   if (!id) return;
 
+  this.isLoading.set(true);
   this.budgetTxService.getBudgetSummary(id).subscribe({
     next: (summary) => {
       const exceeded = +summary.totalExpenses >= +summary.limitAmount;
       this.isBudgetExceeded.set(exceeded);
+      this.isLoading.set(false);
     },
-    error: (err) => console.error('Failed to load summary', err)
+    error: (err) => {
+      console.error('Failed to load summary', err);
+      this.isLoading.set(false);
+    }
   });
 }
 

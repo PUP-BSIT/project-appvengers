@@ -32,14 +32,26 @@
           </tr>
         </thead>
         <tbody>
-          @if(budgetExpenses().length === 0) {
+          <!-- Placeholder while loading -->
+          @if(isLoading()) {
+            <tr>
+              <td colspan="5" class="text-center">
+                <span class="placeholder col-12 placeholder-style"></span>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5" class="text-center">
+                <span class="placeholder col-12 placeholder-style"></span>
+              </td>
+            </tr>
+          } @else if(budgetExpenses().length === 0) {
             <tr>
               <td colspan="5" class="text-center">
                 No budget expenses found.
               </td>
             </tr>
           } @else {
-              @for(transaction of budgetExpenses(); track $index) {
+            @for(transaction of budgetExpenses(); track $index) {
               <tr>
                 <td>{{ transaction.transactionDate }}</td>
                 <td>{{ transaction.description }}</td>
