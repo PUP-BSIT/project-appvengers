@@ -64,10 +64,10 @@ export class ViewBudget implements OnInit, AfterViewInit {
       next: (transactions) => {
         this.budgetExpenses.set(transactions);
 
+        // Added a timeout for better UX while loading
         setTimeout(() => {
           this.isLoading.set(false);
-        }, 2000); // Simulate loading delay for better UX
-  
+        }, 2000);
       },
       error: (err) => {
         console.error('Failed to load budget expenses', err);
@@ -80,7 +80,6 @@ export class ViewBudget implements OnInit, AfterViewInit {
   const id = this.budgetId();
   if (!id) return;
 
-  this.isLoading.set(true);
   this.budgetTxService.getBudgetSummary(id).subscribe({
     next: (summary) => {
       const exceeded = +summary.totalExpenses >= +summary.limitAmount;
