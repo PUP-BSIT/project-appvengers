@@ -139,4 +139,14 @@ export class NotificationPreferencesService {
       console.error('Failed to save notification preferences:', e);
     }
   }
+
+  /**
+   * Clear preferences state (for logout).
+   * Does NOT clear localStorage since preferences should persist across sessions.
+   */
+  clearState(): void {
+    // Reset to defaults but keep localStorage (preferences are user-specific settings)
+    this.preferencesSubject.next(this.loadFromStorage());
+    console.log('🧹 Notification preferences state cleared');
+  }
 }
