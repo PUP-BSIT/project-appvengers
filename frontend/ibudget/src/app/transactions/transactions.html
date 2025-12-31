@@ -10,21 +10,30 @@
         <div class="card skeleton">
           <div class="card-content w-100">
             <div class="skeleton-line short mb-3"></div>
-            <div class="skeleton-line long" style="height: 2rem; width: 60%"></div>
+            <div
+              class="skeleton-line long"
+              style="height: 2rem; width: 60%">
+            </div>
           </div>
           <div class="skeleton-circle"></div>
         </div>
         <div class="card skeleton">
           <div class="card-content w-100">
             <div class="skeleton-line short mb-3"></div>
-            <div class="skeleton-line long" style="height: 2rem; width: 60%"></div>
+            <div
+              class="skeleton-line long"
+              style="height: 2rem; width: 60%">
+            </div>
           </div>
           <div class="skeleton-circle"></div>
         </div>
         <div class="card skeleton">
           <div class="card-content w-100">
             <div class="skeleton-line short mb-3"></div>
-            <div class="skeleton-line long" style="height: 2rem; width: 60%"></div>
+            <div
+              class="skeleton-line long"
+              style="height: 2rem; width: 60%">
+            </div>
           </div>
           <div class="skeleton-circle"></div>
         </div>
@@ -53,7 +62,9 @@
             <p class="amount">{{ getBalance() | currency : 'PHP' }}</p>
           </div>
           <i
-            class="bi bi-wallet-fill" style="color: #007bff; font-size: 2rem;"></i>
+            class="bi bi-wallet-fill"
+            style="color: #007bff; font-size: 2rem;">
+          </i>
         </div>
       }
     </div>
@@ -120,7 +131,8 @@
         <div class="transactions-cards-skeleton">
           <!-- Skeleton Item 1 -->
            <div class="skeleton-transaction">
-              <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="d-flex justify-content-between
+                align-items-center mb-2">
                  <div class="skeleton-line short" style="width: 30%"></div>
                  <div class="skeleton-line short" style="width: 10%"></div>
               </div>
@@ -131,7 +143,8 @@
            </div>
            <!-- Skeleton Item 2 -->
            <div class="skeleton-transaction">
-              <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="d-flex justify-content-between
+                align-items-center mb-2">
                  <div class="skeleton-line short" style="width: 30%"></div>
                  <div class="skeleton-line short" style="width: 10%"></div>
               </div>
@@ -142,7 +155,8 @@
            </div>
            <!-- Skeleton Item 3 -->
            <div class="skeleton-transaction">
-              <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="d-flex justify-content-between
+                align-items-center mb-2">
                  <div class="skeleton-line short" style="width: 30%"></div>
                  <div class="skeleton-line short" style="width: 10%"></div>
               </div>
@@ -154,24 +168,32 @@
         </div>
       } @else {
         <!-- Selection mode controls (only one block) -->
-        <div *ngIf="selectionMode || hasSelectedTransactions()">
+        @if (selectionMode || hasSelectedTransactions()) {
           <div class="bulk-actions-bar">
             <span>{{ selectedTransactionIds.size }} selected</span>
-            <button class="btn btn-danger btn-sm" (click)="showDeleteModal()">
+            <button
+              class="btn btn-danger btn-sm"
+              (click)="showDeleteModal()">
               <i class="bi bi-trash"></i> Delete Selected
             </button>
-            <button class="btn btn-secondary btn-sm" (click)="exitSelectionMode()">
-              Cancel
+            <button
+              class="btn btn-secondary btn-sm"
+              (click)="exitSelectionMode()">
+                Cancel
             </button>
           </div>
           <!-- Select All Checkbox -->
           <div class="select-all-row">
-            <input type="checkbox" [checked]="areAllVisibleSelected()" (change)="selectAllVisible()" id="selectAllCheckbox">
+            <input
+              type="checkbox"
+              [checked]="areAllVisibleSelected()"
+              (change)="selectAllVisible()" id="selectAllCheckbox">
             <label for="selectAllCheckbox">Select All</label>
           </div>
-        </div>
+        }
         @for (transaction of getPaginatedTransactions(); track transaction.id) {
-          @if ($first || getRelativeDate(transaction.date) !== getRelativeDate(getPaginatedTransactions()[$index - 1]?.date)) {
+          @if ($first || getRelativeDate(transaction.date) !==
+               getRelativeDate(getPaginatedTransactions()[$index - 1]?.date)) {
             <div class="date-group-label">
               @if (getRelativeDate(transaction.date) === 'Today') {
                 Today
@@ -183,7 +205,8 @@
             </div>
           }
 
-          <div class="transaction-card transaction-card-with-checkbox position-relative overflow-visible">
+          <div class="transaction-card transaction-card-with-checkbox
+            position-relative overflow-visible">
             @if (selectionMode || hasSelectedTransactions()) {
               <div class="transaction-select-checkbox">
                 <input
@@ -195,22 +218,40 @@
             }
 
             <!-- Dropdown moved outside card-body for proper overlay -->
-            <div class="dropdown transaction-dropdown position-absolute top-0 end-0 m-2">
-              <button class="btn btn-sm p-0 d-flex align-items-center justify-content-center"
-                      type="button"
-                      (click)="toggleDropdown(transaction.id, $event)"
-                      aria-label="Show actions">
-                <i class="bi bi-three-dots-vertical" style="font-size: 1.1rem;" aria-hidden="true"></i>
+            <div
+              class="dropdown transaction-dropdown position-absolute
+                top-0 end-0 m-2">
+              <button
+                class="btn btn-sm p-0 d-flex align-items-center
+                  justify-content-center"
+                type="button"
+                (click)="toggleDropdown(transaction.id, $event)"
+                aria-label="Show actions">
+                <i
+                  class="bi bi-three-dots-vertical"
+                  style="font-size: 1.1rem;"
+                  aria-hidden="true"></i>
                 <span class="visually-hidden">Actions</span>
               </button>
                   <ul class="dropdown-menu dropdown-menu-end"
                     [class.show]="activeDropdownId() === transaction.id"
-                    [style.display]="activeDropdownId() === transaction.id ? 'block' : 'none'">
+                    [style.display]="activeDropdownId() === transaction.id ?
+                      'block' : 'none'">
                 <li>
-                  <button class="dropdown-item" type="button" (click)="editTransaction(transaction)">Edit</button>
+                  <button
+                    class="dropdown-item"
+                    type="button"
+                    (click)="editTransaction(transaction)">
+                      Edit
+                  </button>
                 </li>
                 <li>
-                  <button class="dropdown-item text-danger" type="button" (click)="deleteTransaction(transaction.id)">Delete</button>
+                  <button
+                    class="dropdown-item text-danger"
+                    type="button"
+                    (click)="deleteTransaction(transaction.id)">
+                      Delete
+                  </button>
                 </li>
               </ul>
             </div>
@@ -223,8 +264,12 @@
 
               <div class="card-bottom">
                 <div class="category-section">
-                  <span class="category-tag" [ngClass]="[(getCategoryName(transaction.category_id, transaction.category) || '').toLowerCase()]">
-                    {{ getCategoryName(transaction.category_id, transaction.category) }}
+                  <span
+                    class="category-tag"
+                    [ngClass]="[(getCategoryName(transaction.category_id,
+                      transaction.category) || '').toLowerCase()]">
+                    {{ getCategoryName(transaction.category_id,
+                      transaction.category) }}
                   </span>
                 </div>
               </div>
@@ -232,7 +277,10 @@
 
               <div class="card-right">
                 <div class="amount-section">
-                  <span class="amount-text" [ngClass]="{'income': transaction.type === 'income', 'expense': transaction.type === 'expense'}">
+                  <span
+                    class="amount-text"
+                    [ngClass]="{'income': transaction.type === 'income',
+                    'expense': transaction.type === 'expense'}">
                     {{ transaction.type === 'income' ? '+' : '-' }}
                     {{ transaction.amount | currency : 'PHP' }}
                   </span>
