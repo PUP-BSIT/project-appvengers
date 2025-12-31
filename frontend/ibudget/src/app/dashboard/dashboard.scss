@@ -9,6 +9,7 @@ main {
   display: grid;
   grid-template-areas:
     "greeting-panel greeting-panel"
+    "recent-activity-panel recent-activity-panel"
     "add-transaction-panel add-budget-panel"
     "add-saving-panel notifications-panel"
     "reports-panel reports-panel"
@@ -123,7 +124,155 @@ main {
   }
 }
 
+.card.recent-activity-panel {
+  grid-area: recent-activity-panel;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px $card-drop-shadow;
+  padding: 0; // padding handled by card-body
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  overflow: hidden;
+
+  .card-body {
+    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+
+    h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #2c3e50;
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+    }
+
+    .view-all {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #3b82f6;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .loading-state, .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #6c757d;
+    min-height: 150px;
+    
+    i {
+      font-size: 2rem;
+      opacity: 0.5;
+      display: block !important; // override global hide rule
+      color: #6c757d;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+  }
+
+  .activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .activity-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f5f9;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .icon-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      i {
+        font-size: 1.2rem;
+        display: block !important; // override global hide rule
+      }
+
+      &.income {
+        background-color: #d1fae5;
+        color: #10b981;
+      }
+
+      &.expense {
+        background-color: #fee2e2;
+        color: #ef4444;
+      }
+    }
+
+    .item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .description {
+        font-weight: 600;
+        color: #334155;
+        font-size: 0.95rem;
+      }
+
+      .date {
+        font-size: 0.8rem;
+        color: #94a3b8;
+      }
+    }
+
+    .item-amount {
+      font-weight: 700;
+      font-size: 0.95rem;
+
+      &.income {
+        color: #10b981;
+      }
+
+      &.expense {
+        color: #ef4444;
+      }
+    }
+  }
+}
+
 .card.notifications-panel {
+  grid-area: notifications-panel;
   box-shadow: 0 4px 8px $card-drop-shadow;
   border-radius: 10px;
   padding: 20px;
@@ -131,7 +280,7 @@ main {
   margin-left: 20px;
   margin-right: 20px;
   background-image: linear-gradient(-225deg, #B6CEE8 0%, #F578DC 100%);
-  border: 1px solid #FFEEBA; // slightly darker yellow border
+  border: 1px solid #FFEEBA;
 
   h2 {
     font-family: 'Atkinson Hyperlegible', sans-serif;
@@ -189,51 +338,6 @@ main {
   }
 }
 
-//  Button Styles for each panel
-// .card.add-transaction-panel .btn.transaction-button {
-//   background-color: peru;
-//   font-weight: 500;
-//   color: white;
-//   transition: background-color 0.2s ease-in-out;
-
-//   &:hover {
-//     background-color: rgb(165, 107, 49);
-//   }
-// }
-
-// .card.add-budget-panel .btn.budget-button {
-//   background-color: teal;
-//   font-weight: 500;
-//   color: white;
-//   transition: background-color 0.2s ease-in-out;
-
-//   &:hover {
-//     background-color: rgb(0, 100, 100);
-//   }
-// }
-
-// .card.add-saving-panel .btn.saving-button {
-//   background-color: rgb(37, 37, 250);
-//   font-weight: 500;
-//   color: white;
-//   transition: background-color 0.2s ease-in-out;
-
-//   &:hover {
-//     background-color: rgb(31, 31, 130);
-//   }
-// }
-
-// .card.reports-panel .btn.report-button {
-//   background-color: rgb(255, 169, 63);
-//   font-weight: 500;
-//   color: white;
-//   transition: background-color 0.2s ease-in-out;
-
-//   &:hover {
-//     background-color: rgb(180, 90, 0);
-//   }
-// }
-
 .card.greeting-panel {
   grid-area: greeting-panel;
 }
@@ -250,9 +354,7 @@ main {
   grid-area: add-saving-panel;
 }
 
-.card.notifications-panel {
-  grid-area: notifications-panel;
-}
+
 
 .card.reports-panel {
   grid-area: reports-panel;
@@ -313,6 +415,7 @@ main {
 .card.card.add-transaction-panel:hover,
 .card.card.add-budget-panel:hover,
 .card.card.add-saving-panel:hover,
+.card.card.recent-activity-panel:hover,
 .card.card.notifications-panel:hover,
 .card.card.reports-panel:hover,
 .card.card.chatbot-panel:hover {
@@ -341,6 +444,7 @@ main {
   .card.add-transaction-panel,
   .card.add-budget-panel,
   .card.add-saving-panel,
+  .card.recent-activity-panel,
   .card.notifications-panel,
   .card.reports-panel,
   .card.chatbot-panel {
