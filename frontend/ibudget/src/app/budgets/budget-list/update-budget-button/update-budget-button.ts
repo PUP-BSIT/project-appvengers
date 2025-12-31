@@ -56,6 +56,7 @@ export class UpdateBudgetButton implements OnInit {
   constructor() {
     this.budgetForm = this.formBuilder.group({
       category_id: [],
+      name: ['', { validators: [Validators.required] }],
       limit_amount: [0, [Validators.required, Validators.min(1)]],
       current_amount: [0],
       start_date: ['', {
@@ -98,6 +99,7 @@ export class UpdateBudgetButton implements OnInit {
       .subscribe((fetchedBudget: Budget) => {
         this.budgetForm.patchValue({
           category_id: fetchedBudget.category_id,
+          name: fetchedBudget.name,
           limit_amount: fetchedBudget.limit_amount,
           current_amount: fetchedBudget.current_amount,
           start_date: fetchedBudget.start_date,
