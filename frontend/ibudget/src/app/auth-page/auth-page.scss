@@ -234,3 +234,9 @@ span.highlight-yellow {
     font-size: 14px;
   }
 }
+
+@media (min-width: 1024px) {
+  .auth-page-container {
+    min-height: 100vh;
+  }
+}
