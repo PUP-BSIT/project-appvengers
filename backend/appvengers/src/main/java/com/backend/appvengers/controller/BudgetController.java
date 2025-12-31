@@ -75,6 +75,7 @@ public class BudgetController {
 
     // Update the fields of the existing budget (userId remains the same)
     existingBudget.setCategoryId(budget.getCategoryId());
+    existingBudget.setName(budget.getName());
     existingBudget.setLimitAmount(budget.getLimitAmount());
     existingBudget.setStartDate(budget.getStartDate());
     existingBudget.setEndDate(budget.getEndDate()); 
