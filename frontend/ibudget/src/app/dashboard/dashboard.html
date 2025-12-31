@@ -87,10 +87,13 @@
         <a routerLink="/transactions" class="view-all">View All</a>
       </div>
 
+      <!-- Recent Activity List -->
       <div class="activity-list-container">
         @if (isLoading()) {
           <div class="loading-state">
-            <div class="spinner-border spinner-border-sm text-secondary" role="status"></div>
+            <div 
+              class="spinner-border spinner-border-sm text-secondary" 
+              role="status"></div>
             <span>Loading...</span>
           </div>
         } @else if (recentTransactions().length === 0) {
@@ -103,16 +106,29 @@
             @for (tx of recentTransactions(); track tx.id) {
               <div class="activity-item">
                 <div class="item-left">
-                  <div class="icon-circle" [class.income]="tx.type === 'income'" [class.expense]="tx.type === 'expense'">
-                    <i [class]="tx.type === 'income' ? 'bi bi-arrow-down-left' : 'bi bi-arrow-up-right'"></i>
+                  <div 
+                    class="icon-circle" 
+                    [class.income]="tx.type === 'income'" 
+                    [class.expense]="tx.type === 'expense'">
+                    <i 
+                      [class]="tx.type === 'income' ? 
+                      'bi bi-arrow-down-left' : 
+                      'bi bi-arrow-up-right'"></i>
                   </div>
                   <div class="item-info">
                     <span class="description">{{ tx.description }}</span>
-                    <span class="date">{{ tx.transactionDate | date:'MMM d' }}</span>
+                    <span 
+                      class="date">
+                        {{ tx.transactionDate | date:'MMM d' }}
+                    </span>
                   </div>
                 </div>
-                <div class="item-amount" [class.income]="tx.type === 'income'" [class.expense]="tx.type === 'expense'">
-                  {{ tx.type === 'income' ? '+' : '-' }} {{ tx.amount | currency:'PHP':'symbol':'1.0-0' }}
+                <div 
+                  class="item-amount" 
+                  [class.income]="tx.type === 'income'" 
+                  [class.expense]="tx.type === 'expense'">
+                    {{ tx.type === 'income' ? '+' : '-' }} 
+                    {{ tx.amount | currency:'PHP':'symbol':'1.0-0' }}
                 </div>
               </div>
             }
