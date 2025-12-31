@@ -49,45 +49,10 @@
         "/api/categories/**"
       ],
       "cacheConfig": {
-        "strategy": "performance",
+        "strategy": "freshness",
         "maxSize": 100,
-        "maxAge": "1h"
-      }
-    },
-    {
-      "name": "api-budgets",
-      "urls": [
-        "/api/budgets",
-        "/api/budgets/**"
-      ],
-      "cacheConfig": {
-        "strategy": "performance",
-        "maxSize": 100,
-        "maxAge": "30m"
-      }
-    },
-    {
-      "name": "api-transactions",
-      "urls": [
-        "/api/transactions",
-        "/api/transactions/**"
-      ],
-      "cacheConfig": {
-        "strategy": "performance",
-        "maxSize": 200,
-        "maxAge": "30m"
-      }
-    },
-    {
-      "name": "api-savings",
-      "urls": [
-        "/api/savings",
-        "/api/savings/**"
-      ],
-      "cacheConfig": {
-        "strategy": "performance",
-        "maxSize": 100,
-        "maxAge": "30m"
+        "maxAge": "15m",
+        "timeout": "10s"
       }
     },
     {
@@ -99,7 +64,7 @@
       "cacheConfig": {
         "strategy": "freshness",
         "maxSize": 50,
-        "maxAge": "5m",
+        "maxAge": "2m",
         "timeout": "5s"
       }
     },
@@ -114,26 +79,6 @@
         "maxAge": "5m",
         "timeout": "5s"
       }
-    },
-    {
-      "name": "api-reports",
-      "urls": [
-        "/api/transactions/reports/**",
-        "/api/expenses/summary"
-      ],
-      "cacheConfig": {
-        "strategy": "performance",
-        "maxSize": 50,
-        "maxAge": "1h"
-      }
     }
-  ],
-  "navigationUrls": [
-    "/**",
-    "!/api/**",
-    "!/ws-notifications/**",
-    "!/oauth2/**",
-    "!/login/oauth2/**",
-    "!/auth/callback/**"
   ]
 }
