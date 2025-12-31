@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ResendEmailService } from '../../services/resend-email.service';
 import { ActivatedRoute } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-resend-verification',
@@ -20,7 +21,9 @@ export class ResendVerification implements OnInit{
       // only send if email is present and different from previous to avoid duplicate sends
       if (email && email !== this.userEmail()) {
         this.userEmail.set(email);
-        console.log('Resending verification email to:', this.userEmail());
+        if (!environment.production) {
+          console.log('Resending verification email to:', this.userEmail());
+        }
         this.resendEmail(this.userEmail());
       }
     });
@@ -30,7 +33,9 @@ export class ResendVerification implements OnInit{
     this.resendEmailService.resendVerificationEmail(email)
       .subscribe({
         next: (response) => {
-          console.log('Verification email resent successfully:', response);
+          if (!environment.production) {
+            console.log('Verification email resent successfully:', response);
+          }
         },
         error: (error) => {
           console.error('Error resending verification email:', error);

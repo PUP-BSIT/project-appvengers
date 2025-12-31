@@ -75,7 +75,9 @@ export class AuthService {
     
     // Note: Services should be cleared by the header component calling their clearState() methods
     // This includes: NotificationService.clearState(), WebSocketService.disconnect()
-    console.log('🚪 User logged out - all storage and caches cleared');
+    if (!environment.production) {
+      console.log('🚪 User logged out - all storage and caches cleared');
+    }
   }
 
   /**
@@ -86,24 +88,32 @@ export class AuthService {
    */
   private async clearServiceWorkerCache(): Promise<void> {
     if (!this.swUpdate || !this.swUpdate.isEnabled) {
-      console.log('⚠️ Service Worker not available or not enabled, skipping cache clear');
+      if (!environment.production) {
+        console.log('⚠️ Service Worker not available or not enabled, skipping cache clear');
+      }
       return;
     }
 
     try {
       // Access all available caches
       const cacheNames = await caches.keys();
-      console.log(`🗑️ Clearing ${cacheNames.length} Service Worker caches...`);
+      if (!environment.production) {
+        console.log(`🗑️ Clearing ${cacheNames.length} Service Worker caches...`);
+      }
 
       // Delete all caches (ngsw:...db, ngsw:...assets)
       await Promise.all(
         cacheNames.map(cacheName => {
-          console.log(`  ↳ Deleting cache: ${cacheName}`);
+          if (!environment.production) {
+            console.log(`  ↳ Deleting cache: ${cacheName}`);
+          }
           return caches.delete(cacheName);
         })
       );
 
-      console.log('✅ Service Worker caches cleared successfully');
+      if (!environment.production) {
+        console.log('✅ Service Worker caches cleared successfully');
+      }
     } catch (error) {
       // Non-blocking error (cache clearing is best-effort)
       console.error('⚠️ Failed to clear Service Worker cache:', error);
@@ -183,7 +193,9 @@ changePassword(
     if (username) {
       localStorage.setItem('iBudget_username', username);
     }
-    console.log('OAuth token stored successfully');
+    if (!environment.production) {
+      console.log('OAuth token stored successfully');
+    }
   }
 
   /**

@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../environments/environment';
 
 /**
  * Handles OAuth2 callback from backend.
@@ -80,12 +81,16 @@ export class AuthCallback implements OnInit {
 
     // Store token and user info
     this.authService.handleOAuthCallback(token, username || '');
-    console.log('OAuth token stored successfully');
+    if (!environment.production) {
+      console.log('OAuth token stored successfully');
+    }
 
     // Small delay to ensure localStorage is fully committed before navigation
     // This prevents race condition with auth guard reading token
     setTimeout(() => {
-      console.log('OAuth callback successful, navigating to dashboard');
+      if (!environment.production) {
+        console.log('OAuth callback successful, navigating to dashboard');
+      }
       this.router.navigate(['/dashboard'], { replaceUrl: true });
     }, 100);
   }
