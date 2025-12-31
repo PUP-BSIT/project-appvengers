@@ -19,7 +19,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
     AddBudgetButton,
     UpdateBudgetButton,
     BudgetProgressBar
-],
+  ],
   templateUrl: './budget-list.html',
   styleUrl: './budget-list.scss',
 })
@@ -59,7 +59,17 @@ export class BudgetList implements OnInit {
   // Fetch budgets and enrich with summaries
   getBudgets() {
     this.budgetService.getBudgets()
-      .pipe(switchMap(budgets => this.hydrateBudgets(budgets)))
+      .pipe(
+        switchMap(budgets => {
+          if (!budgets.length) {
+            this.budgets.set([]);
+            this.isLoading.set(false);
+            return of([]);
+          }
+          return this.hydrateBudgets(budgets);
+        })
+      )
+      
       .subscribe({
         next: hydrated => {
           this.budgets.set(hydrated);
