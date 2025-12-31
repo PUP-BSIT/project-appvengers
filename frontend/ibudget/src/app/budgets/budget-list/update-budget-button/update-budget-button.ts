@@ -36,8 +36,10 @@ import {
 
 export class UpdateBudgetButton implements OnInit {
   @ViewChild('updateBudgetModal') updateBudgetModal!: ElementRef;
-  @ViewChild('openUpdateBudgetModalBtn') 
+  @ViewChild('openUpdateBudgetModalBtn')
     openUpdateBudgetModalBtn!: ElementRef<HTMLButtonElement>;
+  @ViewChild('confirmDeleteModal') confirmDeleteModal!: ElementRef; 
+
   budgetForm: FormGroup;
   router = inject(Router);
   formBuilder = inject(FormBuilder);  
@@ -128,6 +130,17 @@ export class UpdateBudgetButton implements OnInit {
       });
   }
 
+  openConfirmDeleteModal() {
+    const modal = new Modal(this.confirmDeleteModal.nativeElement);
+    modal.show();
+  }
+
+  confirmDelete() {
+    this.deleteBudget();
+    const modal = Modal.getInstance(this.confirmDeleteModal.nativeElement);
+    modal?.hide();
+  }
+
   getCategories() {
     this.categoriesService.getCategories().subscribe(data => {
       this.categories.set(data);
@@ -147,10 +160,9 @@ export class UpdateBudgetButton implements OnInit {
     this.budgetForm.enable();
   }
 
-  // Delete: delete budget based on budgetId
   onDelete() {
     if (!this.budgetId()) return;
-    this.deleteBudget();
+    this.openConfirmDeleteModal(); 
   }
 
   showNotificationMessage(message: string) {
