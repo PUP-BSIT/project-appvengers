@@ -3,43 +3,61 @@
   ' ' + 
   (getToggleState() ? 'open' : 'closed')" 
   [class.expanded]="isExpanded">
-  <!-- Coin Image here -->
-  <!-- <div class="image-container">
-    <img 
-      src="../../assets/images/ibudget_coin_icon.png" 
-      alt="Coin Image" />
-  </div> -->
 
   <div class="sidebar-inner-container">
     <!-- Nav Items -->
-    <div class="nav-item" routerLink="/dashboard" routerLinkActive="active">
-      <i class="bi bi-house"></i>
-      <span>Dashboard</span>
+    <div 
+      class="nav-item" 
+      routerLink="/dashboard" 
+      routerLinkActive="active" 
+      (click)="closeSidebarOnMobile()">
+        <i class="bi bi-house"></i>
+        <span>Dashboard</span>
     </div>
 
-    <div class="nav-item" routerLink="/transactions" routerLinkActive="active">
-      <i class="bi bi-receipt-cutoff"></i>
-      <span>Transactions</span>
+    <div 
+      class="nav-item" 
+      routerLink="/transactions" 
+      routerLinkActive="active" 
+      (click)="closeSidebarOnMobile()">
+        <i class="bi bi-receipt-cutoff"></i>
+        <span>Transactions</span>
     </div>
 
-    <div class="nav-item" routerLink="/budgets" routerLinkActive="active">
-      <i class="bi bi-wallet2"></i>
-      <span>Budgets</span>
+    <div 
+      class="nav-item" 
+      routerLink="/budgets" 
+      routerLinkActive="active" 
+      (click)="closeSidebarOnMobile()">
+        <i class="bi bi-wallet2"></i>
+        <span>Budgets</span>
     </div>
 
-    <div class="nav-item" routerLink="/savings" routerLinkActive="active">
-      <i class="bi bi-piggy-bank"></i>
-      <span>Savings</span>
+    <div 
+      class="nav-item" 
+      routerLink="/savings" 
+      routerLinkActive="active" 
+      (click)="closeSidebarOnMobile()">
+        <i class="bi bi-piggy-bank"></i>
+        <span>Savings</span>
     </div>
 
-    <div class="nav-item" routerLink="/categories" routerLinkActive="active">
-      <i class="bi bi-tags"></i>
-      <span>Categories</span>
+    <div 
+      class="nav-item" 
+      routerLink="/categories" 
+      routerLinkActive="active" 
+      (click)="closeSidebarOnMobile()">
+        <i class="bi bi-tags"></i>
+        <span>Categories</span>
     </div>
 
-    <div class="nav-item" routerLink="/reports" routerLinkActive="active">
-      <i class="bi bi-bar-chart-line"></i>
-      <span>Reports</span>
+    <div 
+      class="nav-item" 
+      routerLink="/reports" 
+      routerLinkActive="active" 
+      (click)="closeSidebarOnMobile()">
+        <i class="bi bi-bar-chart-line"></i>
+        <span>Reports</span>
     </div>
 
     <!-- Sidebar Control -->

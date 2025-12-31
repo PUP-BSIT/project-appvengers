@@ -57,13 +57,6 @@ export class ToggleableSidebar implements OnDestroy {
     this.updateScrollLock();
   });
 
-  // Close sidebar on navigation for desktop / large screens
-  private _navSub = this.router.events.subscribe(event => {
-    if (event instanceof NavigationEnd && window.innerWidth > 992) {
-      this.sidebarService.isOpen.set(false);
-    }
-  });
-
   // React to viewport size changes
   @HostListener('window:resize')
   onResize(): void {
@@ -72,6 +65,5 @@ export class ToggleableSidebar implements OnDestroy {
 
   ngOnDestroy(): void {
     document.body.style.overflow = '';
-    this._navSub.unsubscribe();
   }
 }
