@@ -1,29 +1,47 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ChatbotService, ChatMessage } from './chatbot.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 import { environment } from '../../environments/environment';
 
 describe('ChatbotService', () => {
     let service: ChatbotService;
     let httpMock: HttpTestingController;
-    const SESSION_STORAGE_KEY = 'bonzi_session_id';
-    const MESSAGES_STORAGE_KEY = 'bonzi_chat_history';
+    let localStorageService: jasmine.SpyObj<LocalStorageService>;
+
+    // Storage mock to simulate LocalStorageService behavior
+    let mockStorage: Map<string, any>;
 
     beforeEach(() => {
+        mockStorage = new Map();
+
+        const localStorageServiceSpy = jasmine.createSpyObj('LocalStorageService', 
+            ['getUserId', 'setUserId', 'getItem', 'setItem', 'removeItem', 'clearUserId']
+        );
+        // Mock userId to be set (simulates logged-in user)
+        localStorageServiceSpy.getUserId.and.returnValue(1);
+        localStorageServiceSpy.getItem.and.callFake((key: string) => mockStorage.get(key) ?? null);
+        localStorageServiceSpy.setItem.and.callFake((key: string, value: any) => mockStorage.set(key, value));
+        localStorageServiceSpy.removeItem.and.callFake((key: string) => mockStorage.delete(key));
+
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
-            providers: [ChatbotService]
+            providers: [
+                ChatbotService,
+                { provide: LocalStorageService, useValue: localStorageServiceSpy }
+            ]
         });
         service = TestBed.inject(ChatbotService);
         httpMock = TestBed.inject(HttpTestingController);
+        localStorageService = TestBed.inject(LocalStorageService) as jasmine.SpyObj<LocalStorageService>;
 
-        // Clear localStorage before each test
-        localStorage.clear();
+        // Clear mock storage before each test
+        mockStorage.clear();
     });
 
     afterEach(() => {
         httpMock.verify();
-        localStorage.clear();
+        mockStorage.clear();
     });
 
     describe('Session Persistence', () => {
@@ -32,22 +50,21 @@ describe('ChatbotService', () => {
         });
 
         it('should generate and persist session ID to localStorage on first creation', () => {
-            // Ensure localStorage is clear before test
-            localStorage.clear();
+            // Ensure mock storage is clear before test
+            mockStorage.clear();
             
             const sessionId = service.getSessionId();
             
             expect(sessionId).toBeTruthy();
             expect(sessionId).toContain('chat-');
             
-            const storedSessionId = localStorage.getItem(SESSION_STORAGE_KEY);
-            expect(storedSessionId).toBe(sessionId);
+            // Verify setItem was called with the session ID
+            expect(localStorageService.setItem).toHaveBeenCalledWith('bonzi_session_id', sessionId);
         });
 
         it('should reuse existing session ID from localStorage', () => {
             const existingSessionId = 'chat-test-session-123';
-            localStorage.clear();
-            localStorage.setItem(SESSION_STORAGE_KEY, existingSessionId);
+            mockStorage.set('bonzi_session_id', existingSessionId);
 
             // Call getSessionId which should return the stored value
             const retrievedSessionId = service.getSessionId();
@@ -63,20 +80,21 @@ describe('ChatbotService', () => {
 
             service.saveMessages(testMessages);
 
-            const stored = localStorage.getItem(MESSAGES_STORAGE_KEY);
-            expect(stored).toBeTruthy();
-            
-            const parsed = JSON.parse(stored!);
-            expect(parsed.length).toBe(2);
-            expect(parsed[0].text).toBe('Hello');
-            expect(parsed[1].text).toBe('Hi there!');
+            // Verify setItem was called with serialized messages
+            expect(localStorageService.setItem).toHaveBeenCalledWith(
+                'bonzi_chat_history',
+                jasmine.arrayContaining([
+                    jasmine.objectContaining({ text: 'Hello' }),
+                    jasmine.objectContaining({ text: 'Hi there!' })
+                ])
+            );
         });
 
         it('should load messages from localStorage', () => {
             const testMessages = [
                 { text: 'Test message', isUser: true, timestamp: new Date().toISOString() }
             ];
-            localStorage.setItem(MESSAGES_STORAGE_KEY, JSON.stringify(testMessages));
+            mockStorage.set('bonzi_chat_history', testMessages);
 
             const loaded = service.loadMessages();
 
@@ -92,17 +110,17 @@ describe('ChatbotService', () => {
         });
 
         it('should clear history from localStorage', () => {
-            localStorage.setItem(MESSAGES_STORAGE_KEY, JSON.stringify([{ text: 'test' }]));
-            localStorage.setItem(SESSION_STORAGE_KEY, 'chat-old-session');
+            mockStorage.set('bonzi_chat_history', [{ text: 'test' }]);
+            mockStorage.set('bonzi_session_id', 'chat-old-session');
 
             service.clearHistory();
 
-            expect(localStorage.getItem(MESSAGES_STORAGE_KEY)).toBeNull();
-            expect(localStorage.getItem(SESSION_STORAGE_KEY)).toBeNull();
+            expect(localStorageService.removeItem).toHaveBeenCalledWith('bonzi_chat_history');
+            expect(localStorageService.removeItem).toHaveBeenCalledWith('bonzi_session_id');
         });
 
         it('should handle localStorage errors gracefully when saving messages', () => {
-            spyOn(localStorage, 'setItem').and.throwError('QuotaExceededError');
+            localStorageService.setItem.and.throwError('QuotaExceededError');
             spyOn(console, 'warn');
 
             const messages: ChatMessage[] = [{ text: 'test', isUser: true, timestamp: new Date() }];
@@ -113,7 +131,7 @@ describe('ChatbotService', () => {
         });
 
         it('should handle localStorage errors gracefully when loading messages', () => {
-            spyOn(localStorage, 'getItem').and.throwError('SecurityError');
+            localStorageService.getItem.and.throwError('SecurityError');
             spyOn(console, 'warn');
 
             const result = service.loadMessages();

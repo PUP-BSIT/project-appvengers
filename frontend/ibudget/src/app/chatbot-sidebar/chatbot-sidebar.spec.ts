@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChatbotSidebar } from './chatbot-sidebar';
 import { ChatbotService, ChatMessage } from './chatbot.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 import { of, throwError, Observable } from 'rxjs';
 import { signal } from '@angular/core';
 
@@ -8,21 +9,31 @@ describe('ChatbotSidebar - Retry Logic', () => {
     let component: ChatbotSidebar;
     let fixture: ComponentFixture<ChatbotSidebar>;
     let chatbotService: jasmine.SpyObj<ChatbotService>;
+    let localStorageService: jasmine.SpyObj<LocalStorageService>;
 
     beforeEach(async () => {
         const chatbotServiceSpy = jasmine.createSpyObj('ChatbotService', 
             ['sendMessage', 'toggle', 'saveMessages', 'loadMessages', 'clearHistory', 'getSessionId'],
-            { isOpen: signal(false) }
+            { isOpen: signal(false), stateVersion: signal(0) }
         );
+
+        const localStorageServiceSpy = jasmine.createSpyObj('LocalStorageService',
+            ['getUserId', 'setUserId', 'getItem', 'setItem', 'removeItem', 'clearUserId']
+        );
+        // Mock userId to be set (simulates logged-in user)
+        localStorageServiceSpy.getUserId.and.returnValue(1);
+        localStorageServiceSpy.getItem.and.returnValue(null);
 
         await TestBed.configureTestingModule({
             imports: [ChatbotSidebar],
             providers: [
-                { provide: ChatbotService, useValue: chatbotServiceSpy }
+                { provide: ChatbotService, useValue: chatbotServiceSpy },
+                { provide: LocalStorageService, useValue: localStorageServiceSpy }
             ]
         }).compileComponents();
 
         chatbotService = TestBed.inject(ChatbotService) as jasmine.SpyObj<ChatbotService>;
+        localStorageService = TestBed.inject(LocalStorageService) as jasmine.SpyObj<LocalStorageService>;
         fixture = TestBed.createComponent(ChatbotSidebar);
         component = fixture.componentInstance;
     });
