@@ -45,6 +45,6 @@ export class App {
 
   // Dismiss install prompt
   protected dismissInstall(): void {
-    this.pwaService.isInstallable.set(false);
+    this.pwaService.dismissInstallPrompt();
   }
 }

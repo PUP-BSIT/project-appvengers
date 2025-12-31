@@ -11,6 +11,11 @@ export class PwaService {
   installPromptEvent = signal<BeforeInstallPromptEvent | null>(null);
   isInstallable = signal(false);
 
+  // LocalStorage keys for PWA preferences
+  private readonly INSTALL_DISMISSED_KEY = 'pwa_install_dismissed';
+  private readonly INSTALL_DISMISSED_UNTIL_KEY = 'pwa_install_dismissed_until';
+  private readonly DISMISS_DURATION_DAYS = 7; // Show again after 7 days
+
   constructor() {
     this.initializeUpdateCheck();
     this.initializeInstallPrompt();
@@ -48,8 +53,14 @@ export class PwaService {
       event.preventDefault();
       // Store the event for later use
       this.installPromptEvent.set(event as BeforeInstallPromptEvent);
-      this.isInstallable.set(true);
-      console.log('PWA install prompt available');
+      
+      // Only show install prompt if user hasn't dismissed it recently
+      if (!this.isInstallDismissed()) {
+        this.isInstallable.set(true);
+        console.log('PWA install prompt available');
+      } else {
+        console.log('PWA install prompt dismissed by user - not showing');
+      }
     });
 
     // Listen for successful installation
@@ -57,6 +68,8 @@ export class PwaService {
       console.log('iBudget PWA was installed');
       this.isInstallable.set(false);
       this.installPromptEvent.set(null);
+      // Clear dismissal state since app is now installed
+      this.clearInstallDismissed();
     });
   }
 
@@ -114,6 +127,48 @@ export class PwaService {
   isRunningStandalone(): boolean {
     return window.matchMedia('(display-mode: standalone)').matches ||
            (window.navigator as any).standalone === true;
+  }
+
+  /**
+   * Mark install prompt as dismissed by user
+   */
+  dismissInstallPrompt(): void {
+    const dismissedUntil = Date.now() + (this.DISMISS_DURATION_DAYS * 24 * 60 * 60 * 1000);
+    localStorage.setItem(this.INSTALL_DISMISSED_KEY, 'true');
+    localStorage.setItem(this.INSTALL_DISMISSED_UNTIL_KEY, dismissedUntil.toString());
+    this.isInstallable.set(false);
+    console.log(`PWA install prompt dismissed until ${new Date(dismissedUntil).toLocaleDateString()}`);
+  }
+
+  /**
+   * Check if install prompt was dismissed and still within dismissal period
+   */
+  private isInstallDismissed(): boolean {
+    const dismissed = localStorage.getItem(this.INSTALL_DISMISSED_KEY);
+    const dismissedUntil = localStorage.getItem(this.INSTALL_DISMISSED_UNTIL_KEY);
+    
+    if (!dismissed || !dismissedUntil) {
+      return false;
+    }
+
+    const dismissedUntilTime = parseInt(dismissedUntil, 10);
+    const now = Date.now();
+
+    // If dismissal period expired, clear the flag
+    if (now > dismissedUntilTime) {
+      this.clearInstallDismissed();
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Clear install dismissal state
+   */
+  private clearInstallDismissed(): void {
+    localStorage.removeItem(this.INSTALL_DISMISSED_KEY);
+    localStorage.removeItem(this.INSTALL_DISMISSED_UNTIL_KEY);
   }
 }
 
