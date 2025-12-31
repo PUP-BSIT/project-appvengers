@@ -25,6 +25,7 @@ describe('BudgetService', () => {
       userId: 99,
       categoryId: 10,
       categoryName: 'Food',
+      name: 'My Budget',
       limitAmount: 1000,
       startDate: '2025-01-01',
       endDate: '2025-01-31'
@@ -53,6 +54,7 @@ describe('BudgetService', () => {
       userId: 99,
       categoryId: 20,
       categoryName: 'Transport',
+      name: 'Transport Budget',
       limitAmount: 500,
       startDate: '2025-02-01',
       endDate: '2025-02-28'
@@ -72,6 +74,7 @@ describe('BudgetService', () => {
   it('should add budget', () => {
     const input = {
       category_id: 30,
+      name: 'Health Budget',
       limit_amount: 800,
       start_date: '2025-03-01',
       end_date: '2025-03-31'
@@ -82,6 +85,7 @@ describe('BudgetService', () => {
       userId: 99,
       categoryId: 30,
       categoryName: 'Health',
+      name: 'Health Budget',
       limitAmount: 800,
       startDate: '2025-03-01',
       endDate: '2025-03-31'
@@ -97,6 +101,7 @@ describe('BudgetService', () => {
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({
       categoryId: 30,
+      name: 'Health Budget',       
       limitAmount: 800,
       startDate: '2025-03-01',
       endDate: '2025-03-31'
@@ -107,6 +112,7 @@ describe('BudgetService', () => {
   it('should update budget', () => {
     const payload = {
       category_id: 40,
+      name: 'Utilities Budget',
       limit_amount: 1200,
       start_date: '2025-04-01',
       end_date: '2025-04-30'
@@ -117,6 +123,7 @@ describe('BudgetService', () => {
       userId: 99,
       categoryId: 40,
       categoryName: 'Utilities',
+      name: 'Utilities Budget',
       limitAmount: 1200,
       startDate: '2025-04-01',
       endDate: '2025-04-30'
@@ -132,6 +139,7 @@ describe('BudgetService', () => {
     expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual({
       categoryId: 40,
+      name: 'Utilities Budget',     
       limitAmount: 1200,
       startDate: '2025-04-01',
       endDate: '2025-04-30'
