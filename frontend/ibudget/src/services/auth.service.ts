@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { SwUpdate } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { ApiResponse, AuthData, SignupRequest, ReactivateAccountRequest } from '../models/user.model';
 
@@ -11,6 +12,7 @@ import { ApiResponse, AuthData, SignupRequest, ReactivateAccountRequest } from '
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
   private http = inject(HttpClient);
+  private swUpdate = inject(SwUpdate);
 
   signup(userData: SignupRequest): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${this.apiUrl}/signup`, userData);
@@ -52,7 +54,7 @@ export class AuthService {
       );
   }
 
-  logout(): void {
+  async logout(): Promise<void> {
     // Clear ALL localStorage items to prevent data leakage between accounts
     localStorage.removeItem('iBudget_authToken');
     localStorage.removeItem('iBudget_username');
@@ -67,9 +69,46 @@ export class AuthService {
     // Also clear sessionStorage (if any session data exists)
     sessionStorage.clear();
     
+    // 🔒 SECURITY FIX: Clear Service Worker cache on logout
+    // This prevents cross-account data leakage from cached API responses
+    await this.clearServiceWorkerCache();
+    
     // Note: Services should be cleared by the header component calling their clearState() methods
     // This includes: NotificationService.clearState(), WebSocketService.disconnect()
-    console.log('🚪 User logged out - all storage cleared');
+    console.log('🚪 User logged out - all storage and caches cleared');
+  }
+
+  /**
+   * Clear Service Worker cache to prevent cross-account data contamination.
+   * CRITICAL SECURITY: Service Worker caches API responses with URL-only keys,
+   * ignoring Authorization headers. Must clear on logout to prevent User B
+   * from seeing User A's cached financial data.
+   */
+  private async clearServiceWorkerCache(): Promise<void> {
+    if (!this.swUpdate.isEnabled) {
+      console.log('⚠️ Service Worker not enabled, skipping cache clear');
+      return;
+    }
+
+    try {
+      // Access all available caches
+      const cacheNames = await caches.keys();
+      console.log(`🗑️ Clearing ${cacheNames.length} Service Worker caches...`);
+
+      // Delete all caches (ngsw:...db, ngsw:...assets)
+      await Promise.all(
+        cacheNames.map(cacheName => {
+          console.log(`  ↳ Deleting cache: ${cacheName}`);
+          return caches.delete(cacheName);
+        })
+      );
+
+      console.log('✅ Service Worker caches cleared successfully');
+    } catch (error) {
+      // Non-blocking error (cache clearing is best-effort)
+      console.error('⚠️ Failed to clear Service Worker cache:', error);
+      console.warn('User should manually clear browser cache if issues persist');
+    }
   }
 
   getToken(): string | null {
