@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.backend.appvengers.entity.Budget;
 import com.backend.appvengers.dto.BudgetWithCategoryResponse;
+import java.util.Optional;
 
 public interface BudgetRepository extends JpaRepository<Budget, Integer> {
   @Query(value = "SELECT * FROM tbl_budget WHERE deleted_at IS NULL", nativeQuery = true)
@@ -28,4 +29,8 @@ public interface BudgetRepository extends JpaRepository<Budget, Integer> {
   // Find budgets ending on a specific date
   @Query(value = "SELECT * FROM tbl_budget WHERE deleted_at IS NULL AND end_date = :endDate", nativeQuery = true)
   List<Budget> findByEndDate(@Param("endDate") LocalDate endDate);
+  
+  // Find active budget (non soft-deleted) by ID
+  @Query("SELECT b FROM Budget b WHERE b.budgetId = :id AND b.deletedAt IS NULL")
+  Optional<Budget> findActiveById(@Param("id") Integer id);
 }
