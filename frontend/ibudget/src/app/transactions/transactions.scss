@@ -1525,6 +1525,10 @@ $header-height: 70px;
 }
 
 @media (max-width: 320px) {
+  main {
+    margin-top: 60px !important;
+  }
+
   .transaction-card {
     padding: 1rem 0.9rem;
   }
@@ -1558,6 +1562,10 @@ $header-height: 70px;
 }
 
 @media (max-width: 768px) {
+  main {
+    margin-top: 60px !important;
+  }
+
   .card-actions {
     top: 0.7rem;
     right: 0.7rem;
