@@ -299,6 +299,11 @@ $card-drop-shadow: #00000040;
   }
 }
 
+.ibudget-logo {
+  width: 40px;
+  height: 40px;
+}
+
 @keyframes dropdownFadeIn {
   from {
     opacity: 0;
@@ -317,6 +322,10 @@ $card-drop-shadow: #00000040;
     margin-left: 0;
     padding: 0 8px;
     gap: 6px;
+  }
+
+  img {
+    display: none;
   }
 
   .menu-toggle {
@@ -431,6 +440,10 @@ $card-drop-shadow: #00000040;
     margin-left: 0;
     padding: 0 10px;
     gap: 8px;
+  }
+
+  img {
+    display: none;
   }
 
   .menu-toggle {
@@ -652,6 +665,10 @@ $card-drop-shadow: #00000040;
   .about-nav {
     display: none;
   }
+
+  img {
+    display: none;
+  }
 }
 
 /* Tablet - 426px to 768px */
@@ -757,12 +774,16 @@ $card-drop-shadow: #00000040;
   .about-nav {
     display: none;
   }
+
+  img {
+    display: none;
+  }
 }
 
 /* Laptop - 769px to 1024px */
 @media (min-width: 769px) and (max-width: 1024px) {
   .header-container {
-    margin-left: $header-margin-left;
+    margin-left: $header-margin-left - 5px;
     padding: 0 18px;
     gap: 16px;
   }
@@ -835,7 +856,7 @@ $card-drop-shadow: #00000040;
 /* Desktop & Above - 1025px+ */
 @media (min-width: 1025px) {
   .header-container {
-    margin-left: $header-margin-left;
+    margin-left: $header-margin-left - 5px;
   }
 
   .menu-toggle {
