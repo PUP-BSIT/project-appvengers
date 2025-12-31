@@ -1,6 +1,6 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule} from '@angular/common';
+import { Component, inject, OnInit, signal, computed, effect } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Budget } from '../../../models/user.model';
 import { BudgetService } from '../../../services/budget.service';
 import { AddBudgetButton } from "./add-budget-button/add-budget-button";
@@ -16,6 +16,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,              
     AddBudgetButton,
     UpdateBudgetButton,
     BudgetProgressBar
@@ -25,13 +26,38 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 })
 
 export class BudgetList implements OnInit {
+  // All budgets loaded from backend
+  private allBudgets = signal<Budget[]>([]);
+
+  // Filtered budgets shown in UI
   budgets = signal<Budget[]>([]);
+
+  // Search query
+  searchQuery = signal('');
+
+  // Services
   budgetService = inject(BudgetService);
   router = inject(Router);
   budgetTransactionsService = inject(BudgetTransactionsService);
 
   // Loading State
   isLoading = signal(true);
+
+  constructor() {
+    effect(() => {
+      const query = this.searchQuery().toLowerCase();
+      if (!query) {
+        this.budgets.set(this.allBudgets());
+      } else {
+        this.budgets.set(
+          this.allBudgets().filter(b =>
+            b.name.toLowerCase().includes(query) ||
+            (b.category_name && b.category_name.toLowerCase().includes(query))
+          )
+        );
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.getBudgets();
@@ -62,6 +88,7 @@ export class BudgetList implements OnInit {
       .pipe(
         switchMap(budgets => {
           if (!budgets.length) {
+            this.allBudgets.set([]);
             this.budgets.set([]);
             this.isLoading.set(false);
             return of([]);
@@ -69,9 +96,9 @@ export class BudgetList implements OnInit {
           return this.hydrateBudgets(budgets);
         })
       )
-      
       .subscribe({
         next: hydrated => {
+          this.allBudgets.set(hydrated);
           this.budgets.set(hydrated);
           this.isLoading.set(false);
         },
@@ -83,16 +110,12 @@ export class BudgetList implements OnInit {
   }
 
   // Handle add/update/delete by re-fetching hydrated budgets
-  onBudgetAdded(_: Budget) {
-    this.getBudgets();
-  }
-
-  onBudgetUpdated(_: Budget) {
-    this.getBudgets();
-  }
+  onBudgetAdded(_: Budget) { this.getBudgets(); }
+  onBudgetUpdated(_: Budget) { this.getBudgets(); }
 
   onBudgetDeleted(updatedBudgets: Budget[]) {
     if (!updatedBudgets.length) {
+      this.allBudgets.set([]);
       this.budgets.set([]);
       this.isLoading.set(false);
       return;
@@ -100,6 +123,7 @@ export class BudgetList implements OnInit {
 
     this.hydrateBudgets(updatedBudgets).subscribe({
       next: hydrated => {
+        this.allBudgets.set(hydrated);
         this.budgets.set(hydrated);
         this.isLoading.set(false); 
       },
