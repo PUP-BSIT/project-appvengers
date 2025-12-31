@@ -184,25 +184,31 @@
           }
 
           <div class="transaction-card transaction-card-with-checkbox position-relative overflow-visible">
-            <div *ngIf="selectionMode || hasSelectedTransactions()" class="transaction-select-checkbox">
-              <input type="checkbox" [checked]="isTransactionSelected(transaction.id)" (change)="toggleTransactionSelection(transaction.id)" id="select-{{transaction.id}}">
-            </div>
+            @if (selectionMode || hasSelectedTransactions()) {
+              <div class="transaction-select-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="isTransactionSelected(transaction.id)"
+                  (change)="toggleTransactionSelection(transaction.id)"
+                  id="select-{{transaction.id}}">
+              </div>
+            }
 
-          <!-- Dropdown moved outside card-body for proper overlay -->
-          <div class="dropdown transaction-dropdown position-absolute top-0 end-0 m-2">
-            <button class="btn btn-sm p-0 d-flex align-items-center justify-content-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Show actions">
-              <i class="bi bi-three-dots-vertical" style="font-size: 1.1rem;" aria-hidden="true"></i>
-              <span class="visually-hidden">Actions</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-                <button class="dropdown-item" type="button" (click)="editTransaction(transaction)">Edit</button>
-              </li>
-              <li>
-                <button class="dropdown-item text-danger" type="button" (click)="deleteTransaction(transaction.id)">Delete</button>
-              </li>
-            </ul>
-          </div>
+            <!-- Dropdown moved outside card-body for proper overlay -->
+            <div class="dropdown transaction-dropdown position-absolute top-0 end-0 m-2">
+              <button class="btn btn-sm p-0 d-flex align-items-center justify-content-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Show actions">
+                <i class="bi bi-three-dots-vertical" style="font-size: 1.1rem;" aria-hidden="true"></i>
+                <span class="visually-hidden">Actions</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <button class="dropdown-item" type="button" (click)="editTransaction(transaction)">Edit</button>
+                </li>
+                <li>
+                  <button class="dropdown-item text-danger" type="button" (click)="deleteTransaction(transaction.id)">Delete</button>
+                </li>
+              </ul>
+            </div>
 
             <div class="card-body">
               <div class="card-left">
