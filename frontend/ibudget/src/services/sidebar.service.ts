@@ -22,6 +22,7 @@ export class SidebarService implements OnDestroy {
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.initializeSidebarType();
+      this.isOpen.set(false); // Close sidebar on every navigation
     });
   }
 
