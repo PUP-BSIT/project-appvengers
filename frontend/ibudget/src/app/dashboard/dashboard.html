@@ -79,19 +79,45 @@
     </div>
   </div>
 
-  <!-- Notifications Panel -->
-  <div class="card notifications-panel">
-    <div class="card-body d-flex justify-content-between align-items-center">
-      <div>
-        <h3>Smart Notifications</h3>
-        <p>
-          System sends you notifications to stay updated on your budget and 
-          transaction activities.
-        </p>
+  <!-- Recent Activity Panel -->
+  <div class="card recent-activity-panel">
+    <div class="card-body">
+      <div class="panel-header">
+        <h3>Recent Activity</h3>
+        <a routerLink="/transactions" class="view-all">View All</a>
       </div>
-      
-      <div class="icon-container">
-        <i class="fas fa-bell fa-5x"></i>
+
+      <div class="activity-list-container">
+        @if (isLoading()) {
+          <div class="loading-state">
+            <div class="spinner-border spinner-border-sm text-secondary" role="status"></div>
+            <span>Loading...</span>
+          </div>
+        } @else if (recentTransactions().length === 0) {
+          <div class="empty-state">
+            <i class="bi bi-receipt"></i>
+            <p>No recent activity</p>
+          </div>
+        } @else {
+          <div class="activity-list">
+            @for (tx of recentTransactions(); track tx.id) {
+              <div class="activity-item">
+                <div class="item-left">
+                  <div class="icon-circle" [class.income]="tx.type === 'income'" [class.expense]="tx.type === 'expense'">
+                    <i [class]="tx.type === 'income' ? 'bi bi-arrow-down-left' : 'bi bi-arrow-up-right'"></i>
+                  </div>
+                  <div class="item-info">
+                    <span class="description">{{ tx.description }}</span>
+                    <span class="date">{{ tx.transactionDate | date:'MMM d' }}</span>
+                  </div>
+                </div>
+                <div class="item-amount" [class.income]="tx.type === 'income'" [class.expense]="tx.type === 'expense'">
+                  {{ tx.type === 'income' ? '+' : '-' }} {{ tx.amount | currency:'PHP':'symbol':'1.0-0' }}
+                </div>
+              </div>
+            }
+          </div>
+        }
       </div>
     </div>
   </div>
@@ -113,6 +139,23 @@
 
       <div class="icon-container">
         <i class="fas fa-chart-line fa-5x"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifications Panel -->
+  <div class="card notifications-panel">
+    <div class="card-body d-flex justify-content-between align-items-center">
+      <div>
+        <h3>Smart Notifications</h3>
+        <p>
+          System sends you notifications to stay updated on your budget and 
+          transaction activities.
+        </p>
+      </div>
+      
+      <div class="icon-container">
+        <i class="fas fa-bell fa-5x"></i>
       </div>
     </div>
   </div>
