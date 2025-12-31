@@ -1,11 +1,12 @@
-import { Component, signal, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, signal, inject, computed } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { NgxLoadingBar } from '@ngx-loading-bar/core';
 import { ChatbotSidebar } from './chatbot-sidebar/chatbot-sidebar';
 import { ChatbotService } from './chatbot-sidebar/chatbot.service';
 import { AuthService } from '../services/auth.service';
 import { ToastContainer } from './toast/toast';
 import { PwaService } from '../services/pwa.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -18,15 +19,27 @@ export class App {
   private chatbotService = inject(ChatbotService);
   private authService = inject(AuthService);
   private pwaService = inject(PwaService);
+  private router = inject(Router);
   
   protected isOpen = this.chatbotService.isOpen;
   protected updateAvailable = this.pwaService.updateAvailable;
   protected isInstallable = this.pwaService.isInstallable;
 
-  // Only show chatbot when user is authenticated
-  protected get showChatbot(): boolean {
-    return this.authService.isLoggedIn();
+  // Signal to track authentication state
+  private isAuthenticated = signal(this.authService.isLoggedIn());
+
+  // Update authentication state when navigation completes
+  constructor() {
+    // Update auth state after each navigation (login, logout, OAuth callback, etc.)
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.isAuthenticated.set(this.authService.isLoggedIn());
+    });
   }
+
+  // Only show chatbot when user is authenticated
+  protected showChatbot = computed(() => this.isAuthenticated());
 
   // PWA update handler
   protected reloadApp(): void {
