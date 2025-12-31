@@ -65,4 +65,12 @@ export class BudgetService {
       switchMap(() => this.getBudgets())
     );
   }
+
+  searchBudgets(query: string): Observable<Budget[]> {
+    return this.http.get<BackendBudget[]>(`${this.baseUrl}/search`, {
+      params: { query }
+    }).pipe(
+      map(list => list.map(this.toFrontend))
+    );
+  }
 }
