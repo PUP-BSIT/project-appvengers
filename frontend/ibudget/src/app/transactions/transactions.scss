@@ -708,10 +708,25 @@ $header-height: 70px;
 
 .transaction-dropdown {
   z-index: 1050;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
 }
 
 .dropdown-menu {
   min-width: 8rem;
+  right: 0;
+  left: auto;
+  top: 2.2rem;
+  position: absolute;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  z-index: 1100;
 }
 
 .dropdown-item.text-danger {
