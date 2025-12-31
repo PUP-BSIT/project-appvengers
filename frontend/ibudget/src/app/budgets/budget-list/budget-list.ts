@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { CommonModule} from '@angular/common';
 import { Budget } from '../../../models/user.model';
 import { BudgetService } from '../../../services/budget.service';
 import { AddBudgetButton } from "./add-budget-button/add-budget-button";
