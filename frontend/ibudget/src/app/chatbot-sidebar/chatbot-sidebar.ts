@@ -2,7 +2,7 @@ import { Component, signal, inject, effect, ElementRef, ViewChild, OnInit, OnDes
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ChatbotService, ChatMessage, ChatbotAction, ChatbotResponse, ChatVisualization } from './chatbot.service';
+import { ChatbotService, ChatMessage, ChatbotAction, ChatbotResponse, ChatVisualization, RateLimitError, CHATBOT_INPUT_LIMITS } from './chatbot.service';
 import { ChatChart } from './chat-chart/chat-chart';
 import { SpeechService, SpeechResult, SpeechError } from '../../services/speech.service';
 import { LocalStorageService } from '../../services/local-storage.service';
@@ -271,6 +271,12 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
         const text = this.userInput().trim();
         if (!text || this.isLoading()) return;
 
+        // Client-side validation (matches backend limits)
+        if (text.length > CHATBOT_INPUT_LIMITS.MAX_MESSAGE_LENGTH) {
+            this.handleError(`Message is too long. Maximum ${CHATBOT_INPUT_LIMITS.MAX_MESSAGE_LENGTH} characters allowed.`);
+            return;
+        }
+
         this.sendMessageWithText(text);
     }
 
@@ -327,13 +333,27 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
                     let errorMessage = "Sorry, I couldn't reach the server. Please try again.";
                     
                     if (error) {
+                        // Handle 429 Too Many Requests (rate limit exceeded)
+                        if (error.status === 429) {
+                            const rateLimitError = error.error as RateLimitError;
+                            const retrySeconds = rateLimitError?.retryAfterSeconds || 60;
+                            errorMessage = `⏱️ You're sending messages too quickly. Please wait ${retrySeconds} seconds before trying again.`;
+                            
+                            // Auto-retry after the wait period (optional - can be disabled)
+                            // setTimeout(() => this.retryLastMessage(), retrySeconds * 1000);
+                        }
                         // Try to extract error message from various possible structures
-                        if (typeof error === 'string') {
+                        else if (typeof error === 'string') {
                             errorMessage = error;
                         } else if (error.error) {
-                            errorMessage = typeof error.error === 'string' 
-                                ? error.error 
-                                : error.error.message || errorMessage;
+                            // Check for structured error response with output field
+                            if (error.error.output) {
+                                errorMessage = error.error.output;
+                            } else {
+                                errorMessage = typeof error.error === 'string' 
+                                    ? error.error 
+                                    : error.error.message || errorMessage;
+                            }
                         } else if (error.message) {
                             errorMessage = error.message;
                         }

@@ -65,7 +65,28 @@ export interface ChatbotResponse {
     visualization?: ChatVisualization;
     /** Optional error message */
     error?: string;
+    /** Seconds to wait before retrying (for rate limit errors) */
+    retryAfterSeconds?: number;
 }
+
+/**
+ * Rate limit error response from the API (429 status).
+ */
+export interface RateLimitError {
+    error: string;
+    output: string;
+    retryAfterSeconds: number;
+}
+
+/**
+ * Constants for input validation (should match backend limits).
+ */
+export const CHATBOT_INPUT_LIMITS = {
+    /** Maximum message length allowed */
+    MAX_MESSAGE_LENGTH: 500,
+    /** Minimum message length required */
+    MIN_MESSAGE_LENGTH: 1
+} as const;
 
 @Injectable({
     providedIn: 'root'
