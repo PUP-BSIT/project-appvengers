@@ -12,7 +12,7 @@ import { ApiResponse, AuthData, SignupRequest, ReactivateAccountRequest } from '
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
   private http = inject(HttpClient);
-  private swUpdate = inject(SwUpdate);
+  private swUpdate = inject(SwUpdate, { optional: true });
 
   signup(userData: SignupRequest): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${this.apiUrl}/signup`, userData);
@@ -85,8 +85,8 @@ export class AuthService {
    * from seeing User A's cached financial data.
    */
   private async clearServiceWorkerCache(): Promise<void> {
-    if (!this.swUpdate.isEnabled) {
-      console.log('⚠️ Service Worker not enabled, skipping cache clear');
+    if (!this.swUpdate || !this.swUpdate.isEnabled) {
+      console.log('⚠️ Service Worker not available or not enabled, skipping cache clear');
       return;
     }
 
