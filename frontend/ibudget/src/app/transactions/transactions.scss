@@ -1623,6 +1623,16 @@ $header-height: 70px;
     width: 100% !important;
     box-sizing: border-box;
   }
+
+  .filter-add-row {
+    flex-wrap: wrap !important;
+
+    .button-container {
+      button {
+        margin: 0 !important;
+      }
+    }
+  }
 }
 
 /* Skeleton loading styles */
