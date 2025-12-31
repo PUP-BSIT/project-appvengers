@@ -1,6 +1,9 @@
 package com.backend.appvengers.controller;
 
+import com.backend.appvengers.dto.ChatbotMessageRequest;
 import com.backend.appvengers.service.ChatbotService;
+import com.backend.appvengers.service.InputValidationService;
+import com.backend.appvengers.service.InputValidationService.ValidationResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,8 +15,11 @@ import org.mockito.quality.Strictness;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,6 +28,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for ChatbotController focusing on input validation and error handling.
+ * Tests cover Bean Validation, InputValidationService sanitization, and request processing.
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -31,7 +38,13 @@ class ChatbotControllerTest {
     private ChatbotService chatbotService;
 
     @Mock
+    private InputValidationService inputValidationService;
+
+    @Mock
     private Authentication authentication;
+
+    @Mock
+    private BindingResult bindingResult;
 
     @InjectMocks
     private ChatbotController chatbotController;
@@ -43,21 +56,24 @@ class ChatbotControllerTest {
     @BeforeEach
     void setUp() {
         when(authentication.getName()).thenReturn(TEST_USER_EMAIL);
+        when(bindingResult.hasErrors()).thenReturn(false);
     }
 
     @Test
     void testSendMessage_ValidInput_Success() {
         // Arrange
-        Map<String, String> payload = new HashMap<>();
-        payload.put("message", "How do I add a transaction?");
-        payload.put("sessionId", TEST_SESSION_ID);
+        ChatbotMessageRequest request = new ChatbotMessageRequest("How do I add a transaction?", TEST_SESSION_ID);
+        
+        when(inputValidationService.validateAndSanitize("How do I add a transaction?"))
+                .thenReturn(ValidationResult.success("How do I add a transaction?"));
 
         Map<String, String> expectedResponse = Map.of("output", "AI response");
         when(chatbotService.sendMessage(anyString(), eq(TEST_USER_EMAIL), eq(TEST_SESSION_ID), anyString()))
                 .thenReturn(expectedResponse);
 
         // Act
-        ResponseEntity<Object> response = chatbotController.sendMessage(payload, authentication, TEST_JWT_TOKEN);
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, TEST_JWT_TOKEN);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -73,12 +89,17 @@ class ChatbotControllerTest {
     @Test
     void testSendMessage_EmptyMessage_ReturnsBadRequest() {
         // Arrange
-        Map<String, String> payload = new HashMap<>();
-        payload.put("message", "");
-        payload.put("sessionId", TEST_SESSION_ID);
+        ChatbotMessageRequest request = new ChatbotMessageRequest("", TEST_SESSION_ID);
+        
+        // Simulate Bean Validation failure for empty message
+        when(bindingResult.hasErrors()).thenReturn(true);
+        when(bindingResult.getFieldErrors()).thenReturn(List.of(
+                new FieldError("request", "message", "Message cannot be empty")
+        ));
 
         // Act
-        ResponseEntity<Object> response = chatbotController.sendMessage(payload, authentication, TEST_JWT_TOKEN);
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, TEST_JWT_TOKEN);
 
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -87,7 +108,8 @@ class ChatbotControllerTest {
         @SuppressWarnings("unchecked")
         Map<String, String> responseBody = (Map<String, String>) response.getBody();
         assertTrue(responseBody.containsKey("error"));
-        assertTrue(responseBody.get("error").contains("empty"));
+        assertEquals("Validation failed", responseBody.get("error"));
+        assertTrue(responseBody.get("output").contains("empty"));
         
         verify(chatbotService, never()).sendMessage(anyString(), anyString(), anyString(), anyString());
     }
@@ -95,12 +117,17 @@ class ChatbotControllerTest {
     @Test
     void testSendMessage_WhitespaceOnlyMessage_ReturnsBadRequest() {
         // Arrange
-        Map<String, String> payload = new HashMap<>();
-        payload.put("message", "   ");
-        payload.put("sessionId", TEST_SESSION_ID);
+        ChatbotMessageRequest request = new ChatbotMessageRequest("   ", TEST_SESSION_ID);
+        
+        // Simulate Bean Validation failure for whitespace-only message (NotBlank triggers)
+        when(bindingResult.hasErrors()).thenReturn(true);
+        when(bindingResult.getFieldErrors()).thenReturn(List.of(
+                new FieldError("request", "message", "Message cannot be empty")
+        ));
 
         // Act
-        ResponseEntity<Object> response = chatbotController.sendMessage(payload, authentication, TEST_JWT_TOKEN);
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, TEST_JWT_TOKEN);
 
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -110,12 +137,17 @@ class ChatbotControllerTest {
     @Test
     void testSendMessage_NullMessage_ReturnsBadRequest() {
         // Arrange
-        Map<String, String> payload = new HashMap<>();
-        payload.put("sessionId", TEST_SESSION_ID);
-        // message is null
+        ChatbotMessageRequest request = new ChatbotMessageRequest(null, TEST_SESSION_ID);
+        
+        // Simulate Bean Validation failure for null message
+        when(bindingResult.hasErrors()).thenReturn(true);
+        when(bindingResult.getFieldErrors()).thenReturn(List.of(
+                new FieldError("request", "message", "Message cannot be empty")
+        ));
 
         // Act
-        ResponseEntity<Object> response = chatbotController.sendMessage(payload, authentication, TEST_JWT_TOKEN);
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, TEST_JWT_TOKEN);
 
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -125,13 +157,18 @@ class ChatbotControllerTest {
     @Test
     void testSendMessage_MessageTooLong_ReturnsBadRequest() {
         // Arrange
-        String longMessage = "a".repeat(1001); // 1001 characters (exceeds 1000 limit)
-        Map<String, String> payload = new HashMap<>();
-        payload.put("message", longMessage);
-        payload.put("sessionId", TEST_SESSION_ID);
+        String longMessage = "a".repeat(501); // 501 characters (exceeds 500 limit)
+        ChatbotMessageRequest request = new ChatbotMessageRequest(longMessage, TEST_SESSION_ID);
+        
+        // Simulate Bean Validation failure for message too long
+        when(bindingResult.hasErrors()).thenReturn(true);
+        when(bindingResult.getFieldErrors()).thenReturn(List.of(
+                new FieldError("request", "message", "Message must be between 1 and 500 characters")
+        ));
 
         // Act
-        ResponseEntity<Object> response = chatbotController.sendMessage(payload, authentication, TEST_JWT_TOKEN);
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, TEST_JWT_TOKEN);
 
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -140,9 +177,7 @@ class ChatbotControllerTest {
         @SuppressWarnings("unchecked")
         Map<String, String> responseBody = (Map<String, String>) response.getBody();
         assertTrue(responseBody.containsKey("error"));
-        assertTrue(responseBody.get("error").contains("too long"));
-        assertTrue(responseBody.get("output").contains("1000"));
-        assertTrue(responseBody.get("output").contains("1001"));
+        assertTrue(responseBody.get("output").contains("500"));
         
         verify(chatbotService, never()).sendMessage(anyString(), anyString(), anyString(), anyString());
     }
@@ -150,17 +185,19 @@ class ChatbotControllerTest {
     @Test
     void testSendMessage_ExactlyMaxLength_Success() {
         // Arrange
-        String maxLengthMessage = "a".repeat(1000); // Exactly 1000 characters
-        Map<String, String> payload = new HashMap<>();
-        payload.put("message", maxLengthMessage);
-        payload.put("sessionId", TEST_SESSION_ID);
+        String maxLengthMessage = "a".repeat(500); // Exactly 500 characters (max limit)
+        ChatbotMessageRequest request = new ChatbotMessageRequest(maxLengthMessage, TEST_SESSION_ID);
+        
+        when(inputValidationService.validateAndSanitize(maxLengthMessage))
+                .thenReturn(ValidationResult.success(maxLengthMessage));
 
         Map<String, String> expectedResponse = Map.of("output", "AI response");
         when(chatbotService.sendMessage(anyString(), eq(TEST_USER_EMAIL), eq(TEST_SESSION_ID), anyString()))
                 .thenReturn(expectedResponse);
 
         // Act
-        ResponseEntity<Object> response = chatbotController.sendMessage(payload, authentication, TEST_JWT_TOKEN);
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, TEST_JWT_TOKEN);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -170,16 +207,18 @@ class ChatbotControllerTest {
     @Test
     void testSendMessage_WithoutAuthHeader_ExtractsNullToken() {
         // Arrange
-        Map<String, String> payload = new HashMap<>();
-        payload.put("message", "Test message");
-        payload.put("sessionId", TEST_SESSION_ID);
+        ChatbotMessageRequest request = new ChatbotMessageRequest("Test message", TEST_SESSION_ID);
+        
+        when(inputValidationService.validateAndSanitize("Test message"))
+                .thenReturn(ValidationResult.success("Test message"));
 
         Map<String, String> expectedResponse = Map.of("output", "AI response");
         when(chatbotService.sendMessage(anyString(), eq(TEST_USER_EMAIL), eq(TEST_SESSION_ID), isNull()))
                 .thenReturn(expectedResponse);
 
         // Act
-        ResponseEntity<Object> response = chatbotController.sendMessage(payload, authentication, null);
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, null);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -194,16 +233,18 @@ class ChatbotControllerTest {
     @Test
     void testSendMessage_WithMalformedAuthHeader_ExtractsNullToken() {
         // Arrange
-        Map<String, String> payload = new HashMap<>();
-        payload.put("message", "Test message");
-        payload.put("sessionId", TEST_SESSION_ID);
+        ChatbotMessageRequest request = new ChatbotMessageRequest("Test message", TEST_SESSION_ID);
+        
+        when(inputValidationService.validateAndSanitize("Test message"))
+                .thenReturn(ValidationResult.success("Test message"));
 
         Map<String, String> expectedResponse = Map.of("output", "AI response");
         when(chatbotService.sendMessage(anyString(), eq(TEST_USER_EMAIL), eq(TEST_SESSION_ID), isNull()))
                 .thenReturn(expectedResponse);
 
         // Act - Auth header without "Bearer " prefix
-        ResponseEntity<Object> response = chatbotController.sendMessage(payload, authentication, "InvalidHeader");
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, "InvalidHeader");
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -218,16 +259,18 @@ class ChatbotControllerTest {
     @Test
     void testSendMessage_WithNullSessionId_StillWorks() {
         // Arrange
-        Map<String, String> payload = new HashMap<>();
-        payload.put("message", "Test message");
-        // sessionId is null
+        ChatbotMessageRequest request = new ChatbotMessageRequest("Test message", null);
+        
+        when(inputValidationService.validateAndSanitize("Test message"))
+                .thenReturn(ValidationResult.success("Test message"));
 
         Map<String, String> expectedResponse = Map.of("output", "AI response");
         when(chatbotService.sendMessage(anyString(), eq(TEST_USER_EMAIL), isNull(), anyString()))
                 .thenReturn(expectedResponse);
 
         // Act
-        ResponseEntity<Object> response = chatbotController.sendMessage(payload, authentication, TEST_JWT_TOKEN);
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, TEST_JWT_TOKEN);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -245,16 +288,18 @@ class ChatbotControllerTest {
         String customEmail = "custom@example.com";
         when(authentication.getName()).thenReturn(customEmail);
 
-        Map<String, String> payload = new HashMap<>();
-        payload.put("message", "Test message");
-        payload.put("sessionId", TEST_SESSION_ID);
+        ChatbotMessageRequest request = new ChatbotMessageRequest("Test message", TEST_SESSION_ID);
+        
+        when(inputValidationService.validateAndSanitize("Test message"))
+                .thenReturn(ValidationResult.success("Test message"));
 
         Map<String, String> expectedResponse = Map.of("output", "AI response");
         when(chatbotService.sendMessage(anyString(), eq(customEmail), eq(TEST_SESSION_ID), anyString()))
                 .thenReturn(expectedResponse);
 
         // Act
-        ResponseEntity<Object> response = chatbotController.sendMessage(payload, authentication, TEST_JWT_TOKEN);
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, TEST_JWT_TOKEN);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -269,9 +314,10 @@ class ChatbotControllerTest {
     @Test
     void testSendMessage_ForwardsServiceResponse() {
         // Arrange
-        Map<String, String> payload = new HashMap<>();
-        payload.put("message", "Test");
-        payload.put("sessionId", TEST_SESSION_ID);
+        ChatbotMessageRequest request = new ChatbotMessageRequest("Test", TEST_SESSION_ID);
+        
+        when(inputValidationService.validateAndSanitize("Test"))
+                .thenReturn(ValidationResult.success("Test"));
 
         Map<String, String> serviceResponse = Map.of(
                 "output", "AI response",
@@ -281,10 +327,89 @@ class ChatbotControllerTest {
                 .thenReturn(serviceResponse);
 
         // Act
-        ResponseEntity<Object> response = chatbotController.sendMessage(payload, authentication, TEST_JWT_TOKEN);
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, TEST_JWT_TOKEN);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(serviceResponse, response.getBody());
+    }
+
+    @Test
+    void testSendMessage_InputValidationFails_ReturnsBadRequest() {
+        // Arrange
+        ChatbotMessageRequest request = new ChatbotMessageRequest("<script>alert('xss')</script>", TEST_SESSION_ID);
+        
+        // Bean Validation passes, but InputValidationService detects malicious content
+        when(inputValidationService.validateAndSanitize("<script>alert('xss')</script>"))
+                .thenReturn(ValidationResult.error("Message contains potentially unsafe content"));
+
+        // Act
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, TEST_JWT_TOKEN);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        
+        @SuppressWarnings("unchecked")
+        Map<String, String> responseBody = (Map<String, String>) response.getBody();
+        assertEquals("Invalid input", responseBody.get("error"));
+        assertTrue(responseBody.get("output").contains("unsafe"));
+        
+        verify(chatbotService, never()).sendMessage(anyString(), anyString(), anyString(), anyString());
+    }
+
+    @Test
+    void testSendMessage_SanitizesInput() {
+        // Arrange
+        String originalMessage = "Test  <b>message</b>";
+        String sanitizedMessage = "Test &lt;b&gt;message&lt;&#x2F;b&gt;";
+        
+        ChatbotMessageRequest request = new ChatbotMessageRequest(originalMessage, TEST_SESSION_ID);
+        
+        when(inputValidationService.validateAndSanitize(originalMessage))
+                .thenReturn(ValidationResult.success(sanitizedMessage));
+
+        Map<String, String> expectedResponse = Map.of("output", "AI response");
+        when(chatbotService.sendMessage(eq(sanitizedMessage), eq(TEST_USER_EMAIL), eq(TEST_SESSION_ID), anyString()))
+                .thenReturn(expectedResponse);
+
+        // Act
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, TEST_JWT_TOKEN);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        // Verify sanitized message is passed to service
+        verify(chatbotService, times(1)).sendMessage(
+                eq(sanitizedMessage),
+                eq(TEST_USER_EMAIL),
+                eq(TEST_SESSION_ID),
+                anyString()
+        );
+    }
+
+    @Test
+    void testSendMessage_BeanValidationErrorsNoFieldErrors_ReturnsDefaultMessage() {
+        // Arrange
+        ChatbotMessageRequest request = new ChatbotMessageRequest("test", TEST_SESSION_ID);
+        
+        // Simulate validation error with no field errors (edge case)
+        when(bindingResult.hasErrors()).thenReturn(true);
+        when(bindingResult.getFieldErrors()).thenReturn(Collections.emptyList());
+
+        // Act
+        ResponseEntity<Object> response = chatbotController.sendMessage(
+                request, bindingResult, authentication, TEST_JWT_TOKEN);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        
+        @SuppressWarnings("unchecked")
+        Map<String, String> responseBody = (Map<String, String>) response.getBody();
+        assertEquals("Invalid request", responseBody.get("output"));
+        
+        verify(chatbotService, never()).sendMessage(anyString(), anyString(), anyString(), anyString());
     }
 }
