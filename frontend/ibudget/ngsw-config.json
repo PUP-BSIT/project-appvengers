@@ -80,5 +80,13 @@
         "timeout": "5s"
       }
     }
+  ],
+  "navigationUrls": [
+    "/**",
+    "!/api/**",
+    "!/ws-notifications/**",
+    "!/oauth2/**",
+    "!/login/oauth2/**",
+    "!/auth/callback/**"
   ]
 }
