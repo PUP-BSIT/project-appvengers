@@ -55,8 +55,8 @@ public class BudgetController {
   @GetMapping("/budgets/{id}")
   public ResponseEntity<Budget> getBudgetById(@PathVariable Integer id, Authentication auth) {
     int userId = currentUserId(auth);
-    Budget budget = budgetRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Budget not found with id " + id));
+    Budget budget = budgetRepository.findActiveById(id)   // 👈 replaced
+        .orElseThrow(() -> new RuntimeException("Budget not found or deleted with id " + id));
     if (budget.getUserId() != userId) {
       throw new RuntimeException("Unauthorized to access this resource");
     }
@@ -67,7 +67,7 @@ public class BudgetController {
   @PutMapping("/budgets/{id}")
   public ResponseEntity<Budget> updateBudget(@PathVariable Integer id, @RequestBody Budget budget, Authentication auth) {
     int userId = currentUserId(auth);
-    Budget existingBudget = budgetRepository.findById(id)
+    Budget existingBudget = budgetRepository.findActiveById(id)  
         .orElseThrow(() -> new RuntimeException("Budget not found with id " + id));
     if (existingBudget.getUserId() != userId) {
       throw new RuntimeException("Unauthorized to modify this resource");
@@ -88,13 +88,14 @@ public class BudgetController {
   @DeleteMapping("/budgets/{id}")
   public ResponseEntity<Void> deleteBudget(@PathVariable Integer id, Authentication auth) {
     int userId = currentUserId(auth);
-    Budget existingBudget = budgetRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Budget not found with id " + id)); 
+    Budget existingBudget = budgetRepository.findActiveById(id)   
+        .orElseThrow(() -> new RuntimeException("Budget not found with id " + id));
     if (existingBudget.getUserId() != userId) {
       throw new RuntimeException("Unauthorized to delete this resource");
     }
 
-    budgetRepository.delete(existingBudget);
+    existingBudget.setDeletedAt(java.time.LocalDateTime.now());
+    budgetRepository.save(existingBudget);
     return ResponseEntity.noContent().build();
   }
 }
