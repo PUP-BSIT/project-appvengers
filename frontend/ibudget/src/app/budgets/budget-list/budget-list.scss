@@ -217,3 +217,17 @@
   height: 100px;
   border-radius: 10px;
 }
+
+.budget-search {
+  width: 260px;
+  padding: -0.3rem 2.5rem 0.7rem 1.1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 1rem;
+  color: #374151;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  margin: 0;
+}
