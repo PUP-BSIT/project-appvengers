@@ -68,7 +68,9 @@ export class SavingsService {
   // Add new saving
   addSaving(newSaving: Saving): Observable<Saving> {
     const payload = this.toBackend(newSaving);
-    console.log('Adding Saving with payload:', payload);
+    if (!environment.production) {
+      console.log('Adding Saving with payload:', payload);
+    }
     
     // Request to add new saving with converted payload
     return this.http.post<BackendSaving>(this.apiUrl, payload).pipe(

@@ -9,6 +9,7 @@ import {
   FormGroup,
   ReactiveFormsModule,
   Validators } from '@angular/forms';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -64,13 +65,17 @@ export class Login implements OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.success) {
-            console.log('Login successful:', response);
+            if (!environment.production) {
+              console.log('Login successful:', response);
+            }
             this.router.navigate(['/dashboard']);
           } else {
-            console.log('Login failed:', response);
+            if (!environment.production) {
+              console.log('Login failed:', response);
+            }
             this.errorMessage.set(response.message || 'Login failed');
           }
-        }, 
+        },
         error: (err) => {
           console.error('Login failed:', err);
           
@@ -146,7 +151,9 @@ export class Login implements OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.success && response.data) {
-            console.log('Account reactivated successfully');
+            if (!environment.production) {
+              console.log('Account reactivated successfully');
+            }
             this.showReactivationPrompt.set(false);
             this.router.navigate(['/dashboard']);
           } else {

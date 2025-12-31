@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, output, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-sub-header',
@@ -15,7 +16,9 @@ export class SubHeader implements OnInit{
 
   ngOnInit(): void {
     this.getUserId();
-    console.log(this.userId());
+    if (!environment.production) {
+      console.log(this.userId());
+    }
   }
 
   getUserId() {

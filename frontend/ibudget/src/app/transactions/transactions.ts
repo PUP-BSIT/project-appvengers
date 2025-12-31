@@ -3,6 +3,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import { Sidebar } from "../sidebar/sidebar";
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe, DatePipe, CommonModule } from '@angular/common';
@@ -507,9 +508,13 @@ openAddModal() {
 
       this.txService.create(payload)
         .subscribe((created: TransactionResponse) => {
-        console.log('create response:', created);
+        if (!environment.production) {
+          console.log('create response:', created);
+        }
         this.txService.getAll().subscribe(all => {
-          console.log('transactions after create (from backend):', all);
+          if (!environment.production) {
+            console.log('transactions after create (from backend):', all);
+          }
         }, err => console.error('getAll after create failed', err));
         const createdTx: Transaction = {
           id: created.id,

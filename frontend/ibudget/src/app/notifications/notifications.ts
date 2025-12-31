@@ -9,6 +9,7 @@ import { NotificationPreferencesService } from '../../services/notification-pref
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ToggleableSidebar } from "../toggleable-sidebar/toggleable-sidebar";
+import { environment } from '../../environments/environment';
 
 // Interface for grouped notifications
 export interface NotificationGroup {
@@ -62,18 +63,26 @@ notifications.forEach(notification => {
         if (!notification.read && !this.processedNotificationIds.has(notification.id)) {
           if (notification.type === 'SAVINGS_COMPLETED') {
             if (this.preferencesService.getPreferencesSync().savingsCompletedEnabled) {
-              console.log('🎉 Triggering celebration confetti for:', notification.title);
+              if (!environment.production) {
+                console.log('🎉 Triggering celebration confetti for:', notification.title);
+              }
               this.confettiService.celebrate();
             } else {
-              console.log('🔕 Celebration confetti disabled by preferences');
+              if (!environment.production) {
+                console.log('🔕 Celebration confetti disabled by preferences');
+              }
             }
             this.processedNotificationIds.add(notification.id);
           } else if (notification.type === 'SAVINGS_MILESTONE_50' || notification.type === 'SAVINGS_MILESTONE_75') {
             if (this.preferencesService.getPreferencesSync().savingsMilestoneEnabled) {
-              console.log('⭐ Triggering milestone confetti for:', notification.title);
+              if (!environment.production) {
+                console.log('⭐ Triggering milestone confetti for:', notification.title);
+              }
               this.confettiService.milestone();
             } else {
-              console.log('🔕 Milestone confetti disabled by preferences');
+              if (!environment.production) {
+                console.log('🔕 Milestone confetti disabled by preferences');
+              }
             }
             this.processedNotificationIds.add(notification.id);
           }

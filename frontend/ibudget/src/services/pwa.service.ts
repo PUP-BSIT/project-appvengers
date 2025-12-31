@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class PwaService {
@@ -26,7 +27,9 @@ export class PwaService {
    */
   private initializeUpdateCheck(): void {
     if (!this.swUpdate.isEnabled) {
-      console.log('Service Worker is not enabled');
+      if (!environment.production) {
+        console.log('Service Worker is not enabled');
+      }
       return;
     }
 
@@ -34,7 +37,9 @@ export class PwaService {
     this.swUpdate.versionUpdates
       .pipe(filter((event): event is VersionReadyEvent => event.type === 'VERSION_READY'))
       .subscribe((event) => {
-        console.log('New version available:', event.latestVersion);
+        if (!environment.production) {
+          console.log('New version available:', event.latestVersion);
+        }
         this.updateAvailable.set(true);
       });
 
@@ -57,15 +62,21 @@ export class PwaService {
       // Only show install prompt if user hasn't dismissed it recently
       if (!this.isInstallDismissed()) {
         this.isInstallable.set(true);
-        console.log('PWA install prompt available');
+        if (!environment.production) {
+          console.log('PWA install prompt available');
+        }
       } else {
-        console.log('PWA install prompt dismissed by user - not showing');
+        if (!environment.production) {
+          console.log('PWA install prompt dismissed by user - not showing');
+        }
       }
     });
 
     // Listen for successful installation
     window.addEventListener('appinstalled', () => {
-      console.log('iBudget PWA was installed');
+      if (!environment.production) {
+        console.log('iBudget PWA was installed');
+      }
       this.isInstallable.set(false);
       this.installPromptEvent.set(null);
       // Clear dismissal state since app is now installed
@@ -102,7 +113,9 @@ export class PwaService {
     const promptEvent = this.installPromptEvent();
     
     if (!promptEvent) {
-      console.log('Install prompt not available');
+      if (!environment.production) {
+        console.log('Install prompt not available');
+      }
       return false;
     }
 
@@ -112,7 +125,9 @@ export class PwaService {
     // Wait for the user's response
     const result = await promptEvent.userChoice;
     
-    console.log('Install prompt result:', result.outcome);
+    if (!environment.production) {
+      console.log('Install prompt result:', result.outcome);
+    }
     
     // Clear the stored prompt
     this.installPromptEvent.set(null);
@@ -137,7 +152,9 @@ export class PwaService {
     localStorage.setItem(this.INSTALL_DISMISSED_KEY, 'true');
     localStorage.setItem(this.INSTALL_DISMISSED_UNTIL_KEY, dismissedUntil.toString());
     this.isInstallable.set(false);
-    console.log(`PWA install prompt dismissed until ${new Date(dismissedUntil).toLocaleDateString()}`);
+    if (!environment.production) {
+      console.log(`PWA install prompt dismissed until ${new Date(dismissedUntil).toLocaleDateString()}`);
+    }
   }
 
   /**

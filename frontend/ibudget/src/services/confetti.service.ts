@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import confetti from 'canvas-confetti';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +55,9 @@ export class ConfettiService {
         oscillator.stop(audioContext.currentTime + 0.15);
       }
 
-      console.log(`🔊 Playing ${type} sound (AudioContext state: ${audioContext.state})`);
+      if (!environment.production) {
+        console.log(`🔊 Playing ${type} sound (AudioContext state: ${audioContext.state})`);
+      }
     } catch (error) {
       // Silently fail if audio context not supported
       console.error('Audio playback error:', error);

@@ -37,7 +37,9 @@ export class WebSocketService implements OnDestroy {
    */
   connect(userId: number): void {
     if (this.client?.active) {
-      console.log('🔌 WebSocket already connected');
+      if (!environment.production) {
+        console.log('🔌 WebSocket already connected');
+      }
       return;
     }
 
@@ -61,14 +63,18 @@ export class WebSocketService implements OnDestroy {
       heartbeatOutgoing: 10000,
 
       onConnect: () => {
-        console.log('✅ WebSocket connected successfully');
+        if (!environment.production) {
+          console.log('✅ WebSocket connected successfully');
+        }
         this.connectionStatus.next(true);
         this.reconnectAttempts = 0;
         this.subscribeToNotifications(userId);
       },
 
       onDisconnect: () => {
-        console.log('❌ WebSocket disconnected');
+        if (!environment.production) {
+          console.log('❌ WebSocket disconnected');
+        }
         this.connectionStatus.next(false);
         this.cleanupSubscriptions();
       },
@@ -90,7 +96,9 @@ export class WebSocketService implements OnDestroy {
       }
     });
 
-    console.log('🔌 Connecting to WebSocket...');
+    if (!environment.production) {
+      console.log('🔌 Connecting to WebSocket...');
+    }
     this.client.activate();
   }
 
@@ -107,7 +115,9 @@ export class WebSocketService implements OnDestroy {
       (message: IMessage) => {
         try {
           const notification: Notification = JSON.parse(message.body);
-          console.log('📬 Received notification via WebSocket:', notification.title);
+          if (!environment.production) {
+            console.log('📬 Received notification via WebSocket:', notification.title);
+          }
           this.notificationSubject.next(notification);
         } catch (error) {
           console.error('❌ Error parsing notification:', error);
@@ -115,7 +125,9 @@ export class WebSocketService implements OnDestroy {
       }
     );
 
-    console.log(`📡 Subscribed to notifications for user ${userId}`);
+    if (!environment.production) {
+      console.log(`📡 Subscribed to notifications for user ${userId}`);
+    }
 
     // Optional: Subscribe to unread count updates
     this.countSubscription = this.client.subscribe(
@@ -123,7 +135,9 @@ export class WebSocketService implements OnDestroy {
       (message: IMessage) => {
         try {
           const count = JSON.parse(message.body);
-          console.log('🔢 Unread count update:', count);
+          if (!environment.production) {
+            console.log('🔢 Unread count update:', count);
+          }
           // This could be used to update a badge without fetching all notifications
         } catch (error) {
           console.error('❌ Error parsing count:', error);
@@ -136,7 +150,9 @@ export class WebSocketService implements OnDestroy {
    * Disconnect from WebSocket server and cleanup subscriptions.
    */
   disconnect(): void {
-    console.log('🔌 Disconnecting WebSocket...');
+    if (!environment.production) {
+      console.log('🔌 Disconnecting WebSocket...');
+    }
     this.cleanupSubscriptions();
     
     if (this.client) {

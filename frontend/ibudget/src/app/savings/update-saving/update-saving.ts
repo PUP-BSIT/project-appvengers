@@ -5,6 +5,7 @@ import { SavingsService } from '../../../services/savings.service';
 import { Saving } from '../../../models/user.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToggleableSidebar } from "../../toggleable-sidebar/toggleable-sidebar";
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-update-saving',
@@ -53,7 +54,9 @@ export class UpdateSaving implements OnInit{
   getSavingsData() {
     this.savingService.getSavingById(+this.savingId())
       .subscribe((savingData) => {
-        console.log('Fetched saving data:', savingData);
+        if (!environment.production) {
+          console.log('Fetched saving data:', savingData);
+        }
         this.updateSavingForm.setValue({
           name: savingData.name,
           goal_date: savingData.goal_date,

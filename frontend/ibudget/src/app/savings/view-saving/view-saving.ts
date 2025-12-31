@@ -12,6 +12,7 @@ import { FormsModule } from "@angular/forms";
 import { SavingTransactionService } from '../../../services/saving-transaction.service';
 import { Modal, Toast } from 'bootstrap';
 import { ToggleableSidebar } from "../../toggleable-sidebar/toggleable-sidebar";
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-view-saving',
@@ -86,7 +87,9 @@ export class ViewSaving implements OnInit{
         .filter(id => id !== transactionId));
     }
 
-    console.log('Selected Transactions:', this.selectedTransactionIds());
+    if (!environment.production) {
+      console.log('Selected Transactions:', this.selectedTransactionIds());
+    }
   }
 
   // Selected Transactions Modal
