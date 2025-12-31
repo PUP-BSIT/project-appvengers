@@ -121,7 +121,7 @@ export class Header implements OnInit, OnDestroy {
     this.showLogoutModal.set(false);
   }
 
-  confirmLogout() {
+  async confirmLogout(): Promise<void> {
     if (!environment.production) {
       console.log('[Header] Logout initiated');
     }
@@ -135,15 +135,16 @@ export class Header implements OnInit, OnDestroy {
     // The user-prefixed localStorage data stays intact for when this user logs back in
     this.localStorageService.clearUserId();
     
-    // Logout and navigate
-    this.authService.logout();
+    // 🔒 SECURITY FIX: Await logout to ensure Service Worker cache is cleared
+    // This prevents cross-account data leakage from cached API responses
+    await this.authService.logout();
     
     // Navigate to landing page
     this.router.navigate(['/']);
     this.showLogoutModal.set(false);
     
     if (!environment.production) {
-      console.log('[Header] Logout complete - in-memory state cleared, localStorage preserved');
+      console.log('[Header] Logout complete - in-memory state cleared, caches purged');
     }
   }
 
