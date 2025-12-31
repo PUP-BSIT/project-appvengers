@@ -98,4 +98,14 @@ public class BudgetController {
     budgetRepository.save(existingBudget);
     return ResponseEntity.noContent().build();
   }
+
+  // Search Budget
+  @GetMapping("/budgets/search")
+  public List<BudgetWithCategoryResponse> searchBudgets(
+    @RequestParam String query,
+    Authentication auth ){
+
+    int userId = currentUserId(auth);
+    return budgetRepository.searchBudgetsByUserIdAndQuery(userId, query);
+  }
 }
