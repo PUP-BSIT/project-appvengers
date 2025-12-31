@@ -3,30 +3,33 @@
 @import url('https://fonts.cdnfonts.com/css/patua-one');
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-html, body {
+html {
   height: 100%;
   width: 100%;
-  scroll-behavior: smooth;
   overflow-x: hidden;
+}
+
+body {
+  min-height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  margin: 0;
 }
 
 @media (max-width: 320px) {
   html, body {
-    height: 100%;
     width: 100%;
   }
 }
 
 @media (min-width: 426px) and (max-width: 768px) {
   html, body {
-    height: 100%;
     width: 100%;
   }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
   html, body {
-    height: 100%;
     width: auto;
   }
 }
