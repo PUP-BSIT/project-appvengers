@@ -33,4 +33,17 @@ public interface BudgetRepository extends JpaRepository<Budget, Integer> {
   // Find active budget (non soft-deleted) by ID
   @Query("SELECT b FROM Budget b WHERE b.budgetId = :id AND b.deletedAt IS NULL")
   Optional<Budget> findActiveById(@Param("id") Integer id);
+
+  // Search budgets by name or category for a given user
+  @Query(value =
+    "SELECT tb.budget_id AS budgetId, tb.user_id AS userId, tb.category_id AS categoryId, " +
+    "tb.name AS name, tb.limit_amount AS limitAmount, tb.start_date AS startDate, " +
+    "tb.end_date AS endDate, tc.name AS categoryName " +
+    "FROM tbl_budget tb " +
+    "LEFT JOIN tbl_category tc ON tb.category_id = tc.category_id " +
+    "WHERE tb.deleted_at IS NULL AND tb.user_id = :userId " +
+    "AND (LOWER(tb.name) LIKE LOWER(CONCAT('%', :query, '%')) " +
+    "OR LOWER(tc.name) LIKE LOWER(CONCAT('%', :query, '%')))",
+    nativeQuery = true)
+  List<BudgetWithCategoryResponse> searchBudgetsByUserIdAndQuery(@Param("userId") int userId, @Param("query") String query);
 }
