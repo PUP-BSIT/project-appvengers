@@ -706,27 +706,34 @@ $header-height: 70px;
 
 // Dropdown menu always in top right
 
+
 .transaction-dropdown {
-  z-index: 1050;
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
+  z-index: 1;
+}
+
+.transaction-dropdown > button {
+  z-index: 1;
+  position: relative;
 }
 
 .dropdown-menu {
-  min-width: 8rem;
+  min-width: 3rem;
   right: 0;
   left: auto;
-  top: 2.2rem;
+  top: 1.2rem;
   position: absolute;
   border-radius: 0.5rem;
-  padding: 0.5rem 0;
+  padding: 0.1rem 0;
   background: #fff;
   border: 1px solid #e5e7eb;
-  z-index: 1100;
+  z-index: 9999;
+  margin-top: 0.25rem;
 }
 
 .dropdown-item.text-danger {
