@@ -82,9 +82,21 @@ export class BudgetList implements OnInit {
   }
 
   onBudgetDeleted(updatedBudgets: Budget[]) {
+    if (!updatedBudgets.length) {
+      this.budgets.set([]);
+      this.isLoading.set(false);
+      return;
+    }
+
     this.hydrateBudgets(updatedBudgets).subscribe({
-      next: hydrated => this.budgets.set(hydrated),
-      error: err => console.error('Failed to hydrate after delete', err)
+      next: hydrated => {
+        this.budgets.set(hydrated);
+        this.isLoading.set(false); 
+      },
+      error: err => {
+        console.error('Failed to hydrate after delete', err);
+        this.isLoading.set(false);
+      }
     });
   }
 
