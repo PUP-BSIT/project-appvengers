@@ -690,6 +690,7 @@ $header-height: 70px;
 }
 
 .transaction-card {
+  border: 1.5px solid #d1d5db;
   border-radius: .75rem;
   background: #fff;
   border-radius: 0.5rem;
@@ -728,7 +729,7 @@ $header-height: 70px;
   border-radius: 0.5rem;
   padding: 0.1rem 0;
   background: #fff;
-  border: 1px solid #e5e7eb;
+  border: 1.5px solid #d1d5db;
   z-index: 9999;
   margin-top: 0.25rem;
 }
