@@ -808,36 +808,6 @@ $header-height: 70px;
 }
 
 /* Modal Styles */
-.modal.show .modal-dialog {
-  animation: modalSlideIn 0.3s ease-out;
-}
-
-.modal.closing .modal-dialog {
-  animation: modalSlideOut 0.3s ease-in forwards;
-}
-
-@keyframes modalSlideIn {
-  from {
-    transform: translateY(-50px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes modalSlideOut {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(-50px);
-    opacity: 0;
-  }
-}
-
 .modal-overlay {
   position: fixed;
   top: 0;
