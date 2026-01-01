@@ -1,3 +1,16 @@
+.dropdown-menu {
+  min-width: 3rem;
+  right: 0;
+  left: auto;
+  top: 1.2rem;
+  position: absolute;
+  border-radius: 0.5rem;
+  padding: 0.1rem 0;
+  background: #fff;
+  border: 1.5px solid #d1d5db;
+  z-index: 9999;
+}
+
 .categories-panel-container {
   padding: 1rem;
 }
