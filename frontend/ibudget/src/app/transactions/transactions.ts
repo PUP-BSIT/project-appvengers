@@ -173,6 +173,7 @@ export class Transactions implements OnInit, OnDestroy {
   }
 
   showAddModal = signal(false);
+  isClosingModal = signal(false);
   showNotification = signal(false);
   isHidingNotification = signal(false);
   notificationMessage = signal('');
@@ -468,7 +469,11 @@ openAddModal() {
   }
 
   closeAddModal() {
-    this.showAddModal.set(false);
+    this.isClosingModal.set(true);
+    setTimeout(() => {
+      this.showAddModal.set(false);
+      this.isClosingModal.set(false);
+    }, 300);
   }
 
   setExpenseType() {
