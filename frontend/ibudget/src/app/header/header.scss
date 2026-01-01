@@ -39,6 +39,7 @@ $card-drop-shadow: #00000040;
   margin-right: 8px;
   transition: color 0.2s;
 }
+
 .menu-toggle:hover {
   color: $icon-hovered-color;
 }
@@ -137,9 +138,9 @@ $card-drop-shadow: #00000040;
   }
 }
 
-  .chatbot-nav {
-  display: flex;
-  align-items: center;
+.chatbot-nav {
+display: flex;
+align-items: center;
 
   .chatbot-btn {
     display: flex;
@@ -188,7 +189,6 @@ $card-drop-shadow: #00000040;
 }
 
 .nav-link {
-
   text-decoration: none;
   transition: color 0.3s ease-in-out;
 }
@@ -248,7 +248,7 @@ $card-drop-shadow: #00000040;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    min-width: 200px;
+    min-width: 142px;
     z-index: 1100;
     animation: dropdownFadeIn 0.2s ease;
 
