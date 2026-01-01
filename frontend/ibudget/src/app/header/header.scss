@@ -40,6 +40,7 @@ $card-drop-shadow: #00000040;
   transition: color 0.2s;
 }
 
+
 .menu-toggle:hover {
   color: $icon-hovered-color;
 }
@@ -248,7 +249,7 @@ align-items: center;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    min-width: 152px;
+    min-width: 200px;
     z-index: 1100;
     animation: dropdownFadeIn 0.2s ease;
 
