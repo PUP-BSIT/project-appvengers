@@ -1,7 +1,7 @@
 # iBudget Backend API Specification
 
-**Version:** 2.0
-**Last Updated:** December 25, 2025
+**Version:** 2.1
+**Last Updated:** January 2, 2026
 **Server URL:** `https://i-budget.site` (Production) / `http://localhost:8080` (Local)
 
 ---
@@ -430,6 +430,88 @@
 }
 ```
 
+### 1.10 Reactivate Account
+**Endpoint:** `POST /api/auth/reactivate`
+**Description:** Reactivates a deactivated account.
+
+**Request Parameters:**
+
+| Parameter | Type | In | Description |
+|---|---|---|---|
+| `email` | string | Body | User's email. |
+| `password` | string | Body | User's password. |
+
+**Success Response:**
+- **Status Code:** 200 OK
+- **Response Type:** JSON
+
+**Response Data:**
+
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Success message. |
+
+- **Sample Response:**
+```json
+{
+  "message": "Account reactivated successfully"
+}
+```
+
+**Fail Response:**
+- **Status Code:** 400 Bad Request
+- **Response Type:** JSON
+
+**Response Data:**
+
+| Parameter | Type | Description |
+|---|---|---|
+| `error` | string | Error message. |
+
+- **Sample Response:**
+```json
+{
+  "error": "Account could not be reactivated"
+}
+```
+
+### 1.11 Resend Verification Email
+**Endpoint:** `POST /api/auth/resend-verification`
+**Description:** Resends the email verification link.
+
+**Request Parameters:**
+
+| Parameter | Type | In | Description |
+|---|---|---|---|
+| `email` | string | Query | User's email. |
+
+**Success Response:**
+- **Status Code:** 200 OK
+- **Response Type:** JSON
+
+**Response Data:**
+
+| Parameter | Type | Description |
+|---|---|---|
+| `message` | string | Success message. |
+
+- **Sample Response:**
+```json
+{
+  "message": "Verification email resent successfully"
+}
+```
+
+**Fail Response:**
+- **Status Code:** 302 Found (Redirect)
+- **Response Type:** JSON
+
+**Response Data:**
+
+| Parameter | Type | Description |
+|---|---|---|
+| `Location` | string | Redirect to failure page. |
+
 ---
 
 ## 2. User Profile (`/api/user`)
@@ -455,7 +537,8 @@
 | `id` | integer | User ID. |
 | `username` | string | Username. |
 | `email` | string | Email address. |
-| `joinDate` | string | Date of account creation (YYYY-MM-DD). |
+| `hasPassword` | boolean | If user has password set. |
+| `remainingBudget` | number | Remaining budget (default 0). |
 
 - **Sample Response:**
 ```json
@@ -463,7 +546,8 @@
   "id": 101,
   "username": "budgetHero",
   "email": "hero@example.com",
-  "joinDate": "2025-01-15"
+  "hasPassword": true,
+  "remainingBudget": 0
 }
 ```
 
@@ -997,6 +1081,20 @@
 }
 ```
 
+### 3.9 Expense Summary (Alternate)
+**Endpoint:** `GET /api/expenses/summary`
+**Description:** Total expenses summary.
+
+**Success Response:**
+- **Status Code:** 200 OK
+- **Response Type:** JSON
+
+**Response Data:**
+
+| Parameter | Type | Description |
+|---|---|---|
+| `totalExpense` | number | The sum of all expenses. |
+
 ---
 
 ## 4. Budgets (`/api/budgets`)
@@ -1013,21 +1111,25 @@
 
 | Parameter | Type | Description |
 |---|---|---|
-| `[].id` | integer | Budget ID. |
-| `[].category` | string | Category name. |
+| `[].budgetId` | integer | Budget ID. |
+| `[].categoryName` | string | Category name. |
 | `[].limitAmount` | number | The spending limit. |
-| `[].spent` | number | Amount already spent. |
-| `[].remaining` | number | Amount remaining. |
+| `[].userId` | integer | User ID. |
+| `[].categoryId` | integer | Category ID. |
+| `[].startDate` | string | Start Date. |
+| `[].endDate` | string | End Date. |
 
 - **Sample Response:**
 ```json
 [
   {
-    "id": 10,
-    "category": "Food",
+    "budgetId": 10,
+    "categoryName": "Food",
     "limitAmount": 500,
-    "spent": 200,
-    "remaining": 300
+    "userId": 1,
+    "categoryId": 2,
+    "startDate": "2025-05-01",
+    "endDate": "2025-05-31"
   }
 ]
 ```
@@ -1231,9 +1333,15 @@
 }
 ```
 
-### 4.6 Get Budget Transactions
-**Endpoint:** `GET /api/transactions/budget-transactions/budget/{budgetId}`
-**Description:** Lists expenses linked to a budget.
+### 4.6 Search Budgets
+**Endpoint:** `GET /api/budgets/search`
+**Description:** Searches budgets by query.
+
+**Request Parameters:**
+
+| Parameter | Type | In | Description |
+|---|---|---|---|
+| `query` | string | Query | Search term. |
 
 **Success Response:**
 - **Status Code:** 200 OK
@@ -1243,35 +1351,66 @@
 
 | Parameter | Type | Description |
 |---|---|---|
-| `[].id` | integer | Transaction ID. |
-| `[].amount` | number | Amount. |
-| `[].description` | string | Description. |
-| `[].date` | string | Date. |
+| `[].budgetId` | integer | Budget ID. |
+| `[].categoryName` | string | Category name. |
 
-- **Sample Response:**
-```json
-[
-  { "id": 1, "amount": 50, "description": "Grocery", "date": "2025-05-10" },
-  { "id": 5, "amount": 20, "description": "Snacks", "date": "2025-05-12" }
-]
-```
+---
 
-**Fail Response:**
-- **Status Code:** 404 Not Found
+### 4.7 Budget Transactions
+**Note:** These endpoints are managed by `TransactionController` but logically belong to Budget management.
+
+#### 4.7.1 List Budget Transactions
+**Endpoint:** `GET /api/transactions/budget-transactions/budget/{budgetId}`
+**Description:** Lists expenses linked to a budget.
+
+**Success Response:**
+- **Status Code:** 200 OK
+- **Response Type:** JSON Array
+
+#### 4.7.2 Get Budget Transaction
+**Endpoint:** `GET /api/transactions/budget-transactions/{id}`
+**Description:** Gets a single budget transaction.
+
+**Success Response:**
+- **Status Code:** 200 OK
+
+#### 4.7.3 Create Budget Transaction
+**Endpoint:** `POST /api/transactions/budget-transactions`
+**Description:** Creates a new budget expense.
+
+**Request Parameters:**
+
+| Parameter | Type | In | Description |
+|---|---|---|---|
+| `budget_id` | integer | Body | Budget ID. |
+| `category_id` | integer | Body | Category ID. |
+| `amount` | number | Body | Amount. |
+| `description` | string | Body | Description. |
+| `transaction_date` | string | Body | Date (YYYY-MM-DD). |
+
+#### 4.7.4 Update Budget Transaction
+**Endpoint:** `PUT /api/transactions/budget-transactions/{id}`
+**Description:** Updates a budget expense.
+
+#### 4.7.5 Delete Budget Transaction
+**Endpoint:** `DELETE /api/transactions/budget-transactions/{id}`
+**Description:** Deletes a budget expense.
+
+#### 4.7.6 Budget Summary
+**Endpoint:** `GET /api/transactions/budgets/{budgetId}/summary`
+**Description:** Gets summary of a budget (limit, spent, remaining).
+
+**Success Response:**
+- **Status Code:** 200 OK
 - **Response Type:** JSON
 
 **Response Data:**
 
 | Parameter | Type | Description |
 |---|---|---|
-| `error` | string | Error message. |
-
-- **Sample Response:**
-```json
-{
-  "error": "Budget not found"
-}
-```
+| `budgetId` | integer | Budget ID. |
+| `totalExpenses` | number | Total spent. |
+| `remainingBudget` | number | Remaining amount. |
 
 ---
 
@@ -1510,6 +1649,8 @@
 | `savingId` | integer | Path | ID of the savings goal. |
 | `amount` | number | Body | Amount to add/remove. |
 | `savingsAction` | string | Body | "DEPOSIT" or "WITHDRAW". |
+| `description` | string | Body | Transaction description. |
+| `transactionDate` | string | Body | Date (YYYY-MM-DD). |
 
 **Success Response:**
 - **Status Code:** 201 Created
@@ -1521,16 +1662,14 @@
 |---|---|---|
 | `id` | integer | Transaction ID. |
 | `amount` | number | Amount. |
-| `action` | string | Action taken. |
-| `newBalance` | number | Updated savings balance. |
+| `savingsAction` | string | Action taken. |
 
 - **Sample Response:**
 ```json
 {
   "id": 101,
   "amount": 500,
-  "action": "DEPOSIT",
-  "newBalance": 2500
+  "savingsAction": "DEPOSIT"
 }
 ```
 
@@ -1592,6 +1731,49 @@
   "error": "Savings goal not found"
 }
 ```
+
+### 5.8 Get All Saving Transactions
+**Endpoint:** `GET /api/savings/transactions`
+**Description:** Lists all saving transactions for the user.
+
+**Success Response:**
+- **Status Code:** 200 OK
+- **Response Type:** JSON Array
+
+### 5.9 Get Saving Transaction Detail
+**Endpoint:** `GET /api/savings/{savingId}/transactions/{id}`
+**Description:** Gets a single saving transaction.
+
+### 5.10 Update Saving Transaction
+**Endpoint:** `PUT /api/savings/{savingId}/transactions/{id}`
+**Description:** Updates a saving transaction.
+
+**Request Parameters:**
+
+| Parameter | Type | In | Description |
+|---|---|---|---|
+| `amount` | number | Body | Amount. |
+| `savingsAction` | string | Body | Action. |
+| `description` | string | Body | Description. |
+| `transactionDate` | string | Body | Date. |
+
+### 5.11 Delete Saving Transaction
+**Endpoint:** `DELETE /api/savings/{savingId}/transactions/{id}`
+**Description:** Deletes a saving transaction.
+
+### 5.12 Delete Multiple Saving Transactions
+**Endpoint:** `DELETE /api/savings/transactions`
+**Description:** Deletes multiple transactions.
+
+**Request Parameters:**
+
+| Parameter | Type | In | Description |
+|---|---|---|---|
+| `transactionIds` | array | Body | List of transaction IDs. |
+
+### 5.13 Refresh Current Amount
+**Endpoint:** `GET /api/savings/{savingId}/refresh-current-amount`
+**Description:** Recalculates current amount for a saving goal.
 
 ---
 
@@ -1687,7 +1869,22 @@
 }
 ```
 
-### 6.3 Delete Category
+### 6.3 Update Category
+**Endpoint:** `PUT /api/categories/{id}`
+**Description:** Updates a custom category.
+
+**Request Parameters:**
+
+| Parameter | Type | In | Description |
+|---|---|---|---|
+| `name` | string | Body | Category Name. |
+| `type` | string | Body | Category Type. |
+
+**Success Response:**
+- **Status Code:** 200 OK
+- **Response Type:** JSON
+
+### 6.4 Delete Category
 **Endpoint:** `DELETE /api/categories/{id}`
 **Description:** Deletes a custom category.
 
@@ -1923,6 +2120,13 @@
   "error": "Notification not found"
 }
 ```
+
+### 7.6 Generate Notifications
+**Endpoint:** `POST /api/notifications/generate`
+**Description:** Triggers notification generation (e.g. for testing).
+
+**Success Response:**
+- **Status Code:** 200 OK
 
 ---
 
