@@ -812,7 +812,7 @@ $header-height: 70px;
   animation: modalSlideIn 0.3s ease-out;
 }
 
-.modal.fade:not(.show) .modal-dialog {
+.modal.closing .modal-dialog {
   animation: modalSlideOut 0.3s ease-in forwards;
 }
 
