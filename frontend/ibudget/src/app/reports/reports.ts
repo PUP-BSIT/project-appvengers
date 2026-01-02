@@ -344,7 +344,11 @@ export class Reports implements OnInit {
     doc.setFontSize(22);
     doc.setTextColor(45, 90, 135); // #2D5A87
     doc.setFont('helvetica', 'bold');
-    doc.text(`iBudget Financial Report Summary`, 14, 22);
+    const title = `iBudget Financial Report Summary`;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const titleWidth = doc.getTextWidth(title);
+    const xOffset = (pageWidth - titleWidth) / 2;
+    doc.text(title, xOffset, 22);
     
     const addReportToDoc = (report: MonthlyReport, startY: number) => {
       let y = startY;
@@ -357,11 +361,25 @@ export class Reports implements OnInit {
       doc.setFontSize(12);
       doc.setTextColor(0, 0, 0); // Reset to black
       doc.setFont('helvetica', 'normal');
-      doc.text(`Total Income: PHP ${report.totalIncome.toFixed(2)}`, 14, y);
+      
+      // Total Income
+      doc.text(`Total Income: `, 14, y);
+      doc.setTextColor(16, 185, 129); // Green
+      doc.text(`PHP ${report.totalIncome.toFixed(2)}`, 14 + doc.getTextWidth('Total Income: '), y);
       y += 6;
-      doc.text(`Total Expenses: PHP ${report.totalSpent.toFixed(2)}`, 14, y);
+
+      // Total Expenses
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Total Expenses: `, 14, y);
+      doc.setTextColor(239, 68, 68); // Red
+      doc.text(`PHP ${report.totalSpent.toFixed(2)}`, 14 + doc.getTextWidth('Total Expenses: '), y);
       y += 6;
-      doc.text(`Net Balance: PHP ${(report.totalIncome - report.totalSpent).toFixed(2)}`, 14, y);
+
+      // Net Balance
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Net Balance: `, 14, y);
+      doc.setTextColor(45, 90, 135); // #2D5A87
+      doc.text(`PHP ${(report.totalIncome - report.totalSpent).toFixed(2)}`, 14 + doc.getTextWidth('Net Balance: '), y);
       y += 10;
 
       // Income Table
