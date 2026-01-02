@@ -43,8 +43,11 @@ export class NotificationPreferencesService {
   public preferences$ = this.preferencesSubject.asObservable();
 
   constructor() {
-    // Load preferences after userId is set
-    this.loadPreferences();
+    // Don't load preferences in constructor - wait for userId to be set first
+    // loadPreferences() will be called by Header component after login
+    if (!environment.production) {
+      console.log('[NotificationPreferences] Service initialized (waiting for userId)');
+    }
   }
 
   /**
@@ -120,8 +123,19 @@ export class NotificationPreferencesService {
 
   /**
    * Load preferences from user-scoped localStorage
+   * Only works after userId is set in LocalStorageService
    */
   loadPreferences(): void {
+    // Check if userId is set before trying to load
+    const userId = this.localStorageService.getUserId();
+    if (!userId) {
+      if (!environment.production) {
+        console.warn('[NotificationPreferences] Cannot load preferences - userId not set. Using defaults.');
+      }
+      this.preferencesSubject.next(DEFAULT_PREFERENCES);
+      return;
+    }
+
     try {
       const stored = this.localStorageService.getItem<NotificationPreferences>(STORAGE_KEY);
       if (stored) {
@@ -129,11 +143,11 @@ export class NotificationPreferencesService {
         const preferences = { ...DEFAULT_PREFERENCES, ...stored };
         this.preferencesSubject.next(preferences);
         if (!environment.production) {
-          console.log('[NotificationPreferences] Loaded user preferences');
+          console.log('[NotificationPreferences] Loaded user preferences for user:', userId);
         }
       } else {
         if (!environment.production) {
-          console.log('[NotificationPreferences] No stored preferences, using defaults');
+          console.log('[NotificationPreferences] No stored preferences for user:', userId, '- using defaults');
         }
         this.preferencesSubject.next(DEFAULT_PREFERENCES);
       }
@@ -147,10 +161,19 @@ export class NotificationPreferencesService {
    * Save preferences to user-scoped localStorage
    */
   private saveToStorage(preferences: NotificationPreferences): void {
+    // Check if userId is set before saving
+    const userId = this.localStorageService.getUserId();
+    if (!userId) {
+      if (!environment.production) {
+        console.warn('[NotificationPreferences] Cannot save preferences - userId not set. Skipping save.');
+      }
+      return;
+    }
+
     try {
       this.localStorageService.setItem(STORAGE_KEY, preferences);
       if (!environment.production) {
-        console.log('[NotificationPreferences] Saved user preferences');
+        console.log('[NotificationPreferences] Saved user preferences for user:', userId);
       }
     } catch (e) {
       console.error('[NotificationPreferences] Failed to save preferences:', e);
