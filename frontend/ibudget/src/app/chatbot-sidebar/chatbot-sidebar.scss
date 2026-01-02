@@ -63,7 +63,7 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
     right: -400px; // Start off-screen
     width: 400px;
     height: calc(100vh - 70px); // Subtract header height
-    background-color: $chat-sidebar-bg;
+    background-color: #ffffff; // White background
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
     z-index: 1001;
     transition: right 0.3s ease-in-out;
@@ -117,10 +117,7 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
 
 .chatbot-header {
     padding: 20px;
-    // Glass morphism effect
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: #ffffff; // Solid white to match sidebar
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     display: flex;
     justify-content: space-between;
@@ -317,6 +314,7 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -330,7 +328,7 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
     display: flex;
     flex-direction: column;
     gap: 15px;
-    background-color: #f8f9fa; // Slightly different bg for messages area
+    background-color: transparent; // Transparent background for floating input effect
 
     &::-webkit-scrollbar {
         width: 6px;
@@ -351,14 +349,83 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         align-items: center;
         justify-content: center;
         height: 100%;
-        color: #9ca3af;
+        padding: 60px 40px;
+        text-align: center;
 
-        i {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            color: $primary-color;
-            opacity: 0.5;
+        .greeting-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 32px;
+
+            img {
+                width: 100%;
+                height: 100%;
+                border-radius: 16px;
+                object-fit: cover;
+                box-shadow: 0 8px 24px rgba($primary-color, 0.2);
+            }
         }
+
+        .typewriter-greeting {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: $text-color;
+            margin: 0 0 16px 0;
+            font-family: 'Inter', sans-serif;
+
+            .cursor {
+                display: inline-block;
+                margin-left: 4px;
+                animation: blink 1s step-end infinite;
+                color: $primary-color;
+            }
+        }
+
+        .greeting-subtitle {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: $text-color;
+            margin: 0 0 12px 0;
+        }
+
+        .greeting-hint {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin: 0;
+            line-height: 1.6;
+            max-width: 320px;
+        }
+
+        @media (max-width: 480px) {
+            padding: 40px 20px;
+
+            .greeting-icon {
+                width: 64px;
+                height: 64px;
+                margin-bottom: 24px;
+            }
+
+            .typewriter-greeting {
+                font-size: 1.5rem;
+            }
+
+            .greeting-subtitle {
+                font-size: 1rem;
+            }
+        }
+    }
+}
+
+@keyframes blink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
     }
 }
 
@@ -432,6 +499,7 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         }
 
         .message-footer {
+
             .speak-btn,
             .copy-btn {
                 color: #9ca3af;
@@ -588,10 +656,14 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
 }
 
 @keyframes typingBounce {
-    0%, 80%, 100% {
+
+    0%,
+    80%,
+    100% {
         transform: scale(0.6);
         opacity: 0.4;
     }
+
     40% {
         transform: scale(1);
         opacity: 1;
@@ -600,21 +672,25 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
 
 // Avatar pulse animation for typing indicator
 @keyframes avatarPulse {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 0 0 0 rgba($primary-color, 0.4);
     }
+
     50% {
         box-shadow: 0 0 0 8px rgba($primary-color, 0);
     }
 }
 
 .input-area {
-    // Floating card-like input bar
-    margin: 12px;
-    padding: 8px;
+    // Floating card-like input bar (Claude-style)
+    margin: 16px;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    background: transparent; // Transparent background - no grey area
 
     .speech-error {
         display: flex;
@@ -652,27 +728,34 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         }
     }
 
-    // Claude-style input container with embedded buttons
+    // Vertical layout - textarea on top (full width), buttons below at bottom-right
     .input-container {
-        display: flex;
-        align-items: flex-end;
-        gap: 8px;
         background: $input-bg;
-        border: 1px solid #d1d5db;
-        border-radius: 24px;
-        padding: 8px 8px 8px 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 26px;
+        padding: 12px 16px 8px 16px; // Less bottom padding for buttons row
         transition: border-color 0.2s, box-shadow 0.2s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+        display: flex;
+        flex-direction: column; // Stack vertically
+        gap: 4px; // Small gap between textarea and buttons
 
         &:focus-within {
             border-color: $primary-color;
-            box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12), 0 0 0 3px rgba($primary-color, 0.1);
+        }
+
+        .textarea-wrapper {
+            width: 100%; // Full width for text
+            display: flex;
         }
 
         textarea {
             flex: 1;
+            width: 100%; // Full width
             background: transparent;
             border: none;
-            padding: 6px 0;
+            padding: 0;
             color: $text-color;
             resize: none;
             min-height: 24px;
@@ -702,70 +785,71 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
             }
         }
 
+        // Action buttons - below textarea, aligned to the right
         .input-actions {
             display: flex;
             align-items: center;
-            gap: 4px;
-            flex-shrink: 0;
+            justify-content: flex-end; // Push buttons to the right
+            gap: 6px;
+        }
+    }
+
+    // Icon buttons below input (Claude-style)
+    .action-icon-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        font-size: 1rem;
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+    }
+
+    .mic-btn {
+        background: transparent;
+        color: #6b7280;
+
+        &:hover:not(:disabled) {
+            background: #f3f4f6;
+            color: $primary-color;
         }
 
-        // Icon buttons inside input (Claude-style)
-        .action-icon-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            font-size: 1rem;
+        &.recording {
+            background: #dc2626;
+            color: white;
+            animation: recordingPulse 1.5s ease-in-out infinite;
 
-            &:disabled {
-                opacity: 0.4;
-                cursor: not-allowed;
+            &:hover {
+                background: #b91c1c;
+            }
+        }
+    }
+
+    .send-btn {
+        background: #e5e7eb;
+        color: #9ca3af;
+
+        &.active {
+            background: $primary-color;
+            color: white;
+
+            &:hover {
+                background: color.adjust($primary-color, $lightness: -5%);
+                transform: scale(1.05);
             }
         }
 
-        .mic-btn {
-            background: transparent;
-            color: #6b7280;
-
-            &:hover:not(:disabled) {
-                background: #f3f4f6;
-                color: $primary-color;
-            }
-
-            &.recording {
-                background: #dc2626;
-                color: white;
-                animation: recordingPulse 1.5s ease-in-out infinite;
-
-                &:hover {
-                    background: #b91c1c;
-                }
-            }
-        }
-
-        .send-btn {
+        &:disabled {
             background: #e5e7eb;
             color: #9ca3af;
-
-            &.active {
-                background: $primary-color;
-                color: white;
-
-                &:hover {
-                    background: color.adjust($primary-color, $lightness: -5%);
-                    transform: scale(1.05);
-                }
-            }
-
-            &:disabled {
-                background: #e5e7eb;
-                color: #9ca3af;
-            }
         }
     }
 }
@@ -789,18 +873,24 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.5;
     }
 }
 
 @keyframes recordingPulse {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
     }
+
     50% {
         box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
     }
@@ -976,14 +1066,14 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
     a {
         color: $primary-color;
         text-decoration: none;
-        
+
         &:hover {
             text-decoration: underline;
         }
     }
 
     // Tip/Warning Callouts (using bold + emoji patterns)
-    > p:first-child {
+    >p:first-child {
         &:has(strong:first-child) {
             // Style for tip callouts like "**💡 Tip:**"
         }
@@ -1059,13 +1149,19 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         &:nth-child(2):hover {
             background: $gradient-orange; // Orange
             color: $text-color; // Dark text for light gradient
-            i { color: $text-color; }
+
+            i {
+                color: $text-color;
+            }
         }
 
         &:nth-child(3):hover {
             background: $gradient-green; // Green
             color: $text-color; // Dark text for light gradient
-            i { color: $text-color; }
+
+            i {
+                color: $text-color;
+            }
         }
 
         &:nth-child(4):hover {
@@ -1141,7 +1237,7 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         overflow: hidden;
 
         // Icon styling
-        > i:first-child {
+        >i:first-child {
             font-size: 1.1rem;
             flex-shrink: 0;
         }
@@ -1167,12 +1263,10 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.2),
-                transparent
-            );
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.2),
+                    transparent);
             transition: left 0.5s ease;
         }
 
@@ -1200,9 +1294,12 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
 }
 
 @keyframes actionPulse {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 3px 8px rgba($primary-color, 0.3);
     }
+
     50% {
         box-shadow: 0 3px 12px rgba($primary-color, 0.5);
     }
@@ -1212,33 +1309,34 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
 // Styles for the embedded chat charts in bot messages
 
 .message.bot {
+
     // Ensure chart container fits properly within message bubble
     app-chat-chart {
         display: block;
         margin-top: 10px;
-        
+
         // Override chart container styles for better integration
         ::ng-deep .chat-chart-container {
             background: rgba(255, 255, 255, 0.95);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             border: 1px solid rgba($border-color, 0.8);
-            
+
             .chart-title {
                 color: $text-color;
                 font-size: 0.85rem;
             }
-            
+
             .chart-wrapper {
                 // Compact height for chat context
                 height: 180px;
-                
+
                 @media (max-width: 480px) {
                     height: 160px;
                 }
             }
         }
     }
-    
+
     // When both visualization and action are present
     &:has(app-chat-chart) {
         .message-action {

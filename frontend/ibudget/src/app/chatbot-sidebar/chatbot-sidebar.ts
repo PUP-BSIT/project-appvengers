@@ -39,6 +39,11 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     lastError = signal<string | null>(null);
     showWelcome = signal(true);
 
+    // Typewriter greeting
+    userName = signal<string>('');
+    typewriterText = signal<string>('');
+    showTypewriter = signal<boolean>(true);
+
     // Speech-related signals
     isRecording = this.speechService.isListening;
     isSpeaking = this.speechService.isSpeaking;
@@ -47,7 +52,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     autoSpeak = signal(false); // Auto-read bot responses
     liveTranscript = signal(''); // Live transcript during recording
     speechError = signal<string | null>(null);
-    
+
     // Voice settings
     showSettings = signal(false);
     availableVoices = this.speechService.availableVoices;
@@ -58,7 +63,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
 
     // Scroll tracking
     private shouldScrollToBottom = false;
-    
+
     // Track which user's messages are loaded (to detect user change)
     private loadedForUserId: number | null = null;
 
@@ -124,14 +129,14 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
             (result: SpeechResult) => {
                 // Update live transcript
                 this.liveTranscript.set(result.transcript);
-                
+
                 // When speech recognition finalizes, append to existing input
                 if (result.isFinal) {
                     const existingText = this.userInput().trim();
                     const newText = result.transcript.trim();
                     // Append with space separator if there's existing text
-                    const combined = existingText 
-                        ? `${existingText} ${newText}` 
+                    const combined = existingText
+                        ? `${existingText} ${newText}`
                         : newText;
                     this.userInput.set(combined);
                     this.liveTranscript.set('');
@@ -144,7 +149,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
             (error: SpeechError) => {
                 this.speechError.set(error.message);
                 this.liveTranscript.set('');
-                
+
                 // Auto-clear error after 5 seconds
                 setTimeout(() => this.speechError.set(null), 5000);
             }
@@ -154,6 +159,10 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     ngOnInit() {
         // Try to load persisted messages (will only work if userId is already set)
         this.loadMessagesIfReady();
+
+        // Extract username and start typewriter animation
+        this.extractUsername();
+        this.startTypewriterAnimation();
     }
 
     /**
@@ -162,7 +171,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
      */
     private loadMessagesIfReady(): void {
         const userId = this.localStorageService.getUserId();
-        
+
         if (userId === null) {
             if (!environment.production) {
                 console.log('[ChatbotSidebar] userId not set yet, will retry when sidebar opens');
@@ -205,7 +214,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
         } else {
             this.autoSpeak.set(false);
         }
-        
+
         this.loadedForUserId = userId;
     }
 
@@ -217,21 +226,16 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
         if (this.errorSubscription) {
             this.errorSubscription.unsubscribe();
         }
-        
+
         // Stop any ongoing speech
         this.speechService.stopListening();
         this.speechService.stopSpeaking();
     }
 
     private addWelcomeMessage() {
-        const welcomeMsg: ChatMessage = {
-            text: "👋 Hi! I'm **Bonzi**, your AI Financial Assistant for iBudget!\n\nI'm here to help you manage your budget, track expenses, and achieve your financial goals. Feel free to ask me anything about budgeting or use the quick actions below!",
-            isUser: false,
-            timestamp: new Date()
-        };
-        this.messages.set([welcomeMsg]);
+        // No longer adding a constant welcome message
+        // Greeting is now displayed via typewriter effect in the empty state
         this.showWelcome.set(false);
-        this.scrollToBottomSmooth();
     }
 
     /**
@@ -240,7 +244,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
      */
     private isNearBottom(): boolean {
         if (!this.scrollContainer?.nativeElement) return true;
-        
+
         const el = this.scrollContainer.nativeElement;
         const threshold = 100; // pixels from bottom
         return el.scrollHeight - el.scrollTop - el.clientHeight < threshold;
@@ -283,7 +287,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     private sendMessageWithText(text: string) {
         // Check if user is near bottom before adding message (for smart scroll)
         const wasNearBottom = this.isNearBottom();
-        
+
         // Add user message
         this.messages.update(msgs => [...msgs, { text, isUser: true, timestamp: new Date() }]);
         this.userInput.set('');
@@ -302,10 +306,10 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
                         this.handleError("Sorry, I received an empty response. Please try again.");
                         return;
                     }
-                    
+
                     // Parse the response to extract text and action
                     const parsed = this.parseResponse(response);
-                    
+
                     // Create message with optional action and visualization
                     const botMessage: ChatMessage = {
                         text: parsed.text,
@@ -314,7 +318,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
                         action: parsed.action,
                         visualization: parsed.visualization
                     };
-                    
+
                     this.messages.update(msgs => [...msgs, botMessage]);
                     this.isLoading.set(false);
 
@@ -331,14 +335,14 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
                 error: (error) => {
                     // Extract user-friendly error message from error object
                     let errorMessage = "Sorry, I couldn't reach the server. Please try again.";
-                    
+
                     if (error) {
                         // Handle 429 Too Many Requests (rate limit exceeded)
                         if (error.status === 429) {
                             const rateLimitError = error.error as RateLimitError;
                             const retrySeconds = rateLimitError?.retryAfterSeconds || 60;
                             errorMessage = `⏱️ You're sending messages too quickly. Please wait ${retrySeconds} seconds before trying again.`;
-                            
+
                             // Auto-retry after the wait period (optional - can be disabled)
                             // setTimeout(() => this.retryLastMessage(), retrySeconds * 1000);
                         }
@@ -350,15 +354,15 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
                             if (error.error.output) {
                                 errorMessage = error.error.output;
                             } else {
-                                errorMessage = typeof error.error === 'string' 
-                                    ? error.error 
+                                errorMessage = typeof error.error === 'string'
+                                    ? error.error
                                     : error.error.message || errorMessage;
                             }
                         } else if (error.message) {
                             errorMessage = error.message;
                         }
                     }
-                    
+
                     this.handleError(errorMessage);
                     this.isLoading.set(false);
                 }
@@ -387,7 +391,8 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     clearChat() {
         this.messages.set([]);
         this.chatbotService.clearHistory();
-        this.addWelcomeMessage();
+        this.showTypewriter.set(true);
+        this.startTypewriterAnimation();
         this.lastError.set(null);
     }
 
@@ -405,10 +410,10 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     autoResize(event: Event): void {
         const textarea = event.target as HTMLTextAreaElement;
         if (!textarea) return;
-        
+
         // Reset height to auto to get the correct scrollHeight
         textarea.style.height = 'auto';
-        
+
         // Set height to scrollHeight (content height), capped at max-height via CSS
         const newHeight = Math.min(textarea.scrollHeight, 150); // 150px max
         textarea.style.height = `${newHeight}px`;
@@ -434,8 +439,8 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
      * Parses the chatbot response to extract text, optional action, and visualization.
      * Handles both plain text responses and structured JSON responses.
      */
-    private parseResponse(response: ChatbotResponse | any): { 
-        text: string; 
+    private parseResponse(response: ChatbotResponse | any): {
+        text: string;
         action?: ChatbotAction;
         visualization?: ChatVisualization;
     } {
@@ -446,7 +451,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
 
         // Extract text from various possible response structures
         let text = response.output || response.text || response.message || response.response || '';
-        
+
         // If text is empty and response is an object, stringify it
         if (!text && typeof response === 'object') {
             // Check if it's an error response
@@ -657,18 +662,18 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
      */
     private isValidVisualization(obj: any): boolean {
         if (!obj || typeof obj !== 'object') return false;
-        
+
         const validTypes = ['doughnut', 'pie', 'bar', 'line'];
         if (!validTypes.includes(obj.type)) return false;
-        
+
         if (!obj.data || !Array.isArray(obj.data.labels) || !Array.isArray(obj.data.values)) {
             return false;
         }
-        
+
         if (obj.data.labels.length === 0 || obj.data.values.length === 0) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -696,7 +701,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
                 if (action.path) {
                     // Close the sidebar before navigating
                     this.chatbotService.toggle();
-                    
+
                     // Navigate with query params if present
                     if (action.queryParams && Object.keys(action.queryParams).length > 0) {
                         this.router.navigate([action.path], { queryParams: action.queryParams });
@@ -719,11 +724,11 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
                 // For now, navigate to the page - modal opening can be handled by the target component
                 if (action.path) {
                     this.chatbotService.toggle();
-                    this.router.navigate([action.path], { 
-                        queryParams: { 
-                            ...action.queryParams, 
-                            openModal: 'true' 
-                        } 
+                    this.router.navigate([action.path], {
+                        queryParams: {
+                            ...action.queryParams,
+                            openModal: 'true'
+                        }
                     });
                 }
                 break;
@@ -747,7 +752,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
         }
 
         this.speechError.set(null);
-        
+
         if (this.isRecording()) {
             this.speechService.stopListening();
             this.liveTranscript.set('');
@@ -768,7 +773,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
 
         const newValue = !this.autoSpeak();
         this.autoSpeak.set(newValue);
-        
+
         // Persist preference to user-scoped localStorage
         this.localStorageService.setItem('bonzi_autoSpeak', newValue);
 
@@ -814,11 +819,11 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
             // Strip markdown formatting for cleaner clipboard content
             const cleanText = this.stripMarkdown(msg.text);
             await navigator.clipboard.writeText(cleanText);
-            
+
             // Show copied feedback using message timestamp as ID
             const msgId = msg.timestamp.getTime();
             this.copiedMessageId.set(msgId);
-            
+
             // Reset after 2 seconds
             setTimeout(() => {
                 if (this.copiedMessageId() === msgId) {
@@ -865,7 +870,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
         document.body.appendChild(textArea);
         textArea.focus();
         textArea.select();
-        
+
         try {
             document.execCommand('copy');
             const msgId = msg.timestamp.getTime();
@@ -878,7 +883,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
         } catch (error) {
             console.error('Fallback copy failed:', error);
         }
-        
+
         document.body.removeChild(textArea);
     }
 
@@ -913,7 +918,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     getGroupedVoices(): { lang: string; langName: string; voices: SpeechSynthesisVoice[] }[] {
         const voices = this.availableVoices();
         const grouped = new Map<string, SpeechSynthesisVoice[]>();
-        
+
         // Group voices by language
         voices.forEach(voice => {
             const lang = voice.lang;
@@ -926,7 +931,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
         // Convert to array and sort, prioritizing English and Filipino
         const result: { lang: string; langName: string; voices: SpeechSynthesisVoice[] }[] = [];
         const priorityLangs = ['en-PH', 'fil-PH', 'en-US', 'en-GB', 'en-AU'];
-        
+
         // Add priority languages first
         priorityLangs.forEach(lang => {
             if (grouped.has(lang)) {
@@ -978,5 +983,58 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
             'ru-RU': '🇷🇺 Russian',
         };
         return langNames[langCode] || langCode;
+    }
+
+    // ==================== Username & Typewriter Animation ====================
+
+    /**
+     * Extract username from localStorage
+     */
+    private extractUsername(): void {
+        try {
+            // Try to get username from localStorage first (stored during login)
+            const storedUsername = localStorage.getItem('iBudget_username');
+
+            if (storedUsername) {
+                this.userName.set(storedUsername);
+                return;
+            }
+
+            // Fallback to token if username not in localStorage
+            const token = localStorage.getItem('iBudget_authToken');
+            if (!token) {
+                this.userName.set('Guest');
+                return;
+            }
+
+            // Decode JWT token payload
+            const payload = JSON.parse(atob(token.split('.')[1]));
+
+            // Extract username from token, avoiding email
+            const username = payload.username || payload.name || 'Guest';
+
+            this.userName.set(username);
+        } catch (e) {
+            console.error('Error extracting username:', e);
+            this.userName.set('Guest');
+        }
+    }
+
+    /**
+     * Start typewriter animation for greeting
+     */
+    private startTypewriterAnimation(): void {
+        const fullText = `Hi, ${this.userName()}`;
+        let currentIndex = 0;
+        this.typewriterText.set('');
+
+        const typeInterval = setInterval(() => {
+            if (currentIndex < fullText.length) {
+                this.typewriterText.set(fullText.substring(0, currentIndex + 1));
+                currentIndex++;
+            } else {
+                clearInterval(typeInterval);
+            }
+        }, 80); // 80ms delay between characters
     }
 }
