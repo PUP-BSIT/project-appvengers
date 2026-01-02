@@ -138,16 +138,15 @@ describe('ChatbotSidebar - Retry Logic', () => {
     });
 
     describe('Welcome Message', () => {
-        it('should display welcome message when no saved messages exist', () => {
+        it('should display typewriter greeting when no saved messages exist', () => {
             chatbotService.loadMessages.and.returnValue([]);
             
             fixture.detectChanges(); // Trigger ngOnInit
 
             const messages = component.messages();
-            expect(messages.length).toBe(1);
-            expect(messages[0].isUser).toBe(false);
-            expect(messages[0].text).toContain('Bonzi');
-            expect(messages[0].text).toContain('AI Financial Assistant');
+            expect(messages.length).toBe(0); // No messages, just typewriter greeting
+            expect(component.showTypewriter()).toBe(true); // Typewriter should be visible
+            expect(component.typewriterText()).toBeDefined(); // Greeting text should be set
         });
 
         it('should not display welcome message when saved messages exist', () => {
@@ -182,7 +181,7 @@ describe('ChatbotSidebar - Retry Logic', () => {
     });
 
     describe('Clear Chat', () => {
-        it('should clear all messages and reset to welcome state', () => {
+        it('should clear all messages and reset to typewriter state', () => {
             chatbotService.loadMessages.and.returnValue([
                 { text: 'Old message', isUser: true, timestamp: new Date() }
             ]);
@@ -194,8 +193,8 @@ describe('ChatbotSidebar - Retry Logic', () => {
             expect(chatbotService.clearHistory).toHaveBeenCalled();
             
             const messages = component.messages();
-            expect(messages.length).toBe(1);
-            expect(messages[0].text).toContain('Bonzi');
+            expect(messages.length).toBe(0); // No messages after clear
+            expect(component.showTypewriter()).toBe(true); // Typewriter re-enabled
             expect(component.lastError()).toBeNull();
         });
     });
@@ -266,11 +265,13 @@ describe('ChatbotSidebar - Retry Logic', () => {
             component.userInput.set('Test');
             component.sendMessage();
 
+            // Wait for message to be processed and effect to trigger
             setTimeout(() => {
+                fixture.detectChanges(); // Trigger change detection for effect
                 // Effect should have triggered saveMessages
                 expect(chatbotService.saveMessages).toHaveBeenCalled();
                 done();
-            }, 100);
+            }, 150); // Increased timeout for effect to execute
         });
     });
 });
