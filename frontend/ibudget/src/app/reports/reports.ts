@@ -8,6 +8,9 @@ import { TransactionsService } from '../../services/transactions.service';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
 import { ToggleableSidebar } from "../toggleable-sidebar/toggleable-sidebar";
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-reports',
@@ -330,5 +333,93 @@ export class Reports implements OnInit {
     }
     
     return colors;
+  }
+
+  exportToPdf(): void {
+    if (!this.thisMonthReport || !this.lastMonthReport) return;
+
+    const doc = new jsPDF();
+    
+    // Title
+    doc.setFontSize(22);
+    doc.setTextColor(45, 90, 135); // #2D5A87
+    doc.setFont('helvetica', 'bold');
+    doc.text(`iBudget Financial Report Summary`, 14, 22);
+    
+    const addReportToDoc = (report: MonthlyReport, startY: number) => {
+      let y = startY;
+      doc.setFontSize(18);
+      doc.setTextColor(45, 90, 135); // #2D5A87
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${report.monthName} Report`, 14, y);
+      y += 10;
+
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0); // Reset to black
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Total Income: PHP ${report.totalIncome.toFixed(2)}`, 14, y);
+      y += 6;
+      doc.text(`Total Expenses: PHP ${report.totalSpent.toFixed(2)}`, 14, y);
+      y += 6;
+      doc.text(`Net Balance: PHP ${(report.totalIncome - report.totalSpent).toFixed(2)}`, 14, y);
+      y += 10;
+
+      // Income Table
+      const incomeData = Object.entries(report.incomeByCategory).map(([category, amount]) => [category, `PHP ${amount.toFixed(2)}`]);
+      if (incomeData.length > 0) {
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Income Breakdown', 14, y);
+        doc.setFont('helvetica', 'normal');
+        autoTable(doc, {
+          startY: y + 2,
+          head: [['Category', 'Amount']],
+          body: incomeData,
+          theme: 'striped',
+          headStyles: { fillColor: [16, 185, 129] }
+        });
+        y = (doc as any).lastAutoTable.finalY + 10;
+      }
+
+      // Expense Table
+      const expenseData = Object.entries(report.expenseByCategory).map(([category, amount]) => [category, `PHP ${amount.toFixed(2)}`]);
+      if (expenseData.length > 0) {
+        if (y + 20 > doc.internal.pageSize.getHeight()) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Expense Breakdown', 14, y);
+        doc.setFont('helvetica', 'normal');
+        autoTable(doc, {
+          startY: y + 2,
+          head: [['Category', 'Amount']],
+          body: expenseData,
+          theme: 'striped',
+          headStyles: { fillColor: [239, 68, 68] }
+        });
+        y = (doc as any).lastAutoTable.finalY + 15;
+      }
+      return y;
+    };
+
+    // Add This Month
+    let currentY = addReportToDoc(this.thisMonthReport, 35);
+
+    // Add page for Last Month if needed or just space
+    if (currentY + 40 > doc.internal.pageSize.getHeight()) {
+      doc.addPage();
+      currentY = 20;
+    } else {
+      currentY += 10;
+    }
+
+    // Add Last Month
+    addReportToDoc(this.lastMonthReport, currentY);
+
+    // Save using file-saver
+    const blob = doc.output('blob');
+    saveAs(blob, `iBudget_Financial_Report.pdf`);
   }
 }
