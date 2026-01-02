@@ -808,6 +808,29 @@ $primary-blue: #2563eb;
   display: inline-block;
 }
 
+@media (max-width: 800px) {
+  .about-section .row.g-4,
+  .about-section .row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 1.5rem 0 !important;
+  }
+  .about-section .col-12.col-sm-6.col-md-4.col-lg-3 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin-bottom: 1.5rem !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  .team-card {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+}
+
 // Scroll to Top Button
 .scroll-to-top {
   position: fixed;
