@@ -391,8 +391,7 @@
             <div class="mb-3 d-flex justify-content-center">
               <div
                 class="btn-group w-100"
-                style="max-width: 400px;
-                min-width: 350px;"
+                style="max-width: 100px; min-width: 350px;"
                 role="group"
                 aria-label="Transaction type toggle">
                 <button type="button"
@@ -409,6 +408,7 @@
                 </button>
               </div>
             </div>
+
             <form #form="ngForm" (ngSubmit)="isEditing() ? updateTransaction() :
               addTransaction()">
               <div class="mb-3">
