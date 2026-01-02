@@ -1,4 +1,4 @@
-<div class="chatbot-sidebar" [class.open]="isOpen()">
+<div class="chatbot-sidebar" [class.open]="isOpen()">
     <div class="chatbot-header">
         <div class="header-content">
             <img src="assets/images/kamen-rider-gotchard.jpg" alt="Bonzi" class="header-avatar">
@@ -6,16 +6,11 @@
         </div>
         <div class="header-actions">
             @if (isTTSSupported()) {
-            <button class="icon-btn" 
-                    (click)="toggleSettings()" 
-                    [class.active]="showSettings()"
-                    title="Voice settings">
+            <button class="icon-btn" (click)="toggleSettings()" [class.active]="showSettings()" title="Voice settings">
                 <i class="bi bi-gear"></i>
             </button>
-            <button class="icon-btn" 
-                    (click)="toggleAutoSpeak()" 
-                    [class.active]="autoSpeak()"
-                    [title]="autoSpeak() ? 'Disable auto-read responses' : 'Enable auto-read responses'">
+            <button class="icon-btn" (click)="toggleAutoSpeak()" [class.active]="autoSpeak()"
+                [title]="autoSpeak() ? 'Disable auto-read responses' : 'Enable auto-read responses'">
                 <i class="bi" [ngClass]="autoSpeak() ? 'bi-volume-up-fill' : 'bi-volume-mute'"></i>
             </button>
             }
@@ -36,9 +31,7 @@
         </div>
         <div class="settings-content">
             <label class="settings-label">Select Voice</label>
-            <select class="voice-select" 
-                    [ngModel]="currentVoiceName()" 
-                    (ngModelChange)="selectVoice($event)">
+            <select class="voice-select" [ngModel]="currentVoiceName()" (ngModel Change)="selectVoice($event)">
                 @for (group of getGroupedVoices(); track group.lang) {
                 <optgroup [label]="group.langName">
                     @for (voice of group.voices; track voice.name) {
@@ -62,10 +55,15 @@
     }
 
     <div class="messages-container" #scrollContainer>
-        @if (messages().length === 0) {
+        @if (messages().length === 0 && showTypewriter()) {
         <div class="empty-state">
-            <i class="bi bi-stars"></i>
-            <p>How can I help you today?</p>
+            <div class="greeting-icon">
+                <img src="assets/images/kamen-rider-gotchard.jpg" alt="Bonzi Buddy">
+            </div>
+            <h2 class="typewriter-greeting">{{ typewriterText() }}<span class="cursor">|</span></h2>
+            <p class="greeting-subtitle">Can I help you with anything?</p>
+            <p class="greeting-hint">Ready to assist you with anything you need?<br>From answering questions, generating
+                or providing recommendations</p>
         </div>
         }
 
@@ -78,12 +76,12 @@
             }
             <div class="message" [class.user]="msg.isUser" [class.bot]="!msg.isUser">
                 <div class="message-content" [innerHTML]="parseMarkdown(msg.text)"></div>
-                
+
                 <!-- Render visualization chart if present -->
                 @if (msg.visualization && !msg.isUser) {
                 <app-chat-chart [visualization]="msg.visualization"></app-chat-chart>
                 }
-                
+
                 @if (msg.action && !msg.isUser) {
                 <div class="message-action">
                     <button class="action-btn" (click)="executeAction(msg.action)">
@@ -93,23 +91,22 @@
                     </button>
                 </div>
                 }
-                
+
                 <div class="message-footer">
                     <div class="message-time">
                         {{ msg.timestamp | date:'shortTime' }}
                     </div>
                     @if (!msg.isUser) {
                     <div class="footer-actions">
-                        <button class="copy-btn" 
-                                (click)="copyMessage(msg)"
-                                [class.copied]="copiedMessageId() === msg.timestamp.getTime()"
-                                [title]="copiedMessageId() === msg.timestamp.getTime() ? 'Copied!' : 'Copy message'">
-                            <i class="bi" [ngClass]="copiedMessageId() === msg.timestamp.getTime() ? 'bi-check-lg' : 'bi-copy'"></i>
+                        <button class="copy-btn" (click)="copyMessage(msg)"
+                            [class.copied]="copiedMessageId() === msg.timestamp.getTime()"
+                            [title]="copiedMessageId() === msg.timestamp.getTime() ? 'Copied!' : 'Copy message'">
+                            <i class="bi"
+                                [ngClass]="copiedMessageId() === msg.timestamp.getTime() ? 'bi-check-lg' : 'bi-copy'"></i>
                         </button>
                         @if (isTTSSupported()) {
-                        <button class="speak-btn" 
-                                (click)="speakMessage(msg.text)" 
-                                [title]="isSpeaking() ? 'Stop speaking' : 'Read aloud'">
+                        <button class="speak-btn" (click)="speakMessage(msg.text)"
+                            [title]="isSpeaking() ? 'Stop speaking' : 'Read aloud'">
                             <i class="bi" [ngClass]="isSpeaking() ? 'bi-stop-fill' : 'bi-volume-up'"></i>
                         </button>
                         }
@@ -145,7 +142,7 @@
         </div>
         }
 
-        @if (messages().length <= 1 && !isLoading()) {
+        @if (messages().length === 0 && !isLoading()) {
         <div class="quick-actions">
             <p class="quick-actions-title">Quick Actions:</p>
             <div class="quick-actions-grid">
@@ -167,40 +164,32 @@
             <span>{{ speechError() }}</span>
         </div>
         }
-        
+
         @if (isRecording() && liveTranscript()) {
         <div class="live-transcript">
             <i class="bi bi-mic-fill recording-icon"></i>
             <span>{{ liveTranscript() }}</span>
         </div>
         }
-        
+
         <div class="input-container">
-            <textarea 
-                #textareaRef
-                [ngModel]="userInput()" 
-                (ngModelChange)="userInput.set($event)" 
-                (keydown)="handleKeydown($event)"
-                (input)="autoResize($event)"
-                [placeholder]="isRecording() ? 'Listening... Click mic to stop' : 'Type a message...'" 
-                rows="1" 
-                maxlength="1000"></textarea>
-            
+            <div class="textarea-wrapper">
+                <textarea #textareaRef [ngModel]="userInput()" (ngModelChange)="userInput.set($event)"
+                    (keydown)="handleKeydown($event)" (input)="autoResize($event)"
+                    [placeholder]="isRecording() ? 'Listening... Click mic to stop' : 'Type a message...'" rows="1"
+                    maxlength="1000"></textarea>
+            </div>
+
             <div class="input-actions">
                 @if (isSTTSupported()) {
-                <button class="action-icon-btn mic-btn" 
-                        (click)="toggleRecording()" 
-                        [class.recording]="isRecording()"
-                        [title]="isRecording() ? 'Stop recording' : 'Voice input'"
-                        [disabled]="isLoading()">
+                <button class="action-icon-btn mic-btn" (click)="toggleRecording()" [class.recording]="isRecording()"
+                    [title]="isRecording() ? 'Stop recording' : 'Voice input'" [disabled]="isLoading()">
                     <i class="bi" [ngClass]="isRecording() ? 'bi-mic-fill' : 'bi-mic'"></i>
                 </button>
                 }
-                
-                <button class="action-icon-btn send-btn" 
-                        (click)="sendMessage()" 
-                        [disabled]="!userInput().trim() || isLoading()"
-                        [class.active]="userInput().trim() && !isLoading()">
+
+                <button class="action-icon-btn send-btn" (click)="sendMessage()"
+                    [disabled]="!userInput().trim() || isLoading()" [class.active]="userInput().trim() && !isLoading()">
                     <i class="bi bi-arrow-up"></i>
                 </button>
             </div>
