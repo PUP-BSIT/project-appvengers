@@ -2,6 +2,13 @@
 <app-header></app-header>
 
 <main class="reports-container container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3 pt-3">
+    <h1 class="h3 mb-0 text-gray-800">Financial Reports</h1>
+    <button class="btn btn-primary shadow-sm" (click)="exportToPdf()" [disabled]="isLoading()">
+      <i class="fas fa-download me-2"></i> Export PDF
+    </button>
+  </div>
+
   <div class="tabs-container">
     <ul class="nav nav-tabs" role="tablist">
       <li class="nav-item" role="presentation">
