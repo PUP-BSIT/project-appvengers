@@ -6,7 +6,7 @@ $header-height: 70px;
   margin-left: $sidebar-width;
   margin-top: $header-height;
   padding: 10px;
-  height: 100%;
+  height: 100vh;
   background-color: $background-color;
   // min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -674,7 +674,7 @@ $header-height: 70px;
 // Responsive Design for Notifications Page
 @media (max-width: 1200px) {
   .notifications-container {
-    margin-left: 0;
+    margin-left: $sidebar-width;
     padding: 10px 10px 0 10px;
   }
   .notifications-content {
