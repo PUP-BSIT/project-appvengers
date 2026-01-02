@@ -21,6 +21,20 @@
              Add New Saving
         </button>
       </div>
+
+      <div>
+        <select 
+          class="form-select savings-sort-select" 
+          [ngModel]="sortOption()"
+          (ngModelChange)="sortOption.set($event)">
+            <option value="name-asc">Name (A-Z)</option>
+            <option value="name-desc">Name (Z-A)</option>
+            <option value="date-asc">Goal Date (Earliest)</option>
+            <option value="date-desc">Goal Date (Latest)</option>
+            <option value="progress-asc">Progress (Lowest)</option>
+            <option value="progress-desc">Progress (Highest)</option>
+        </select>
+      </div>
     </div>
     
     <div class="savings-container">
