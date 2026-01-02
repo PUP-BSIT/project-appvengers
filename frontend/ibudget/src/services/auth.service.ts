@@ -38,9 +38,9 @@ export class AuthService {
     credentials: { email: string; password: string }
   ): Observable<ApiResponse<AuthData>> {
     return this.http.post<ApiResponse<AuthData>>(
-        `${this.apiUrl}/login`,
-        credentials
-      )
+      `${this.apiUrl}/login`,
+      credentials
+    )
       .pipe(
         tap((res: ApiResponse<AuthData>) => {
           if (res.success && res.data?.token) {
@@ -49,6 +49,10 @@ export class AuthService {
               'iBudget_authToken',
               res.data.token
             );
+            // Store username for personalization features (e.g., chatbot greeting)
+            if (res.data.username) {
+              localStorage.setItem('iBudget_username', res.data.username);
+            }
           }
         })
       );
@@ -58,21 +62,21 @@ export class AuthService {
     // Clear ALL localStorage items to prevent data leakage between accounts
     localStorage.removeItem('iBudget_authToken');
     localStorage.removeItem('iBudget_username');
-    
+
     // Clear ALL iBudget-prefixed items (comprehensive cleanup)
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('iBudget_') || key.startsWith('chatbot_')) {
         localStorage.removeItem(key);
       }
     });
-    
+
     // Also clear sessionStorage (if any session data exists)
     sessionStorage.clear();
-    
+
     // 🔒 SECURITY FIX: Clear Service Worker cache on logout
     // This prevents cross-account data leakage from cached API responses
     await this.clearServiceWorkerCache();
-    
+
     // Note: Services should be cleared by the header component calling their clearState() methods
     // This includes: NotificationService.clearState(), WebSocketService.disconnect()
     if (!environment.production) {
@@ -157,14 +161,14 @@ export class AuthService {
     return this.http.post<ApiResponse>(`${this.apiUrl}/reset-password`, data);
   }
 
-changePassword(
-    data: { 
-      currentPassword: string; 
-      newPassword: string; 
-      confirmPassword: string 
+  changePassword(
+    data: {
+      currentPassword: string;
+      newPassword: string;
+      confirmPassword: string
     }): Observable<ApiResponse> {
-      return this.http.post<ApiResponse>(`${this.apiUrl}/change-password`, data);
-    }
+    return this.http.post<ApiResponse>(`${this.apiUrl}/change-password`, data);
+  }
 
   /**
    * Reactivate a deactivated account.
