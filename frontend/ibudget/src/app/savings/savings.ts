@@ -35,17 +35,52 @@ export class Savings implements OnInit {
 
   // Search and filter state
   searchQuery = signal('');
+  sortOption = signal('name-asc');
   
+  // Filter Savings based on search query and sort option
   filteredSavings = computed(() => {
     const query = this.searchQuery().toLowerCase();
-    if (!query) {
-      return this.allSavings();
+    const sort = this.sortOption();
+    let savings = this.allSavings();
+
+    // Filter
+    if (query) {
+      savings = savings.filter(saving =>
+        saving.name.toLowerCase().includes(query) ||
+        (saving.description && saving.description.toLowerCase().includes(query))
+      );
     }
-    return this.allSavings().filter(saving =>
-      saving.name.toLowerCase().includes(query) ||
-      (saving.name && saving.name.toLowerCase().includes(query))
-    );
+
+    // Sort
+    return [...savings].sort((a, b) => {
+      switch (sort) {
+        case 'name-asc':
+          return a.name.localeCompare(b.name);
+        case 'name-desc':
+          return b.name.localeCompare(a.name);
+        case 'date-asc':
+          return new Date(a.goal_date).getTime() 
+              - new Date(b.goal_date).getTime();
+        case 'date-desc':
+          return new Date(b.goal_date).getTime() 
+                - new Date(a.goal_date).getTime();
+        case 'progress-asc':
+          return this.getProgress(a) - this.getProgress(b);
+        case 'progress-desc':
+          return this.getProgress(b) - this.getProgress(a);
+        default:
+          return 0;
+      }
+    });
   });
+
+  // Helper to get progress for sorting
+  private getProgress(s: Saving): number {
+    const target = Number(s.target_amount);
+    const current = Number(s.current_amount);
+    if (!target || target <= 0) return 0;
+    return (current / target) * 100;
+  }
 
   // Pagination state
   pageSize = signal(3);
