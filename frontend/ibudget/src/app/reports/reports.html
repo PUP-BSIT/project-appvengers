@@ -4,7 +4,10 @@
 <main class="reports-container container-fluid">
   <div class="d-flex justify-content-between align-items-center mb-3 pt-3">
     <h1 class="h3 mb-0 text-gray-800">Financial Reports</h1>
-    <button class="btn btn-primary shadow-sm" (click)="exportToPdf()" [disabled]="isLoading()">
+    <button 
+      class="btn btn-primary shadow-sm" 
+      (click)="exportToPdf()" 
+      [disabled]="isLoading()">
       <i class="fas fa-download me-2"></i> Export PDF
     </button>
   </div>
@@ -268,25 +271,36 @@
 
           <!-- Bar Section for Last Month -->
           <div class="chart-card bar-chart-card">
-            <h3 class="chart-title">
-              <i class="fas fa-chart-bar me-2"></i>
-              Expense Breakdown
-            </h3>
+            <div class="d-flex justify-content-between align-items-center">
+              <h3 class="chart-title">
+                <i class="fas fa-chart-bar me-2"></i>
+                {{ barMode() === 'expense' ? 'Expense Breakdown' : 
+                  'Income Breakdown' }}
+              </h3>
+
+              <!-- Arrow Toggle -->
+              <button class="btn btn-outline-secondary btn-sm" 
+                (click)="toggleBarMode()">
+                {{ barMode() === 'expense' ? 'Show Income →' : 
+                  'Show Expenses →' }}
+              </button>
+            </div>
+
             <div class="chart-wrapper">
-              @if (!lastMonthExpenseBarChartData ||
-                  !lastMonthExpenseBarChartData.datasets[0]?.data?.length) {
+              @if (!lastMonthBarData().datasets[0].data.length) {
                 <div class="empty-chart-state">
-                  <i class="bi bi-bar-chart"
+                  <i class="bi bi-bar-chart" 
                     style="font-size:3rem;color:#ff6f61;">
                   </i>
-                  <div class="empty-chart-label text-primary fw-bold mt-2"
+                  <div class="empty-chart-label text-primary fw-bold mt-2" 
                     style="font-size:1.2rem;">
-                    NO EXPENSES YET
+                    {{ barMode() === 'expense' ? 'NO EXPENSES YET' : 
+                      'NO INCOME YET' }}
                   </div>
                 </div>
               } @else {
                 <canvas baseChart
-                  [data]="lastMonthExpenseBarChartData"
+                  [data]="lastMonthBarData()"
                   [type]="'bar'"
                   [options]="barChartOptions">
                 </canvas>
@@ -369,25 +383,37 @@
 
           <!-- Bar Section for This Month -->
           <div class="chart-card bar-chart-card">
-            <h3 class="chart-title">
-              <i class="fas fa-chart-bar me-2"></i>
-              Expense Breakdown
-            </h3>
+            <div class="d-flex justify-content-between align-items-center">
+              <h3 class="chart-title">
+                <i class="fas fa-chart-bar me-2"></i>
+                {{ barMode() === 'expense' ? 'Expense Breakdown' : 
+                  'Income Breakdown' }}
+              </h3>
+
+              <!-- Arrow Toggle -->
+              <button 
+                class="btn btn-outline-secondary btn-sm" 
+                (click)="toggleBarMode()">
+                {{ barMode() === 'expense' ? 'Show Income →' : 
+                  'Show Expenses →' }}
+              </button>
+            </div>
+
             <div class="chart-wrapper">
-              @if (!thisMonthExpenseBarChartData ||
-                  !thisMonthExpenseBarChartData.datasets[0]?.data?.length) {
+              @if (!thisMonthBarData().datasets[0]?.data?.length) {
                 <div class="empty-chart-state">
                   <i class="bi bi-bar-chart" 
                     style="font-size:3rem;color:#ff6f61;">
                   </i>
                   <div class="empty-chart-label text-primary fw-bold mt-2" 
                     style="font-size:1.2rem;">
-                    NO EXPENSES YET
+                    {{ barMode() === 'expense' ? 'NO EXPENSES YET' : 
+                      'NO INCOME YET' }}
                   </div>
                 </div>
               } @else {
                 <canvas baseChart
-                  [data]="thisMonthExpenseBarChartData"
+                  [data]="thisMonthBarData()"
                   [type]="'bar'"
                   [options]="barChartOptions">
                 </canvas>

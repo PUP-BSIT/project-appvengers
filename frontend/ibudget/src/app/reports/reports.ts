@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { Header } from "../header/header";
@@ -18,6 +18,7 @@ import { saveAs } from 'file-saver';
   templateUrl: './reports.html',
   styleUrl: './reports.scss',
 })
+
 export class Reports implements OnInit {
   monthlyReports: MonthlyReport[] = [];
   lastMonthReport?: MonthlyReport;
@@ -26,6 +27,25 @@ export class Reports implements OnInit {
 
   // Loading State
   isLoading = signal(false);
+
+  // Bar State (Expense | Income)
+  barMode = signal<'expense' | 'income'>('expense');
+
+  // Income chart data
+  thisMonthIncomeChartData!: ChartData<'doughnut'>;
+  lastMonthIncomeChartData!: ChartData<'doughnut'>;
+
+  // Expense chart data
+  thisMonthExpenseChartData!: ChartData<'doughnut'>;
+  lastMonthExpenseChartData!: ChartData<'doughnut'>;
+
+  // Income bar chart data
+  thisMonthIncomeBarChartData!: ChartData<'bar'>;
+  lastMonthIncomeBarChartData!: ChartData<'bar'>;
+
+  // Expense bar chart data
+  thisMonthExpenseBarChartData!: ChartData<'bar'>;
+  lastMonthExpenseBarChartData!: ChartData<'bar'>;
 
   // Chart configuration (doughnut)
   chartType: ChartType = 'doughnut';
@@ -77,21 +97,21 @@ export class Reports implements OnInit {
     }
   };
 
-  // Income chart data
-  thisMonthIncomeChartData!: ChartData<'doughnut'>;
-  lastMonthIncomeChartData!: ChartData<'doughnut'>;
+  thisMonthBarData = computed(() => {
+    return this.barMode() === 'expense'
+      ? this.thisMonthExpenseBarChartData
+      : this.thisMonthIncomeBarChartData;
+  });
 
-  // Expense chart data
-  thisMonthExpenseChartData!: ChartData<'doughnut'>;
-  lastMonthExpenseChartData!: ChartData<'doughnut'>;
+  lastMonthBarData = computed(() => {
+    return this.barMode() === 'expense'
+      ? this.lastMonthExpenseBarChartData
+      : this.lastMonthIncomeBarChartData;
+  });
 
-  // Income bar chart data
-  thisMonthIncomeBarChartData!: ChartData<'bar'>;
-  lastMonthIncomeBarChartData!: ChartData<'bar'>;
-
-  // Expense bar chart data
-  thisMonthExpenseBarChartData!: ChartData<'bar'>;
-  lastMonthExpenseBarChartData!: ChartData<'bar'>;
+  toggleBarMode() {
+    this.barMode.set(this.barMode() === 'expense' ? 'income' : 'expense');
+  }
 
   constructor(private transactionsService: TransactionsService) {}
 
