@@ -565,10 +565,10 @@ export class Reports implements OnInit {
 
         doc.addPage();
         doc.setFontSize(16);
-        doc.text('This Month Expense Breakdown', 14, 20);
+        doc.text('Expense Breakdown', 14, 20);
         doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
 
-        doc.text('This Month Income Breakdown', 14, 120);
+        doc.text('Income Breakdown', 14, 120);
         doc.addImage(incomeImg, 'PNG', 14, 130, 180, 80);
       }
     }
@@ -585,10 +585,10 @@ export class Reports implements OnInit {
 
         doc.addPage();
         doc.setFontSize(16);
-        doc.text('Last Month Expense Breakdown', 14, 20);
+        doc.text('Expense Breakdown', 14, 20);
         doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
 
-        doc.text('Last Month Income Breakdown', 14, 120);
+        doc.text('Income Breakdown', 14, 120);
         doc.addImage(incomeImg, 'PNG', 14, 130, 180, 80);
       }
     }
