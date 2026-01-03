@@ -672,7 +672,7 @@ ngOnInit() {
     this.isLoading.set(true);
 
     this.txService.getAllWithCategory().pipe(
-      finalize(() => {=
+      finalize(() => {
         setTimeout(() => this.isLoading.set(false), 250);
       })
     ).subscribe({
