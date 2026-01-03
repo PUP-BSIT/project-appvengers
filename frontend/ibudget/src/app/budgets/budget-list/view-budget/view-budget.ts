@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, OnInit, signal, ViewChild, ElementRef } from '@angular/core'; 
+import { AfterViewInit, Component, inject, OnInit, signal, ViewChild, ElementRef, computed } from '@angular/core'; 
 import { Modal } from 'bootstrap';
 import { Sidebar } from "../../../sidebar/sidebar";
 import { Header } from "../../../header/header";
@@ -35,6 +35,19 @@ export class ViewBudget implements OnInit, AfterViewInit {
   categories = signal<Category[]>([]);
   budgetId = signal<number>(0);
   selectedTransactionId = signal<number | null>(null);
+
+  // Pagination State
+  pageSize = 5;
+  currentPage = signal(1);
+  pageCount = computed(() => {
+    return Math.max(1, Math.ceil(this.budgetExpenses().length / this.pageSize));
+  });
+
+  paginatedExpenses = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return this.budgetExpenses().slice(start, end);
+  });
 
   // Snackbar
   showNotification = signal(false);
@@ -175,4 +188,13 @@ export class ViewBudget implements OnInit, AfterViewInit {
     this.updateBudgetModal.open(transactionId);
     this.isDropdownOpen.set(null); // Close dropdown after opening modal
   }
+
+  // Pagination helpers
+  goToPage(page: number) {
+    if (page < 1 || page > this.pageCount()) return;
+    this.currentPage.set(page);
+  }
+
+  nextPage() { this.goToPage(this.currentPage() + 1); }
+  prevPage() { this.goToPage(this.currentPage() - 1); }
 }
