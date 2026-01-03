@@ -241,7 +241,7 @@
                   <button
                     class="dropdown-item"
                     type="button"
-                    (click)="editTransaction(transaction)">
+                    (click)="editTransaction(transaction); activeDropdownId.set(null)">
                       Edit
                   </button>
                 </li>
@@ -249,7 +249,7 @@
                   <button
                     class="dropdown-item text-danger"
                     type="button"
-                    (click)="deleteTransaction(transaction.id)">
+                    (click)="deleteTransaction(transaction.id); activeDropdownId.set(null)">
                       Delete
                   </button>
                 </li>
