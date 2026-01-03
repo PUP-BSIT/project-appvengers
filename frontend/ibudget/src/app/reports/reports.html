@@ -391,12 +391,13 @@
               </h3>
 
               <!-- Arrow Toggle -->
-              <button 
+              <span 
                 class="btn btn-outline-secondary btn-sm" 
                 (click)="toggleBarMode()">
+                (->)
                 {{ barMode() === 'expense' ? 'Show Income →' : 
                   'Show Expenses →' }}
-              </button>
+              </span>
             </div>
 
             <div class="chart-wrapper">
