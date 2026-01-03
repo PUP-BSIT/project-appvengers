@@ -14,31 +14,18 @@ export class LandingPage implements OnInit, OnDestroy, AfterViewInit {
   showNavbar = true;
   private lastScrollTop = 0;
   private homeObserver?: IntersectionObserver;
-    ngAfterViewInit(): void {
-      // Fade-in animation for sections
-      const fadeSections = document.querySelectorAll('.fade-in-section');
-      if (fadeSections.length > 0) {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              (entry.target as HTMLElement).classList.add('visible');
-            }
-          });
-        }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
-        fadeSections.forEach(section => observer.observe(section));
-      }
-
-      // Show scroll-to-top button when #home is NOT visible
-      const homeSection = document.getElementById('home');
-      if (homeSection) {
-        this.homeObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            this.showScrollTop = !entry.isIntersecting;
-          });
-        }, { threshold: 0.1 });
-        this.homeObserver.observe(homeSection);
-      }
+  ngAfterViewInit(): void {
+    // Show scroll-to-top button when #home is NOT visible
+    const homeSection = document.getElementById('home');
+    if (homeSection) {
+      this.homeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          this.showScrollTop = !entry.isIntersecting;
+        });
+      }, { threshold: 0.1 });
+      this.homeObserver.observe(homeSection);
     }
+  }
    displayedText = signal('');
 
   menuOpen = false;
