@@ -614,6 +614,7 @@ openAddModal() {
                 : new Date(this.newTransaction.date),
               description: updated.description,
               category: updated.category,
+              category_id: updated.category_id,
               amount: updated.amount,
               type: updated.type
             };
