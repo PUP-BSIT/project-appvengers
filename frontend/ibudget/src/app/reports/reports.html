@@ -300,10 +300,30 @@
                   </div>
                 </div>
               } @else {
-                <canvas baseChart
+                <canvas #lastMonthChart baseChart
                   [data]="lastMonthBarData()"
                   [type]="'bar'"
                   [options]="barChartOptions">
+                </canvas>
+
+                <!-- Hidden chart: Last Month Expense -->
+                <canvas #lastMonthExpenseChart baseChart
+                  [data]="lastMonthExpenseBarChartData"
+                  [type]="'bar'"
+                  [options]="barChartOptions"
+                  width="800" height="400"
+                  style="position:absolute; left:-9999px; top:-9999px;"
+                  aria-hidden="true">
+                </canvas>
+
+                <!-- Hidden chart: Last Month Income -->
+                <canvas #lastMonthIncomeChart baseChart
+                  [data]="lastMonthIncomeBarChartData"
+                  [type]="'bar'"
+                  [options]="barChartOptions"
+                  width="800" height="400"
+                  style="position:absolute; left:-9999px; top:-9999px;"
+                  aria-hidden="true">
                 </canvas>
               }
             </div>

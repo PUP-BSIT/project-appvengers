@@ -38,6 +38,12 @@ export class Reports implements OnInit {
   @ViewChild('thisMonthIncomeChart') 
   thisMonthIncomeChart!: ElementRef<HTMLCanvasElement>;  
 
+  @ViewChild('lastMonthExpenseChart') 
+  lastMonthExpenseChart!: ElementRef<HTMLCanvasElement>;
+
+  @ViewChild('lastMonthIncomeChart') 
+  lastMonthIncomeChart!: ElementRef<HTMLCanvasElement>;
+
   // Income chart data
   thisMonthIncomeChartData!: ChartData<'doughnut'>;
   lastMonthIncomeChartData!: ChartData<'doughnut'>;
@@ -541,24 +547,49 @@ export class Reports implements OnInit {
     // Add Last Month
     addReportToDoc(this.lastMonthReport, currentY);
 
-    // This Month Bar Graph 
-    const expenseCanvas = this.thisMonthExpenseChart.nativeElement;
-    const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
+    // Conditionally export based on active tab
+    if (
+      this.activeTab === 'thisMonth' && 
+      this.thisMonthExpenseChart && 
+      this.thisMonthIncomeChart
+    ) {
+      const expenseCanvas = this.thisMonthExpenseChart.nativeElement;
+      const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
 
-    const incomeCanvas = this.thisMonthIncomeChart.nativeElement;
-    const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+      const incomeCanvas = this.thisMonthIncomeChart.nativeElement;
+      const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
 
-    // Add both charts on the same page
-    doc.addPage();
-    doc.setFontSize(16);
-    doc.text('This Month Expense Breakdown', 14, 20);
-    doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
-    
-    doc.text('This Month Income Breakdown', 14, 120);
-    doc.addImage(incomeImg, 'PNG', 14, 130, 180, 80);
+      doc.addPage();
+      doc.setFontSize(16);
+      doc.text('This Month Expense Breakdown', 14, 20);
+      doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
+
+      doc.text('This Month Income Breakdown', 14, 120);
+      doc.addImage(incomeImg, 'PNG', 14, 130, 180, 80);
+    }
+
+    if (
+      this.activeTab === 'lastMonth' && 
+      this.lastMonthExpenseChart && 
+      this.lastMonthIncomeChart
+    ) {
+      const expenseCanvas = this.lastMonthExpenseChart.nativeElement;
+      const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
+
+      const incomeCanvas = this.lastMonthIncomeChart.nativeElement;
+      const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+
+      doc.addPage();
+      doc.setFontSize(16);
+      doc.text('Last Month Expense Breakdown', 14, 20);
+      doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
+
+      doc.text('Last Month Income Breakdown', 14, 120);
+      doc.addImage(incomeImg, 'PNG', 14, 130, 180, 80);
+    }
 
     // Save using file-saver
     const blob = doc.output('blob');
     saveAs(blob, `iBudget_Financial_Report.pdf`);
   }
-}
+} 
