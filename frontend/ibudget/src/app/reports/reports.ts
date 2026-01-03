@@ -448,9 +448,8 @@ export class Reports implements OnInit {
 
   exportToPdf(): void {
     if (!this.thisMonthReport || !this.lastMonthReport) return;
-
     const doc = new jsPDF();
-    
+
     // Title
     doc.setFontSize(22);
     doc.setTextColor(45, 90, 135); // #2D5A87
@@ -460,47 +459,45 @@ export class Reports implements OnInit {
     const titleWidth = doc.getTextWidth(title);
     const xOffset = (pageWidth - titleWidth) / 2;
     doc.text(title, xOffset, 22);
-    
+
     const addReportToDoc = (report: MonthlyReport, startY: number) => {
       let y = startY;
       doc.setFontSize(18);
-      doc.setTextColor(45, 90, 135); // #2D5A87
+      doc.setTextColor(45, 90, 135);
       doc.setFont('helvetica', 'bold');
       doc.text(`${report.monthName} Report`, 14, y);
       y += 10;
 
       doc.setFontSize(12);
-      doc.setTextColor(0, 0, 0); // Reset to black
+      doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
-      
-      // Total Income
+
+      // Totals
       doc.text(`Total Income: `, 14, y);
-      doc.setTextColor(16, 185, 129); // Green
+      doc.setTextColor(16, 185, 129);
       doc.text(
-        `PHP ${report.totalIncome.toFixed(2)}`, 
-        14 + doc.getTextWidth('Total Income: '), 
+        `PHP ${report.totalIncome.toFixed(2)}`,
+        14 + doc.getTextWidth('Total Income: '),
         y
       );
       y += 6;
 
-      // Total Expenses
       doc.setTextColor(0, 0, 0);
       doc.text(`Total Expenses: `, 14, y);
-      doc.setTextColor(239, 68, 68); // Red
+      doc.setTextColor(239, 68, 68);
       doc.text(
-        `PHP ${report.totalSpent.toFixed(2)}`, 
-        14 + doc.getTextWidth('Total Expenses: '), 
+        `PHP ${report.totalSpent.toFixed(2)}`,
+        14 + doc.getTextWidth('Total Expenses: '),
         y
       );
       y += 6;
 
-      // Net Balance
       doc.setTextColor(0, 0, 0);
       doc.text(`Net Balance: `, 14, y);
-      doc.setTextColor(45, 90, 135); // #2D5A87
+      doc.setTextColor(45, 90, 135);
       doc.text(
-        `PHP ${(report.totalIncome - report.totalSpent).toFixed(2)}`, 
-        14 + doc.getTextWidth('Net Balance: '), 
+        `PHP ${(report.totalIncome - report.totalSpent).toFixed(2)}`,
+        14 + doc.getTextWidth('Net Balance: '),
         y
       );
       y += 10;
@@ -508,7 +505,7 @@ export class Reports implements OnInit {
       // Income Table
       const incomeData = Object.entries(report.incomeByCategory)
         .map(([category, amount]) => [
-          category, 
+          category,
           `PHP ${amount.toFixed(2)}`
         ]);
 
@@ -530,10 +527,10 @@ export class Reports implements OnInit {
       // Expense Table
       const expenseData = Object.entries(report.expenseByCategory)
         .map(([category, amount]) => [
-          category, 
+          category,
           `PHP ${amount.toFixed(2)}`
         ]);
-        
+
       if (expenseData.length > 0) {
         if (y + 20 > doc.internal.pageSize.getHeight()) {
           doc.addPage();
@@ -555,62 +552,48 @@ export class Reports implements OnInit {
       return y;
     };
 
-    // Add This Month
-    let currentY = addReportToDoc(this.thisMonthReport, 35);
+    // Render only the active tab’s report
+    if (this.activeTab === 'thisMonth') {
+      addReportToDoc(this.thisMonthReport, 35);
 
-    // Add page for Last Month if needed or just space
-    if (currentY + 40 > doc.internal.pageSize.getHeight()) {
-      doc.addPage();
-      currentY = 20;
-    } else {
-      currentY += 10;
+      if (this.thisMonthExpenseChart && this.thisMonthIncomeChart) {
+        const expenseCanvas = this.thisMonthExpenseChart.nativeElement;
+        const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
+
+        const incomeCanvas = this.thisMonthIncomeChart.nativeElement;
+        const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+
+        doc.addPage();
+        doc.setFontSize(16);
+        doc.text('This Month Expense Breakdown', 14, 20);
+        doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
+
+        doc.text('This Month Income Breakdown', 14, 120);
+        doc.addImage(incomeImg, 'PNG', 14, 130, 180, 80);
+      }
     }
 
-    // Add Last Month
-    addReportToDoc(this.lastMonthReport, currentY);
+    if (this.activeTab === 'lastMonth') {
+      addReportToDoc(this.lastMonthReport, 35);
 
-    // Conditionally export based on active tab
-    if (
-      this.activeTab === 'thisMonth' && 
-      this.thisMonthExpenseChart && 
-      this.thisMonthIncomeChart
-    ) {
-      const expenseCanvas = this.thisMonthExpenseChart.nativeElement;
-      const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
+      if (this.lastMonthExpenseChart && this.lastMonthIncomeChart) {
+        const expenseCanvas = this.lastMonthExpenseChart.nativeElement;
+        const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
 
-      const incomeCanvas = this.thisMonthIncomeChart.nativeElement;
-      const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+        const incomeCanvas = this.lastMonthIncomeChart.nativeElement;
+        const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
 
-      doc.addPage();
-      doc.setFontSize(16);
-      doc.text('This Month Expense Breakdown', 14, 20);
-      doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
+        doc.addPage();
+        doc.setFontSize(16);
+        doc.text('Last Month Expense Breakdown', 14, 20);
+        doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
 
-      doc.text('This Month Income Breakdown', 14, 120);
-      doc.addImage(incomeImg, 'PNG', 14, 130, 180, 80);
+        doc.text('Last Month Income Breakdown', 14, 120);
+        doc.addImage(incomeImg, 'PNG', 14, 130, 180, 80);
+      }
     }
 
-    if (
-      this.activeTab === 'lastMonth' && 
-      this.lastMonthExpenseChart && 
-      this.lastMonthIncomeChart
-    ) {
-      const expenseCanvas = this.lastMonthExpenseChart.nativeElement;
-      const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
-
-      const incomeCanvas = this.lastMonthIncomeChart.nativeElement;
-      const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
-
-      doc.addPage();
-      doc.setFontSize(16);
-      doc.text('Last Month Expense Breakdown', 14, 20);
-      doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
-
-      doc.text('Last Month Income Breakdown', 14, 120);
-      doc.addImage(incomeImg, 'PNG', 14, 130, 180, 80);
-    }
-
-    // Save using file-saver
+    // Save
     const blob = doc.output('blob');
     saveAs(blob, `iBudget_Financial_Report.pdf`);
   }
