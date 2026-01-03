@@ -85,6 +85,10 @@ export class Reports implements OnInit {
   thisMonthExpenseChartData!: ChartData<'doughnut'>;
   lastMonthExpenseChartData!: ChartData<'doughnut'>;
 
+  // Income bar chart data
+  thisMonthIncomeBarChartData!: ChartData<'bar'>;
+  lastMonthIncomeBarChartData!: ChartData<'bar'>;
+
   // Expense bar chart data
   thisMonthExpenseBarChartData!: ChartData<'bar'>;
   lastMonthExpenseBarChartData!: ChartData<'bar'>;
@@ -181,6 +185,26 @@ export class Reports implements OnInit {
     };
 
     this.lastMonthExpenseBarChartData = {
+      labels: [],
+      datasets: [{
+        data: [],
+        backgroundColor: [],
+        borderColor: [],
+        borderWidth: 1
+      }]
+    };
+
+    this.thisMonthIncomeBarChartData = {
+      labels: [],
+      datasets: [{
+        data: [],
+        backgroundColor: [],
+        borderColor: [],
+        borderWidth: 1
+      }]
+    };
+
+    this.lastMonthIncomeBarChartData = {
       labels: [],
       datasets: [{
         data: [],
@@ -297,6 +321,44 @@ export class Reports implements OnInit {
         borderWidth: 1,
         barPercentage: 0.6,
         categoryPercentage: 0.4 
+      }]
+    };
+
+    // This Month Income Bar Chart
+    this.thisMonthIncomeBarChartData = {
+      labels: Object.keys(this.thisMonthReport.incomeByCategory),
+      datasets: [{
+        label: 'Income',
+        data: Object.values(this.thisMonthReport.incomeByCategory),
+        backgroundColor: this.generateColors(
+          Object.keys(this.thisMonthReport.incomeByCategory).length, 'income'
+        ),
+        borderColor: this.generateColors(
+          Object.keys(this.thisMonthReport.incomeByCategory).
+          length, 'income', true
+        ),
+        borderWidth: 1,
+        barPercentage: 0.6,
+        categoryPercentage: 0.4
+      }]
+    };
+
+    // Last Month Income Bar Chart
+    this.lastMonthIncomeBarChartData = {
+      labels: Object.keys(this.lastMonthReport.incomeByCategory),
+      datasets: [{
+        label: 'Income',
+        data: Object.values(this.lastMonthReport.incomeByCategory),
+        backgroundColor: this.generateColors(
+          Object.keys(this.lastMonthReport.incomeByCategory).length, 'income'
+        ),
+        borderColor: this.generateColors(
+          Object.keys(this.lastMonthReport.incomeByCategory).
+          length, 'income', true
+        ),
+        borderWidth: 1,
+        barPercentage: 0.6,
+        categoryPercentage: 0.4
       }]
     };
   }
