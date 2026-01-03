@@ -571,8 +571,8 @@ openAddModal() {
     this.customCategoryName = '';
     this.newTransaction = {
       date: transaction.date instanceof Date 
-        ? transaction.date.toISOString().split('T')[0]
-        : (transaction.date as any),
+        ? formatLocalDate(transaction.date)
+        : String(transaction.date),
       description: transaction.description,
       category_id: transaction.category_id,
       category: transaction.category!,
