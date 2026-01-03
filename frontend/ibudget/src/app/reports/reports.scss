@@ -2,6 +2,23 @@ $background-color: #F9FAFB;
 $sidebar-width: 80px;
 $header-height: 70px;
 
+.floating-toggle-arrow {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  font-size: 2.5rem;
+  color: #2D5A87;
+  cursor: pointer;
+  z-index: 10;
+  transition: color 0.2s ease;
+}
+
+.floating-toggle-arrow:hover {
+  color: #007bff;
+}
+
+
 .empty-chart-state {
   display: flex;
   flex-direction: column;
