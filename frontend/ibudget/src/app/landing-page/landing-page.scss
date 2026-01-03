@@ -545,7 +545,7 @@ $primary-blue: #2563eb;
 
 /* Main content */
 .landing-container {
-  padding: 2rem 0 6rem 0;
+  padding: 4rem 0 6rem 0;
 }
 
 .min-vh-75 {
@@ -679,7 +679,7 @@ $primary-blue: #2563eb;
 /* Responsive Design */
 @media (max-width: 768px) {
   .landing-container {
-    padding: 2rem 0;
+    padding: 6rem 0;
   }
   .hero-right {
     padding-left: 0;
