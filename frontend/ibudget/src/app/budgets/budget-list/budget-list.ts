@@ -43,6 +43,10 @@ export class BudgetList implements OnInit {
   // Loading State
   isLoading = signal(true);
 
+  // Pagination state
+  pageSize = signal(3);
+  currentPage = signal(1);
+
   constructor() {
     effect(() => {
       const query = this.searchQuery().toLowerCase();
@@ -56,8 +60,21 @@ export class BudgetList implements OnInit {
           )
         );
       }
+      this.currentPage.set(1);
     });
   }
+
+  // Pagination is now computed based on the filtered list
+  paginatedBudgets = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return this.budgets().slice(start, start + this.pageSize());
+  });
+
+  totalPages = computed(() => {
+    const len = this.budgets().length;
+    const pages = Math.ceil(len / this.pageSize());
+    return pages > 0 ? pages : 1;
+  });
 
   ngOnInit(): void {
     this.getBudgets();
@@ -156,5 +173,25 @@ export class BudgetList implements OnInit {
 
   viewBudgetDetails(budgetId: number) {
     this.router.navigate(['/budgets/view-budget/', budgetId]);
+  }
+
+  // Pagination helpers
+  getPageNumbers() {
+    return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
+  }
+
+  goToPage(page: number) {
+    const clamped = Math.min(Math.max(page, 1), this.totalPages());
+    this.currentPage.set(clamped);
+  }
+
+  prevPage() { this.goToPage(this.currentPage() - 1); }
+  nextPage() { this.goToPage(this.currentPage() + 1); }
+
+  updateCurrentPage(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const num = Number(input.value);
+    if (!Number.isNaN(num)) this.goToPage(num);
+    else input.value = String(this.currentPage());
   }
 }
