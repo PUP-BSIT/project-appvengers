@@ -562,7 +562,12 @@ export class Reports implements OnInit {
     if (this.activeTab === 'thisMonth') {
       let currentY = addReportToDoc(this.thisMonthReport, 35);
 
-      // Doughnut charts on first page after text
+      // Center textual report on first page
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const offsetY = (pageHeight - currentY) / 2;
+
+      // Doughnut chart
+      doc.addPage();
       if (this.thisMonthIncomeDoughnut && this.thisMonthExpenseDoughnut) {
         const incomeCanvas = this.thisMonthIncomeDoughnut.nativeElement;
         const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
@@ -570,16 +575,16 @@ export class Reports implements OnInit {
         const expenseCanvas = this.thisMonthExpenseDoughnut.nativeElement;
         const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
 
-        doc.text('Income by Category', 14, currentY);
-        doc.addImage(incomeImg, 'PNG', 14, currentY + 5, 180, 80);
+        doc.setFontSize(16);
+        doc.text('Income by Category', 14, 20);
+        doc.addImage(incomeImg, 'PNG', 14, 25, 180, 80);
 
-        doc.text('Expenses by Category', 14, currentY + 90);
-        doc.addImage(expenseImg, 'PNG', 14, currentY + 95, 180, 80);
-
-        currentY += 95;
+        doc.text('Expenses by Category', 14, 120);
+        doc.addImage(expenseImg, 'PNG', 14, 125, 180, 80);
       }
 
-      // Bar charts on a new page
+      // Bar chart
+      doc.addPage();
       if (this.thisMonthExpenseChart && this.thisMonthIncomeChart) {
         const expenseCanvas = this.thisMonthExpenseChart.nativeElement;
         const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
@@ -587,7 +592,6 @@ export class Reports implements OnInit {
         const incomeCanvas = this.thisMonthIncomeChart.nativeElement;
         const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
 
-        doc.addPage();
         doc.setFontSize(16);
         doc.text('Expense Breakdown', 14, 20);
         doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
@@ -598,8 +602,14 @@ export class Reports implements OnInit {
     }
 
     if (this.activeTab === 'lastMonth') {
-      addReportToDoc(this.lastMonthReport, 35);
+      let currentY = addReportToDoc(this.lastMonthReport, 35);
 
+      // Center textual report on first page
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const offsetY = (pageHeight - currentY) / 2;
+
+      // Bar charts 
+      doc.addPage();
       if (this.lastMonthExpenseChart && this.lastMonthIncomeChart) {
         const expenseCanvas = this.lastMonthExpenseChart.nativeElement;
         const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
@@ -607,7 +617,6 @@ export class Reports implements OnInit {
         const incomeCanvas = this.lastMonthIncomeChart.nativeElement;
         const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
 
-        doc.addPage();
         doc.setFontSize(16);
         doc.text('Expense Breakdown', 14, 20);
         doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
