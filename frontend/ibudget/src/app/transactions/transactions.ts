@@ -584,9 +584,11 @@ openAddModal() {
   updateTransaction() {
     if (this.editingTransactionId !== null &&
         this.newTransaction.description &&
-        (this.newTransaction.category_id || this.newTransactionCategoryId) && this.newTransaction.amount > 0) {
+        (this.newTransaction.category_id || this.newTransactionCategoryId) &&
+         this.newTransaction.amount > 0) {
 
-      const finalCategoryId: number | undefined = this.newTransactionCategoryId ?? this.newTransaction.category_id ?? undefined;
+      const finalCategoryId: number | undefined = this.newTransactionCategoryId
+      ?? this.newTransaction.category_id ?? undefined;
 
       if (this.showCustomCategoryInput && this.customCategoryName && 
           !this.categories.includes(this.customCategoryName)) {
@@ -618,7 +620,8 @@ openAddModal() {
           }
           this.filterTransactions();
           this.closeAddModal();
-          this.showNotificationMessage('Transaction updated successfully!', 'success');
+          this.showNotificationMessage('Transaction updated successfully!',
+            'success');
         }, () => {
           this.showNotificationMessage('Failed to update transaction', 'error');
         });
@@ -629,7 +632,8 @@ openAddModal() {
     return this.getTotalIncome() - this.getTotalExpenses();
   }
 
-  showNotificationMessage(message: string, type: 'success' | 'error' = 'success') {
+  showNotificationMessage(message: string, type: 'success' | 'error' =
+    'success') {
     this.notificationMessage.set(message);
     this.notificationType.set(type);
     this.showNotification.set(true);
@@ -646,8 +650,8 @@ openAddModal() {
 ngOnInit() {
     // Handle query params from chatbot deep links
     this.route.queryParams.subscribe(params => {
-      if (params['openModal'] === 'true' || params['amount'] || params['description']) {
-        // Wait for categories to load before opening modal with pre-filled data
+      if (params['openModal'] === 'true' || params['amount'] ||
+        params['description']) {
         this.categoriesService.getCategories().subscribe({
           next: (cats) => {
             this.allCategories = cats;
@@ -665,13 +669,10 @@ ngOnInit() {
       }
     });
 
-    // Load transactions with category linkage
-    // show skeleton
     this.isLoading.set(true);
 
     this.txService.getAllWithCategory().pipe(
-      finalize(() => {
-        // small debounce so skeleton doesn't flash for very fast responses
+      finalize(() => {=
         setTimeout(() => this.isLoading.set(false), 250);
       })
     ).subscribe({
@@ -679,11 +680,12 @@ ngOnInit() {
         const backendTransactions = txs.map(
           (t: any): Transaction => ({
             id: t.id,
-            // Normalize date strings to local midnight to avoid timezone shifts breaking filters
-            date: t.transactionDate ? new Date(`${t.transactionDate}T00:00:00`) : new Date(),
+            date: t.transactionDate ? new Date(`${t.transactionDate}T00:00:00`)
+              : new Date(),
             description: t.description,
             category: t.category ?? t.name,
-            category_id: typeof t.category_id === 'number' ? t.category_id : (t.categoryId != null ? Number(t.categoryId) : undefined),
+            category_id: typeof t.category_id === 'number' ? t.category_id :
+              (t.categoryId != null ? Number(t.categoryId) : undefined),
             amount: t.amount,
             type: t.type
         }));
@@ -780,7 +782,8 @@ ngOnInit() {
   }
 
   getTodayTotalPages(): number {
-    return Math.ceil(this.getTodayTransactions().length / this.itemsPerGroup) || 1;
+    return Math.ceil(this.getTodayTransactions().length / this.itemsPerGroup) ||
+      1;
   }
 
   nextTodayPage() {
@@ -816,7 +819,8 @@ ngOnInit() {
   }
 
   getYesterdayTotalPages(): number {
-    return Math.ceil(this.getYesterdayTransactions().length / this.itemsPerGroup) || 1;
+    return Math.ceil(this.getYesterdayTransactions().length /
+      this.itemsPerGroup) || 1;
   }
 
   nextYesterdayPage() {
@@ -838,7 +842,8 @@ ngOnInit() {
   }
 
   getOlderTotalPages(): number {
-    return Math.ceil(this.getOlderTransactions().length / this.itemsPerGroup) || 1;
+    return Math.ceil(this.getOlderTransactions().length / this.itemsPerGroup) ||
+      1;
   }
 
   nextOlderPage() {
@@ -855,7 +860,8 @@ ngOnInit() {
 
   getPaginatedTransactions(): Transaction[] {
     // filteredTransactions is already sorted and filtered by search
-    this.totalPages = Math.ceil(this.filteredTransactions.length / this.itemsPerPage);
+    this.totalPages = Math.ceil(this.filteredTransactions.length /
+      this.itemsPerPage);
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     return this.filteredTransactions.slice(startIndex, endIndex);
