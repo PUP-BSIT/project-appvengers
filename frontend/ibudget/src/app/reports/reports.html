@@ -270,7 +270,7 @@
           </div>
 
           <!-- Bar Section for Last Month -->
-          <div class="chart-card bar-chart-card">
+          <div class="chart-card bar-chart-card position-relative">
             <div class="d-flex justify-content-between align-items-center">
               <h3 class="chart-title">
                 <i class="fas fa-chart-bar me-2"></i>
@@ -278,12 +278,13 @@
                   'Income Breakdown' }}
               </h3>
 
-              <!-- Arrow Toggle -->
-              <button class="btn btn-outline-secondary btn-sm" 
-                (click)="toggleBarMode()">
-                {{ barMode() === 'expense' ? 'Show Income →' : 
-                  'Show Expenses →' }}
-              </button>
+              <!-- Floating Arrow Toggle -->
+              <div class="floating-toggle-arrow" (click)="toggleBarMode()">
+                <i class="bi" [ngClass]="barMode() === 'expense' 
+                  ? 'bi-arrow-right-circle-fill' 
+                  : 'bi-arrow-left-circle-fill'">
+                </i>
+              </div>
             </div>
 
             <div class="chart-wrapper">
