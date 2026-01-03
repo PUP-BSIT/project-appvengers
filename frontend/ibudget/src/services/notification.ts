@@ -130,47 +130,51 @@ export class NotificationService implements OnDestroy {
       return;
     }
     
-    // Add new notification at the beginning
-    const updatedNotifications = [notification, ...currentNotifications];
-    this.notificationsSubject.next(updatedNotifications);
-    
-    // Track this notification ID
-    this.previousNotificationIds.add(notification.id);
-    
-    // Play notification sound (if enabled in preferences)
-    if (this.preferencesService.isSoundEnabled()) {
-      this.confettiService.playNotificationSound();
-    }
-    
-// Trigger confetti for special notifications (if enabled in preferences)
-    if (notification.type === 'SAVINGS_COMPLETED') {
-      if (this.preferencesService.getPreferencesSync().savingsCompletedEnabled) {
-        if (!environment.production) {
-          console.log('🎉 Triggering celebration confetti!');
+    // Defer update to avoid ExpressionChangedAfterItHasBeenCheckedError
+    // This allows Angular to complete the current change detection cycle
+    setTimeout(() => {
+      // Add new notification at the beginning
+      const updatedNotifications = [notification, ...currentNotifications];
+      this.notificationsSubject.next(updatedNotifications);
+      
+      // Track this notification ID
+      this.previousNotificationIds.add(notification.id);
+      
+      // Play notification sound (if enabled in preferences)
+      if (this.preferencesService.isSoundEnabled()) {
+        this.confettiService.playNotificationSound();
+      }
+      
+      // Trigger confetti for special notifications (if enabled in preferences)
+      if (notification.type === 'SAVINGS_COMPLETED') {
+        if (this.preferencesService.getPreferencesSync().savingsCompletedEnabled) {
+          if (!environment.production) {
+            console.log('🎉 Triggering celebration confetti!');
+          }
+          this.confettiService.celebrate();
+        } else {
+          if (!environment.production) {
+            console.log('🔕 Celebration confetti disabled by preferences');
+          }
         }
-        this.confettiService.celebrate();
-      } else {
-        if (!environment.production) {
-          console.log('🔕 Celebration confetti disabled by preferences');
+      } else if (notification.type === 'SAVINGS_MILESTONE_50' || notification.type === 'SAVINGS_MILESTONE_75') {
+        if (this.preferencesService.getPreferencesSync().savingsMilestoneEnabled) {
+          if (!environment.production) {
+            console.log('⭐ Triggering milestone confetti!');
+          }
+          this.confettiService.milestone();
+        } else {
+          if (!environment.production) {
+            console.log('🔕 Milestone confetti disabled by preferences');
+          }
         }
       }
-    } else if (notification.type === 'SAVINGS_MILESTONE_50' || notification.type === 'SAVINGS_MILESTONE_75') {
-      if (this.preferencesService.getPreferencesSync().savingsMilestoneEnabled) {
-        if (!environment.production) {
-          console.log('⭐ Triggering milestone confetti!');
-        }
-        this.confettiService.milestone();
-      } else {
-        if (!environment.production) {
-          console.log('🔕 Milestone confetti disabled by preferences');
-        }
-      }
-    }
 
-    // Show toast notification (only if enabled and not on notifications page)
-    if (this.preferencesService.isToastEnabled() && !this.router.url.includes('/notifications')) {
-      this.showNotificationToast(notification);
-    }
+      // Show toast notification (only if enabled and not on notifications page)
+      if (this.preferencesService.isToastEnabled() && !this.router.url.includes('/notifications')) {
+        this.showNotificationToast(notification);
+      }
+    }, 0);
   }
 
   /**
@@ -262,8 +266,11 @@ fetchNotifications(): void {
           // Update previous IDs tracker (store ALL notification IDs, not just unread)
           this.previousNotificationIds = new Set(data.map(n => n.id));
 
-          // Update notifications subject
-          this.notificationsSubject.next(data);
+          // Defer update to avoid ExpressionChangedAfterItHasBeenCheckedError
+          // This allows Angular to complete the current change detection cycle
+          setTimeout(() => {
+            this.notificationsSubject.next(data);
+          }, 0);
         },
         error: (error) => console.error('Error fetching notifications:', error)
       });
