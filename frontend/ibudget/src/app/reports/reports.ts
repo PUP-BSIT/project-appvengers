@@ -476,25 +476,42 @@ export class Reports implements OnInit {
       // Total Income
       doc.text(`Total Income: `, 14, y);
       doc.setTextColor(16, 185, 129); // Green
-      doc.text(`PHP ${report.totalIncome.toFixed(2)}`, 14 + doc.getTextWidth('Total Income: '), y);
+      doc.text(
+        `PHP ${report.totalIncome.toFixed(2)}`, 
+        14 + doc.getTextWidth('Total Income: '), 
+        y
+      );
       y += 6;
 
       // Total Expenses
       doc.setTextColor(0, 0, 0);
       doc.text(`Total Expenses: `, 14, y);
       doc.setTextColor(239, 68, 68); // Red
-      doc.text(`PHP ${report.totalSpent.toFixed(2)}`, 14 + doc.getTextWidth('Total Expenses: '), y);
+      doc.text(
+        `PHP ${report.totalSpent.toFixed(2)}`, 
+        14 + doc.getTextWidth('Total Expenses: '), 
+        y
+      );
       y += 6;
 
       // Net Balance
       doc.setTextColor(0, 0, 0);
       doc.text(`Net Balance: `, 14, y);
       doc.setTextColor(45, 90, 135); // #2D5A87
-      doc.text(`PHP ${(report.totalIncome - report.totalSpent).toFixed(2)}`, 14 + doc.getTextWidth('Net Balance: '), y);
+      doc.text(
+        `PHP ${(report.totalIncome - report.totalSpent).toFixed(2)}`, 
+        14 + doc.getTextWidth('Net Balance: '), 
+        y
+      );
       y += 10;
 
       // Income Table
-      const incomeData = Object.entries(report.incomeByCategory).map(([category, amount]) => [category, `PHP ${amount.toFixed(2)}`]);
+      const incomeData = Object.entries(report.incomeByCategory)
+        .map(([category, amount]) => [
+          category, 
+          `PHP ${amount.toFixed(2)}`
+        ]);
+
       if (incomeData.length > 0) {
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
@@ -511,7 +528,12 @@ export class Reports implements OnInit {
       }
 
       // Expense Table
-      const expenseData = Object.entries(report.expenseByCategory).map(([category, amount]) => [category, `PHP ${amount.toFixed(2)}`]);
+      const expenseData = Object.entries(report.expenseByCategory)
+        .map(([category, amount]) => [
+          category, 
+          `PHP ${amount.toFixed(2)}`
+        ]);
+        
       if (expenseData.length > 0) {
         if (y + 20 > doc.internal.pageSize.getHeight()) {
           doc.addPage();
