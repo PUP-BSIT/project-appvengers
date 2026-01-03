@@ -523,6 +523,10 @@ export class SpeechService implements OnDestroy {
    */
   private cleanTextForSpeech(text: string): string {
     return text
+      // Replace Philippine Peso symbol with number-first format
+      .replace(/₱(\d+(?:,\d{3})*(?:\.\d{2})?)/g, '$1 Philippine Pesos')
+      // Fallback for ₱ without numbers (replace with currency name)
+      .replace(/₱/g, 'Philippine Pesos')
       // Remove emojis (comprehensive Unicode ranges)
       // Emoticons: 😀-🙏 (U+1F600-U+1F64F)
       // Symbols & Pictographs: 🌀-🗿 (U+1F300-U+1F5FF)
