@@ -534,6 +534,9 @@ export class Reports implements OnInit {
           headStyles: { fillColor: [16, 185, 129] }
         });
         y = (doc as any).lastAutoTable.finalY + 10;
+      } else {
+        doc.text('Income Breakdown: NO DATA', 14, y);
+        y += 10;
       }
 
       // Expense Table
@@ -560,6 +563,9 @@ export class Reports implements OnInit {
           headStyles: { fillColor: [239, 68, 68] }
         });
         y = (doc as any).lastAutoTable.finalY + 15;
+      } else {
+        doc.text('Expense Breakdown: NO DATA', 14, y);
+        y += 10;
       }
       return y;
     };
@@ -575,35 +581,65 @@ export class Reports implements OnInit {
       // Doughnut chart
       doc.addPage();
       if (this.thisMonthIncomeDoughnut && this.thisMonthExpenseDoughnut) {
-        const incomeCanvas = this.thisMonthIncomeDoughnut.nativeElement;
-        const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+        const hasIncomeData = this.thisMonthIncomeChartData
+          ?.datasets?.[0]
+          ?.data?.length;
 
-        const expenseCanvas = this.thisMonthExpenseDoughnut.nativeElement;
-        const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
+        const hasExpenseData = this.thisMonthExpenseChartData
+          ?.datasets?.[0]
+          ?.data?.length;
 
         doc.setFontSize(16);
-        doc.text('Income by Category', 14, 20);
-        doc.addImage(incomeImg, 'PNG', 14, 25, 180, 80);
 
-        doc.text('Expenses by Category', 14, 120);
-        doc.addImage(expenseImg, 'PNG', 14, 125, 180, 80);
+        if (hasIncomeData) {
+          const incomeCanvas = this.thisMonthIncomeDoughnut.nativeElement;
+          const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+          doc.text('Income by Category', 14, 20);
+          doc.addImage(incomeImg, 'PNG', 14, 25, 180, 80);
+        } else {
+          doc.text('Income by Category: NO DATA', 14, 20);
+        }
+
+        if (hasExpenseData) {
+          const expenseCanvas = this.thisMonthExpenseDoughnut.nativeElement;
+          const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
+          doc.text('Expenses by Category', 14, 120);
+          doc.addImage(expenseImg, 'PNG', 14, 125, 180, 80);
+        } else {
+          doc.text('Expenses by Category: NO DATA', 14, 120);
+        }
       }
 
       // Bar chart
       doc.addPage();
       if (this.thisMonthExpenseChart && this.thisMonthIncomeChart) {
-        const expenseCanvas = this.thisMonthExpenseChart.nativeElement;
-        const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
+        const hasExpenseData = this.thisMonthExpenseBarChartData
+          ?.datasets?.[0]
+          ?.data?.length;
 
-        const incomeCanvas = this.thisMonthIncomeChart.nativeElement;
-        const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+        const hasIncomeData = this.thisMonthIncomeBarChartData
+          ?.datasets?.[0]
+          ?.data?.length;
 
         doc.setFontSize(16);
-        doc.text('Expense Breakdown', 14, 20);
-        doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
 
-        doc.text('Income Breakdown', 14, 120);
-        doc.addImage(incomeImg, 'PNG', 14, 130, 180, 80);
+        if (hasExpenseData) {
+          const expenseCanvas = this.thisMonthExpenseChart.nativeElement;
+          const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
+          doc.text('Expense Breakdown', 14, 20);
+          doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
+        } else {
+          doc.text('Expense Breakdown: NO DATA', 14, 20);
+        }
+
+        if (hasIncomeData) {
+          const incomeCanvas = this.thisMonthIncomeChart.nativeElement;
+          const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+          doc.text('Income Breakdown', 14, 120);
+          doc.addImage(incomeImg, 'PNG', 14, 130, 180, 80);
+        } else {
+          doc.text('Income Breakdown: NO DATA', 14, 120);
+        }
       }
     }
 
@@ -617,35 +653,63 @@ export class Reports implements OnInit {
       // Doughnut chart
       doc.addPage();
       if (this.lastMonthIncomeDoughnut && this.lastMonthExpenseDoughnut) {
-        const incomeCanvas = this.lastMonthIncomeDoughnut.nativeElement;
-        const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
-
-        const expenseCanvas = this.lastMonthExpenseDoughnut.nativeElement;
-        const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
+        const hasIncomeData = this.lastMonthIncomeChartData
+          ?.datasets?.[0]
+          ?.data?.length;
+        const hasExpenseData = this.lastMonthExpenseChartData
+          ?.datasets?.[0]
+          ?.data?.length;
 
         doc.setFontSize(16);
-        doc.text('Income by Category', 14, 20);
-        doc.addImage(incomeImg, 'PNG', 14, 25, 180, 80);
 
-        doc.text('Expenses by Category', 14, 120);
-        doc.addImage(expenseImg, 'PNG', 14, 125, 180, 80);
+        if (hasIncomeData) {
+          const incomeCanvas = this.lastMonthIncomeDoughnut.nativeElement;
+          const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+          doc.text('Income by Category', 14, 20);
+          doc.addImage(incomeImg, 'PNG', 14, 25, 180, 80);
+        } else {
+          doc.text('Income by Category: NO DATA', 14, 20);
+        }
+
+        if (hasExpenseData) {
+          const expenseCanvas = this.lastMonthExpenseDoughnut.nativeElement;
+          const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
+          doc.text('Expenses by Category', 14, 120);
+          doc.addImage(expenseImg, 'PNG', 14, 125, 180, 80);
+        } else {
+          doc.text('Expenses by Category: NO DATA', 14, 120);
+        }
       }
 
       // Bar chart
       doc.addPage();
       if (this.lastMonthExpenseChart && this.lastMonthIncomeChart) {
-        const expenseCanvas = this.lastMonthExpenseChart.nativeElement;
-        const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
-
-        const incomeCanvas = this.lastMonthIncomeChart.nativeElement;
-        const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+        const hasExpenseData = this.lastMonthExpenseBarChartData
+          ?.datasets?.[0]
+          ?.data?.length;
+        const hasIncomeData = this.lastMonthIncomeBarChartData
+          ?.datasets?.[0]
+          ?.data?.length;
 
         doc.setFontSize(16);
-        doc.text('Expense Breakdown', 14, 20);
-        doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
 
-        doc.text('Income Breakdown', 14, 120);
-        doc.addImage(incomeImg, 'PNG', 14, 130, 180, 80);
+        if (hasExpenseData) {
+          const expenseCanvas = this.lastMonthExpenseChart.nativeElement;
+          const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
+          doc.text('Expense Breakdown', 14, 20);
+          doc.addImage(expenseImg, 'PNG', 14, 30, 180, 80);
+        } else {
+          doc.text('Expense Breakdown: NO DATA', 14, 20);
+        }
+
+        if (hasIncomeData) {
+          const incomeCanvas = this.lastMonthIncomeChart.nativeElement;
+          const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+          doc.text('Income Breakdown', 14, 120);
+          doc.addImage(incomeImg, 'PNG', 14, 130, 180, 80);
+        } else {
+          doc.text('Income Breakdown: NO DATA', 14, 120);
+        }
       }
     }
 
