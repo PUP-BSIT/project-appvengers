@@ -249,7 +249,7 @@
                   <button
                     class="dropdown-item text-danger"
                     type="button"
-                    (click)="deleteTransaction(transaction.id); activeDropdownId.set(null)">
+                    (click)="openDeleteModal(transaction.id); activeDropdownId.set(null)">
                       Delete
                   </button>
                 </li>
@@ -358,6 +358,35 @@
         </div>
       </div>
     }
+
+    <!-- Single Delete Confirmation Modal -->
+    @if (showDeleteConfirmationModal()) {
+      <div class="modal fade show d-block" tabindex="-1"
+        style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Confirm Delete</h5>
+              <button
+                type="button"
+                class="btn-close"
+                (click)="cancelDelete()"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to delete this transaction?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary"
+                (click)="cancelDelete()">Cancel</button>
+              <button type="button" class="btn btn-danger"
+                (click)="confirmDelete()">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
   @if (showNotification()) {
     <div class="snackbar" [class.hide]="isHidingNotification()">
       @if (notificationType() === 'success') {

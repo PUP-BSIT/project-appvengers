@@ -276,6 +276,10 @@ export class Transactions implements OnInit, OnDestroy {
 
   isEditing = signal(false);
   editingTransactionId: number | null = null;
+  
+  // Single delete confirmation state
+  showDeleteConfirmationModal = signal(false);
+  transactionToDeleteId = signal<number | null>(null);
 
   isIncomeToggle = signal(false);
 
@@ -540,15 +544,30 @@ openAddModal() {
     }
   }
 
-  deleteTransaction(id: number) {
-    this.txService.delete(id).subscribe(() => {
-      this.transactions = this.transactions.filter(
-          transaction => transaction.id !== id);
-      this.filterTransactions();
-      this.showNotificationMessage('Transaction deleted successfully!', 'success');
-    }, () => {
-      this.showNotificationMessage('Failed to delete transaction', 'error');
-    });
+  openDeleteModal(id: number) {
+    this.transactionToDeleteId.set(id);
+    this.showDeleteConfirmationModal.set(true);
+  }
+
+  cancelDelete() {
+    this.showDeleteConfirmationModal.set(false);
+    this.transactionToDeleteId.set(null);
+  }
+
+  confirmDelete() {
+    const id = this.transactionToDeleteId();
+    if (id !== null) {
+      this.txService.delete(id).subscribe(() => {
+        this.transactions = this.transactions.filter(
+            transaction => transaction.id !== id);
+        this.filterTransactions();
+        this.showNotificationMessage('Transaction deleted successfully!', 'success');
+        this.cancelDelete();
+      }, () => {
+        this.showNotificationMessage('Failed to delete transaction', 'error');
+        this.cancelDelete();
+      });
+    }
   }
 
   getTotalIncome(): number {
