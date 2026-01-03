@@ -101,9 +101,15 @@
           @if(updateSavingForm.get('goal_date')?.touched &&
             updateSavingForm.get('goal_date')?.invalid) 
           {
-            <div class="text-danger mt-1">
-              Goal Date is required.
-            </div>
+            @if(updateSavingForm.get('goal_date')?.errors?.['required']) {
+              <div class="text-danger mt-1">
+                Goal Date is required.
+              </div>
+            } @else if(updateSavingForm.get('goal_date')?.errors?.['pastDate']) {
+              <div class="text-danger mt-1">
+                Goal Date must be in the future.
+              </div>
+            }
           }
         </div>
       </div>

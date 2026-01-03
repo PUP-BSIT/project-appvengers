@@ -3,9 +3,26 @@ import { Header } from "../../header/header";
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SavingsService } from '../../../services/savings.service';
 import { Saving } from '../../../models/user.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ToggleableSidebar } from "../../toggleable-sidebar/toggleable-sidebar";
 import { environment } from '../../../environments/environment';
+
+/**
+ * Validator to check if the date is in the future.
+ */
+function futureDateValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) {
+    return null; // Let required validator handle empty values
+  }
+  const selectedDate = new Date(control.value);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Reset time part for accurate comparison
+
+  if (selectedDate < today) {
+    return { pastDate: true };
+  }
+  return null;
+}
 
 @Component({
   selector: 'app-update-saving',
@@ -28,7 +45,7 @@ export class UpdateSaving implements OnInit{
         validators: [Validators.required]
       }],
       goal_date: ['', {
-        validators: [Validators.required]
+        validators: [Validators.required, futureDateValidator]
       }],
       frequency: ['', {
         validators: [Validators.required]
