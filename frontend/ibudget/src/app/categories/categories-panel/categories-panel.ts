@@ -1,11 +1,11 @@
-import { Component, OnInit, signal, inject, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, inject, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Category } from '../../../models/user.model';
 import { CategoriesService } from '../../../services/categories.service';
 import { CommonModule } from '@angular/common';
 import { AddCategoryModal } from '../add-category-modal/add-category-modal';
 import { ToastService } from '../../../services/toast.service';
-import * as bootstrap from 'bootstrap';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-categories-panel',
@@ -17,6 +17,7 @@ import * as bootstrap from 'bootstrap';
 
 export class CategoriesPanel implements OnInit {
   @ViewChild(AddCategoryModal) addCategoryModalComponent!: AddCategoryModal;
+  @ViewChild('confirmDeleteModal') confirmDeleteModal!: ElementRef;
 
   categoriesService = inject(CategoriesService);
   route = inject(ActivatedRoute);
@@ -29,6 +30,9 @@ export class CategoriesPanel implements OnInit {
 
   // Loading State
   isLoading = signal(true);
+
+  // Delete Confirmation
+  categoryToDelete?: Category;
 
   ngOnInit(): void {
     this.loadCategories();
@@ -77,7 +81,7 @@ export class CategoriesPanel implements OnInit {
   // Initialize Bootstrap dropdowns
   private initDropdowns() {
     const triggers = document.querySelectorAll('[data-bs-toggle="dropdown"]');
-    triggers.forEach(el => new bootstrap.Dropdown(el));
+    triggers.forEach(el => new Modal(el));
   }
 
   // Get icon based on category name
@@ -130,31 +134,42 @@ export class CategoriesPanel implements OnInit {
     setTimeout(() => this.loadCategories(), 1000); // optional refresh
   }
 
-  onDeleteCategory(category: Category) {
+  openConfirmDeleteModal(category: Category) {
     if (category.referencesCount > 0) {
       this.toastService.error(
         'Delete Failed', 'Category is used and cannot be deleted.'
       );
-
       return;
     }
 
-    this.categoriesService.deleteCategory(category.id).subscribe({
+    this.categoryToDelete = category;
+    const modal = new Modal(this.confirmDeleteModal.nativeElement);
+    modal.show();
+  }
+
+  confirmDeleteCategory() {
+    if (!this.categoryToDelete) return;
+
+    this.categoriesService.deleteCategory(this.categoryToDelete.id).subscribe({
       next: () => {
         this.toastService.success(
           'Delete Success', 'Category deleted successfully!'
         );
 
-        const updatedList = this.allCategories().filter(c => 
-          c.id !== category.id
+        const updatedList = this.allCategories().filter(
+          c => c.id !== this.categoryToDelete?.id
         );
-        
+
         this.allCategories.set(updatedList);
         this.filterCategories();
         this.initDropdowns();
         setTimeout(() => this.loadCategories(), 1000);
+
+        const modal = Modal.getInstance(this.confirmDeleteModal.nativeElement);
+        modal?.hide();
+        this.categoryToDelete = undefined;
       },
-      error: (err) => {
+      error: () => {
         this.toastService.error('Delete Failed', 'Error deleting category.');
       }
     });
