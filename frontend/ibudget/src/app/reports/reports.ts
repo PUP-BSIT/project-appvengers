@@ -31,6 +31,22 @@ export class Reports implements OnInit {
   // Bar State (Expense | Income)
   barMode = signal<'expense' | 'income'>('expense');
 
+  // Income chart data
+  thisMonthIncomeChartData!: ChartData<'doughnut'>;
+  lastMonthIncomeChartData!: ChartData<'doughnut'>;
+
+  // Expense chart data
+  thisMonthExpenseChartData!: ChartData<'doughnut'>;
+  lastMonthExpenseChartData!: ChartData<'doughnut'>;
+
+  // Income bar chart data
+  thisMonthIncomeBarChartData!: ChartData<'bar'>;
+  lastMonthIncomeBarChartData!: ChartData<'bar'>;
+
+  // Expense bar chart data
+  thisMonthExpenseBarChartData!: ChartData<'bar'>;
+  lastMonthExpenseBarChartData!: ChartData<'bar'>;
+
   // Template Reference
   @ViewChild('thisMonthExpenseChart') 
   thisMonthExpenseChart!: ElementRef<HTMLCanvasElement>;
@@ -50,21 +66,11 @@ export class Reports implements OnInit {
   @ViewChild('thisMonthExpenseDoughnut', { static: false })
   thisMonthExpenseDoughnut!: ElementRef<HTMLCanvasElement>;
 
-  // Income chart data
-  thisMonthIncomeChartData!: ChartData<'doughnut'>;
-  lastMonthIncomeChartData!: ChartData<'doughnut'>;
+  @ViewChild('lastMonthIncomeDoughnut', { static: false })
+  lastMonthIncomeDoughnut!: ElementRef<HTMLCanvasElement>;
 
-  // Expense chart data
-  thisMonthExpenseChartData!: ChartData<'doughnut'>;
-  lastMonthExpenseChartData!: ChartData<'doughnut'>;
-
-  // Income bar chart data
-  thisMonthIncomeBarChartData!: ChartData<'bar'>;
-  lastMonthIncomeBarChartData!: ChartData<'bar'>;
-
-  // Expense bar chart data
-  thisMonthExpenseBarChartData!: ChartData<'bar'>;
-  lastMonthExpenseBarChartData!: ChartData<'bar'>;
+  @ViewChild('lastMonthExpenseDoughnut', { static: false })
+  lastMonthExpenseDoughnut!: ElementRef<HTMLCanvasElement>;
 
   // Chart configuration (doughnut)
   chartType: ChartType = 'doughnut';
@@ -608,7 +614,24 @@ export class Reports implements OnInit {
       const pageHeight = doc.internal.pageSize.getHeight();
       const offsetY = (pageHeight - currentY) / 2;
 
-      // Bar charts 
+      // Doughnut chart
+      doc.addPage();
+      if (this.lastMonthIncomeDoughnut && this.lastMonthExpenseDoughnut) {
+        const incomeCanvas = this.lastMonthIncomeDoughnut.nativeElement;
+        const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+
+        const expenseCanvas = this.lastMonthExpenseDoughnut.nativeElement;
+        const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
+
+        doc.setFontSize(16);
+        doc.text('Income by Category', 14, 20);
+        doc.addImage(incomeImg, 'PNG', 14, 25, 180, 80);
+
+        doc.text('Expenses by Category', 14, 120);
+        doc.addImage(expenseImg, 'PNG', 14, 125, 180, 80);
+      }
+
+      // Bar chart
       doc.addPage();
       if (this.lastMonthExpenseChart && this.lastMonthIncomeChart) {
         const expenseCanvas = this.lastMonthExpenseChart.nativeElement;
