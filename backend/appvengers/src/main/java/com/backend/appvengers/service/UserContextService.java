@@ -8,6 +8,7 @@ import com.backend.appvengers.entity.Saving;
 import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.BudgetRepository;
 import com.backend.appvengers.repository.SavingRepository;
+import com.backend.appvengers.repository.TransactionRepository;
 import com.backend.appvengers.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class UserContextService {
     private final TransactionService transactionService;
     private final BudgetRepository budgetRepository;
     private final SavingRepository savingRepository;
+    private final TransactionRepository transactionRepository;
 
     /**
      * Builds a comprehensive financial context for the authenticated user.
@@ -119,12 +121,10 @@ public class UserContextService {
         List<BudgetWithCategoryResponse> budgets = budgetRepository.findBudgetsWithCategoryByUserId(userId);
 
         return budgets.stream().map(budget -> {
-            // Calculate spent amount for this budget's category
-            BigDecimal spentAmount = transactions.stream()
-                    .filter(t -> "EXPENSE".equalsIgnoreCase(t.getType()))
-                    .filter(t -> t.getCategory().equalsIgnoreCase(budget.getCategoryName()))
-                    .map(TransactionResponse::getAmount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            // Use the correct repository method that sums by budget_id
+            // This matches the logic used by frontend and notifications
+            Double spentAmountDouble = transactionRepository.sumByBudgetId(budget.getBudgetId());
+            BigDecimal spentAmount = BigDecimal.valueOf(spentAmountDouble != null ? spentAmountDouble : 0.0);
 
             BigDecimal limitAmount = BigDecimal.valueOf(budget.getLimitAmount());
             BigDecimal remainingAmount = limitAmount.subtract(spentAmount);
