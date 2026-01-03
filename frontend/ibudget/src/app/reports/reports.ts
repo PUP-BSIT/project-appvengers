@@ -97,16 +97,32 @@ export class Reports implements OnInit {
     }
   };
 
-  thisMonthBarData = computed(() => {
-    return this.barMode() === 'expense'
+  thisMonthBarData = computed<ChartData<'bar'>>(() => {
+    const src = this.barMode() === 'expense'
       ? this.thisMonthExpenseBarChartData
       : this.thisMonthIncomeBarChartData;
+
+    return {
+      labels: [...(src.labels ?? [])],
+      datasets: src.datasets.map(ds => ({
+        ...ds,
+        data: [...(ds.data ?? [])]
+      }))
+    };
   });
 
-  lastMonthBarData = computed(() => {
-    return this.barMode() === 'expense'
+  lastMonthBarData = computed<ChartData<'bar'>>(() => {
+    const src = this.barMode() === 'expense'
       ? this.lastMonthExpenseBarChartData
       : this.lastMonthIncomeBarChartData;
+
+    return {
+      labels: [...(src.labels ?? [])],
+      datasets: src.datasets.map(ds => ({
+        ...ds,
+        data: [...(ds.data ?? [])]
+      }))
+    };
   });
 
   toggleBarMode() {
