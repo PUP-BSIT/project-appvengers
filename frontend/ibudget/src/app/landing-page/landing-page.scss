@@ -142,6 +142,35 @@
   opacity: 1;
   transform: none;
 }
+
+/* Staggered animation for feature cards */
+.fade-in-section.visible .feature-card {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.fade-in-section.visible .feature-card:nth-child(1) { animation-delay: 0.1s; }
+.fade-in-section.visible .feature-card:nth-child(2) { animation-delay: 0.2s; }
+.fade-in-section.visible .feature-card:nth-child(3) { animation-delay: 0.3s; }
+.fade-in-section.visible .feature-card:nth-child(4) { animation-delay: 0.4s; }
+.fade-in-section.visible .feature-card:nth-child(5) { animation-delay: 0.5s; }
+.fade-in-section.visible .feature-card:nth-child(6) { animation-delay: 0.6s; }
+.fade-in-section.visible .feature-card:nth-child(7) { animation-delay: 0.7s; }
+.fade-in-section.visible .feature-card:nth-child(8) { animation-delay: 0.8s; }
+.fade-in-section.visible .feature-card:nth-child(9) { animation-delay: 0.9s; }
+
+/* Staggered animation for team cards in About Us */
+.fade-in-section.visible .team-card {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.fade-in-section.visible .col-12:nth-child(1) .team-card { animation-delay: 0.1s; }
+.fade-in-section.visible .col-12:nth-child(2) .team-card { animation-delay: 0.2s; }
+.fade-in-section.visible .col-12:nth-child(3) .team-card { animation-delay: 0.3s; }
+.fade-in-section.visible .col-12:nth-child(4) .team-card { animation-delay: 0.4s; }
 $card-bg: rgba(255, 255, 255, 0.8);
 $text-dark: #1e293b;
 $text-muted: #64748b;
