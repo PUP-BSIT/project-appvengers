@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, ViewChild, ElementRef} from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { Header } from "../header/header";
@@ -30,6 +30,9 @@ export class Reports implements OnInit {
 
   // Bar State (Expense | Income)
   barMode = signal<'expense' | 'income'>('expense');
+
+  // Template Reference
+  @ViewChild('thisMonthChart') thisMonthChart!: ElementRef<HTMLCanvasElement>;
 
   // Income chart data
   thisMonthIncomeChartData!: ChartData<'doughnut'>;
@@ -533,6 +536,14 @@ export class Reports implements OnInit {
 
     // Add Last Month
     addReportToDoc(this.lastMonthReport, currentY);
+
+    // This Month Bar Graph 
+    const thisMonthCanvas = this.thisMonthChart.nativeElement;
+    const thisMonthImg = thisMonthCanvas.toDataURL('image/png', 1.0);
+    doc.addPage();
+    doc.setFontSize(16);
+    doc.text('This Month Bar Chart', 14, 20);
+    doc.addImage(thisMonthImg, 'PNG', 14, 30, 180, 90);
 
     // Save using file-saver
     const blob = doc.output('blob');

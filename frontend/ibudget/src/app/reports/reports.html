@@ -413,7 +413,7 @@
                   </div>
                 </div>
               } @else {
-                <canvas baseChart
+                <canvas  #thisMonthChart baseChart
                   [data]="thisMonthBarData()"
                   [type]="'bar'"
                   [options]="barChartOptions">
