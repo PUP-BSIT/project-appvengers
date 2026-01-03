@@ -418,6 +418,22 @@
                   [type]="'bar'"
                   [options]="barChartOptions">
                 </canvas>
+
+                <!-- Hidden chart: This Month Expense -->
+                <canvas #thisMonthExpenseChart baseChart
+                  [data]="thisMonthExpenseBarChartData"
+                  [type]="'bar'"
+                  [options]="barChartOptions"
+                  style="display:none">
+                </canvas>
+
+                <!-- Hidden chart: This Month Income -->
+                <canvas #thisMonthIncomeChart baseChart
+                  [data]="thisMonthIncomeBarChartData"
+                  [type]="'bar'"
+                  [options]="barChartOptions"
+                  style="display:none">
+                </canvas>
               }
             </div>
           </div>

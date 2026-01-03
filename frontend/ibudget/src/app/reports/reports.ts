@@ -32,7 +32,11 @@ export class Reports implements OnInit {
   barMode = signal<'expense' | 'income'>('expense');
 
   // Template Reference
-  @ViewChild('thisMonthChart') thisMonthChart!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('thisMonthExpenseChart') 
+  thisMonthExpenseChart!: ElementRef<HTMLCanvasElement>;
+
+  @ViewChild('thisMonthIncomeChart') 
+  thisMonthIncomeChart!: ElementRef<HTMLCanvasElement>;  
 
   // Income chart data
   thisMonthIncomeChartData!: ChartData<'doughnut'>;
@@ -538,12 +542,19 @@ export class Reports implements OnInit {
     addReportToDoc(this.lastMonthReport, currentY);
 
     // This Month Bar Graph 
-    const thisMonthCanvas = this.thisMonthChart.nativeElement;
-    const thisMonthImg = thisMonthCanvas.toDataURL('image/png', 1.0);
+    const expenseCanvas = this.thisMonthExpenseChart.nativeElement;
+    const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
     doc.addPage();
     doc.setFontSize(16);
-    doc.text('This Month Bar Chart', 14, 20);
-    doc.addImage(thisMonthImg, 'PNG', 14, 30, 180, 90);
+    doc.text('This Month Expense Breakdown', 14, 20);
+    doc.addImage(expenseImg, 'PNG', 14, 30, 180, 90);
+
+    const incomeCanvas = this.thisMonthIncomeChart.nativeElement;
+    const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+    doc.addPage();
+    doc.setFontSize(16);
+    doc.text('This Month Income Breakdown', 14, 20);
+    doc.addImage(incomeImg, 'PNG', 14, 30, 180, 90);
 
     // Save using file-saver
     const blob = doc.output('blob');
