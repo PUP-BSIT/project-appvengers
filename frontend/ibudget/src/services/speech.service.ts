@@ -519,10 +519,21 @@ export class SpeechService implements OnDestroy {
 
   /**
    * Clean text for speech synthesis.
-   * Removes markdown, HTML, URLs, and other non-speech content.
+   * Removes markdown, HTML, URLs, emojis, and other non-speech content.
    */
   private cleanTextForSpeech(text: string): string {
     return text
+      // Remove emojis (comprehensive Unicode ranges)
+      // Emoticons: 😀-🙏 (U+1F600-U+1F64F)
+      // Symbols & Pictographs: 🌀-🗿 (U+1F300-U+1F5FF)
+      // Transport & Map: 🚀-🛿 (U+1F680-U+1F6FF)
+      // Supplemental Symbols: 🤀-🧿 (U+1F900-U+1F9FF)
+      // Misc Symbols: ☀-⛿ (U+2600-U+26FF)
+      // Dingbats: ✀-➿ (U+2700-U+27BF)
+      // Misc Symbols and Arrows: ⬀-⮿ (U+2B00-U+2BFF)
+      // Additional Emoticons: 🥀-🥶 (U+1F940-U+1F976)
+      // Flags: 🇦-🇿 (U+1F1E6-U+1F1FF)
+      .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{2B00}-\u{2BFF}\u{1F1E6}-\u{1F1FF}]/gu, '')
       // Remove markdown code blocks
       .replace(/```[\s\S]*?```/g, '')
       // Remove inline code
