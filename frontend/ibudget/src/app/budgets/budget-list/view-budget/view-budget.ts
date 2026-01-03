@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, inject, OnInit, signal, ViewChild } from '@angular/core'; 
+import { AfterViewInit, Component, inject, OnInit, signal, ViewChild, ElementRef } from '@angular/core'; 
+import { Modal } from 'bootstrap';
 import { Sidebar } from "../../../sidebar/sidebar";
 import { Header } from "../../../header/header";
 import { KpiPanel } from "../../kpi-panel/kpi-panel";
@@ -21,6 +22,7 @@ import { ToggleableSidebar } from "../../../toggleable-sidebar/toggleable-sideba
 export class ViewBudget implements OnInit, AfterViewInit {
   @ViewChild(KpiPanel) kpiPanel!: KpiPanel; 
   @ViewChild('updateBudgetModal') updateBudgetModal!: UpdateBudgetExpense;
+  @ViewChild('confirmDeleteModal') confirmDeleteModal!: ElementRef;
 
   // Services
   budgetTxService = inject(BudgetTransactionsService);
@@ -32,6 +34,7 @@ export class ViewBudget implements OnInit, AfterViewInit {
   isBudgetExceeded = signal(false);
   categories = signal<Category[]>([]);
   budgetId = signal<number>(0);
+  selectedTransactionId = signal<number | null>(null);
 
   // Snackbar
   showNotification = signal(false);
@@ -108,6 +111,21 @@ export class ViewBudget implements OnInit, AfterViewInit {
   getCategoryName(categoryId: number): string {
     const cat = this.categories().find(c => c.id === categoryId);
     return cat ? cat.name : `Category ${categoryId}`;
+  }
+
+  openConfirmDeleteModal(transactionId: number) {
+    this.selectedTransactionId.set(transactionId);
+    const modal = new Modal(this.confirmDeleteModal.nativeElement);
+    modal.show();
+  }
+
+  confirmDelete() {
+    const id = this.selectedTransactionId();
+    if (id) {
+      this.deleteBudgetExpense(id);
+      const modal = Modal.getInstance(this.confirmDeleteModal.nativeElement);
+      modal?.hide();
+    }
   }
 
   deleteBudgetExpense(transactionId: number) {
