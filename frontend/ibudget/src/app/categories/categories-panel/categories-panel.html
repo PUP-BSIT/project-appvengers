@@ -93,6 +93,7 @@
 
 <!-- From add-category-modal component -->
 <app-add-category-modal 
+  [existingCategories]="allCategories()"
   (categoryAdded)="onCategoryAdded($event)"
   (categoryUpdated)="onCategoryUpdated($event)">
 </app-add-category-modal>
