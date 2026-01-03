@@ -1722,3 +1722,41 @@ $header-height: 70px;
 .skeleton { opacity: 0.95; }
 .skeleton-transaction { padding: 0.6rem 0.75rem; border-radius: .5rem; background: white; border: 1px solid #eee; margin-bottom: 0.75rem; }
 .transactions-cards-skeleton { padding: 8px 0; }
+
+// Transaction type toggle responsive styles
+.transaction-type-toggle {
+  width: 100%;
+  max-width: 350px;
+  min-width: 200px;
+}
+
+// Mobile M (375px and below)
+@media (max-width: 375px) {
+  .transaction-type-toggle {
+    max-width: 100%;
+    min-width: 100%;
+  }
+
+  .transaction-type-toggle .btn {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.5rem;
+  }
+
+  .transaction-type-toggle .btn i {
+    margin-right: 0.25rem;
+    font-size: 0.875rem;
+  }
+}
+
+// Mobile S (320px and below)
+@media (max-width: 320px) {
+  .transaction-type-toggle .btn {
+    font-size: 0.8rem;
+    padding: 0.45rem 0.4rem;
+  }
+
+  .transaction-type-toggle .btn i {
+    font-size: 0.8rem;
+    margin-right: 0.2rem;
+  }
+}
