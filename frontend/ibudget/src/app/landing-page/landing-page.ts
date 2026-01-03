@@ -11,6 +11,8 @@ import { RouterLink } from '@angular/router';
 })
 export class LandingPage implements OnInit, OnDestroy, AfterViewInit {
   showScrollTop = false;
+  showNavbar = true;
+  private lastScrollTop = 0;
   private homeObserver?: IntersectionObserver;
     ngAfterViewInit(): void {
       // Fade-in animation for sections
@@ -56,6 +58,7 @@ export class LandingPage implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.typeEffect();
+    window.addEventListener('scroll', this.onScroll.bind(this));
   }
 
   private typeEffect(): void {
@@ -81,6 +84,21 @@ export class LandingPage implements OnInit, OnDestroy, AfterViewInit {
     if (this.homeObserver) {
       this.homeObserver.disconnect();
     }
+    window.removeEventListener('scroll', this.onScroll.bind(this));
+  }
+
+  private onScroll(): void {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    if (scrollTop > this.lastScrollTop && scrollTop > 100) {
+      // Scrolling down
+      this.showNavbar = false;
+    } else {
+      // Scrolling up
+      this.showNavbar = true;
+    }
+    
+    this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
   }
 
 
