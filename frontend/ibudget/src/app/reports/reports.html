@@ -338,6 +338,7 @@
             This Month ({{ thisMonthReport.monthName }})
           </div>
 
+          <!-- Doughnut Section for This Month-->
           <div class="charts-section">
             <div class="chart-card">
               <h3 class="chart-title">
@@ -400,6 +401,26 @@
                 }
               </div>
             </div>
+
+            <!-- Hidden chart: This Month Income -->
+            <canvas #thisMonthIncomeDoughnut baseChart
+              [data]="thisMonthIncomeChartData"
+              [type]="'doughnut'"
+              [options]="chartOptions"
+              width="400" height="400"
+              style="position:absolute; left:-9999px; top:-9999px;"
+              aria-hidden="true">
+              </canvas>
+            
+            <!-- Hidden chart: This Month Expense -->
+            <canvas #thisMonthExpenseDoughnut baseChart
+              [data]="thisMonthExpenseChartData"
+              [type]="'doughnut'"
+              [options]="chartOptions"
+              width="400" height="400"
+              style="position:absolute; left:-9999px; top:-9999px;"
+              aria-hidden="true">
+            </canvas>
           </div>
 
           <!-- Bar Section for This Month -->

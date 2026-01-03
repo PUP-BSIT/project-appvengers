@@ -44,6 +44,12 @@ export class Reports implements OnInit {
   @ViewChild('lastMonthIncomeChart') 
   lastMonthIncomeChart!: ElementRef<HTMLCanvasElement>;
 
+  @ViewChild('thisMonthIncomeDoughnut', { static: false })
+  thisMonthIncomeDoughnut!: ElementRef<HTMLCanvasElement>;
+
+  @ViewChild('thisMonthExpenseDoughnut', { static: false })
+  thisMonthExpenseDoughnut!: ElementRef<HTMLCanvasElement>;
+
   // Income chart data
   thisMonthIncomeChartData!: ChartData<'doughnut'>;
   lastMonthIncomeChartData!: ChartData<'doughnut'>;
@@ -554,8 +560,26 @@ export class Reports implements OnInit {
 
     // Render only the active tab’s report
     if (this.activeTab === 'thisMonth') {
-      addReportToDoc(this.thisMonthReport, 35);
+      let currentY = addReportToDoc(this.thisMonthReport, 35);
 
+      // Doughnut charts on first page after text
+      if (this.thisMonthIncomeDoughnut && this.thisMonthExpenseDoughnut) {
+        const incomeCanvas = this.thisMonthIncomeDoughnut.nativeElement;
+        const incomeImg = incomeCanvas.toDataURL('image/png', 1.0);
+
+        const expenseCanvas = this.thisMonthExpenseDoughnut.nativeElement;
+        const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
+
+        doc.text('Income by Category', 14, currentY);
+        doc.addImage(incomeImg, 'PNG', 14, currentY + 5, 180, 80);
+
+        doc.text('Expenses by Category', 14, currentY + 90);
+        doc.addImage(expenseImg, 'PNG', 14, currentY + 95, 180, 80);
+
+        currentY += 95;
+      }
+
+      // Bar charts on a new page
       if (this.thisMonthExpenseChart && this.thisMonthIncomeChart) {
         const expenseCanvas = this.thisMonthExpenseChart.nativeElement;
         const expenseImg = expenseCanvas.toDataURL('image/png', 1.0);
