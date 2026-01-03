@@ -1,11 +1,28 @@
 import { Component, inject, OnInit, output, signal, } from '@angular/core';
 import { Header } from "../../header/header";
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Saving } from '../../../models/user.model';
 import { SavingsService } from '../../../services/savings.service';
 import { ToggleableSidebar } from "../../toggleable-sidebar/toggleable-sidebar";
 import { ToastService } from '../../../services/toast.service';
+
+/**
+ * Validator to check if the date is in the future.
+ */
+function futureDateValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) {
+    return null; // Let required validator handle empty values
+  }
+  const selectedDate = new Date(control.value);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Reset time part for accurate comparison
+
+  if (selectedDate < today) {
+    return { pastDate: true };
+  }
+  return null;
+}
 
 /**
  * Formats a Date object to YYYY-MM-DD string in local timezone.
@@ -83,7 +100,7 @@ export class AddSaving implements OnInit {
         validators: [Validators.required]
       }],
       goal_date: [this.dateNow, {
-        validators: [Validators.required]
+        validators: [Validators.required, futureDateValidator]
       }],
       frequency: ['', {
         validators: [Validators.required]
@@ -108,7 +125,7 @@ export class AddSaving implements OnInit {
         validators: [Validators.required]
       }],
       goal_date: [this.dateNow, {
-        validators: [Validators.required]
+        validators: [Validators.required, futureDateValidator]
       }],
       frequency: ['', {
         validators: [Validators.required]
