@@ -189,6 +189,9 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
             return;
         }
 
+        // Reload voices to load this user's saved voice preference
+        this.speechService.reloadVoices();
+
         if (!environment.production) {
             console.log('[ChatbotSidebar] Loading messages for user', userId);
         }

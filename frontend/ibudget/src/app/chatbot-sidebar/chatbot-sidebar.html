@@ -31,7 +31,7 @@
         </div>
         <div class="settings-content">
             <label class="settings-label">Select Voice</label>
-            <select class="voice-select" [ngModel]="currentVoiceName()" (ngModel Change)="selectVoice($event)">
+            <select class="voice-select" [ngModel]="currentVoiceName()" (ngModelChange)="selectVoice($event)">
                 @for (group of getGroupedVoices(); track group.lang) {
                 <optgroup [label]="group.langName">
                     @for (voice of group.voices; track voice.name) {

@@ -1,5 +1,6 @@
 import { Injectable, signal, OnDestroy } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
+import { LocalStorageService } from './local-storage.service';
 
 /**
  * Speech recognition result from the Web Speech API.
@@ -138,7 +139,7 @@ export class SpeechService implements OnDestroy {
   /** Observable for speech errors */
   readonly error$ = this.errorSubject.asObservable();
 
-  constructor() {
+  constructor(private localStorageService: LocalStorageService) {
     this.initializeSpeechAPIs();
   }
 
@@ -264,9 +265,19 @@ export class SpeechService implements OnDestroy {
     if (voices.length > 0) {
       // Update available voices signal
       this.availableVoices.set(voices);
-      
+
       // Check for saved voice preference
-      const savedVoiceName = localStorage.getItem(this.VOICE_STORAGE_KEY);
+      // Try user-scoped storage first, fall back to direct localStorage
+      let savedVoiceName: string | null = null;
+      
+      if (this.localStorageService.getUserId() !== null) {
+        // User is logged in - use user-scoped storage
+        savedVoiceName = this.localStorageService.getItem<string>(this.VOICE_STORAGE_KEY);
+      } else {
+        // User not logged in yet - check direct localStorage as fallback
+        savedVoiceName = localStorage.getItem(this.VOICE_STORAGE_KEY);
+      }
+
       if (savedVoiceName) {
         const savedVoice = voices.find(v => v.name === savedVoiceName);
         if (savedVoice) {
@@ -275,18 +286,18 @@ export class SpeechService implements OnDestroy {
           return;
         }
       }
-      
+
       // Default: Prefer Philippine English voices for correct peso reading
       // Priority: en-PH > fil-PH > Google English > Local English > Any English
-      const preferredVoice = voices.find(v => 
+      const preferredVoice = voices.find(v =>
         v.lang === 'en-PH'
-      ) || voices.find(v => 
+      ) || voices.find(v =>
         v.lang === 'fil-PH'
-      ) || voices.find(v => 
+      ) || voices.find(v =>
         v.lang.startsWith('en') && v.name.includes('Google')
-      ) || voices.find(v => 
+      ) || voices.find(v =>
         v.lang.startsWith('en') && v.localService
-      ) || voices.find(v => 
+      ) || voices.find(v =>
         v.lang.startsWith('en')
       ) || voices[0];
 
@@ -440,16 +451,22 @@ export class SpeechService implements OnDestroy {
   }
 
   /**
-   * Set the voice for TTS.
+   * Set voice for TTS.
    * @param voice Voice to use
    * @param persist Whether to save to localStorage (default: true)
    */
   setVoice(voice: SpeechSynthesisVoice, persist = true): void {
     this.selectedVoice = voice;
     this.currentVoiceName.set(voice.name);
-    
+
     if (persist) {
-      localStorage.setItem(this.VOICE_STORAGE_KEY, voice.name);
+      // Try user-scoped storage first, fall back to direct localStorage
+      if (this.localStorageService.getUserId() !== null) {
+        this.localStorageService.setItem(this.VOICE_STORAGE_KEY, voice.name);
+      } else {
+        // User not logged in yet - use direct localStorage
+        localStorage.setItem(this.VOICE_STORAGE_KEY, voice.name);
+      }
     }
   }
 
@@ -549,6 +566,14 @@ export class SpeechService implements OnDestroy {
       return 'stt-only';
     }
     return 'none';
+  }
+
+  /**
+   * Reload voices and reapply current user's voice preference.
+   * Call this when user logs in to load their saved voice.
+   */
+  reloadVoices(): void {
+    this.loadVoices();
   }
 
   /**
