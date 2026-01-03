@@ -11,11 +11,13 @@ import {
         provideZonelessChangeDetection, isDevMode,
     } from '@angular/core';
 import { provideServiceWorker } from '@angular/service-worker';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
+    provideAnimationsAsync(),
     provideRouter(
       routes,
       withInMemoryScrolling({
