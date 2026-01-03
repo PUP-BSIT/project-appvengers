@@ -22,11 +22,9 @@ export class LandingPage implements OnInit, OnDestroy, AfterViewInit {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
               (entry.target as HTMLElement).classList.add('visible');
-            } else {
-              (entry.target as HTMLElement).classList.remove('visible');
             }
           });
-        }, { threshold: 0.2 });
+        }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
         fadeSections.forEach(section => observer.observe(section));
       }
 
