@@ -20,6 +20,7 @@ import {
 export class AddCategoryModal {
   @ViewChild('addCategoryModal') addCategoryModal!: ElementRef;
   @Input() categoryToEdit?: Category;
+  @Input() existingCategories: Category[] = [];
   categoryUpdated = output<Category>();
 
   // Form
@@ -124,6 +125,18 @@ export class AddCategoryModal {
     }
 
     const formValue = this.categoryForm.value;
+
+    // Check for duplicates
+    const isDuplicate = this.existingCategories.some(cat => 
+      cat.name.toLowerCase() === formValue.name.trim().toLowerCase() && 
+      cat.type === formValue.type &&
+      (!this.categoryToEdit || cat.id !== this.categoryToEdit.id)
+    );
+
+    if (isDuplicate) {
+      this.showNotificationMessage('Category already exists!');
+      return;
+    }
 
     if (this.categoryToEdit) {
       const updated: Category = {
