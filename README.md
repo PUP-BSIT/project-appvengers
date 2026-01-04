@@ -159,8 +159,17 @@ Bank-level security with JWT authentication and rate limiting.
 
 ### Test Account
 
-- Email: <test@example.com>
-- Password: password123
+1.
+- Email: <ryancampbell@dayrep.com>
+- Password: }IX]D!mDDVL[Y{Az
+
+2.
+- Email: <starofthenightsky@super.lgbt>
+- Password: a.3cjPP?ib!GwB,5
+
+3.
+- Email: <ernestagutierrezmedina@cuvox.de>
+- Password: Y4W?w1|[B`#!:.FP
 
 ---
 
