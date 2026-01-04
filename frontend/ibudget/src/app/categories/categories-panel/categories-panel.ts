@@ -1,11 +1,11 @@
-import { Component, OnInit, signal, inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, signal, inject, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Category } from '../../../models/user.model';
 import { CategoriesService } from '../../../services/categories.service';
 import { CommonModule } from '@angular/common';
 import { AddCategoryModal } from '../add-category-modal/add-category-modal';
 import { ToastService } from '../../../services/toast.service';
-import { Modal } from 'bootstrap';
+import { Modal, Dropdown } from 'bootstrap';
 
 @Component({
   selector: 'app-categories-panel',
@@ -15,7 +15,7 @@ import { Modal } from 'bootstrap';
   styleUrl: './categories-panel.scss',
 })
 
-export class CategoriesPanel implements OnInit {
+export class CategoriesPanel implements OnInit, OnDestroy {
   @ViewChild(AddCategoryModal) addCategoryModalComponent!: AddCategoryModal;
   @ViewChild('confirmDeleteModal') confirmDeleteModal!: ElementRef;
 
@@ -34,6 +34,9 @@ export class CategoriesPanel implements OnInit {
   // Delete Confirmation
   categoryToDelete?: Category;
 
+  // Cleanup timers
+  private timers: number[] = [];
+
   ngOnInit(): void {
     this.loadCategories();
 
@@ -41,24 +44,33 @@ export class CategoriesPanel implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (params['openModal'] === 'true' || params['name'] || params['type']) {
         // Delay slightly to ensure ViewChild is available
-        setTimeout(() => {
+        const timer: number = setTimeout(() => {
           this.addCategoryModalComponent.openModalWithParams(params);
-        }, 100);
+        }, 100) as unknown as number;
+        this.timers.push(timer);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup all timers to prevent memory leaks
+    this.timers.forEach(timer => clearTimeout(timer));
+    this.timers = [];
   }
 
   loadCategories() {
     this.categoriesService.getCategories().subscribe({
       next: (data: Category[]) => {
-        setTimeout(() => {
-          this.allCategories.set(data);
-          this.filterCategories();
-          this.initDropdowns();
-          this.isLoading.set(false);
-        }, 1000); // simulate loading delay
+        this.allCategories.set(data);
+        this.filterCategories();
+        this.initDropdowns();
+        this.isLoading.set(false);
       },
-      error: (err) => console.error('Failed to load categories:', err)
+      error: (err) => {
+        console.error('Failed to load categories:', err);
+        this.toastService.error('Load Failed', 'Failed to load categories. Please try again.');
+        this.isLoading.set(false);
+      }
     })
   }
 
@@ -81,7 +93,7 @@ export class CategoriesPanel implements OnInit {
   // Initialize Bootstrap dropdowns
   private initDropdowns() {
     const triggers = document.querySelectorAll('[data-bs-toggle="dropdown"]');
-    triggers.forEach(el => new Modal(el));
+    triggers.forEach(el => new Dropdown(el));
   }
 
   // Get icon based on category name
@@ -107,9 +119,6 @@ export class CategoriesPanel implements OnInit {
     this.allCategories.set([...this.allCategories(), newCategory]);
     this.filterCategories();
     this.initDropdowns();
-
-    // re-fetch after a short delay for consistency
-    setTimeout(() => this.loadCategories(), 1000);
   }
 
   onEditCategory(category: Category) {
@@ -131,7 +140,6 @@ export class CategoriesPanel implements OnInit {
     this.allCategories.set(updatedList);
     this.filterCategories();
     this.initDropdowns();
-    setTimeout(() => this.loadCategories(), 1000); // optional refresh
   }
 
   openConfirmDeleteModal(category: Category) {
@@ -163,7 +171,6 @@ export class CategoriesPanel implements OnInit {
         this.allCategories.set(updatedList);
         this.filterCategories();
         this.initDropdowns();
-        setTimeout(() => this.loadCategories(), 1000);
 
         const modal = Modal.getInstance(this.confirmDeleteModal.nativeElement);
         modal?.hide();
