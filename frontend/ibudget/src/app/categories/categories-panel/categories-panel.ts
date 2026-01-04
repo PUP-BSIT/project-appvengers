@@ -68,7 +68,9 @@ export class CategoriesPanel implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Failed to load categories:', err);
-        this.toastService.error('Load Failed', 'Failed to load categories. Please try again.');
+        this.toastService.error(
+          'Load Failed', 'Failed to load categories. Please try again.'
+        );
         this.isLoading.set(false);
       }
     })
