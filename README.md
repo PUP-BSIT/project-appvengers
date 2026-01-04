@@ -163,7 +163,7 @@ Bank-level security with JWT authentication and rate limiting.
 |----------|-------------------------------|----------------------|
 | Mark | mark@dayrep.com | }IX]D!mDDVL[Y{Az |
 | Sophia | starofthenightsky@super.lgbt | a.3cjPP?ib!GwB,5 |
-| Ernesta | ernestagutierrezmedina@cuvox.de | Y4W?w1\|[B`#!:.FP |
+| Angeloo | angelo.05@gmail.com | angelo123 |
 
 ---
 
