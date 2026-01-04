@@ -62,7 +62,6 @@ export class AddCategoryModal {
     if (category) {
       this.categoryForm.patchValue({
         name: category.name,
-        description: (category as any).description || '',
         type: category.type
       });
       this.categoryToEdit = category;
