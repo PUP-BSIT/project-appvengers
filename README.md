@@ -161,7 +161,7 @@ Bank-level security with JWT authentication and rate limiting.
 
 | Username | Email | Password |
 |----------|-------------------------------|----------------------|
-| rycampbell | ryancampbell@dayrep.com | }IX]D!mDDVL[Y{Az |
+| Mark | mark@dayrep.com | }IX]D!mDDVL[Y{Az |
 | starro | starofthenightsky@super.lgbt | a.3cjPP?ib!GwB,5 |
 | Ernesta | ernestagutierrezmedina@cuvox.de | Y4W?w1\|[B`#!:.FP |
 
