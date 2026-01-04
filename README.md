@@ -159,11 +159,11 @@ Bank-level security with JWT authentication and rate limiting.
 
 ### Test Accounts
 
-| Username | Email | Password |
-|----------|-------------------------------|----------------------|
-| Mark | mark@dayrep.com | }IX]D!mDDVL[Y{Az |
-| Sophia | starofthenightsky@super.lgbt | a.3cjPP?ib!GwB,5 |
-| Angeloo | angelo.05@gmail.com | angelo123 |
+| Username | Email | Password | Description |
+|----------|-------------------------------|----------------------|--------------------|
+| Mark | mark@dayrep.com | }IX]D!mDDVL[Y{Az | The Working Student |
+| Sophia | starofthenightsky@super.lgbt | a.3cjPP?ib!GwB,5 | The Impulsive Spender |
+| Angeloo | angelo.05@gmail.com | angelo123 | The Frugal Scholar |
 
 ---
 
