@@ -208,7 +208,7 @@
             <div class="textarea-wrapper">
                 <textarea #textareaRef [ngModel]="userInput()" (ngModelChange)="onInputChange($event)"
                     (keydown)="handleKeydown($event)" (input)="autoResize($event)"
-                    [placeholder]="isRecording() ? 'Listening... Click mic to stop' : 'Type a message or / for commands...'" rows="1"
+                    [placeholder]="isRecording() ? 'Listening... Click mic to stop' : inputPlaceholder()" rows="1"
                     maxlength="1000"></textarea>
             </div>
 

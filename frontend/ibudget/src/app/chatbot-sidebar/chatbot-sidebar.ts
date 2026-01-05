@@ -30,6 +30,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     private speechSubscription: Subscription | null = null;
     private errorSubscription: Subscription | null = null;
     private typewriterTimeoutId: number | null = null;
+    private commandPlaceholderInterval: number | null = null;
 
     // isOpen = signal(false); // Removed local state
     isOpen = this.chatbotService.isOpen;
@@ -66,6 +67,8 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     showCommandPalette = signal(false);
     selectedCommandIndex = signal(0);
     filteredCommands = signal<typeof this.quickActions>([]);
+    inputPlaceholder = signal('Type a message or / for commands...');
+    currentCommandIndex = 0;
 
     // Scroll tracking
     private shouldScrollToBottom = false;
@@ -236,8 +239,9 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
             this.errorSubscription.unsubscribe();
         }
 
-        // Stop typewriter animation
+        // Stop animations
         this.stopTypewriterAnimation();
+        this.stopCommandPlaceholderAnimation();
 
         // Stop any ongoing speech
         this.speechService.stopListening();
@@ -426,6 +430,8 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
         this.showCommandPalette.set(false);
         this.filteredCommands.set([]);
         this.selectedCommandIndex.set(0);
+        this.stopCommandPlaceholderAnimation();
+        this.inputPlaceholder.set('Type a message or / for commands...');
     }
 
     /**
@@ -439,6 +445,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
             this.showCommandPalette.set(true);
             this.filteredCommands.set([...this.quickActions]);
             this.selectedCommandIndex.set(0);
+            this.startCommandPlaceholderAnimation();
         } 
         // If command palette is open and input starts with "/", filter commands
         else if (this.showCommandPalette() && value.startsWith('/')) {
@@ -449,11 +456,57 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
             );
             this.filteredCommands.set(filtered);
             this.selectedCommandIndex.set(0);
+            
+            // Update placeholder based on filtered results
+            if (filtered.length > 0) {
+                this.inputPlaceholder.set(`Try: ${filtered[0].command} - ${filtered[0].text}`);
+            }
         }
         // Close command palette if user cleared the "/"
         else if (this.showCommandPalette() && !value.startsWith('/')) {
             this.closeCommandPalette();
         }
+        // Reset placeholder when input is empty
+        else if (value === '') {
+            this.stopCommandPlaceholderAnimation();
+            this.inputPlaceholder.set('Type a message or / for commands...');
+        }
+    }
+
+    /**
+     * Start cycling through command examples in placeholder
+     */
+    private startCommandPlaceholderAnimation() {
+        // Clear any existing interval
+        this.stopCommandPlaceholderAnimation();
+        
+        // Start at first command
+        this.currentCommandIndex = 0;
+        this.updateCommandPlaceholder();
+        
+        // Cycle through commands every 2 seconds
+        this.commandPlaceholderInterval = window.setInterval(() => {
+            this.currentCommandIndex = (this.currentCommandIndex + 1) % this.quickActions.length;
+            this.updateCommandPlaceholder();
+        }, 2000);
+    }
+
+    /**
+     * Stop command placeholder animation
+     */
+    private stopCommandPlaceholderAnimation() {
+        if (this.commandPlaceholderInterval !== null) {
+            clearInterval(this.commandPlaceholderInterval);
+            this.commandPlaceholderInterval = null;
+        }
+    }
+
+    /**
+     * Update placeholder with current command example
+     */
+    private updateCommandPlaceholder() {
+        const action = this.quickActions[this.currentCommandIndex];
+        this.inputPlaceholder.set(`Try: ${action.command} - ${action.text}`);
     }
 
     /**
