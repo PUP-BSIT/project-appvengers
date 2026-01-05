@@ -201,7 +201,11 @@
               } @else if (getRelativeDate(transaction.date) === 'Yesterday') {
                 Yesterday
               } @else {
-                {{ transaction.date | date:'EEEE, MMM d, y' }}
+                @if (selectedPeriod === 'monthly') {
+                  {{ transaction.date | date:'MMMM y' }}
+                } @else {
+                  {{ transaction.date | date:'EEEE, MMM d, y' }}
+                }
               }
             </div>
           }
