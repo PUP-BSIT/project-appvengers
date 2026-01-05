@@ -140,20 +140,6 @@
             </button>
         </div>
         }
-
-        @if (messages().length === 0 && !isLoading()) {
-        <div class="quick-actions">
-            <p class="quick-actions-title">Quick Actions:</p>
-            <div class="quick-actions-grid">
-                @for (action of quickActions; track action.text) {
-                <button class="quick-action-chip" (click)="sendQuickAction(action.prompt)">
-                    <i class="bi" [class]="action.icon"></i>
-                    <span>{{ action.text }}</span>
-                </button>
-                }
-            </div>
-        </div>
-        }
     </div>
 
     <div class="input-area">
@@ -171,15 +157,71 @@
         </div>
         }
 
+        <!-- Command Palette Dropdown -->
+        @if (showCommandPalette() && filteredCommands().length > 0) {
+        <div class="command-palette">
+            <div class="command-palette-header">
+                <i class="bi bi-lightning-charge"></i>
+                <span>Quick Commands</span>
+                <button class="close-palette-btn" (click)="closeCommandPalette()">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+            <div class="command-palette-list">
+                @for (action of filteredCommands(); track action.command; let i = $index) {
+                <button 
+                    class="command-item" 
+                    [class.selected]="i === selectedCommandIndex()"
+                    (click)="selectCommand(action, i)"
+                    (mouseenter)="selectedCommandIndex.set(i)">
+                    <i class="bi" [class]="action.icon"></i>
+                    <div class="command-text">
+                        <span class="command-name">{{ action.command }}</span>
+                        <span class="command-desc">{{ action.text }}</span>
+                    </div>
+                    <kbd class="command-kbd">↵</kbd>
+                </button>
+                }
+            </div>
+            @if (filteredCommands().length === 0) {
+            <div class="command-empty">
+                <i class="bi bi-search"></i>
+                <span>No commands found</span>
+            </div>
+            }
+        </div>
+        }
+
+        <!-- Compact Pills (shows when thunder button is clicked) -->
+        @if (showCommandPalette()) {
+        <div class="quick-pills">
+            @for (action of quickActions; track action.command) {
+            <button class="quick-pill" (click)="executeQuickAction(action)">
+                <i class="bi" [class]="action.icon"></i>
+                <span>{{ action.text }}</span>
+            </button>
+            }
+        </div>
+        }
+
         <div class="input-container">
             <div class="textarea-wrapper">
-                <textarea #textareaRef [ngModel]="userInput()" (ngModelChange)="userInput.set($event)"
+                <textarea #textareaRef [ngModel]="userInput()" (ngModelChange)="onInputChange($event)"
                     (keydown)="handleKeydown($event)" (input)="autoResize($event)"
-                    [placeholder]="isRecording() ? 'Listening... Click mic to stop' : 'Type a message...'" rows="1"
+                    [placeholder]="isRecording() ? 'Listening... Click mic to stop' : 'Type a message or / for commands...'" rows="1"
                     maxlength="1000"></textarea>
             </div>
 
             <div class="input-actions">
+                <!-- Slash Command Button -->
+                <button class="action-icon-btn slash-btn" 
+                    (click)="toggleCommandPalette()" 
+                    [class.active]="showCommandPalette()"
+                    [title]="showCommandPalette() ? 'Close commands' : 'Quick commands'"
+                    [disabled]="isLoading()">
+                    <i class="bi bi-lightning-charge"></i>
+                </button>
+
                 @if (isSTTSupported()) {
                 <button class="action-icon-btn mic-btn" (click)="toggleRecording()" [class.recording]="isRecording()"
                     [title]="isRecording() ? 'Stop recording' : 'Voice input'" [disabled]="isLoading()">
