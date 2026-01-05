@@ -170,8 +170,10 @@ jobs:
             FRONTEND_URL=https://i-budget.site
             APP_EMAIL_FROM=${{ secrets.APP_EMAIL_FROM }}
             
-            # N8N Webhook
+            # N8N Webhook Configuration
             N8N_WEBHOOK_URL=${{ secrets.N8N_WEBHOOK_URL }}
+            N8N_WEBHOOK_FALLBACK_URL=${{ secrets.N8N_WEBHOOK_FALLBACK_URL }}
+            N8N_FAILOVER_TIMEOUT=${{ secrets.N8N_FAILOVER_TIMEOUT }}
             
             # Google OAuth2 Configuration
             GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
