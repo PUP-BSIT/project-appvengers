@@ -768,6 +768,8 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
 
             &::placeholder {
                 color: #9ca3af;
+                transition: opacity 0.3s ease, color 0.3s ease;
+                animation: placeholderFade 0.5s ease-in-out;
             }
 
             // Custom scrollbar for textarea
@@ -782,6 +784,18 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
             &::-webkit-scrollbar-thumb {
                 background: #cbd5e1;
                 border-radius: 2px;
+            }
+        }
+
+        // Placeholder fade animation
+        @keyframes placeholderFade {
+            0% {
+                opacity: 0;
+                transform: translateY(-2px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
@@ -1510,7 +1524,7 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
     display: flex;
     gap: 6px;
     padding: 8px 12px;
-    background: #f8f9fa;
+    background: transparent;
     border-top: 1px solid $border-color;
     overflow-x: auto;
     scrollbar-width: thin;
