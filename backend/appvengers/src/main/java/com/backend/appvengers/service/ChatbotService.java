@@ -31,6 +31,12 @@ public class ChatbotService {
     @Value("${n8n.webhook.url}")
     private String n8nWebhookUrl;
 
+    @Value("${n8n.webhook.fallback.url}")
+    private String n8nWebhookFallbackUrl;
+
+    @Value("${n8n.webhook.failover.timeout:15000}")
+    private long failoverTimeout;
+
     private final UserContextService userContextService;
     private final RestTemplate restTemplate; // Injected from RestTemplateConfig
 
@@ -40,6 +46,7 @@ public class ChatbotService {
      * The session ID enables conversation continuity in the n8n AI agent.
      * The JWT token is forwarded to n8n for webhook authentication.
      * 
+     * Implements automatic failover to fallback webhook if primary fails.
      * Retries up to 3 times with exponential backoff (3s, 6s, 12s) on transient errors.
      * Total retry window: ~21 seconds between attempts, plus 45s connect timeout per attempt.
      *
@@ -86,43 +93,92 @@ public class ChatbotService {
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
         
-        log.info("Sending request to n8n webhook: {}", n8nWebhookUrl);
-
+        // Try primary webhook first
+        log.info("[Primary] Sending request to n8n webhook: {}", n8nWebhookUrl);
+        Object primaryResponse = tryWebhook(request, n8nWebhookUrl, "Primary");
+        
+        // If primary succeeds, return immediately
+        if (primaryResponse != null && !isErrorResponse(primaryResponse)) {
+            log.info("[Primary] Successfully received response from primary webhook");
+            return primaryResponse;
+        }
+        
+        // If primary fails, try fallback webhook
+        log.warn("[Fallback] Primary webhook failed or returned error, attempting fallback webhook: {}", n8nWebhookFallbackUrl);
+        Object fallbackResponse = tryWebhook(request, n8nWebhookFallbackUrl, "Fallback");
+        
+        // If fallback succeeds, return
+        if (fallbackResponse != null && !isErrorResponse(fallbackResponse)) {
+            log.info("[Fallback] Successfully received response from fallback webhook");
+            return fallbackResponse;
+        }
+        
+        // Both webhooks failed, return generic error
+        log.error("[Failover] Both primary and fallback webhooks failed");
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "All chatbot services are currently unavailable.");
+        errorResponse.put("output", "Sorry, I'm experiencing technical difficulties. Please try again in a few moments.");
+        return errorResponse;
+    }
+    
+    /**
+     * Attempts to send a request to a specific webhook URL and handles errors.
+     * Returns null if the webhook fails (timeout, server error, etc.).
+     * 
+     * @param request The HTTP request entity to send
+     * @param webhookUrl The webhook URL to send to
+     * @param webhookLabel Label for logging (e.g., "Primary" or "Fallback")
+     * @return Response object if successful, null if failed
+     */
+    private Object tryWebhook(HttpEntity<Map<String, Object>> request, String webhookUrl, String webhookLabel) {
         try {
-            ResponseEntity<Object> response = restTemplate.postForEntity(n8nWebhookUrl, request, Object.class);
-            log.info("n8n response status: {}", response.getStatusCode());
+            ResponseEntity<Object> response = restTemplate.postForEntity(webhookUrl, request, Object.class);
+            log.info("[{}] n8n response status: {}", webhookLabel, response.getStatusCode());
             Object responseBody = response.getBody();
             
             // Handle null response from n8n
             if (responseBody == null) {
-                log.warn("n8n returned null response body");
-                Map<String, String> fallbackResponse = new HashMap<>();
-                fallbackResponse.put("output", "I'm having trouble processing your request. Please try again.");
-                return fallbackResponse;
+                log.warn("[{}] n8n returned null response body", webhookLabel);
+                return null;
             }
             
             return responseBody;
         } catch (HttpClientErrorException e) {
-            log.error("n8n client error ({}): {}", e.getStatusCode(), e.getResponseBodyAsString());
+            log.error("[{}] n8n client error ({}): {}", webhookLabel, e.getStatusCode(), e.getResponseBodyAsString());
+            // For 404 errors (workflow not active), trigger fallback instead of returning error
+            if (e.getStatusCode().value() == 404) {
+                log.warn("[{}] Webhook not found or workflow inactive (404), triggering fallback", webhookLabel);
+                return null; // Trigger fallback
+            }
+            // For other client errors (401, 403), return error response
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Authentication failed with chatbot service.");
             errorResponse.put("output", "Sorry, I couldn't authenticate with the AI service. Status: " + e.getStatusCode());
             return errorResponse;
         } catch (HttpServerErrorException e) {
-            log.error("n8n server error ({}): {}", e.getStatusCode(), e.getResponseBodyAsString());
-            // This will trigger retry
-            throw e;
+            log.error("[{}] n8n server error ({}): {}", webhookLabel, e.getStatusCode(), e.getResponseBodyAsString());
+            return null; // Trigger fallback
         } catch (ResourceAccessException e) {
-            log.error("n8n timeout or connection error: {}", e.getMessage());
-            // This will trigger retry
-            throw e;
+            log.error("[{}] n8n timeout or connection error: {}", webhookLabel, e.getMessage());
+            return null; // Trigger fallback
         } catch (Exception e) {
-            log.error("Failed to communicate with n8n: {}", e.getMessage(), e);
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "Failed to communicate with chatbot service.");
-            errorResponse.put("output", "Sorry, I couldn't reach the AI service. Please try again later.");
-            return errorResponse;
+            log.error("[{}] Failed to communicate with n8n: {}", webhookLabel, e.getMessage(), e);
+            return null; // Trigger fallback
         }
+    }
+    
+    /**
+     * Checks if the response is an error response.
+     * 
+     * @param response The response object to check
+     * @return true if response contains an error, false otherwise
+     */
+    private boolean isErrorResponse(Object response) {
+        if (response instanceof Map) {
+            Map<?, ?> responseMap = (Map<?, ?>) response;
+            return responseMap.containsKey("error");
+        }
+        return false;
     }
 
     /**
