@@ -29,6 +29,7 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     // Subscriptions for cleanup
     private speechSubscription: Subscription | null = null;
     private errorSubscription: Subscription | null = null;
+    private typewriterTimeoutId: number | null = null;
 
     // isOpen = signal(false); // Removed local state
     isOpen = this.chatbotService.isOpen;
@@ -229,6 +230,9 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
         if (this.errorSubscription) {
             this.errorSubscription.unsubscribe();
         }
+
+        // Stop typewriter animation
+        this.stopTypewriterAnimation();
 
         // Stop any ongoing speech
         this.speechService.stopListening();
@@ -1024,20 +1028,54 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     }
 
     /**
-     * Start typewriter animation for greeting
+     * Start typewriter animation for greeting (loops infinitely)
      */
     private startTypewriterAnimation(): void {
         const fullText = `Hi, ${this.userName()}`;
         let currentIndex = 0;
+        let isDeleting = false;
         this.typewriterText.set('');
 
-        const typeInterval = setInterval(() => {
-            if (currentIndex < fullText.length) {
-                this.typewriterText.set(fullText.substring(0, currentIndex + 1));
-                currentIndex++;
+        const typeLoop = () => {
+            if (!isDeleting) {
+                // Typing forward
+                if (currentIndex < fullText.length) {
+                    this.typewriterText.set(fullText.substring(0, currentIndex + 1));
+                    currentIndex++;
+                    this.typewriterTimeoutId = window.setTimeout(typeLoop, 80); // 80ms delay between characters
+                } else {
+                    // Pause at the end before deleting
+                    this.typewriterTimeoutId = window.setTimeout(() => {
+                        isDeleting = true;
+                        typeLoop();
+                    }, 2000); // 2 second pause
+                }
             } else {
-                clearInterval(typeInterval);
+                // Deleting backward
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    this.typewriterText.set(fullText.substring(0, currentIndex));
+                    this.typewriterTimeoutId = window.setTimeout(typeLoop, 50); // 50ms delay when deleting (faster)
+                } else {
+                    // Pause before restarting
+                    this.typewriterTimeoutId = window.setTimeout(() => {
+                        isDeleting = false;
+                        typeLoop();
+                    }, 500); // 0.5 second pause
+                }
             }
-        }, 80); // 80ms delay between characters
+        };
+
+        typeLoop();
+    }
+
+    /**
+     * Stop typewriter animation (for cleanup)
+     */
+    private stopTypewriterAnimation(): void {
+        if (this.typewriterTimeoutId !== null) {
+            clearTimeout(this.typewriterTimeoutId);
+            this.typewriterTimeoutId = null;
+        }
     }
 }
