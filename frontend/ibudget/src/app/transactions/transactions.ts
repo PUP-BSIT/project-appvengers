@@ -924,6 +924,12 @@ ngOnInit() {
     yesterday.setDate(yesterday.getDate() - 1);
     yesterday.setHours(0, 0, 0, 0);
     
+    // For monthly view, group by month/year instead of day
+    if (this.selectedPeriod === 'monthly') {
+      const monthYear = `${transactionDate.getFullYear()}-${transactionDate.getMonth()}`;
+      return monthYear;
+    }
+    
     if (transactionDate.getTime() === today.getTime()) {
       return 'Today';
     } else if (transactionDate.getTime() === yesterday.getTime()) {
