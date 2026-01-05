@@ -37,6 +37,7 @@ class ChatbotServiceTest {
     private ChatbotService chatbotService;
 
     private static final String N8N_WEBHOOK_URL = "https://test-n8n.com/webhook/test";
+    private static final String N8N_WEBHOOK_FALLBACK_URL = "https://test-fallback-n8n.com/webhook/test";
     private static final String TEST_MESSAGE = "How do I add a transaction?";
     private static final String TEST_USER_EMAIL = "test@example.com";
     private static final String TEST_SESSION_ID = "test-session-123";
@@ -44,8 +45,10 @@ class ChatbotServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Inject the webhook URL using reflection (since it's @Value annotated)
+        // Inject the webhook URLs using reflection (since they're @Value annotated)
         ReflectionTestUtils.setField(chatbotService, "n8nWebhookUrl", N8N_WEBHOOK_URL);
+        ReflectionTestUtils.setField(chatbotService, "n8nWebhookFallbackUrl", N8N_WEBHOOK_FALLBACK_URL);
+        ReflectionTestUtils.setField(chatbotService, "failoverTimeout", 15000L);
     }
 
     @Test
@@ -74,49 +77,105 @@ class ChatbotServiceTest {
     }
 
     @Test
-    void testSendMessage_ServerError_ShouldThrowForRetry() {
+    void testSendMessage_ServerError_ShouldUseFallback() {
         // Arrange
         when(userContextService.buildUserContext(TEST_USER_EMAIL)).thenReturn(
                 UserFinancialContext.builder().userEmail(TEST_USER_EMAIL).build()
         );
+        
+        // Primary webhook throws server error
         when(restTemplate.postForEntity(eq(N8N_WEBHOOK_URL), any(HttpEntity.class), eq(Object.class)))
                 .thenThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "n8n error"));
-
-        // Act & Assert
-        assertThrows(HttpServerErrorException.class, () -> 
-            chatbotService.sendMessage(TEST_MESSAGE, TEST_USER_EMAIL, TEST_SESSION_ID, TEST_JWT_TOKEN)
-        );
         
-        // Verify it was called (retry mechanism will call it multiple times in real scenario)
+        // Fallback webhook succeeds
+        Map<String, String> fallbackResponse = Map.of("output", "Response from fallback webhook");
+        ResponseEntity<Object> fallbackEntity = new ResponseEntity<>(fallbackResponse, HttpStatus.OK);
+        when(restTemplate.postForEntity(eq(N8N_WEBHOOK_FALLBACK_URL), any(HttpEntity.class), eq(Object.class)))
+                .thenReturn(fallbackEntity);
+
+        // Act
+        Object result = chatbotService.sendMessage(TEST_MESSAGE, TEST_USER_EMAIL, TEST_SESSION_ID, TEST_JWT_TOKEN);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(fallbackResponse, result);
+        
+        // Verify both webhooks were called (primary failed, fallback succeeded)
         verify(restTemplate, times(1)).postForEntity(eq(N8N_WEBHOOK_URL), any(HttpEntity.class), eq(Object.class));
+        verify(restTemplate, times(1)).postForEntity(eq(N8N_WEBHOOK_FALLBACK_URL), any(HttpEntity.class), eq(Object.class));
     }
 
     @Test
-    void testSendMessage_Timeout_ShouldThrowForRetry() {
+    void testSendMessage_Timeout_ShouldUseFallback() {
         // Arrange
         when(userContextService.buildUserContext(TEST_USER_EMAIL)).thenReturn(
                 UserFinancialContext.builder().userEmail(TEST_USER_EMAIL).build()
         );
+        
+        // Primary webhook times out
         when(restTemplate.postForEntity(eq(N8N_WEBHOOK_URL), any(HttpEntity.class), eq(Object.class)))
                 .thenThrow(new ResourceAccessException("Connection timeout"));
-
-        // Act & Assert
-        assertThrows(ResourceAccessException.class, () -> 
-            chatbotService.sendMessage(TEST_MESSAGE, TEST_USER_EMAIL, TEST_SESSION_ID, TEST_JWT_TOKEN)
-        );
         
+        // Fallback webhook succeeds
+        Map<String, String> fallbackResponse = Map.of("output", "Response from fallback after timeout");
+        ResponseEntity<Object> fallbackEntity = new ResponseEntity<>(fallbackResponse, HttpStatus.OK);
+        when(restTemplate.postForEntity(eq(N8N_WEBHOOK_FALLBACK_URL), any(HttpEntity.class), eq(Object.class)))
+                .thenReturn(fallbackEntity);
+
+        // Act
+        Object result = chatbotService.sendMessage(TEST_MESSAGE, TEST_USER_EMAIL, TEST_SESSION_ID, TEST_JWT_TOKEN);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(fallbackResponse, result);
+        
+        // Verify both webhooks were called (primary timed out, fallback succeeded)
         verify(restTemplate, times(1)).postForEntity(eq(N8N_WEBHOOK_URL), any(HttpEntity.class), eq(Object.class));
+        verify(restTemplate, times(1)).postForEntity(eq(N8N_WEBHOOK_FALLBACK_URL), any(HttpEntity.class), eq(Object.class));
     }
 
     @Test
-    void testSendMessage_NullResponse_ShouldReturnFallback() {
+    void testSendMessage_NullResponse_ShouldUseFallback() {
         // Arrange
         when(userContextService.buildUserContext(TEST_USER_EMAIL)).thenReturn(
                 UserFinancialContext.builder().userEmail(TEST_USER_EMAIL).build()
         );
+        
+        // Primary webhook returns null body
         ResponseEntity<Object> nullResponseEntity = new ResponseEntity<>(null, HttpStatus.OK);
         when(restTemplate.postForEntity(eq(N8N_WEBHOOK_URL), any(HttpEntity.class), eq(Object.class)))
                 .thenReturn(nullResponseEntity);
+        
+        // Fallback webhook succeeds
+        Map<String, String> fallbackResponse = Map.of("output", "Response from fallback after null");
+        ResponseEntity<Object> fallbackEntity = new ResponseEntity<>(fallbackResponse, HttpStatus.OK);
+        when(restTemplate.postForEntity(eq(N8N_WEBHOOK_FALLBACK_URL), any(HttpEntity.class), eq(Object.class)))
+                .thenReturn(fallbackEntity);
+
+        // Act
+        Object result = chatbotService.sendMessage(TEST_MESSAGE, TEST_USER_EMAIL, TEST_SESSION_ID, TEST_JWT_TOKEN);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(fallbackResponse, result);
+        
+        // Verify both webhooks were called (primary returned null, fallback succeeded)
+        verify(restTemplate, times(1)).postForEntity(eq(N8N_WEBHOOK_URL), any(HttpEntity.class), eq(Object.class));
+        verify(restTemplate, times(1)).postForEntity(eq(N8N_WEBHOOK_FALLBACK_URL), any(HttpEntity.class), eq(Object.class));
+    }
+
+    @Test
+    void testSendMessage_BothWebhooksFail_ShouldReturnErrorMessage() {
+        // Arrange
+        when(userContextService.buildUserContext(TEST_USER_EMAIL)).thenReturn(
+                UserFinancialContext.builder().userEmail(TEST_USER_EMAIL).build()
+        );
+        
+        // Both webhooks fail
+        when(restTemplate.postForEntity(eq(N8N_WEBHOOK_URL), any(HttpEntity.class), eq(Object.class)))
+                .thenThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Primary error"));
+        when(restTemplate.postForEntity(eq(N8N_WEBHOOK_FALLBACK_URL), any(HttpEntity.class), eq(Object.class)))
+                .thenThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Fallback error"));
 
         // Act
         Object result = chatbotService.sendMessage(TEST_MESSAGE, TEST_USER_EMAIL, TEST_SESSION_ID, TEST_JWT_TOKEN);
@@ -126,8 +185,13 @@ class ChatbotServiceTest {
         assertTrue(result instanceof Map);
         @SuppressWarnings("unchecked")
         Map<String, String> resultMap = (Map<String, String>) result;
+        assertTrue(resultMap.containsKey("error"));
         assertTrue(resultMap.containsKey("output"));
-        assertTrue(resultMap.get("output").contains("trouble processing"));
+        assertTrue(resultMap.get("output").contains("technical difficulties"));
+        
+        // Verify both webhooks were called
+        verify(restTemplate, times(1)).postForEntity(eq(N8N_WEBHOOK_URL), any(HttpEntity.class), eq(Object.class));
+        verify(restTemplate, times(1)).postForEntity(eq(N8N_WEBHOOK_FALLBACK_URL), any(HttpEntity.class), eq(Object.class));
     }
 
     @Test
