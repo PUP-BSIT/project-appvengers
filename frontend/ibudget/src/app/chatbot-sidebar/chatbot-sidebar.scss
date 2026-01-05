@@ -1344,3 +1344,252 @@ $gradient-pink: linear-gradient(135deg, #B6CEE8 0%, #F578DC 100%);
         }
     }
 }
+
+// ==================== Command Palette ====================
+.command-palette {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    margin-bottom: 8px;
+    background: #ffffff;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    z-index: 10;
+    animation: slideUpFade 0.2s ease-out;
+
+    .command-palette-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+        color: white;
+        font-size: 0.85rem;
+        font-weight: 600;
+        
+        i {
+            font-size: 1rem;
+        }
+
+        span {
+            flex: 1;
+        }
+
+        .close-palette-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            transition: background 0.2s;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.15);
+            }
+
+            i {
+                font-size: 1.1rem;
+            }
+        }
+    }
+
+    .command-palette-list {
+        max-height: 240px;
+        overflow-y: auto;
+        padding: 4px;
+    }
+
+    .command-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        background: transparent;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        text-align: left;
+
+        i {
+            font-size: 1.2rem;
+            color: $primary-color;
+            flex-shrink: 0;
+            transition: transform 0.15s ease;
+        }
+
+        .command-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+
+            .command-name {
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: $primary-color;
+                font-family: 'Courier New', monospace;
+            }
+
+            .command-desc {
+                font-size: 0.75rem;
+                color: #6b7280;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .command-kbd {
+            padding: 2px 6px;
+            background: #f3f4f6;
+            border: 1px solid $border-color;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: #6b7280;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        &:hover,
+        &.selected {
+            background: rgba($primary-color, 0.08);
+
+            i {
+                transform: scale(1.1);
+            }
+
+            .command-kbd {
+                background: $primary-color;
+                color: white;
+                border-color: $primary-color;
+            }
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+    }
+
+    .command-empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 24px;
+        color: #9ca3af;
+        font-size: 0.85rem;
+
+        i {
+            font-size: 1.2rem;
+        }
+    }
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// ==================== Quick Pills (Compact) ====================
+.quick-pills {
+    display: flex;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-top: 1px solid $border-color;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 2px;
+    }
+
+    .quick-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: white;
+        border: 1px solid $border-color;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        color: $text-color;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+
+        i {
+            font-size: 0.9rem;
+            color: $primary-color;
+            transition: transform 0.2s ease;
+        }
+
+        &:hover {
+            background: $primary-color;
+            color: white;
+            border-color: $primary-color;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba($primary-color, 0.3);
+
+            i {
+                color: white;
+                transform: scale(1.1);
+            }
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+}
+
+// ==================== Input Actions - Add Slash Button ====================
+.input-actions {
+    .slash-btn {
+        color: $primary-color;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: rgba($primary-color, 0.1);
+            transform: scale(1.05);
+        }
+
+        &.active {
+            background: $primary-color;
+            color: white;
+            box-shadow: 0 2px 8px rgba($primary-color, 0.3);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+}

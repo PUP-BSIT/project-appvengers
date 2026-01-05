@@ -62,6 +62,11 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     // Copy message tracking
     copiedMessageId = signal<number | null>(null);
 
+    // Command palette state
+    showCommandPalette = signal(false);
+    selectedCommandIndex = signal(0);
+    filteredCommands = signal<typeof this.quickActions>([]);
+
     // Scroll tracking
     private shouldScrollToBottom = false;
 
@@ -78,10 +83,10 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     ];
 
     readonly quickActions = [
-        { icon: 'bi-pie-chart', text: 'Show my spending', prompt: 'Show me a breakdown of my spending by category' },
-        { icon: 'bi-lightbulb', text: 'Budget tips', prompt: 'Give me some budgeting tips for students' },
-        { icon: 'bi-plus-circle', text: 'How to add transaction', prompt: 'How do I add a new transaction?' },
-        { icon: 'bi-piggy-bank', text: 'Savings advice', prompt: 'How can I save more money?' }
+        { icon: 'bi-pie-chart', text: 'Show my spending', command: '/spending', prompt: 'Show me a breakdown of my spending by category' },
+        { icon: 'bi-lightbulb', text: 'Budget tips', command: '/tips', prompt: 'Give me some budgeting tips for students' },
+        { icon: 'bi-plus-circle', text: 'How to add transaction', command: '/add', prompt: 'How do I add a new transaction?' },
+        { icon: 'bi-piggy-bank', text: 'Savings advice', command: '/savings', prompt: 'How can I save more money?' }
     ];
 
     constructor() {
@@ -395,6 +400,78 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
         this.sendMessage();
     }
 
+    /**
+     * Toggle command palette visibility
+     */
+    toggleCommandPalette() {
+        const isOpen = !this.showCommandPalette();
+        this.showCommandPalette.set(isOpen);
+        
+        if (isOpen) {
+            // Show all commands initially
+            this.filteredCommands.set([...this.quickActions]);
+            this.selectedCommandIndex.set(0);
+            
+            // Focus textarea if not focused
+            setTimeout(() => {
+                this.textareaRef?.nativeElement.focus();
+            }, 0);
+        }
+    }
+
+    /**
+     * Close command palette
+     */
+    closeCommandPalette() {
+        this.showCommandPalette.set(false);
+        this.filteredCommands.set([]);
+        this.selectedCommandIndex.set(0);
+    }
+
+    /**
+     * Handle input changes - detect slash commands
+     */
+    onInputChange(value: string) {
+        this.userInput.set(value);
+        
+        // Check if user typed "/"
+        if (value === '/') {
+            this.showCommandPalette.set(true);
+            this.filteredCommands.set([...this.quickActions]);
+            this.selectedCommandIndex.set(0);
+        } 
+        // If command palette is open and input starts with "/", filter commands
+        else if (this.showCommandPalette() && value.startsWith('/')) {
+            const query = value.substring(1).toLowerCase();
+            const filtered = this.quickActions.filter(action => 
+                action.command.substring(1).toLowerCase().includes(query) ||
+                action.text.toLowerCase().includes(query)
+            );
+            this.filteredCommands.set(filtered);
+            this.selectedCommandIndex.set(0);
+        }
+        // Close command palette if user cleared the "/"
+        else if (this.showCommandPalette() && !value.startsWith('/')) {
+            this.closeCommandPalette();
+        }
+    }
+
+    /**
+     * Execute a quick action (from pill or command palette)
+     */
+    executeQuickAction(action: typeof this.quickActions[0]) {
+        this.closeCommandPalette();
+        this.sendQuickAction(action.prompt);
+    }
+
+    /**
+     * Select command from palette (keyboard or click)
+     */
+    selectCommand(action: typeof this.quickActions[0], index: number) {
+        this.selectedCommandIndex.set(index);
+        this.executeQuickAction(action);
+    }
+
     clearChat() {
         this.messages.set([]);
         this.chatbotService.clearHistory();
@@ -404,6 +481,39 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
     }
 
     handleKeydown(event: KeyboardEvent) {
+        // Command palette navigation
+        if (this.showCommandPalette()) {
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                const maxIndex = this.filteredCommands().length - 1;
+                this.selectedCommandIndex.set(
+                    Math.min(this.selectedCommandIndex() + 1, maxIndex)
+                );
+                return;
+            }
+            if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                this.selectedCommandIndex.set(
+                    Math.max(this.selectedCommandIndex() - 1, 0)
+                );
+                return;
+            }
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                const selectedCmd = this.filteredCommands()[this.selectedCommandIndex()];
+                if (selectedCmd) {
+                    this.executeQuickAction(selectedCmd);
+                }
+                return;
+            }
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                this.closeCommandPalette();
+                return;
+            }
+        }
+
+        // Regular message sending
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
             this.sendMessage();
