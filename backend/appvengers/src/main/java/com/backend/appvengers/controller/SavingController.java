@@ -20,6 +20,7 @@ import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.SavingRepository;
 import com.backend.appvengers.repository.UserRepository;
 import com.backend.appvengers.service.SavingService;
+import org.springframework.lang.NonNull;
 
 import lombok.RequiredArgsConstructor;
 
@@ -49,7 +50,7 @@ public class SavingController {
   // Additional endpoints (create, update, delete) can be added here
   // Working Endpoint: Get savings by saving_id with the current user
   @GetMapping("/savings/{id}")
-  public Saving getSavingById(@PathVariable Integer id, Authentication auth) {
+  public Saving getSavingById(@PathVariable @NonNull Integer id, Authentication auth) {
     int userId = currentUserId(auth);
     Saving saving = savingRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Saving not found"));
@@ -69,7 +70,7 @@ public class SavingController {
 
   // Working Endpoint: Update Saving
   @PutMapping("/savings/{id}")
-  public Saving updateSaving(@PathVariable Integer id, @RequestBody Saving savingDetails, Authentication auth) {
+  public Saving updateSaving(@PathVariable @NonNull Integer id, @RequestBody Saving savingDetails, Authentication auth) {
     int userId = currentUserId(auth);
     Saving saving = savingRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Saving not found with id " + id));
@@ -96,7 +97,7 @@ public class SavingController {
 
   // Working Endpoint: Soft Delete Saving
   @DeleteMapping("/savings/{id}")
-  public ResponseEntity<Void> deleteSaving(@PathVariable Integer id, Authentication auth) {
+  public ResponseEntity<Void> deleteSaving(@PathVariable @NonNull Integer id, Authentication auth) {
     int userId = currentUserId(auth);
     Saving saving = savingRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Saving not found with id " + id));
@@ -118,14 +119,14 @@ public class SavingController {
 
   // Fetch saving transactions by savingId
   @GetMapping("/savings/{savingId}/transactions")
-  public List<SavingTransaction> getSavingTransactionsBySavingId(@PathVariable Integer savingId, Authentication auth) {
+  public List<SavingTransaction> getSavingTransactionsBySavingId(@PathVariable @NonNull Integer savingId, Authentication auth) {
     int userId = currentUserId(auth);
     return savingRepository.fetchSavingsTransactionById(savingId, userId);
   }
 
   // Refresh current amount for a saving
   @GetMapping("/savings/{savingId}/refresh-current-amount")
-  public ResponseEntity<ApiResponse> refreshCurrentAmount(@PathVariable Integer savingId, Authentication auth) {
+  public ResponseEntity<ApiResponse> refreshCurrentAmount(@PathVariable @NonNull Integer savingId, Authentication auth) {
     int userId = currentUserId(auth);
     Saving saving = savingRepository.findById(savingId)
         .orElseThrow(() -> new RuntimeException("Saving not found with id " + savingId));
