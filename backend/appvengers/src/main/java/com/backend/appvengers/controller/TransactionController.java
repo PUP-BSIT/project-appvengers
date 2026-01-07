@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.lang.NonNull;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -147,7 +148,7 @@ public class TransactionController {
     // Budget Transaction Endpoint [GET by ID]
     @GetMapping("/budget-transactions/{id}")
     public ResponseEntity<ApiResponse> getBudgetExpenseById(
-        @PathVariable Long id
+        @PathVariable @NonNull Long id
     ) {
         try {
             Transaction tx = transactionRepository
