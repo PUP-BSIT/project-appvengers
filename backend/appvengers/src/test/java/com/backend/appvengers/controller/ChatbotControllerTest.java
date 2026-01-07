@@ -104,16 +104,12 @@ class ChatbotControllerTest {
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody() instanceof Map<?,?>);
-
+        
         @SuppressWarnings("unchecked")
-        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
-
-        assertNotNull(responseBody);
+        Map<String, String> responseBody = (Map<String, String>) response.getBody();
         assertTrue(responseBody.containsKey("error"));
         assertEquals("Validation failed", responseBody.get("error"));
-        assertNotNull(responseBody.get("output"));
-        assertTrue(responseBody.get("output").toString().contains("empty"));
+        assertTrue(responseBody.get("output").contains("empty"));
         
         verify(chatbotService, never()).sendMessage(anyString(), anyString(), anyString(), anyString());
     }
@@ -177,16 +173,12 @@ class ChatbotControllerTest {
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody() instanceof Map<?,?>);
-
+        
         @SuppressWarnings("unchecked")
-        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
-
-        assertNotNull(responseBody);
+        Map<String, String> responseBody = (Map<String, String>) response.getBody();
         assertTrue(responseBody.containsKey("error"));
-        assertNotNull(responseBody.get("output"));
-        assertTrue(responseBody.get("output").toString().contains("500"));
-
+        assertTrue(responseBody.get("output").contains("500"));
+        
         verify(chatbotService, never()).sendMessage(anyString(), anyString(), anyString(), anyString());
     }
 
@@ -359,16 +351,12 @@ class ChatbotControllerTest {
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody() instanceof Map<?,?>);
-
+        
         @SuppressWarnings("unchecked")
-        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
-
-        assertNotNull(responseBody);
+        Map<String, String> responseBody = (Map<String, String>) response.getBody();
         assertEquals("Invalid input", responseBody.get("error"));
-        assertNotNull(responseBody.get("output"));
-        assertTrue(responseBody.get("output").toString().contains("unsafe"));
-
+        assertTrue(responseBody.get("output").contains("unsafe"));
+        
         verify(chatbotService, never()).sendMessage(anyString(), anyString(), anyString(), anyString());
     }
 
@@ -417,16 +405,10 @@ class ChatbotControllerTest {
 
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertTrue(response.getBody() instanceof Map<?,?>);
-
+        
         @SuppressWarnings("unchecked")
-        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
-
-        assertNotNull(responseBody);
-        assertEquals("Invalid input", responseBody.get("error"));
-        assertNotNull(responseBody.get("output"));
-        assertTrue(responseBody.get("output").toString().contains("unsafe"));
+        Map<String, String> responseBody = (Map<String, String>) response.getBody();
+        assertEquals("Invalid request", responseBody.get("output"));
         
         verify(chatbotService, never()).sendMessage(anyString(), anyString(), anyString(), anyString());
     }
