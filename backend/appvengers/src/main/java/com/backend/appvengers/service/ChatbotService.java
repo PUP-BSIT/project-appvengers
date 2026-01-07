@@ -15,6 +15,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,10 +30,10 @@ public class ChatbotService {
     private static final String SESSION_ID_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789";
 
     @Value("${n8n.webhook.url}")
-    private String n8nWebhookUrl;
+    private @NonNull String n8nWebhookUrl;
 
     @Value("${n8n.webhook.fallback.url}")
-    private String n8nWebhookFallbackUrl;
+    private @NonNull String n8nWebhookFallbackUrl;
 
     @Value("${n8n.webhook.failover.timeout:15000}")
     private long failoverTimeout;
@@ -130,7 +131,7 @@ public class ChatbotService {
      * @param webhookLabel Label for logging (e.g., "Primary" or "Fallback")
      * @return Response object if successful, null if failed
      */
-    private Object tryWebhook(HttpEntity<Map<String, Object>> request, String webhookUrl, String webhookLabel) {
+    private Object tryWebhook(HttpEntity<Map<String, Object>> request, @NonNull String webhookUrl, String webhookLabel) {
         try {
             ResponseEntity<Object> response = restTemplate.postForEntity(webhookUrl, request, Object.class);
             log.info("[{}] n8n response status: {}", webhookLabel, response.getStatusCode());
