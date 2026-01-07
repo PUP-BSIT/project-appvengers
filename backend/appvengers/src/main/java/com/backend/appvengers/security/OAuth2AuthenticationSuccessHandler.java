@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.lang.NonNull;
 
 import java.io.IOException;
 
@@ -31,7 +30,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final JwtService jwtService;
 
     @Value("${app.oauth2.authorized-redirect-uri}")
-    private @NonNull String redirectUri;
+    private String redirectUri;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, 
