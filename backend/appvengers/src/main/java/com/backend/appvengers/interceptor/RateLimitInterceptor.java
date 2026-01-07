@@ -13,6 +13,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import org.springframework.lang.NonNull;
 
 /**
  * HTTP interceptor for rate limiting chatbot requests.
@@ -33,8 +34,11 @@ public class RateLimitInterceptor implements HandlerInterceptor {
     private static final String HEADER_RATE_LIMIT_RETRY_AFTER = "X-Rate-Limit-Retry-After-Seconds";
     
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) 
-            throws IOException {
+    public boolean preHandle(
+        @NonNull HttpServletRequest request, 
+        @NonNull HttpServletResponse response, 
+        @NonNull Object handler
+    ) throws IOException {
         
         // Extract user email from security context (set by JwtAuthenticationFilter)
         String userEmail = extractUserEmail();
