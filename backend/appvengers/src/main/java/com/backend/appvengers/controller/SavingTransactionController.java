@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.lang.NonNull;
 
 @RestController
 @RequestMapping("/api")
@@ -45,7 +46,7 @@ public class SavingTransactionController {
 
   // DONE: Add saving transaction
   @PostMapping("/savings/{savingId}/transactions")
-  public SavingTransaction addSavingTransaction(@PathVariable Integer savingId,
+  public SavingTransaction addSavingTransaction(@PathVariable @NonNull Integer savingId,
                                                 @RequestBody SavingTransactionRequest req,
                                                 Authentication auth) {
     int userId = currentUserId(auth);
@@ -94,8 +95,8 @@ public class SavingTransactionController {
 
   // DONE: Get saving transaction by ID
   @GetMapping("savings/{savingId}/transactions/{id}")
-  public ResponseEntity<?> getSavingTransactionById(@PathVariable Integer savingId,
-                                                    @PathVariable Long id,
+  public ResponseEntity<?> getSavingTransactionById(@PathVariable @NonNull Integer savingId,
+                                                    @PathVariable @NonNull Long id,
                                                     Authentication auth) {
     int userId = currentUserId(auth);
 
@@ -131,8 +132,8 @@ public class SavingTransactionController {
 
   // Update Saving Transaction
   @PutMapping("/savings/{savingId}/transactions/{id}")
-  public ResponseEntity<?> updateSavingTransaction(@PathVariable Integer savingId,
-                                                  @PathVariable Long id,
+  public ResponseEntity<?> updateSavingTransaction(@PathVariable @NonNull Integer savingId,
+                                                  @PathVariable @NonNull Long id,
                                                   @RequestBody SavingTransactionRequest req,
                                                   Authentication auth) {
     int userId = currentUserId(auth);
@@ -185,8 +186,8 @@ public class SavingTransactionController {
 
   // DONE: Soft Delete Saving Transaction
   @DeleteMapping("/savings/{savingId}/transactions/{id}")
-  public ResponseEntity<?> deleteSavingTransaction(@PathVariable Integer savingId,
-                                                   @PathVariable Long id,
+  public ResponseEntity<?> deleteSavingTransaction(@PathVariable @NonNull Integer savingId,
+                                                   @PathVariable @NonNull Long id,
                                                    Authentication auth) {
     int userId = currentUserId(auth);
 
