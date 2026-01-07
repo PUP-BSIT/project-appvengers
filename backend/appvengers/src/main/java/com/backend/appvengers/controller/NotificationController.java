@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.lang.NonNull;
 
 import com.backend.appvengers.dto.NotificationResponse;
 import com.backend.appvengers.entity.User;
@@ -62,7 +61,7 @@ public class NotificationController {
      * Mark a single notification as read.
      */
     @PutMapping("/{id}/read")
-    public ResponseEntity<Void> markAsRead(@PathVariable @NonNull Long id, Authentication auth) {
+    public ResponseEntity<Void> markAsRead(@PathVariable Long id, Authentication auth) {
         int userId = currentUserId(auth);
         notificationService.markAsRead(id, userId);
         return ResponseEntity.ok().build();
@@ -82,7 +81,7 @@ public class NotificationController {
      * Delete a notification.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteNotification(@PathVariable @NonNull Long id, Authentication auth) {
+    public ResponseEntity<Void> deleteNotification(@PathVariable Long id, Authentication auth) {
         int userId = currentUserId(auth);
         notificationService.deleteNotification(id, userId);
         return ResponseEntity.noContent().build();
