@@ -13,6 +13,7 @@ import com.backend.appvengers.entity.User;
 import com.backend.appvengers.repository.CategoryRepository;
 import com.backend.appvengers.repository.UserRepository;
 import com.backend.appvengers.dto.CategoryWithCountResponse;
+import org.springframework.lang.NonNull;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -64,7 +65,7 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     public void deleteCategory(
-        @PathVariable Integer id,
+        @PathVariable @NonNull Integer id,
         Authentication auth
     ) {
         int userId = currentUserId(auth);
@@ -96,7 +97,7 @@ public class CategoryController {
     // Update a category for current user
     @PutMapping("/{id}")
     public Category updateCategory(
-        @PathVariable Integer id,
+        @PathVariable @NonNull Integer id,
         @RequestBody Category updatedCategory,
         Authentication auth
     ) {
