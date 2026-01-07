@@ -18,6 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     
     private final RateLimitInterceptor rateLimitInterceptor;
     
+    @SuppressWarnings("null")
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // Apply rate limiting only to chatbot message endpoint
