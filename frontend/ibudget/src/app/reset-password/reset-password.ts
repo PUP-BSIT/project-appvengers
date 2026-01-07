@@ -105,9 +105,9 @@ export class ResetPassword implements OnInit {
         this.submitting.set(false);
         if (response.success) {
           this.successMessage.set(response.message);
-          // Redirect to login after 3 seconds
+          // Redirect to auth page after 3 seconds
           setTimeout(() => {
-            this.router.navigate(['/login']);
+            this.router.navigate(['/auth-page']);
           }, 3000);
         } else {
           this.errorMessage.set(response.message);
