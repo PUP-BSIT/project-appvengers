@@ -768,9 +768,18 @@ export class ChatbotSidebar implements OnInit, OnDestroy {
             const [key, value] = pair.split('=');
             if (key && value) {
                 const decodedValue = decodeURIComponent(value);
-                // Try to parse as number
-                const numValue = parseFloat(decodedValue);
-                params[key] = isNaN(numValue) ? decodedValue : numValue;
+                
+                // Check if it's a date parameter (date, goalDate, startDate, endDate)
+                const isDateParam = /date$/i.test(key);
+                
+                if (isDateParam) {
+                    // Keep dates as strings (don't parse as number)
+                    params[key] = decodedValue;
+                } else {
+                    // Try to parse as number for other params
+                    const numValue = parseFloat(decodedValue);
+                    params[key] = isNaN(numValue) ? decodedValue : numValue;
+                }
             }
         }
         return params;
