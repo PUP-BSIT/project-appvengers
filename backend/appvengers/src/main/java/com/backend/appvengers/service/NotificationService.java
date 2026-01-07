@@ -28,7 +28,6 @@ import com.backend.appvengers.controller.NotificationWebSocketController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
 
 @Service
 @RequiredArgsConstructor
@@ -438,7 +437,7 @@ public class NotificationService {
      * Mark a single notification as read.
      */
     @Transactional
-    public void markAsRead(@NonNull Long notificationId, int userId) {
+    public void markAsRead(Long notificationId, int userId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found"));
 
@@ -463,7 +462,7 @@ public class NotificationService {
      * Delete a notification (soft delete).
      */
     @Transactional
-    public void deleteNotification(@NonNull Long notificationId, int userId) {
+    public void deleteNotification(Long notificationId, int userId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found"));
 
