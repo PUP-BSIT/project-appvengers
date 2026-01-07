@@ -43,6 +43,7 @@ public class CategorySeeder {
         }
     }
 
+    @SuppressWarnings("null")
     private void seedDefaultsForUser(Integer userId) {
         List<Category> defaults = List.of(
             new Category(userId, "Housing", "expense"),
