@@ -113,6 +113,7 @@ public class AuthController {
     }
 
     // Verifies email using the token sent to user's email
+    @SuppressWarnings("null") 
     @GetMapping("/verify-email")
     public ResponseEntity<ApiResponse> verifyEmail(@RequestParam("token") String token) {
         ApiResponse response = userService.verifyEmailToken(token);
@@ -205,6 +206,7 @@ public class AuthController {
         }
     }
 
+    @SuppressWarnings("null") 
     @PostMapping("/resend-verification")
     public ResponseEntity<ApiResponse> resendVerification(@RequestParam("email") String email) {
         ApiResponse response = userService.resendVerificationEmail(email);
