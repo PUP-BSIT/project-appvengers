@@ -42,7 +42,6 @@ export class AddCategoryModal {
   constructor() {
     this.categoryForm = this.formBuilder.group({
       name: ['', { validators: [Validators.required, Validators.minLength(4)] }],
-      description: [''],
       type: ['expense', { validators: [Validators.required] }] // expense/income
     });
   }
@@ -75,7 +74,7 @@ export class AddCategoryModal {
 
   /**
    * Opens the add category modal with pre-filled data from query params (chatbot deep links).
-   * Supports: name, description, type (expense/income)
+   * Supports: name, type (expense/income)
    */
   openModalWithParams(params: Record<string, string>) {
     // Validate type - must be 'expense' or 'income'
@@ -90,7 +89,6 @@ export class AddCategoryModal {
     // Patch form values
     this.categoryForm.patchValue({
       name: params['name'] || '',
-      description: params['description'] || '',
       type: type
     });
 
@@ -102,7 +100,7 @@ export class AddCategoryModal {
     modal.show();
 
     // Show toast notification
-    if (params['name'] || params['description'] || params['type']) {
+    if (params['name'] || params['type']) {
       this.toastService.info(
         'Bonzi Pre-fill',
         'Please review the form carefully before submitting.'
