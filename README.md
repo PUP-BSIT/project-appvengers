@@ -10,7 +10,7 @@
 [![Security](https://img.shields.io/github/actions/workflow/status/PUP-BSIT/project-appvengers/gitleaks.yml?branch=main&style=for-the-badge&logo=security&label=Security)](https://github.com/PUP-BSIT/project-appvengers/actions/workflows/gitleaks.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-[Live Demo](https://i-budget.site/) • [Documentation](documents/) • [API Docs](backend/appvengers/API_DOCUMENTATION.md) • [Report Bug](https://github.com/PUP-BSIT/project-appvengers/issues)
+[Live Demo](https://i-budget.site/) • [Documentation](documents/) • [API Docs](documents/api_specification.md) • [Report Bug](https://github.com/PUP-BSIT/project-appvengers/issues)
 
 </div>
 
