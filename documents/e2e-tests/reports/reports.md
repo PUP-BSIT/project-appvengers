@@ -5,7 +5,7 @@
 **Route**: `/reports`  
 **Protection**: Authenticated users only (authGuard)  
 **Production URL**: `https://i-budget.site/reports`  
-**Last Updated**: December 29, 2025
+**Last Updated**: January 9, 2026
 
 ---
 
@@ -37,8 +37,8 @@ The Reports page provides users with comprehensive financial analytics including
 | RPT-SUM-002 | Net Balance Calculation | Verify net balance (income - expenses) | User with income and expense data | 1. Navigate to reports 2. Check Net Balance section | Net Balance = Total Income - Total Expenses | P0 | E2E | ✅ Passed | Dec 29, 2025 | Calculation is correct (0 - 100 = -100) |
 | RPT-EMPTY-001 | Empty State No Data | Verify behavior when no transactions exist | New user with no transactions | 1. Navigate to `/reports` | Charts show empty state, totals display ₱0.00 | P2 | Negative | ✅ Passed | Dec 29, 2025 | Last month shows all zeros |
 | RPT-EMPTY-002 | Empty State One Month Only | Verify when only one month has data | User with transactions in current month only | 1. Navigate to reports 2. Switch to Last Month tab | Last month shows empty/zero values appropriately | P2 | Boundary | ✅ Passed | Dec 29, 2025 | Verified last month empty vs this month data |
-| RPT-GUARD-001 | Auth Guard Redirect | Verify unauthenticated access redirects | User not logged in | 1. Navigate directly to `/reports` | Redirected to login/auth page | P0 | Smoke | ⏳ Pending | - | Implicitly tested in other modules |
-| RPT-RESP-001 | Responsive Charts | Verify charts resize on viewport change | User on reports page | 1. Resize browser window 2. Check chart responsiveness | Charts maintain aspect ratio and remain readable | P3 | Regression | ⏳ Pending | - | |
+| RPT-GUARD-001 | Auth Guard Redirect | Verify unauthenticated access redirects | User not logged in | 1. Navigate directly to `/reports` | Redirected to login/auth page | P0 | Smoke | ✅ Passed | Jan 9, 2026 | Verified on production - properly redirects to login |
+| RPT-RESP-001 | Responsive Charts | Verify charts resize on viewport change | User on reports page | 1. Resize browser window 2. Check chart responsiveness | Charts maintain aspect ratio and remain readable | P3 | Regression | ✅ Passed | Jan 9, 2026 | Verified on mobile - charts display correctly and responsively |
 | RPT-COMP-001 | Month-over-Month Comparison | Verify comparison grid displays both months | User with data in both months | 1. View "Overall Financial Summary" section | Comparison grid shows Last Month, This Month, and Total columns | P1 | E2E | ✅ Passed | Dec 29, 2025 | Grid visible with correct columns |
 
 ---
@@ -163,5 +163,13 @@ Reports Page
 | P0 | 3 | Critical path, must pass |
 | P1 | 5 | Important features |
 | P2 | 2 | Secondary features |
-| P3 | 2 | Edge cases, cosmetic |
+| P3 | 1 | Edge cases, cosmetic |
 | **Total** | **12** | |
+
+---
+
+## Testing Notes
+
+- **Auth Guard (RPT-GUARD-001)**: Verified working correctly on production environment - unauthenticated users are properly redirected to login page
+- **Responsive Design (RPT-RESP-001)**: Charts tested on mobile devices and show proper responsive behavior - maintain aspect ratio and readability
+- **All 12 tests passing** with 100% coverage as of January 9, 2026

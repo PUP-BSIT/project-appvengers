@@ -37,7 +37,7 @@ The Categories feature enables users to:
 | CAT-010 | Duplicate Name Validation | Verify duplicate names rejected | Category "Food" exists | 1. Create new "Food" category 2. Save | Error message: "Category already exists" | P2 | Boundary | ✅ Passed | Jan 3, 2026 | Duplicate prevention implemented - shows "Category already exists!" error |
 | CAT-011 | Category Usage Count | Verify usage count accuracy | Category used in transaction | 1. Check usage text on card | Shows correct number of transactions | P2 | E2E | ✅ Passed | Dec 29, 2025 | Verified "Food" showing "Used in 2 transaction/s" |
 | CAT-012 | Empty State - Expense | Verify empty state for expense | User has no expense categories | 1. Delete all expense categories | Empty state message displayed | P2 | Regression | ✅ Passed | Dec 29, 2025 | Saw "No categories found" briefly before list load |
-| CAT-013 | Empty State - Income | Verify empty state for income | User has no income categories | 1. Switch to Income 2. Delete all income categories | Empty state message displayed | P2 | Regression | ⏳ Pending | - | - |
+| CAT-013 | Empty State - Income | Verify empty state for income | User has no income categories | 1. Switch to Income 2. Delete all income categories | Empty state message displayed | P2 | Regression | ✅ Passed | Jan 9, 2026 | Empty state correctly appears after deleting all default income categories |
 | CAT-014 | Toggle Tabs | Verify switching between Expense/Income | User on page | 1. Click Income 2. Click Expense | List content updates accordingly | P1 | UX | ✅ Passed | Dec 29, 2025 | Works correctly |
 
 ---
@@ -72,6 +72,7 @@ The Categories feature enables users to:
 
 ## Notes
 
-- **Bug Found**: System allows duplicate category names (created "Bonus" twice).
-- **Inconsistency**: Delete action has no confirmation modal (unlike Savings).
+- ~~**Bug Found**: System allows duplicate category names (created "Bonus" twice).~~ ✅ **FIXED** (Jan 3, 2026) - Duplicate validation now implemented
+- ~~**Inconsistency**: Delete action has no confirmation modal (unlike Savings).~~ ✅ **FIXED** (Jan 3, 2026) - Confirmation modal now implemented
 - **Usage Stats**: Usage count works ("Used in 2 transaction/s").
+- **Empty State**: Works correctly - shows "No categories found" after user deletes all default categories. Every new account has pre-built categories by default.
