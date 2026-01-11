@@ -5,12 +5,14 @@
 **Smart Personal Finance Management Made Simple**
 
 [![Live Demo](https://img.shields.io/badge/demo-live-success?style=for-the-badge&logo=vercel)](https://i-budget.site/)
+[![Product Launch](https://img.shields.io/badge/🎬_Product_Launch-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/N9NDKkFZe-M?si=NmOvKg99ETv_MO3o)
+[![Project Presentation](https://img.shields.io/badge/📹_Presentation-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/K5TxoJ5Hg5M?si=mFVLZfwgq7a97Dhe)
 [![CI](https://img.shields.io/github/actions/workflow/status/PUP-BSIT/project-appvengers/ci.yml?branch=main&style=for-the-badge&logo=github&label=CI)](https://github.com/PUP-BSIT/project-appvengers/actions/workflows/ci.yml)
 [![CD](https://img.shields.io/github/actions/workflow/status/PUP-BSIT/project-appvengers/cd.yml?branch=main&style=for-the-badge&logo=github&label=CD)](https://github.com/PUP-BSIT/project-appvengers/actions/workflows/cd.yml)
 [![Security](https://img.shields.io/github/actions/workflow/status/PUP-BSIT/project-appvengers/gitleaks.yml?branch=main&style=for-the-badge&logo=security&label=Security)](https://github.com/PUP-BSIT/project-appvengers/actions/workflows/gitleaks.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-[Live Demo](https://i-budget.site/) • [📹 Project Presentation](https://youtu.be/K5TxoJ5Hg5M?si=mFVLZfwgq7a97Dhe) • [Documentation](documents/) • [API Docs](documents/api_specification.md) • [Report Bug](https://github.com/PUP-BSIT/project-appvengers/issues)
+[Live Demo](https://i-budget.site/) • [🎬 Product Launch](https://youtu.be/N9NDKkFZe-M?si=NmOvKg99ETv_MO3o) • [📹 Project Presentation](https://youtu.be/K5TxoJ5Hg5M?si=mFVLZfwgq7a97Dhe) • [Documentation](documents/) • [API Docs](documents/api_specification.md) • [Report Bug](https://github.com/PUP-BSIT/project-appvengers/issues)
 
 </div>
 
