@@ -10,7 +10,7 @@
 [![Security](https://img.shields.io/github/actions/workflow/status/PUP-BSIT/project-appvengers/gitleaks.yml?branch=main&style=for-the-badge&logo=security&label=Security)](https://github.com/PUP-BSIT/project-appvengers/actions/workflows/gitleaks.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-[Live Demo](https://i-budget.site/) • [Documentation](documents/) • [API Docs](documents/api_specification.md) • [Report Bug](https://github.com/PUP-BSIT/project-appvengers/issues)
+[Live Demo](https://i-budget.site/) • [📹 Project Presentation](https://youtu.be/K5TxoJ5Hg5M?si=mFVLZfwgq7a97Dhe) • [Documentation](documents/) • [API Docs](documents/api_specification.md) • [Report Bug](https://github.com/PUP-BSIT/project-appvengers/issues)
 
 </div>
 
@@ -372,22 +372,30 @@ We use Notion for:
 <table>
   <tr>
     <td align="center" width="25%">
-      <img src="https://github.com/identicons/pm.png" width="100px;" alt="PM"/><br />
+      <a href="https://github.com/delima-justine">
+        <img src="https://github.com/delima-justine.png" width="100px;" alt="Justine Delima"/><br />
+      </a>
       <sub><b>Justine Delima</b></sub><br />
       <sup>Project Manager / Developer</sup>
     </td>
     <td align="center" width="25%">
-      <img src="https://github.com/identicons/tl.png" width="100px;" alt="TL"/><br />
+      <a href="https://github.com/arroyo-johnmatthew">
+        <img src="https://github.com/arroyo-johnmatthew.png" width="100px;" alt="John Matthew Arroyo"/><br />
+      </a>
       <sub><b>John Matthew Arroyo</b></sub><br />
       <sup>Tech Lead / Developer</sup>
     </td>
     <td align="center" width="25%">
-      <img src="https://github.com/identicons/qa.png" width="100px;" alt="QA"/><br />
+      <a href="https://github.com/mejares-jamesmichael">
+        <img src="https://github.com/mejares-jamesmichael.png" width="100px;" alt="James Michael Mejares"/><br />
+      </a>
       <sub><b>James Michael Mejares</b></sub><br />
       <sup>DevOps Engineer / Tester / Developer</sup>
     </td>
     <td align="center" width="25%">
-      <img src="https://github.com/identicons/ux.png" width="100px;" alt="UX"/><br />
+      <a href="https://github.com/ynion-mabeamae">
+        <img src="https://github.com/ynion-mabeamae.png" width="100px;" alt="Ma. Bea Mae Ynion"/><br />
+      </a>
       <sub><b>Ma. Bea Mae Ynion</b></sub><br />
       <sup>UI/UX Designer / Developer</sup>
     </td>
