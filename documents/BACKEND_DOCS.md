@@ -33,6 +33,260 @@ src/main/java/com/backend/appvengers/
 └── DatabaseConn.java   # Main Application Entry Point
 ```
 
+## 3.1 Backend Architecture Layers
+
+The iBudget backend implements a **layered architecture** pattern, ensuring separation of concerns, maintainability, and scalability. Each layer has specific responsibilities and communicates only with adjacent layers.
+
+### Layer 1: Presentation Layer (Controller)
+**Purpose:** Handle HTTP requests and responses, route to appropriate services.
+
+**Components:**
+- REST Controllers (`@RestController`)
+- Request mappings (`@GetMapping`, `@PostMapping`, etc.)
+- Input validation (`@Valid`)
+- Exception handling
+
+**Responsibilities:**
+- Receive HTTP requests from frontend
+- Validate request data (basic validation)
+- Call appropriate service methods
+- Transform service responses to HTTP responses (JSON)
+- Handle HTTP status codes and error responses
+
+**Data Flow:**
+```
+Client Request → Controller → Service Layer
+Client Response ← Controller ← Service Layer
+```
+
+**Example:**
+```java
+@RestController
+@RequestMapping("/api/transactions")
+public class TransactionController {
+    private final TransactionService transactionService;
+    
+    @PostMapping
+    public ResponseEntity<Transaction> create(@Valid @RequestBody TransactionDTO dto) {
+        return ResponseEntity.ok(transactionService.createTransaction(dto));
+    }
+}
+```
+
+### Layer 2: Service Layer (Business Logic)
+**Purpose:** Implement core business logic and orchestrate data operations.
+
+**Components:**
+- Service classes (`@Service`)
+- Business logic methods
+- Transaction management (`@Transactional`)
+- Data validation and transformation
+
+**Responsibilities:**
+- Implement business rules and logic
+- Coordinate multiple repository calls
+- Handle complex calculations (budgets, savings, analytics)
+- Perform data validation and sanitization
+- Manage transactions (ACID properties)
+- Call external services (Email, AI Chatbot)
+
+**Data Flow:**
+```
+Controller → Service → Repository
+Controller ← Service ← Repository
+Service → External Services (Email, N8N Webhook)
+```
+
+**Example:**
+```java
+@Service
+public class TransactionService {
+    private final TransactionRepository transactionRepository;
+    private final CategoryService categoryService;
+    
+    @Transactional
+    public Transaction createTransaction(TransactionDTO dto) {
+        // Business logic: validate, calculate, save
+        Category category = categoryService.findById(dto.getCategoryId());
+        Transaction transaction = new Transaction();
+        // ... business logic
+        return transactionRepository.save(transaction);
+    }
+}
+```
+
+### Layer 3: Repository Layer (Data Access)
+**Purpose:** Abstract database operations and provide data access interface.
+
+**Components:**
+- JPA Repository interfaces (`extends JpaRepository`)
+- Custom query methods
+- Native queries (`@Query`)
+
+**Responsibilities:**
+- CRUD operations (Create, Read, Update, Delete)
+- Custom database queries
+- Data persistence and retrieval
+- Database transaction coordination
+
+**Data Flow:**
+```
+Service → Repository → Database
+Service ← Repository ← Database
+```
+
+**Example:**
+```java
+@Repository
+public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+    List<Transaction> findByUserId(Long userId);
+    List<Transaction> findByUserIdAndDateBetween(Long userId, LocalDate start, LocalDate end);
+}
+```
+
+### Layer 4: Entity Layer (Data Model)
+**Purpose:** Define database schema and object-relational mapping.
+
+**Components:**
+- JPA Entities (`@Entity`)
+- Entity relationships (`@OneToMany`, `@ManyToOne`)
+- Field mappings (`@Column`, `@Id`, `@GeneratedValue`)
+
+**Responsibilities:**
+- Define database table structure
+- Map Java objects to database tables
+- Define entity relationships
+- Specify constraints and validation rules
+
+**Example:**
+```java
+@Entity
+@Table(name = "transactions")
+public class Transaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    
+    private BigDecimal amount;
+    private LocalDate date;
+}
+```
+
+### Cross-Cutting Layers
+
+#### Security Layer
+**Purpose:** Handle authentication, authorization, and security concerns.
+
+**Components:**
+- JWT Filter (`JwtAuthenticationFilter`)
+- Security Configuration (`SecurityConfig`)
+- UserDetailsService implementation
+- Password encoding
+
+**Responsibilities:**
+- Authenticate users (JWT, OAuth2)
+- Authorize API access
+- Encrypt passwords
+- Manage security contexts
+
+#### Configuration Layer
+**Purpose:** Configure application-wide settings and beans.
+
+**Components:**
+- `@Configuration` classes
+- CORS configuration (`CorsConfig`)
+- WebSocket configuration
+- Application properties
+
+**Responsibilities:**
+- Define Spring beans
+- Configure external integrations
+- Set up CORS policies
+- Configure connection pools
+
+#### DTO Layer (Data Transfer Objects)
+**Purpose:** Transfer data between layers without exposing entities.
+
+**Components:**
+- Request DTOs (incoming data)
+- Response DTOs (outgoing data)
+- Validation annotations (`@NotNull`, `@Email`)
+
+**Responsibilities:**
+- Define API request/response structure
+- Validate input data
+- Prevent over-fetching/under-fetching
+- Hide sensitive entity fields
+
+**Example:**
+```java
+public class TransactionDTO {
+    @NotNull
+    private BigDecimal amount;
+    
+    @NotBlank
+    private String description;
+    
+    private Long categoryId;
+}
+```
+
+### Layer Communication Flow
+
+**Complete Request Flow:**
+```
+1. Client sends HTTP Request
+   ↓
+2. Security Filter (JWT validation)
+   ↓
+3. Controller Layer (endpoint routing, validation)
+   ↓
+4. Service Layer (business logic)
+   ↓
+5. Repository Layer (database query)
+   ↓
+6. Entity Layer (ORM mapping)
+   ↓
+7. Database (MySQL)
+   ↓
+[Response flows back through the same layers]
+   ↓
+8. Client receives HTTP Response
+```
+
+### Layer Dependencies
+
+**Dependency Direction (Top to Bottom):**
+```
+Controller Layer
+    ↓ depends on
+Service Layer
+    ↓ depends on
+Repository Layer
+    ↓ depends on
+Entity Layer
+```
+
+**Key Principles:**
+- **Controllers** never directly access Repositories
+- **Services** contain all business logic
+- **Repositories** only handle data access
+- **Entities** are plain data models with no logic
+- Each layer is loosely coupled and independently testable
+
+### Benefits of Layered Architecture
+
+1. **Separation of Concerns:** Each layer has a single, well-defined responsibility
+2. **Maintainability:** Changes in one layer don't affect others
+3. **Testability:** Each layer can be tested independently (unit tests, integration tests)
+4. **Scalability:** Easy to scale individual layers or add new features
+5. **Reusability:** Services can be reused by multiple controllers
+6. **Security:** Centralized security handling in dedicated layer
+
 ## 4. Database Configuration
 
 ### 4.1 Database Information
